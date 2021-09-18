@@ -5,3 +5,6 @@ Packages in Data Access Layer Class Library: Dapper, FluentValidation, DotNetSta
 Packages in Windows Application (WPF): Caliburn Micro, FluentWPF, Material Design Themes/Colors, Dapper.Simple Container for dependency injection.
 
 Unit test: xUnit
+
+
+***Under Construction
