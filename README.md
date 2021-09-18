@@ -7,5 +7,4 @@ Packages in Windows Application (WPF): Caliburn Micro, FluentWPF, Material Desig
 Unit test: xUnit
 
 
-***Under Construction
-:)
+***Under Construction :-)
