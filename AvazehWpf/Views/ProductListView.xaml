@@ -1,0 +1,170 @@
+﻿<Window x:Class="AvazehWpf.Views.ProductListView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+        xmlns:cal="http://www.caliburnproject.org"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:AvazehWpf" mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewmodels:ProductListViewModel}"
+        fw:AcrylicWindow.Enabled="True"
+        Title="Products" FontFamily="Tahoma" WindowStartupLocation="CenterScreen" fw:AcrylicWindow.TintOpacity="1"
+        Width="1100" Height="650" fw:AcrylicWindow.AcrylicWindowStyle="NoIcon">
+    <Grid fw:PointerTracker.Enabled="True">
+        <Grid.Resources>
+            <Style TargetType="TextBox">
+                <Setter Property="TextAlignment" Value="Center"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="Black"/>
+                <Setter Property="Margin" Value="0,2,0,2"/>
+                <Setter Property="Height" Value="25"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+            </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3"/>
+            <ColumnDefinition Width="200" MaxWidth="200"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="3"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Column="1" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <ScrollViewer Grid.Column="0" Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <Grid fw:PointerTracker.Enabled="True">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" MinWidth="120" Orientation="Vertical">
+
+                        <StackPanel Orientation="Vertical" Margin="0,0,0,10">
+                            <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <materialDesign:PackIcon Kind="PackageVariantClosed" Margin="0,2,5,2"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="Product Name" Margin="0,2,0,2"/>
+                            </StackPanel>
+                            <TextBox Text="{Binding SelectedProduct.ProductName, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical" Margin="0,0,0,10">
+                            <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <materialDesign:PackIcon Kind="CashMultiple" Margin="0,2,5,2"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="Buy Price" Margin="0,2,0,2"/>
+                            </StackPanel>
+                            <TextBox Text="{Binding SelectedProduct.BuyPrice, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical" Margin="0,0,0,10">
+                            <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <materialDesign:PackIcon Kind="CashMultiple" Margin="0,2,5,2"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="Sell Price" Margin="0,2,0,2"/>
+                            </StackPanel>
+                            <TextBox Text="{Binding SelectedProduct.SellPrice, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical" Margin="0,0,0,10">
+                            <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <materialDesign:PackIcon Kind="Barcode" Margin="0,2,5,2"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="Barcode" Margin="0,2,0,2"/>
+                            </StackPanel>
+                            <TextBox Text="{Binding SelectedProduct.Barcode, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <DockPanel LastChildFill="True"  Grid.Row="1" DockPanel.Dock="Bottom" Margin="0,0,0,5">
+                        <StackPanel DockPanel.Dock = "Top" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <materialDesign:PackIcon Kind="SemanticWeb" Margin="0,2,5,2"/>
+                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="Description Text" Margin="0,2,0,2"/>
+                        </StackPanel>
+                        <TextBox Text="{Binding SelectedProduct.Descriptions, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MinHeight="50" Height="auto" VerticalContentAlignment="Top" BorderThickness="1" MaxWidth="200"/>
+                    </DockPanel>
+                </Grid>
+            </ScrollViewer>
+            <Grid Grid.Column="0" Grid.Row="1">
+                <StackPanel Orientation="Vertical">
+                    <Button cal:Message.Attach="[Event Click] = [Action AddNewProduct()]" Height="25" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,0,3">
+                        <StackPanel Width="110" Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="PackageDown" Margin="3"/>
+                            <TextBlock Text="Add New" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button cal:Message.Attach="[Event Click] = [Action EditProduct()]" Height="25" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,0,3">
+                        <StackPanel Width="110" Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Edit" Margin="3"/>
+                            <TextBlock Text="Edit" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button cal:Message.Attach="[Event Click] = [Action DeleteProduct()]" Height="25" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent">
+                        <StackPanel Width="110" Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Delete" Margin="3"/>
+                            <TextBlock Text="Delete" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Column="2" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="Search" Grid.Column="0" Height="25" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="DatabaseSearch" Margin="3"/>
+                        <TextBlock Text="Search" VerticalAlignment="Center" Margin="30,0,30,0"/>
+                        <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="3" HorizontalAlignment="Right"/>
+                    </StackPanel>
+                </Button>
+                <TextBox x:Name="SearchText" Grid.Column="1" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]">
+                </TextBox>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="PreviousPage" Height="25" HorizontalAlignment="Left" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="ArrowLeftCircle" Margin="3"/>
+                        <TextBlock Text="Previous" VerticalAlignment="Center" Margin="30,0,30,0"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Next" VerticalAlignment="Center" Margin="30,0,30,0"/>
+                        <materialDesign:PackIcon Kind="ArrowRightCircle" Margin="3" HorizontalAlignment="Right"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditProduct()]" Grid.Row="2" ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Path=Id, Mode=OneWay}" Width="80"/>
+                    <DataGridTextColumn Header="Product Name" Binding="{Binding Path=ProductName, Mode=OneWay}" Width="150"/>
+                    <DataGridTextColumn Header="Buy Price" Binding="{Binding Path=BuyPrice, Mode=OneWay}" Width="150"/>
+                    <DataGridTextColumn Header="Sell Price" Binding="{Binding Path=SellPrice, Mode=OneWay}" Width="150"/>
+                    <DataGridTextColumn Header="Barcode" Binding="{Binding Path=Barcode, Mode=OneWay}" Width="150"/>
+                    <DataGridTextColumn Header="Descriprions" Binding="{Binding Path=Descriprions, Mode=OneWay}" Width="150"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,18 @@
+﻿using DataLibraryCore.Models;
+using FluentValidation.Results;
+using System.Collections.ObjectModel;
+
+namespace DataLibraryCore.DataAccess.Interfaces
+{
+    public interface IProductProcessor
+    {
+        int CreateItem(ProductModel product);
+        int DeleteItemById(int ID);
+        int GetTotalQueryCount(string WhereClause);
+        ObservableCollection<ProductModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.ASC, string OrderBy = "Id");
+        ProductModel LoadSingleItem(int ID);
+        int UpdateItem(ProductModel product);
+        string GenerateWhereClause(string val, SqlSearchMode mode = SqlSearchMode.OR);
+        ValidationResult ValidateItem(ProductModel product);
+    }
+}
