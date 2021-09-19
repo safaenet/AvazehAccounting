@@ -14,11 +14,18 @@ using System.Reflection;
 using System.ComponentModel;
 using Dapper.FluentMap.Mapping;
 using Dapper.FluentMap;
+using DataLibraryCore.DataAccess.Interfaces;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public class SqlInvoiceProcessor : Interfaces.IInvoiceProcessor
+    public class SqlInvoiceProcessor : IInvoiceProcessor
     {
+        public SqlInvoiceProcessor(IDataAccess dataAcess)
+        {
+            DataAccess = dataAcess;
+        }
+
+        private readonly IDataAccess DataAccess;
         private readonly string CreateInvoiceQuery = @"INSERT INTO Invoices (CustomerId, DateCreated, TimeCreated, DiscountType, DiscountValue, Descriptions, LifeStatus)
             VALUES (@customerId, @dateCreated, @timeCreated, @discountType, @discountValue, @descriptions, @lifeStatus); SELECT @id = @@IDENTITY;";
         private readonly string UpdateInvoiceQuery = @"UPDATE Invoices SET CustomerId = @customerId, DateCreated = @dateCreated, TimeCreated = @timeCreated,

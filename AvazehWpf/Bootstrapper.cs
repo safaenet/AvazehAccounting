@@ -41,7 +41,9 @@ namespace AvazehWpf
                 .PerRequest<IProductProcessor, SqlProductProcessor>()
                 .PerRequest<ICustomerProcessor, SqlCustomerProcessor>()
                 .PerRequest<IInvoiceProcessor, SqlInvoiceProcessor>()
-                .PerRequest<IChequeProcessor, SqlChequeProcessor>();
+                .PerRequest<IChequeProcessor, SqlChequeProcessor>()
+
+                .RegisterSingleton(typeof(IDataAccess), nameof(IDataAccess), typeof(SqlDataAccess));
         }
 
         protected override IEnumerable<object> GetAllInstances(Type serviceType)

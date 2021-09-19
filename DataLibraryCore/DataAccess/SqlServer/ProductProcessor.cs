@@ -10,11 +10,18 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using DataLibraryCore.Models.Validators;
 using FluentValidation.Results;
+using DataLibraryCore.DataAccess.Interfaces;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public class SqlProductProcessor : Interfaces.IProductProcessor
+    public class SqlProductProcessor : IProductProcessor
     {
+        public SqlProductProcessor(IDataAccess dataAcess)
+        {
+            DataAccess = dataAcess;
+        }
+
+        private readonly IDataAccess DataAccess;
         private readonly string CreateProductQuery = @"INSERT INTO Products (ProductName, BuyPrice, SellPrice, Barcode, CountString, DateCreated, TimeCreated, Descriptions)
             VALUES (@productName, @buyPrice, @sellPrice, @barcode, @countString, @dateCreated, @timeCreated, @descriptions);
             SELECT @id = @@IDENTITY;";

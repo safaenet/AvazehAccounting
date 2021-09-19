@@ -10,11 +10,18 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using DataLibraryCore.Models.Validators;
 using FluentValidation.Results;
+using DataLibraryCore.DataAccess.Interfaces;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public class SqlCustomerProcessor : Interfaces.ICustomerProcessor
+    public class SqlCustomerProcessor : ICustomerProcessor
     {
+        public SqlCustomerProcessor(IDataAccess dataAcess)
+        {
+            DataAccess = dataAcess;
+        }
+
+        private readonly IDataAccess DataAccess;
         private readonly string CreateCustomerQuery = @"INSERT INTO Customers (FirstName, LastName, CompanyName, EmailAddress, PostAddress, DateJoined, Descriptions)
             VALUES (@firstName, @lastName, @companyName, @emailAddress, @postAddress, @dateJoined, @descriptions);
             SELECT @id = @@IDENTITY;";

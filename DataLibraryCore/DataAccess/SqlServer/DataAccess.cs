@@ -12,41 +12,41 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public static class DataAccess
+    public class SqlDataAccess : Interfaces.IDataAccess
     {
-        public static string GetConnectionString(string DB = "default") => SettingsDataAccess.AppConfiguration().GetConnectionString(DB);
+        public string GetConnectionString(string DB = "default") => SettingsDataAccess.AppConfiguration().GetConnectionString(DB);
 
-        public static ObservableCollection<T> LoadData<T, U>(string sql, U param)
+        public ObservableCollection<T> LoadData<T, U>(string sql, U param)
         {
             using IDbConnection conn = new SqlConnection(GetConnectionString());
-            return new ObservableCollection<T>(conn.Query<T>(sql, param));
+            return conn.Query<T>(sql, param).AsObservable();
         }
 
-        public static async Task<ObservableCollection<T>> LoadDataAsync<T, U>(string sql, U param)
+        public async Task<ObservableCollection<T>> LoadDataAsync<T, U>(string sql, U param)
         {
             using IDbConnection conn = new SqlConnection(GetConnectionString());
-            return new ObservableCollection<T>(await conn.QueryAsync<T>(sql, param));
+            return await conn.QueryAsync<T>(sql, param).AsObservableAsync();
         }
 
-        public static int SaveData<T>(string sql, T data)
+        public int SaveData<T>(string sql, T data)
         {
             using IDbConnection conn = new SqlConnection(GetConnectionString());
             return conn.Execute(sql, data);
         }
 
-        public static async Task<int> SaveDataAsync<T>(string sql, T data)
+        public async Task<int> SaveDataAsync<T>(string sql, T data)
         {
             using IDbConnection conn = new SqlConnection(GetConnectionString());
             return await conn.ExecuteAsync(sql, data);
         }
 
-        public static T ExecuteScalar<T, U>(string sql, U param)
+        public T ExecuteScalar<T, U>(string sql, U param)
         {
             using IDbConnection conn = new SqlConnection(GetConnectionString());
             return conn.ExecuteScalar<T>(sql, param);
         }
 
-        public static async Task<T> ExecuteScalarAsync<T, U>(string sql, U param)
+        public async Task<T> ExecuteScalarAsync<T, U>(string sql, U param)
         {
             using IDbConnection conn = new SqlConnection(GetConnectionString());
             return await conn.ExecuteScalarAsync<T>(sql, param);

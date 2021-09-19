@@ -10,11 +10,18 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using DataLibraryCore.Models.Validators;
 using FluentValidation.Results;
+using DataLibraryCore.DataAccess.Interfaces;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public class SqlChequeProcessor : Interfaces.IChequeProcessor
+    public class SqlChequeProcessor : IChequeProcessor
     {
+        public SqlChequeProcessor(IDataAccess dataAcess)
+        {
+            DataAccess = dataAcess;
+        }
+
+        private readonly IDataAccess DataAccess;
         private readonly string CreateChequeQuery = @"INSERT INTO Cheques (Drawer, Orderer, PayAmount, About, IssueDate, DueDate, BankName, Serial, Identifier, Descriptions)
             VALUES (@drawer, @orderer, @payAmount, @about, @issueDate, @dueDate, @bankName, @serial, @identifier, @descriptions);
             SELECT @id = @@IDENTITY;";

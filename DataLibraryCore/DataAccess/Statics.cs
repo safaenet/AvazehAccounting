@@ -107,5 +107,15 @@ namespace DataLibraryCore.DataAccess
             }
             return first;
         }
+
+        internal static ObservableCollection<T> AsObservable<T>(this IEnumerable<T> collection)
+        {
+            return new ObservableCollection<T>(collection);
+        }
+
+        internal static async Task<ObservableCollection<T>> AsObservableAsync<T>(this Task<IEnumerable<T>> collection)
+        {
+            return await Task.FromResult(new ObservableCollection<T>(collection.Result));
+        }
     }
 }
