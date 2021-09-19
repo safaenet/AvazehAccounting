@@ -29,15 +29,15 @@ namespace AvazehWebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IProductCollectionManager, ProductCollectionManager>();
-            services.AddSingleton<ICustomerCollectionManager, CustomerCollectionManager>();
-            services.AddSingleton<IInvoiceCollectionManager, InvoiceCollectionManager>();
-            services.AddSingleton<IChequeCollectionManager, ChequeCollectionManager>();
+            services.AddScoped<IProductCollectionManager, ProductCollectionManager>();
+            services.AddScoped<ICustomerCollectionManager, CustomerCollectionManager>();
+            services.AddScoped<IInvoiceCollectionManager, InvoiceCollectionManager>();
+            services.AddScoped<IChequeCollectionManager, ChequeCollectionManager>();
 
-            services.AddSingleton<IProductProcessor, SqlProductProcessor>();
-            services.AddSingleton<ICustomerProcessor, SqlCustomerProcessor>();
-            services.AddSingleton<IInvoiceProcessor, SqlInvoiceProcessor>();
-            services.AddSingleton<IChequeProcessor, SqlChequeProcessor>();
+            services.AddTransient<IProductProcessor, SqlProductProcessor>();
+            services.AddTransient<ICustomerProcessor, SqlCustomerProcessor>();
+            services.AddTransient<IInvoiceProcessor, SqlInvoiceProcessor>();
+            services.AddTransient<IChequeProcessor, SqlChequeProcessor>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
