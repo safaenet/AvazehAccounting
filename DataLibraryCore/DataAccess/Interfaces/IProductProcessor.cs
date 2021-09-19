@@ -1,10 +1,11 @@
 ﻿using DataLibraryCore.Models;
 using FluentValidation.Results;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.Interfaces
 {
-    public interface IProductProcessor
+    public partial interface IProductProcessor
     {
         int CreateItem(ProductModel product);
         int DeleteItemById(int ID);

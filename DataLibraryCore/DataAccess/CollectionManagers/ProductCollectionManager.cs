@@ -10,7 +10,7 @@ using System.Text;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public class ProductCollectionManager : IProductCollectionManager
+    public partial class ProductCollectionManager : IProductCollectionManager
     {
         public ProductCollectionManager(IProductProcessor processor)
         {

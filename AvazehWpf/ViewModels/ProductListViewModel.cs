@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,7 +21,7 @@ namespace AvazehWpf.ViewModels
         {
             PCM = manager;
             _SelectedProduct = new();
-            PCM.LoadFirstPage();
+            PCM.LoadFirstPageAsync();
         }
 
         private IProductCollectionManager _PCM;
@@ -31,7 +32,6 @@ namespace AvazehWpf.ViewModels
             get { return _SelectedProduct; }
             set { _SelectedProduct = value; NotifyOfPropertyChange(() => SelectedProduct); }
         }
-
 
         public IProductCollectionManager PCM
         {
@@ -67,19 +67,19 @@ namespace AvazehWpf.ViewModels
 
         public void PreviousPage()
         {
-            PCM.LoadPreviousPage();
+            PCM.LoadPreviousPageAsync();
             NotifyOfPropertyChange(() => Products);
         }
 
         public void NextPage()
         {
-            PCM.LoadNextPage();
+            PCM.LoadNextPageAsync();
             NotifyOfPropertyChange(() => Products);
         }
 
         public void Search()
         {
-            PCM.GenerateWhereClause(SearchText);
+            PCM.GenerateWhereClauseAsync(SearchText);
             NotifyOfPropertyChange(() => Products);
         }
 
@@ -106,8 +106,8 @@ namespace AvazehWpf.ViewModels
             if (SelectedProduct == null) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete {SelectedProduct.ProductName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
-            var output = PCM.Processor.DeleteItemById(SelectedProduct.Id);
-            if (output > 0) Products.Remove(SelectedProduct);
+            var output = PCM.Processor.DeleteItemByIdAsync(SelectedProduct.Id);
+            if (output.Result > 0) Products.Remove(SelectedProduct);
             else MessageBox.Show($"Product with ID: {SelectedProduct.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }

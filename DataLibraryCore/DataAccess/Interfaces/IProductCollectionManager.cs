@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 
 namespace DataLibraryCore.DataAccess.Interfaces
 {
-    public interface IProductCollectionManager
+    public partial interface IProductCollectionManager
     {
         IProductProcessor Processor { get; init; }
         event EventHandler FirstPageLoaded;

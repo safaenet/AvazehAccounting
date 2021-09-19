@@ -11,10 +11,11 @@ using System.Collections.ObjectModel;
 using DataLibraryCore.Models.Validators;
 using FluentValidation.Results;
 using DataLibraryCore.DataAccess.Interfaces;
+using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public class SqlProductProcessor : IProductProcessor
+    public partial class SqlProductProcessor : IProductProcessor
     {
         public SqlProductProcessor(IDataAccess dataAcess)
         {
