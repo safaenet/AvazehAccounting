@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AvazehWebAPI.Models //DTO Models
 {
-    public class ProductModel
+    public class ProductModel_DTO
     {
         public int Id { get; set; }
 

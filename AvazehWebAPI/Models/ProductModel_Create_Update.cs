@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace AvazehWebAPI.Models //DTO Models
 {
-    public class ProductModel_Create_Update
+    public class ProductModel_DTO_Create_Update
     {
-
         [Display(Name ="Product Name", Prompt ="Product name. Max length is 100 characters")]
         [Required(ErrorMessage = "Field is required")]
         [StringLength(100, ErrorMessage = "Maximum length is 100")]
