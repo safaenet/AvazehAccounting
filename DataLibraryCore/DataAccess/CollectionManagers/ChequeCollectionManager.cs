@@ -107,6 +107,7 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
 
         public int GenerateWhereClause(string val, SqlSearchMode mode = SqlSearchMode.OR)
         {
+            if (val == SearchValue) return 0;
             SearchValue = val;
             WhereClause = Processor.GenerateWhereClause(val, mode);
             return Items == null ? 0 : Items.Count;

@@ -110,6 +110,7 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
 
         public int GenerateWhereClause(string val, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, SqlSearchMode mode = SqlSearchMode.OR)
         {
+            if (val == SearchValue) return 0;
             SearchValue = val;
             WhereClause = Processor.GenerateWhereClause(val, LifeStatus, FinStatus, mode);
             return Invoices == null ? 0 : Invoices.Count;
