@@ -19,20 +19,19 @@ namespace AvazehWebAPI.Controllers
         }
         private readonly IProductCollectionManager Manager;
 
+        //GET /Product?Id=1&SearchText=sometext
         [HttpGet]
-        public IProductCollectionManager Get()
-        {
-            Manager.LoadFirstPage();
-            return Manager;
-        }
-
-        //GET ./Product?Id=1,SearchText=sometext
-        [HttpGet("{Id},{SearchText}")]
-        public IProductCollectionManager Get(int Id = 1, string SearchText = "")
+        public IProductCollectionManager GetSearch(int Id = 1, string SearchText = "")
         {
             Manager.GenerateWhereClause(SearchText);
             Manager.GotoPage(Id);
             return Manager;
         }
+
+        //[HttpPost]
+        //public ActionResult CreateNew()
+        //{
+
+        //}
     }
 }
