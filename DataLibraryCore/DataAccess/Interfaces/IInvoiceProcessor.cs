@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 
 namespace DataLibraryCore.DataAccess.Interfaces
 {
-    public interface IInvoiceProcessor
+    public partial interface IInvoiceProcessor
     {
         int CreateItem(InvoiceModel invoice);
         int DeleteItemById(int Id);
