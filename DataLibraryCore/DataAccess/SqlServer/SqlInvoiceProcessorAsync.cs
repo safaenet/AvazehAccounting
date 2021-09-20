@@ -172,7 +172,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
                                     FROM InvoicePayments ips GROUP BY ips.[InvoiceId]) pays ON i.Id=pays.InvoiceId
                                  WHERE i.LifeStatus = { (int)InvoiceLifeStatus.Active } AND c.Id = { CustomerID } { InvoiceClause }
                                  GROUP BY c.Id";
-            return DataAccess.ExecuteScalar<double, DynamicParameters>(sqlQuery, null);
+            return await DataAccess.ExecuteScalarAsync<double, DynamicParameters>(sqlQuery, null);
         }
 
         public async Task<Dictionary<int, string>> GetProductItemsAsync()
@@ -180,52 +180,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
             Dictionary<int, string> choices = new();
             string sql = $@"SELECT p.Id, p.ProductName FROM Products p";
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
-            var items = conn.Query<ProductNamesForComboBox>(sql, null);
+            var items = await conn.QueryAsync<ProductNamesForComboBox>(sql, null);
             choices = items.ToDictionary(x => x.Id, x => x.ProductName);
             return choices;
-        }
-
-        public async Task<string> GenerateWhereClauseAsync(string val, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, SqlSearchMode mode = SqlSearchMode.OR)
-        {
-            string finStatusOperand = "";
-            switch (FinStatus)
-            {
-                case InvoiceFinancialStatus.Balanced:
-                    finStatusOperand = "=";
-                    break;
-                case InvoiceFinancialStatus.Creditor:
-                    finStatusOperand = "<";
-                    break;
-                case InvoiceFinancialStatus.Deptor:
-                    finStatusOperand = ">";
-                    break;
-                default:
-                    break;
-            }
-            string criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
-            return @$"(CAST(i.[Id] AS VARCHAR) LIKE { criteria }
-                      {mode} CAST(i.[CustomerId] AS VARCHAR) LIKE { criteria }
-                      {mode} i.[DateCreated] LIKE { criteria }
-                      {mode} i.[TimeCreated] LIKE { criteria }
-                      {mode} i.[DateUpdated] LIKE { criteria }
-                      {mode} i.[TimeUpdated] LIKE { criteria }
-                      {mode} CAST(i.[DiscountValue] AS VARCHAR) LIKE { criteria }
-                      {mode} i.[Descriptions] LIKE { criteria }
-
-                      {mode} CAST(c.[Id] AS VARCHAR) LIKE { criteria }
-                      {mode} c.[FirstName] + ' ' + c.[LastName] LIKE { criteria }
-                      {mode} c.[CompanyName] LIKE { criteria }
-                      {mode} c.[EmailAddress] LIKE { criteria }
-                      {mode} c.[PostAddress] LIKE { criteria }
-                      {mode} c.[DateJoined] LIKE { criteria }
-                      {mode} c.[Descriptions] LIKE { criteria }
-
-                      {mode} CAST(sp.[TotalSellValue] AS varchar) LIKE { criteria }
-                      {mode} CAST(pays.[TotalPayments] AS varchar) LIKE { criteria }
-                      {mode} CAST(ISNULL(dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue), 0) - ISNULL(pays.[TotalPayments], 0) AS varchar) LIKE { criteria }
-                      {mode} CAST(ISNULL(dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue), 0) AS varchar) LIKE { criteria } )
-                      {(LifeStatus == null ? "" : $" AND i.[LifeStatus] = { (int)LifeStatus } ")}
-                      {(FinStatus == null ? "" : $" AND ISNULL(dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue), 0) - ISNULL(pays.TotalPayments, 0) { finStatusOperand } 0 ")}";
         }
     }
 }

@@ -70,22 +70,5 @@ namespace DataLibraryCore.DataAccess.SqlServer
             var outPut = await LoadManyItemsAsync(0, 1, $"[Id] = { ID }");
             return outPut.FirstOrDefault();
         }
-
-        public async Task<string> GenerateWhereClauseAsync(string val, SqlSearchMode mode = SqlSearchMode.OR)
-        {
-            var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
-            var outPut = @$"(CAST([Id] AS varchar) LIKE {criteria}
-                            {mode} [ProductName] LIKE {criteria}
-                            {mode} CAST([BuyPrice] AS varchar) LIKE {criteria}
-                            {mode} CAST([SellPrice] AS varchar) LIKE {criteria}
-                            {mode} [Barcode] LIKE {criteria}
-                            {mode} [CountString] LIKE {criteria}
-                            {mode} [DateCreated] LIKE {criteria}
-                            {mode} [TimeCreated] LIKE {criteria}
-                            {mode} [DateUpdated] LIKE {criteria}
-                            {mode} [TimeUpdated] LIKE {criteria}
-                            {mode} [Descriptions] LIKE {criteria} )";
-            return await Task.FromResult(outPut);
-        }
     }
 }

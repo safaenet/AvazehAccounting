@@ -22,6 +22,5 @@ namespace DataLibraryCore.DataAccess.Interfaces
         Task<InvoiceModel> LoadSingleItemAsync(int ID);
         Task<int> UpdateItemAsync(InvoiceModel invoice);
         Task<int> UpdateSubItemInDatabaseAsync(InvoiceItemModel item);
-        Task<string> GenerateWhereClauseAsync(string val, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, SqlSearchMode mode = SqlSearchMode.OR);
     }
 }

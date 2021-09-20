@@ -12,6 +12,5 @@ namespace DataLibraryCore.DataAccess.Interfaces
         Task<ObservableCollection<ProductModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.ASC, string OrderBy = "Id");
         Task<ProductModel> LoadSingleItemAsync(int ID);
         Task<int> UpdateItemAsync(ProductModel product);
-        Task<string> GenerateWhereClauseAsync(string val, SqlSearchMode mode = SqlSearchMode.OR);
     }
 }
