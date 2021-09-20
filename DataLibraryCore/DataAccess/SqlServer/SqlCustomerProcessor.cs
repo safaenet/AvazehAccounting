@@ -14,7 +14,7 @@ using DataLibraryCore.DataAccess.Interfaces;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public class SqlCustomerProcessor : ICustomerProcessor
+    public partial class SqlCustomerProcessor : ICustomerProcessor
     {
         public SqlCustomerProcessor(IDataAccess dataAcess)
         {
@@ -56,9 +56,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@postAddress", customer.PostAddress);
             dp.Add("@dateJoined", customer.DateJoined);
             dp.Add("@descriptions", customer.Descriptions);
-            var AffectedCount = DataAccess.SaveDataAsync(CreateCustomerQuery, dp);
+            var AffectedCount = DataAccess.SaveData(CreateCustomerQuery, dp);
             var OutputId = dp.Get<int>("@id");
-            if (AffectedCount.Result > 0)
+            if (AffectedCount > 0)
             {
                 customer.Id = OutputId;
                 InsertPhoneNumbersToDatabase(customer);
@@ -95,10 +95,10 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return DataAccess.SaveData(InsertPhonesQuery, phones);
         }
 
-        public int DeleteItemByID(int ID)
+        public int DeleteItemById(int Id)
         {
             var dp = new DynamicParameters();
-            dp.Add("@id", ID);
+            dp.Add("@id", Id);
             return DataAccess.SaveData(DeleteCustomerQuery, dp);
         }
 
@@ -116,7 +116,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
                                ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
             var query = string.Format(SelectCustomersQuery, sqlInsert);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
-            var reader = conn.QueryMultipleAsync(query, null).Result;
+            var reader = conn.QueryMultiple(query, null);
             return reader.MapObservableCollectionOfCustomers();
         }
 

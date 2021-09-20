@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public class ChequeCollectionManager : IChequeCollectionManager
+    public partial class ChequeCollectionManager : IChequeCollectionManager
     {
         public ChequeCollectionManager(IChequeProcessor processor)
         {
@@ -37,7 +37,7 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
 
         public bool DeleteItemFromDbById(int Id)
         {
-            if (Processor.DeleteItemByID(Id) > 0)
+            if (Processor.DeleteItemById(Id) > 0)
             {
                 DeleteItemFromCollectionById(Id);
                 return true;
@@ -69,11 +69,16 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             if (!Initialized)
             {
                 TotalQueryCount = Processor.GetTotalQueryCount(WhereClause);
-                if (TotalQueryCount == 0) return 0;
+                if (TotalQueryCount == 0)
+                {
+                    Items = null;
+                    return 0;
+                }
                 Initialized = true;
             }
-            PageNumber = PageNumber < 1 ? 1 : PageNumber;
-            PageNumber = PageNumber > PagesCount ? PagesCount : PageNumber;
+            if (PagesCount == 0) PageNumber = 1;
+            else if (PageNumber > PagesCount) PageNumber = PagesCount;
+            else if (PageNumber < 1) PageNumber = 1;
             Items = Processor.LoadManyItems((PageNumber - 1) * PageSize, PageSize, WhereClause);
             CurrentPage = Items == null || Items.Count == 0 ? 0 : PageNumber;
             return Items == null ? 0 : Items.Count;
@@ -105,11 +110,12 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             return result;
         }
 
-        public int GenerateWhereClause(string val, SqlSearchMode mode = SqlSearchMode.OR)
+        public int GenerateWhereClause(string val, bool run = false, SqlSearchMode mode = SqlSearchMode.OR)
         {
             if (val == SearchValue) return 0;
             SearchValue = val;
             WhereClause = Processor.GenerateWhereClause(val, mode);
+            if (run) LoadFirstPage();
             return Items == null ? 0 : Items.Count;
         }
     }

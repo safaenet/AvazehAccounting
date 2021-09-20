@@ -59,7 +59,7 @@ namespace AvazehWpf.ViewModels
             if (Cheque == null) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete cheque of {Cheque.Drawer}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
-            if (Manager.Processor.DeleteItemByID(Cheque.Id) == 0) MessageBox.Show($"Cheque with ID: {Cheque.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            if (Manager.Processor.DeleteItemById(Cheque.Id) == 0) MessageBox.Show($"Cheque with ID: {Cheque.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             _CancelAndClose = false;
             CloseWindow();
         }

@@ -1,5 +1,4 @@
 ﻿using DataLibraryCore.DataAccess.Interfaces;
-using DataLibraryCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public partial class ProductCollectionManager : IProductCollectionManager
+    public partial class ChequeCollectionManager : IChequeCollectionManager
     {
         public async Task<bool> DeleteItemFromDbByIdAsync(int Id)
         {

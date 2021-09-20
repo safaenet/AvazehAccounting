@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 
 namespace DataLibraryCore.DataAccess.Interfaces
 {
-    public interface IInvoiceCollectionManager
+    public partial interface IInvoiceCollectionManager
     {
         IInvoiceProcessor Processor { get; init; }
         event EventHandler FirstPageLoaded;
@@ -16,7 +16,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
         event EventHandler PreviousPageLoaded;
         int CurrentPage { get; }
         bool Initialized { get; }
-        ObservableCollection<InvoiceListModel> Invoices { get; set; }
+        ObservableCollection<InvoiceListModel> Items { get; set; }
         int? MaxID { get; }
         int? MinID { get; }
         int PagesCount { get; }
@@ -28,7 +28,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
 
         bool DeleteItemFromCollectionById(int Id);
         bool DeleteItemFromDbById(int Id);
-        int GenerateWhereClause(string val, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, SqlSearchMode mode = SqlSearchMode.OR);
+        int GenerateWhereClause(string val, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, bool run = false, SqlSearchMode mode = SqlSearchMode.OR);
         InvoiceListModel GetItemFromCollectionById(int Id);
         int GotoPage(int PageNumber);
         int LoadFirstPage();

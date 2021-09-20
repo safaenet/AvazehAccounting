@@ -4,10 +4,10 @@ using System.Collections.ObjectModel;
 
 namespace DataLibraryCore.DataAccess.Interfaces
 {
-    public interface ICustomerProcessor
+    public partial interface ICustomerProcessor
     {
         int CreateItem(CustomerModel customer);
-        int DeleteItemByID(int Id);
+        int DeleteItemById(int Id);
         int GetTotalQueryCount(string WhereClause);
         ObservableCollection<CustomerModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.ASC, string OrderBy = "FirstName");
         CustomerModel LoadSingleItem(int ID);

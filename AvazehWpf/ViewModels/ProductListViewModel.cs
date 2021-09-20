@@ -21,7 +21,7 @@ namespace AvazehWpf.ViewModels
         {
             PCM = manager;
             _SelectedProduct = new();
-            PCM.LoadFirstPageAsync();
+            PCM.LoadFirstPage();
         }
 
         private IProductCollectionManager _PCM;
@@ -79,7 +79,7 @@ namespace AvazehWpf.ViewModels
 
         public void Search()
         {
-            PCM.GenerateWhereClauseAsync(SearchText);
+            PCM.GenerateWhereClause(SearchText, true);
             NotifyOfPropertyChange(() => Products);
         }
 

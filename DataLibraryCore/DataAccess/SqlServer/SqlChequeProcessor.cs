@@ -11,10 +11,11 @@ using System.Collections.ObjectModel;
 using DataLibraryCore.Models.Validators;
 using FluentValidation.Results;
 using DataLibraryCore.DataAccess.Interfaces;
+using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public class SqlChequeProcessor : IChequeProcessor
+    public partial class SqlChequeProcessor : IChequeProcessor
     {
         public SqlChequeProcessor(IDataAccess dataAcess)
         {
@@ -102,10 +103,10 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return DataAccess.SaveData(InsertEventsQuery, events);
         }
 
-        public int DeleteItemByID(int ID)
+        public int DeleteItemById(int Id)
         {
             var dp = new DynamicParameters();
-            dp.Add("@id", ID);
+            dp.Add("@id", Id);
             return DataAccess.SaveData(DeleteChequeQuery, dp);
         }
 
@@ -123,7 +124,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
                                 ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
             string query = string.Format(SelectChequeQuery, sqlTemp);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
-            var reader = conn.QueryMultipleAsync(query, null).Result;
+            var reader = conn.QueryMultiple(query, null);
             var Mapped = reader.MapObservableCollectionOfCheques<ChequeModel, ChequeEventModel, int>
                       (
                          cheque => cheque.Id,
@@ -133,9 +134,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return Mapped;
         }
 
-        public ChequeModel LoadSingleItem(int ID)
+        public ChequeModel LoadSingleItem(int Id)
         {
-            return LoadManyItems(0, 1, $"[Id] = { ID }").FirstOrDefault();
+            return LoadManyItems(0, 1, $"[Id] = { Id }").FirstOrDefault();
         }
 
         public string GenerateWhereClause(string val, SqlSearchMode mode = SqlSearchMode.OR)

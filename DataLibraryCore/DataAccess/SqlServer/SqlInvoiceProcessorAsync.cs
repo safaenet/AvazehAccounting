@@ -145,9 +145,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return await DataAccess.LoadDataAsync<InvoiceListModel, DynamicParameters>(sql, null);
         }
 
-        public async Task<InvoiceModel> LoadSingleItemAsync(int ID)
+        public async Task<InvoiceModel> LoadSingleItemAsync(int Id)
         {
-            var query = string.Format(LoadSingleItemQuery, ID);
+            var query = string.Format(LoadSingleItemQuery, Id);
             if (FluentMapper.EntityMaps.IsEmpty)
             {
                 FluentMapper.Initialize(config => config.AddMap(new CustomerModelMapper()));
