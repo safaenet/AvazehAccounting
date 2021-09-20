@@ -15,7 +15,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
     {
         public async Task<int> CreateItemAsync(ProductModel product)
         {
-            if (product == null) return await Task.FromResult(0);
+            if (product == null) return 0;
             product.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
             product.TimeCreated = PersianCalendarModel.GetCurrentTime();
             var dp = new DynamicParameters();
@@ -28,15 +28,15 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@dateCreated", product.DateCreated);
             dp.Add("@timeCreated", product.TimeCreated);
             dp.Add("@descriptions", product.Descriptions);
-            var AffectedCount = DataAccess.SaveDataAsync(CreateProductQuery, dp);
+            var AffectedCount = await DataAccess.SaveDataAsync(CreateProductQuery, dp);
             var OutputId = dp.Get<int>("@id");
-            if (AffectedCount.Result > 0) product.Id = OutputId;
-            return await Task.FromResult(OutputId);
+            if (AffectedCount > 0) product.Id = OutputId;
+            return OutputId;
         }
 
         public async Task<int> UpdateItemAsync(ProductModel product)
         {
-            if (product == null) return await Task.FromResult(0);
+            if (product == null) return 0;
             product.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
             product.TimeUpdated = PersianCalendarModel.GetCurrentTime();
             return await DataAccess.SaveDataAsync(UpdateProductQuery, product);
@@ -67,7 +67,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         public async Task<ProductModel> LoadSingleItemAsync(int ID)
         {
-            return await Task.FromResult(LoadManyItems(0, 1, $"[Id] = { ID }").FirstOrDefault());
+            var outPut = await LoadManyItemsAsync(0, 1, $"[Id] = { ID }");
+            return outPut.FirstOrDefault();
         }
 
         public async Task<string> GenerateWhereClauseAsync(string val, SqlSearchMode mode = SqlSearchMode.OR)

@@ -17,7 +17,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
     {
         public async Task<int> CreateItemAsync(InvoiceModel invoice)
         {
-            if (invoice == null) return await Task.FromResult(0);
+            if (invoice == null) return 0;
             invoice.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
             invoice.TimeCreated = PersianCalendarModel.GetCurrentTime();
             var dp = new DynamicParameters();
@@ -29,15 +29,15 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@discountValue", invoice.DiscountValue);
             dp.Add("@descriptions", invoice.Descriptions);
             dp.Add("@lifeStatus", invoice.LifeStatus);
-            var AffectedCount = DataAccess.SaveDataAsync(CreateInvoiceQuery, dp);
+            var AffectedCount = await DataAccess.SaveDataAsync(CreateInvoiceQuery, dp);
             var OutputId = dp.Get<int>("@id");
-            if (AffectedCount.Result > 0) invoice.Id = OutputId;
-            return await Task.FromResult(OutputId);
+            if (AffectedCount > 0) invoice.Id = OutputId;
+            return OutputId;
         }
 
         public async Task<int> UpdateItemAsync(InvoiceModel invoice)
         {
-            if (invoice == null) return await Task.FromResult(0);
+            if (invoice == null) return 0;
             invoice.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
             invoice.TimeUpdated = PersianCalendarModel.GetCurrentTime();
             return await DataAccess.SaveDataAsync(UpdateInvoiceQuery, invoice);
@@ -45,7 +45,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         public async Task<int> InsertSubItemToDatabaseAsync(InvoiceItemModel item)
         {
-            if (item == null || !item.IsCountStringValid) return await Task.FromResult(0);
+            if (item == null || !item.IsCountStringValid) return 0;
             item.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
             item.TimeCreated = PersianCalendarModel.GetCurrentTime();
             DynamicParameters dp = new();
@@ -59,18 +59,18 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@timeCreated", item.TimeCreated);
             dp.Add("@delivered", item.Delivered);
             dp.Add("@descriptions", item.Descriptions);
-            var AffectedCount = DataAccess.SaveDataAsync(InsertSubItemQuery, dp);
-            if (AffectedCount.Result > 0)
+            var AffectedCount = await DataAccess.SaveDataAsync(InsertSubItemQuery, dp);
+            if (AffectedCount > 0)
             {
                 item.Id = dp.Get<int>("@id");
                 UpdateItemUpdateDateAndUpdateTimeAsync(item.InvoiceId);
             }
-            return await AffectedCount;
+            return AffectedCount;
         }
 
         public async Task<int> UpdateSubItemInDatabaseAsync(InvoiceItemModel item)
         {
-            if (item == null || !item.IsCountStringValid) return await Task.FromResult(0);
+            if (item == null || !item.IsCountStringValid) return 0;
             item.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
             item.TimeUpdated = PersianCalendarModel.GetCurrentTime();
             DynamicParameters dp = new();
@@ -83,16 +83,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@timeUpdated", item.TimeUpdated);
             dp.Add("@delivered", item.Delivered);
             dp.Add("@descriptions", item.Descriptions);
-            var AffectedCount = DataAccess.SaveDataAsync(UpdateSubItemQuery, item);
-            if (AffectedCount.Result > 0) UpdateItemUpdateDateAndUpdateTimeAsync(item.InvoiceId);
-            return await AffectedCount;
+            var AffectedCount = await DataAccess.SaveDataAsync(UpdateSubItemQuery, item);
+            if (AffectedCount > 0) UpdateItemUpdateDateAndUpdateTimeAsync(item.InvoiceId);
+            return AffectedCount;
         }
 
         public async Task<int> DeleteSubItemFromDatabaseAsync(InvoiceItemModel item)
         {
-            var AffectedCount = DataAccess.SaveDataAsync(DeleteSubItemQuery, item);
-            if (AffectedCount.Result > 0) UpdateItemUpdateDateAndUpdateTimeAsync(item.InvoiceId);
-            return await AffectedCount;
+            var AffectedCount = await DataAccess.SaveDataAsync(DeleteSubItemQuery, item);
+            if (AffectedCount > 0) UpdateItemUpdateDateAndUpdateTimeAsync(item.InvoiceId);
+            return AffectedCount;
         }
 
         private async void UpdateItemUpdateDateAndUpdateTimeAsync(int ID)
@@ -101,7 +101,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@id", ID);
             dp.Add("@dateUpdated", PersianCalendarModel.GetCurrentPersianDate());
             dp.Add("@timeUpdated", PersianCalendarModel.GetCurrentTime());
-            await DataAccess.SaveDataAsync(UpdateSubItemDateAndTimeQuery, dp);
+            await DataAccess.SaveDataAsync(UpdateSubItemDateAndTimeQuery, dp).ConfigureAwait(false);
         }
 
         public async Task<int> DeleteItemByIdAsync(int Id)
@@ -154,7 +154,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 FluentMapper.Initialize(config => config.AddMap(new ProductModelMapper()));
             }
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
-            return await conn.QueryMultipleAsync(query).MapToSingleInvoice();
+            var outPut = await conn.QueryMultipleAsync(query);
+            return outPut.MapToSingleInvoice();
         }
 
         public async Task<double> GetTotalOrRestTotalBalanceOfCustomerAsync(int CustomerID, int InvoiceID = 0)
