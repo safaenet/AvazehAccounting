@@ -93,7 +93,7 @@ namespace AvazehWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int Id, int pageNum, string SearchText)
         {
-            await PCM.DeleteItemFromDbByIdAsync(Id).ConfigureAwait(false);
+            await PCM.Processor.DeleteItemByIdAsync(Id);
             return RedirectToAction(nameof(Index), new { Id = pageNum, SearchText });
         }
     }
