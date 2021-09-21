@@ -34,5 +34,20 @@ namespace DataLibraryCore.Models
                 return result;
             }
         }
+        public bool IsCountStringValid
+        {
+            get
+            {
+                try
+                {
+                    _ = StandardCalculator.CalculateFromString(CountString);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
     }
 }
