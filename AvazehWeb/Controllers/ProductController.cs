@@ -19,10 +19,10 @@ namespace AvazehWeb.Controllers
         private readonly IProductCollectionManager PCM;
 
         // GET: ProductController
-        public ActionResult Index(int Id = 1, string SearchText = "")
+        public async Task<ActionResult> Index(int Id = 1, string SearchText = "")
         {
             if (!PCM.Initialized || PCM.SearchValue != SearchText) PCM.GenerateWhereClause(SearchText);
-            if (PCM.CurrentPage != Id) PCM.GotoPage(Id);
+            if (PCM.CurrentPage != Id) await PCM.GotoPageAsync(Id);
             ViewData["CurrentPage"] = PCM.CurrentPage;
             ViewData["Search"] = SearchText;
             ViewData["PagesCount"] = PCM.PagesCount;
@@ -49,12 +49,12 @@ namespace AvazehWeb.Controllers
         // POST: ProductController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Models.ProductModel model, int pageNum, string SearchText)
+        public async Task<ActionResult> Create(Models.ProductModel model, int pageNum, string SearchText)
         {
             if (ModelState.IsValid)
             {
                 var item = Logics.Mapper.MapProductModel(model);
-                PCM.Processor.CreateItem(item);
+                await PCM.Processor.CreateItemAsync(item).ConfigureAwait(false);
                 return RedirectToAction(nameof(Index), new { Id = pageNum, SearchText });
             }
             ViewData["pageNum"] = pageNum;
@@ -63,11 +63,11 @@ namespace AvazehWeb.Controllers
         }
 
         // GET: ProductController/Edit/5
-        public ActionResult Edit(int id, int pageNum, string SearchText)
+        public async Task<ActionResult> Edit(int id, int pageNum, string SearchText)
         {
             ViewData["pageNum"] = pageNum;
             ViewData["Search"] = SearchText;
-            var model = PCM.Processor.LoadSingleItem(id);
+            var model = await PCM.Processor.LoadSingleItemAsync(id);
             var m = Logics.Mapper.MapProductModel(model);
             return View(m);
         }
@@ -75,12 +75,12 @@ namespace AvazehWeb.Controllers
         // POST: ProductController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Models.ProductModel model, int pageNum, string SearchText)
+        public async Task<ActionResult> Edit(Models.ProductModel model, int pageNum, string SearchText)
         {
             if (ModelState.IsValid)
             {
                 var item = Logics.Mapper.MapProductModel(model);
-                PCM.Processor.UpdateItem(item);
+                await PCM.Processor.UpdateItemAsync(item).ConfigureAwait(false);
                 return RedirectToAction(nameof(Index), new { Id = pageNum, SearchText });
             }
             ViewData["pageNum"] = pageNum;
@@ -91,9 +91,9 @@ namespace AvazehWeb.Controllers
         // POST: ProductController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int Id, int pageNum, string SearchText)
+        public async Task<ActionResult> Delete(int Id, int pageNum, string SearchText)
         {
-            PCM.DeleteItemFromDbById(Id);
+            await PCM.DeleteItemFromDbByIdAsync(Id).ConfigureAwait(false);
             return RedirectToAction(nameof(Index), new { Id = pageNum, SearchText });
         }
     }
