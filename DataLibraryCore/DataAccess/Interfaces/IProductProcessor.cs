@@ -8,10 +8,10 @@ namespace DataLibraryCore.DataAccess.Interfaces
     public partial interface IProductProcessor
     {
         int CreateItem(ProductModel product);
-        int DeleteItemById(int ID);
+        int DeleteItemById(int Id);
         int GetTotalQueryCount(string WhereClause);
         ObservableCollection<ProductModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.ASC, string OrderBy = "Id");
-        ProductModel LoadSingleItem(int ID);
+        ProductModel LoadSingleItem(int Id);
         int UpdateItem(ProductModel product);
         string GenerateWhereClause(string val, SqlSearchMode mode = SqlSearchMode.OR);
         ValidationResult ValidateItem(ProductModel product);

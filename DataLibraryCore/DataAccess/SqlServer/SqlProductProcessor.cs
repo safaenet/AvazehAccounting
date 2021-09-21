@@ -31,39 +31,39 @@ namespace DataLibraryCore.DataAccess.SqlServer
             WHERE Id = @id";
         private readonly string DeleteProductQuery = @"DELETE FROM Products WHERE Id = @id";
 
-        public int CreateItem(ProductModel product)
+        public int CreateItem(ProductModel item)
         {
-            if (product == null) return 0;
-            product.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
-            product.TimeCreated = PersianCalendarModel.GetCurrentTime();
+            if (item == null || !ValidateItem(item).IsValid) return 0;
+            item.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
+            item.TimeCreated = PersianCalendarModel.GetCurrentTime();
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
-            dp.Add("@productName", product.ProductName);
-            dp.Add("@buyPrice", product.BuyPrice);
-            dp.Add("@sellPrice", product.SellPrice);
-            dp.Add("@barcode", product.Barcode);
-            dp.Add("@countString", product.CountString);
-            dp.Add("@dateCreated", product.DateCreated);
-            dp.Add("@timeCreated", product.TimeCreated);
-            dp.Add("@descriptions", product.Descriptions);
+            dp.Add("@productName", item.ProductName);
+            dp.Add("@buyPrice", item.BuyPrice);
+            dp.Add("@sellPrice", item.SellPrice);
+            dp.Add("@barcode", item.Barcode);
+            dp.Add("@countString", item.CountString);
+            dp.Add("@dateCreated", item.DateCreated);
+            dp.Add("@timeCreated", item.TimeCreated);
+            dp.Add("@descriptions", item.Descriptions);
             var AffectedCount = DataAccess.SaveData(CreateProductQuery, dp);
             var OutputId = dp.Get<int>("@id");
-            if (AffectedCount > 0) product.Id = OutputId;
+            if (AffectedCount > 0) item.Id = OutputId;
             return OutputId;
         }
 
-        public int UpdateItem(ProductModel product)
+        public int UpdateItem(ProductModel item)
         {
-            if (product == null) return 0;
-            product.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
-            product.TimeUpdated = PersianCalendarModel.GetCurrentTime();
-            return DataAccess.SaveData(UpdateProductQuery, product);
+            if (item == null || !ValidateItem(item).IsValid) return 0;
+            item.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
+            item.TimeUpdated = PersianCalendarModel.GetCurrentTime();
+            return DataAccess.SaveData(UpdateProductQuery, item);
         }
 
-        public int DeleteItemById(int ID)
+        public int DeleteItemById(int Id)
         {
             DynamicParameters dp = new();
-            dp.Add("@id", ID);
+            dp.Add("@id", Id);
             return DataAccess.SaveData(DeleteProductQuery, dp);
         }
 
@@ -83,9 +83,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return DataAccess.LoadData<ProductModel, DynamicParameters>(sql, null);
         }
 
-        public ProductModel LoadSingleItem(int ID)
+        public ProductModel LoadSingleItem(int Id)
         {
-            return LoadManyItems(0, 1, $"[Id] = { ID }").FirstOrDefault();
+            return LoadManyItems(0, 1, $"[Id] = { Id }").FirstOrDefault();
         }
 
         public string GenerateWhereClause(string val, SqlSearchMode mode = SqlSearchMode.OR)

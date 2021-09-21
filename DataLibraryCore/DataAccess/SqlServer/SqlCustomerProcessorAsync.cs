@@ -14,37 +14,37 @@ namespace DataLibraryCore.DataAccess.SqlServer
 {
     public partial class SqlCustomerProcessor : ICustomerProcessor
     {
-        public async Task<int> CreateItemAsync(CustomerModel customer)
+        public async Task<int> CreateItemAsync(CustomerModel item)
         {
-            if (customer == null) return 0;
+            if (item == null || !ValidateItem(item).IsValid) return 0;
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
-            dp.Add("@firstName", customer.FirstName);
-            dp.Add("@lastName", customer.LastName);
-            dp.Add("@companyName", customer.CompanyName);
-            dp.Add("@emailAddress", customer.EmailAddress);
-            dp.Add("@postAddress", customer.PostAddress);
-            dp.Add("@dateJoined", customer.DateJoined);
-            dp.Add("@descriptions", customer.Descriptions);
+            dp.Add("@firstName", item.FirstName);
+            dp.Add("@lastName", item.LastName);
+            dp.Add("@companyName", item.CompanyName);
+            dp.Add("@emailAddress", item.EmailAddress);
+            dp.Add("@postAddress", item.PostAddress);
+            dp.Add("@dateJoined", item.DateJoined);
+            dp.Add("@descriptions", item.Descriptions);
             var AffectedCount = await DataAccess.SaveDataAsync(CreateCustomerQuery, dp);
             var OutputId = dp.Get<int>("@id");
             if (AffectedCount > 0)
             {
-                customer.Id = OutputId;
-                await InsertPhoneNumbersToDatabaseAsync(customer).ConfigureAwait(false);
+                item.Id = OutputId;
+                await InsertPhoneNumbersToDatabaseAsync(item).ConfigureAwait(false);
             }
             return OutputId;
         }
 
-        public async Task<int> UpdateItemAsync(CustomerModel customer)
+        public async Task<int> UpdateItemAsync(CustomerModel item)
         {
-            if (customer == null) return 0;
-            var AffectedCount = await DataAccess.SaveDataAsync(UpdateCustomerQuery, customer);
+            if (item == null || !ValidateItem(item).IsValid) return 0;
+            var AffectedCount = await DataAccess.SaveDataAsync(UpdateCustomerQuery, item);
             if (AffectedCount > 0)
             {
-                string sqlPhones = $"DELETE FROM PhoneNumbers WHERE CustomerId = { customer.Id }";
+                string sqlPhones = $"DELETE FROM PhoneNumbers WHERE CustomerId = { item.Id }";
                 await DataAccess.SaveDataAsync<DynamicParameters>(sqlPhones, null).ConfigureAwait(false);
-                await InsertPhoneNumbersToDatabaseAsync(customer).ConfigureAwait(false);
+                await InsertPhoneNumbersToDatabaseAsync(item).ConfigureAwait(false);
             }
             return AffectedCount;
         }
@@ -90,9 +90,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return await reader.MapObservableCollectionOfCustomersAsync();
         }
 
-        public async Task<CustomerModel> LoadSingleItemAsync(int ID)
+        public async Task<CustomerModel> LoadSingleItemAsync(int Id)
         {
-            var outPut = await LoadManyItemsAsync(0, 1, $"[Id] = { ID }");
+            var outPut = await LoadManyItemsAsync(0, 1, $"[Id] = { Id }");
             return outPut.FirstOrDefault();
         }
     }

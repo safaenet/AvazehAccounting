@@ -14,7 +14,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
         Task<int> DeleteItemByIdAsync(int Id);
         Task<int> GetTotalQueryCountAsync(string WhereClause);
         Task<ObservableCollection<CustomerModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.ASC, string OrderBy = "FirstName");
-        Task<CustomerModel> LoadSingleItemAsync(int ID);
+        Task<CustomerModel> LoadSingleItemAsync(int Id);
         Task<int> UpdateItemAsync(CustomerModel customer);
     }
 }

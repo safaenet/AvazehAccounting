@@ -13,39 +13,39 @@ namespace DataLibraryCore.DataAccess.SqlServer
 {
     public partial class SqlProductProcessor : IProductProcessor
     {
-        public async Task<int> CreateItemAsync(ProductModel product)
+        public async Task<int> CreateItemAsync(ProductModel item)
         {
-            if (product == null) return 0;
-            product.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
-            product.TimeCreated = PersianCalendarModel.GetCurrentTime();
+            if (item == null || !ValidateItem(item).IsValid) return 0;
+            item.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
+            item.TimeCreated = PersianCalendarModel.GetCurrentTime();
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
-            dp.Add("@productName", product.ProductName);
-            dp.Add("@buyPrice", product.BuyPrice);
-            dp.Add("@sellPrice", product.SellPrice);
-            dp.Add("@barcode", product.Barcode);
-            dp.Add("@countString", product.CountString);
-            dp.Add("@dateCreated", product.DateCreated);
-            dp.Add("@timeCreated", product.TimeCreated);
-            dp.Add("@descriptions", product.Descriptions);
+            dp.Add("@productName", item.ProductName);
+            dp.Add("@buyPrice", item.BuyPrice);
+            dp.Add("@sellPrice", item.SellPrice);
+            dp.Add("@barcode", item.Barcode);
+            dp.Add("@countString", item.CountString);
+            dp.Add("@dateCreated", item.DateCreated);
+            dp.Add("@timeCreated", item.TimeCreated);
+            dp.Add("@descriptions", item.Descriptions);
             var AffectedCount = await DataAccess.SaveDataAsync(CreateProductQuery, dp);
             var OutputId = dp.Get<int>("@id");
-            if (AffectedCount > 0) product.Id = OutputId;
+            if (AffectedCount > 0) item.Id = OutputId;
             return OutputId;
         }
 
-        public async Task<int> UpdateItemAsync(ProductModel product)
+        public async Task<int> UpdateItemAsync(ProductModel item)
         {
-            if (product == null) return 0;
-            product.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
-            product.TimeUpdated = PersianCalendarModel.GetCurrentTime();
-            return await DataAccess.SaveDataAsync(UpdateProductQuery, product);
+            if (item == null || !ValidateItem(item).IsValid) return 0;
+            item.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
+            item.TimeUpdated = PersianCalendarModel.GetCurrentTime();
+            return await DataAccess.SaveDataAsync(UpdateProductQuery, item);
         }
 
-        public async Task<int> DeleteItemByIdAsync(int ID)
+        public async Task<int> DeleteItemByIdAsync(int Id)
         {
             DynamicParameters dp = new();
-            dp.Add("@id", ID);
+            dp.Add("@id", Id);
             return await DataAccess.SaveDataAsync(DeleteProductQuery, dp);
         }
 
@@ -65,9 +65,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return await DataAccess.LoadDataAsync<ProductModel, DynamicParameters>(sql, null);
         }
 
-        public async Task<ProductModel> LoadSingleItemAsync(int ID)
+        public async Task<ProductModel> LoadSingleItemAsync(int Id)
         {
-            var outPut = await LoadManyItemsAsync(0, 1, $"[Id] = { ID }");
+            var outPut = await LoadManyItemsAsync(0, 1, $"[Id] = { Id }");
             return outPut.FirstOrDefault();
         }
     }

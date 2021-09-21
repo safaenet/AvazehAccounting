@@ -76,32 +76,32 @@ namespace DataLibraryCore.DataAccess.SqlServer
             SELECT * FROM InvoicePayments WHERE InvoiceId IN (SELECT i.Id FROM @invoices i);
             SELECT * FROM PhoneNumbers WHERE CustomerId IN (SELECT i.CustomerId FROM @invoices i);";
 
-        public int CreateItem(InvoiceModel invoice)
+        public int CreateItem(InvoiceModel item)
         {
-            if (invoice == null) return 0;
-            invoice.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
-            invoice.TimeCreated = PersianCalendarModel.GetCurrentTime();
+            if (item == null || !ValidateItem(item).IsValid) return 0;
+            item.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
+            item.TimeCreated = PersianCalendarModel.GetCurrentTime();
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
-            dp.Add("@customerId", invoice.Customer.Id);
-            dp.Add("@dateCreated", invoice.DateCreated);
-            dp.Add("@timeCreated", invoice.TimeCreated);
-            dp.Add("@discountType", invoice.DiscountType);
-            dp.Add("@discountValue", invoice.DiscountValue);
-            dp.Add("@descriptions", invoice.Descriptions);
-            dp.Add("@lifeStatus", invoice.LifeStatus);
+            dp.Add("@customerId", item.Customer.Id);
+            dp.Add("@dateCreated", item.DateCreated);
+            dp.Add("@timeCreated", item.TimeCreated);
+            dp.Add("@discountType", item.DiscountType);
+            dp.Add("@discountValue", item.DiscountValue);
+            dp.Add("@descriptions", item.Descriptions);
+            dp.Add("@lifeStatus", item.LifeStatus);
             var AffectedCount = DataAccess.SaveData(CreateInvoiceQuery, dp);
             var OutputId = dp.Get<int>("@id");
-            if (AffectedCount > 0) invoice.Id = OutputId;
+            if (AffectedCount > 0) item.Id = OutputId;
             return OutputId;
         }
 
-        public int UpdateItem(InvoiceModel invoice)
+        public int UpdateItem(InvoiceModel item)
         {
-            if (invoice == null) return 0;
-            invoice.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
-            invoice.TimeUpdated = PersianCalendarModel.GetCurrentTime();
-            return DataAccess.SaveData(UpdateInvoiceQuery, invoice);
+            if (item == null || !ValidateItem(item).IsValid) return 0;
+            item.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
+            item.TimeUpdated = PersianCalendarModel.GetCurrentTime();
+            return DataAccess.SaveData(UpdateInvoiceQuery, item);
         }
 
         public int InsertSubItemToDatabase(InvoiceItemModel item)
@@ -206,9 +206,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return DataAccess.LoadData<InvoiceListModel, DynamicParameters>(sql, null);
         }
 
-        public InvoiceModel LoadSingleItem(int ID)
+        public InvoiceModel LoadSingleItem(int Id)
         {
-            var query = string.Format(LoadSingleItemQuery, ID);
+            var query = string.Format(LoadSingleItemQuery, Id);
             if (FluentMapper.EntityMaps.IsEmpty)
             {
                 FluentMapper.Initialize(config => config.AddMap(new CustomerModelMapper()));
@@ -218,9 +218,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return conn.QueryMultiple(query).MapToSingleInvoice();
         }
 
-        public double GetTotalOrRestTotalBalanceOfCustomer(int CustomerID, int InvoiceID = 0)
+        public double GetTotalOrRestTotalBalanceOfCustomer(int CustomerId, int InvoiceId = 0)
         {
-            string InvoiceClause = InvoiceID == 0 ? "" : $"AND [Id] <> { InvoiceID }";
+            string InvoiceClause = InvoiceId == 0 ? "" : $"AND [Id] <> { InvoiceId }";
             string sqlQuery = @$"SET NOCOUNT ON
                                  SELECT SUM(ISNULL(dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue), 0) - ISNULL(pays.TotalPayments, 0))
                                  FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id
@@ -230,7 +230,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
                                  
                                  LEFT JOIN (SELECT SUM(ips.[PayAmount]) AS TotalPayments, ips.[InvoiceId]
                                     FROM InvoicePayments ips GROUP BY ips.[InvoiceId]) pays ON i.Id=pays.InvoiceId
-                                 WHERE i.LifeStatus = { (int)InvoiceLifeStatus.Active } AND c.Id = { CustomerID } { InvoiceClause }
+                                 WHERE i.LifeStatus = { (int)InvoiceLifeStatus.Active } AND c.Id = { CustomerId } { InvoiceClause }
                                  GROUP BY c.Id";
             return DataAccess.ExecuteScalar<double, DynamicParameters>(sqlQuery, null);
         }
@@ -288,7 +288,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
                       {(FinStatus == null ? "" : $" AND ISNULL(dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue), 0) - ISNULL(pays.TotalPayments, 0) { finStatusOperand } 0 ")}";
         }
 
-        public ValidationResult ValidateInvoice(InvoiceModel invoice)
+        public ValidationResult ValidateItem(InvoiceModel invoice)
         {
             InvoiceValidator validator = new();
             var result = validator.Validate(invoice);

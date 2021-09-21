@@ -44,37 +44,37 @@ namespace DataLibraryCore.DataAccess.SqlServer
             SELECT * FROM PhoneNumbers WHERE CustomerId IN (SELECT c.Id FROM @customers c);";
         private readonly string DeleteCustomerQuery = @"DELETE FROM Customers WHERE Id = @id";
 
-        public int CreateItem(CustomerModel customer)
+        public int CreateItem(CustomerModel item)
         {
-            if (customer == null) return 0;
+            if (item == null || !ValidateItem(item).IsValid) return 0;
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
-            dp.Add("@firstName", customer.FirstName);
-            dp.Add("@lastName", customer.LastName);
-            dp.Add("@companyName", customer.CompanyName);
-            dp.Add("@emailAddress", customer.EmailAddress);
-            dp.Add("@postAddress", customer.PostAddress);
-            dp.Add("@dateJoined", customer.DateJoined);
-            dp.Add("@descriptions", customer.Descriptions);
+            dp.Add("@firstName", item.FirstName);
+            dp.Add("@lastName", item.LastName);
+            dp.Add("@companyName", item.CompanyName);
+            dp.Add("@emailAddress", item.EmailAddress);
+            dp.Add("@postAddress", item.PostAddress);
+            dp.Add("@dateJoined", item.DateJoined);
+            dp.Add("@descriptions", item.Descriptions);
             var AffectedCount = DataAccess.SaveData(CreateCustomerQuery, dp);
             var OutputId = dp.Get<int>("@id");
             if (AffectedCount > 0)
             {
-                customer.Id = OutputId;
-                InsertPhoneNumbersToDatabase(customer);
+                item.Id = OutputId;
+                InsertPhoneNumbersToDatabase(item);
             }
             return OutputId;
         }
 
-        public int UpdateItem(CustomerModel customer)
+        public int UpdateItem(CustomerModel item)
         {
-            if (customer == null) return 0;
-            var AffectedCount = DataAccess.SaveData(UpdateCustomerQuery, customer);
+            if (item == null || !ValidateItem(item).IsValid) return 0;
+            var AffectedCount = DataAccess.SaveData(UpdateCustomerQuery, item);
             if (AffectedCount > 0)
             {
-                string sqlPhones = $"DELETE FROM PhoneNumbers WHERE CustomerId = { customer.Id }";
+                string sqlPhones = $"DELETE FROM PhoneNumbers WHERE CustomerId = { item.Id }";
                 DataAccess.SaveData<DynamicParameters>(sqlPhones, null);
-                InsertPhoneNumbersToDatabase(customer);
+                InsertPhoneNumbersToDatabase(item);
             }
             return AffectedCount;
         }
@@ -120,9 +120,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return reader.MapObservableCollectionOfCustomers();
         }
 
-        public CustomerModel LoadSingleItem(int ID)
+        public CustomerModel LoadSingleItem(int Id)
         {
-            return LoadManyItems(0, 1, $"[Id] = { ID }").FirstOrDefault();
+            return LoadManyItems(0, 1, $"[Id] = { Id }").FirstOrDefault();
         }
 
         public string GenerateWhereClause(string val, SqlSearchMode mode = SqlSearchMode.OR)

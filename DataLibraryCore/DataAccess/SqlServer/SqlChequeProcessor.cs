@@ -49,40 +49,40 @@ namespace DataLibraryCore.DataAccess.SqlServer
             SELECT * FROM ChequeEvents WHERE ChequeId IN (SELECT c.Id FROM @cheques c);";
         private readonly string DeleteChequeQuery = @"DELETE FROM Cheques WHERE Id = @id";
 
-        public int CreateItem(ChequeModel cheque)
+        public int CreateItem(ChequeModel item)
         {
-            if (cheque == null) return 0;
+            if (item == null || !ValidateItem(item).IsValid) return 0;
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
-            dp.Add("@drawer", cheque.Drawer);
-            dp.Add("@orderer", cheque.Orderer);
-            dp.Add("@payAmount", cheque.PayAmount);
-            dp.Add("@about", cheque.About);
-            dp.Add("@issueDate", cheque.IssueDate);
-            dp.Add("@dueDate", cheque.DueDate);
-            dp.Add("@bankName", cheque.BankName);
-            dp.Add("@serial", cheque.Serial);
-            dp.Add("@identifier", cheque.Identifier);
-            dp.Add("@descriptions", cheque.Descriptions);
+            dp.Add("@drawer", item.Drawer);
+            dp.Add("@orderer", item.Orderer);
+            dp.Add("@payAmount", item.PayAmount);
+            dp.Add("@about", item.About);
+            dp.Add("@issueDate", item.IssueDate);
+            dp.Add("@dueDate", item.DueDate);
+            dp.Add("@bankName", item.BankName);
+            dp.Add("@serial", item.Serial);
+            dp.Add("@identifier", item.Identifier);
+            dp.Add("@descriptions", item.Descriptions);
             int AffectedCount = DataAccess.SaveData(CreateChequeQuery, dp);
             int OutputId = dp.Get<int>("@id");
             if (AffectedCount > 0)
             {
-                cheque.Id = OutputId;
-                InsertChequeEventsToDatabase(cheque);
+                item.Id = OutputId;
+                InsertChequeEventsToDatabase(item);
             }
             return OutputId;
         }
 
-        public int UpdateItem(ChequeModel cheque)
+        public int UpdateItem(ChequeModel item)
         {
-            if (cheque == null) return 0;
-            var AffectedCount = DataAccess.SaveData(UpdateChequeQuery, cheque);
+            if (item == null || !ValidateItem(item).IsValid) return 0;
+            var AffectedCount = DataAccess.SaveData(UpdateChequeQuery, item);
             if (AffectedCount > 0)
             {
-                string sqlEvents = $"DELETE FROM ChequeEvents WHERE ChequeId = { cheque.Id }";
+                string sqlEvents = $"DELETE FROM ChequeEvents WHERE ChequeId = { item.Id }";
                 DataAccess.SaveData<DynamicParameters>(sqlEvents, null);
-                InsertChequeEventsToDatabase(cheque);
+                InsertChequeEventsToDatabase(item);
             }
             return AffectedCount;
         }
