@@ -11,7 +11,7 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:ProductListViewModel}"
         fw:AcrylicWindow.Enabled="True"
-        Title="Products" FontFamily="Tahoma" WindowStartupLocation="CenterScreen" fw:AcrylicWindow.TintOpacity="1"
+        Title="Products" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1100" Height="650" fw:AcrylicWindow.AcrylicWindowStyle="NoIcon">
     <Grid fw:PointerTracker.Enabled="True">
         <Grid.Resources>
