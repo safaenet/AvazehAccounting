@@ -10,24 +10,6 @@ namespace AvazehWebAPI
 {
     internal static class Statics
     {
-        internal static ProductModel_DTO AsDTO(this ProductModel item)
-        {
-            return new ProductModel_DTO()
-            {
-                Id = item.Id,
-                ProductName = item.ProductName,
-                BuyPrice = item.BuyPrice,
-                SellPrice = item.SellPrice,
-                Barcode = item.Barcode,
-                CountString = item.CountString,
-                DateCreated = item.DateCreated,
-                TimeCreated = item.TimeCreated,
-                DateUpdated = item.DateUpdated,
-                TimeUpdated = item.TimeUpdated,
-                Descriptions = item.Descriptions
-            };
-        }
-
         internal static ProductModel AsDaLModel(this ProductModel_DTO_Create_Update model)
         {
             return new ProductModel()

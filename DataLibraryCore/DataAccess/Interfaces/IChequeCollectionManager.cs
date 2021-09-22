@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 
 namespace DataLibraryCore.DataAccess.Interfaces
 {
-    public interface IChequeCollectionManager
+    public partial interface IChequeCollectionManager
     {
         IChequeProcessor Processor { get; init; }
         event EventHandler FirstPageLoaded;
@@ -27,7 +27,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
 
         bool DeleteItemFromCollectionById(int Id);
         bool DeleteItemFromDbById(int Id);
-        int GenerateWhereClause(string val, SqlSearchMode mode = SqlSearchMode.OR);
+        int GenerateWhereClause(string val, bool run = false, SqlSearchMode mode = SqlSearchMode.OR);
         ChequeModel GetItemFromCollectionById(int Id);
         int GotoPage(int PageNumber);
         int LoadFirstPage();

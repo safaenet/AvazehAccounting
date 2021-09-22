@@ -84,6 +84,23 @@ namespace DataLibraryCore.DataAccess
             return first;
         }
 
+        internal async static Task<ObservableCollection<CustomerModel>> MapObservableCollectionOfCustomersAsync
+        (
+            this SqlMapper.GridReader reader
+        )
+        {
+            var first = await reader.ReadAsync<CustomerModel>().AsObservableAsync();
+            var task = await reader.ReadAsync<PhoneNumberModel>();
+            var childMap = task
+                .GroupBy(s => s.CustomerId)
+                .ToDictionary(g => g.Key, g => g.AsEnumerable());
+
+            foreach (var item in first)
+                if (childMap.TryGetValue(item.Id, out IEnumerable<PhoneNumberModel> children))
+                    item.PhoneNumbers = new(children);
+            return first;
+        }
+
         internal static ObservableCollection<TFirst> MapObservableCollectionOfCheques<TFirst, TSecond, TKey>
         (
             this SqlMapper.GridReader reader,
@@ -96,6 +113,29 @@ namespace DataLibraryCore.DataAccess
             var childMap = reader
                 .Read<TSecond>()
                 .GroupBy(s => secondKey(s))
+                .ToDictionary(g => g.Key, g => g.AsEnumerable());
+
+            foreach (var item in first)
+            {
+                if (childMap.TryGetValue(firstKey(item), out IEnumerable<TSecond> children))
+                {
+                    addChildren(item, children);
+                }
+            }
+            return first;
+        }
+
+        internal async static Task<ObservableCollection<TFirst>> MapObservableCollectionOfChequesAsync<TFirst, TSecond, TKey>
+        (
+            this SqlMapper.GridReader reader,
+            Func<TFirst, TKey> firstKey,
+            Func<TSecond, TKey> secondKey,
+            Action<TFirst, IEnumerable<TSecond>> addChildren
+        )
+        {
+            var first = new ObservableCollection<TFirst>(await reader.ReadAsync<TFirst>());
+            var task = await reader.ReadAsync<TSecond>();
+            var childMap = task.GroupBy(s => secondKey(s))
                 .ToDictionary(g => g.Key, g => g.AsEnumerable());
 
             foreach (var item in first)

@@ -44,10 +44,10 @@ namespace AvazehWpf.ViewModels
 
         public ObservableCollection<InvoiceListModel> Invoices
         {
-            get { return ICM.Invoices; }
+            get { return ICM.Items; }
             set
             {
-                ICM.Invoices = value;
+                ICM.Items = value;
                 NotifyOfPropertyChange(() => ICM);
                 NotifyOfPropertyChange(() => Invoices);
             }

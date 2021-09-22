@@ -9,7 +9,7 @@ using System.Text;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public class InvoiceCollectionManager : IInvoiceCollectionManager
+    public partial class InvoiceCollectionManager : IInvoiceCollectionManager
     {
         public InvoiceCollectionManager(IInvoiceProcessor processor)
         {
@@ -23,11 +23,11 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         public event EventHandler PreviousPageLoaded;
         public bool Initialized { get; private set; }
         public IInvoiceProcessor Processor { get; init; }
-        public ObservableCollection<InvoiceListModel> Invoices { get; set; }
-        public int? MinID => Invoices == null || Invoices.Count == 0 ? null : Invoices.Min(x => x.Id);
-        public int? MaxID => Invoices == null || Invoices.Count == 0 ? null : Invoices.Max(x => x.Id);
-        public double TotalBalance => Invoices.Sum(x => x.TotalBalance);
-        public double TotalPayments => Invoices.Sum(x => x.TotalPayments);
+        public ObservableCollection<InvoiceListModel> Items { get; set; }
+        public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
+        public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
+        public double TotalBalance => Items.Sum(x => x.TotalBalance);
+        public double TotalPayments => Items.Sum(x => x.TotalPayments);
 
         private protected string _WhereClause;
         public string WhereClause
@@ -52,23 +52,28 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             if (!Initialized)
             {
                 TotalQueryCount = Processor.GetTotalQueryCount(WhereClause);
-                if (TotalQueryCount == 0) return 0;
+                if (TotalQueryCount == 0)
+                {
+                    Items = null;
+                    return 0;
+                }
                 Initialized = true;
             }
-            PageNumber = PageNumber < 1 ? 1 : PageNumber;
-            PageNumber = PageNumber > PagesCount ? PagesCount : PageNumber;
-            Invoices = Processor.LoadManyItems((PageNumber - 1) * PageSize, PageSize, WhereClause);
-            CurrentPage = Invoices == null || Invoices.Count == 0 ? 0 : PageNumber;
-            return Invoices == null ? 0 : Invoices.Count;
+            if (PagesCount == 0) PageNumber = 1;
+            else if (PageNumber > PagesCount) PageNumber = PagesCount;
+            else if (PageNumber < 1) PageNumber = 1;
+            Items = Processor.LoadManyItems((PageNumber - 1) * PageSize, PageSize, WhereClause);
+            CurrentPage = Items == null || Items.Count == 0 ? 0 : PageNumber;
+            return Items == null ? 0 : Items.Count;
         }
 
         public InvoiceListModel GetItemFromCollectionById(int Id)
         {
-            return Invoices.SingleOrDefault(i => i.Id == Id);
+            return Items.SingleOrDefault(i => i.Id == Id);
         }
         public bool DeleteItemFromCollectionById(int Id)
         {
-            return Invoices.Remove(GetItemFromCollectionById(Id));
+            return Items.Remove(GetItemFromCollectionById(Id));
         }
 
         public int LoadFirstPage()
@@ -108,12 +113,13 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             return false;
         }
 
-        public int GenerateWhereClause(string val, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, SqlSearchMode mode = SqlSearchMode.OR)
+        public int GenerateWhereClause(string val, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, bool run = false, SqlSearchMode mode = SqlSearchMode.OR)
         {
             if (val == SearchValue) return 0;
             SearchValue = val;
             WhereClause = Processor.GenerateWhereClause(val, LifeStatus, FinStatus, mode);
-            return Invoices == null ? 0 : Invoices.Count;
+            if (run) LoadFirstPage();
+            return Items == null ? 0 : Items.Count;
         }
     }
 }

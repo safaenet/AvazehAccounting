@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 
 namespace DataLibraryCore.DataAccess.Interfaces
 {
-    public interface ICustomerCollectionManager
+    public partial interface ICustomerCollectionManager
     {
         ICustomerProcessor Processor { get; init; }
         event EventHandler FirstPageLoaded;
@@ -26,7 +26,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
 
         bool DeleteItemFromCollectionById(int Id);
         bool DeleteItemFromDbById(int Id);
-        int GenerateWhereClause(string val, SqlSearchMode mode = SqlSearchMode.OR);
+        int GenerateWhereClause(string val, bool run = false, SqlSearchMode mode = SqlSearchMode.OR);
         CustomerModel GetItemFromCollectionById(int Id);
         int GotoPage(int PageNumber);
         int LoadFirstPage();

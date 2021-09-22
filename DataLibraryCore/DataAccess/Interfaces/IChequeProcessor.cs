@@ -4,13 +4,13 @@ using System.Collections.ObjectModel;
 
 namespace DataLibraryCore.DataAccess.Interfaces
 {
-    public interface IChequeProcessor
+    public partial interface IChequeProcessor
     {
         int CreateItem(ChequeModel cheque);
-        int DeleteItemByID(int ID);
+        int DeleteItemById(int Id);
         int GetTotalQueryCount(string WhereClause);
         ObservableCollection<ChequeModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.DESC, string OrderBy = "DueDate");
-        ChequeModel LoadSingleItem(int ID);
+        ChequeModel LoadSingleItem(int Id);
         int UpdateItem(ChequeModel cheque);
         string GenerateWhereClause(string val, SqlSearchMode mode = SqlSearchMode.OR);
         ValidationResult ValidateItem(ChequeModel cheque);

@@ -105,7 +105,7 @@ namespace AvazehWpf.ViewModels
             if (SelectedCustomer == null) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete {SelectedCustomer.FullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
-            var output = CCM.Processor.DeleteItemByID(SelectedCustomer.Id);
+            var output = CCM.Processor.DeleteItemById(SelectedCustomer.Id);
             if (output > 0) Customers.Remove(SelectedCustomer);
             else MessageBox.Show($"Customer with ID: {SelectedCustomer.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
