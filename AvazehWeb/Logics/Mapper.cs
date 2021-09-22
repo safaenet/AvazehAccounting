@@ -8,10 +8,10 @@ namespace AvazehWeb.Logics
 {
     public static class Mapper
     {
-        public static IEnumerable<Models.ProductModel> MapProductModel(IEnumerable<DataLibraryCore.Models.ProductModel> src)
+        public static IEnumerable<Models.ProductModel_Dto> MapProductModel(IEnumerable<DataLibraryCore.Models.ProductModel> src)
         {
             if (src == null) return null;
-            List<Models.ProductModel> outPut = new();
+            List<Models.ProductModel_Dto> outPut = new();
             foreach (var item in src)
             {
                 outPut.Add(new()
@@ -32,10 +32,10 @@ namespace AvazehWeb.Logics
             return outPut;
         }
 
-        public static Models.ProductModel MapProductModel(DataLibraryCore.Models.ProductModel src)
+        public static Models.ProductModel_Dto MapProductModel(DataLibraryCore.Models.ProductModel src)
         {
             if (src == null) return null;
-            Models.ProductModel outPut = new();
+            Models.ProductModel_Dto outPut = new();
             outPut.Id = src.Id;
             outPut.ProductName = src.ProductName;
             outPut.BuyPrice = src.BuyPrice;
@@ -50,7 +50,7 @@ namespace AvazehWeb.Logics
             return outPut;
         }
 
-        public static IEnumerable<DataLibraryCore.Models.ProductModel> MapProductModel(List<Models.ProductModel> src)
+        public static IEnumerable<DataLibraryCore.Models.ProductModel> MapProductModel(List<Models.ProductModel_Dto> src)
         {
             if (src == null) return null;
             ObservableCollection<DataLibraryCore.Models.ProductModel> outPut = new();
@@ -74,7 +74,7 @@ namespace AvazehWeb.Logics
             return outPut;
         }
 
-        public static DataLibraryCore.Models.ProductModel MapProductModel(Models.ProductModel src)
+        public static DataLibraryCore.Models.ProductModel MapProductModel(Models.ProductModel_Dto src)
         {
             if (src == null) return null;
             DataLibraryCore.Models.ProductModel outPut = new();

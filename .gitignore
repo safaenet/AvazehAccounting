@@ -361,3 +361,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/AvazehWeb/Controllers/ApiProductController.cs
+/AvazehWeb/Models/ProductItemsCollection.cs
+/AvazehWeb/Models/ProductModel_Create_Update.cs
+/AvazehWeb/Models/ProductModel_Dto.cs
+/AvazehWeb

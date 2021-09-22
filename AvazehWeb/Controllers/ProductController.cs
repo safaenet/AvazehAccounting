@@ -42,14 +42,14 @@ namespace AvazehWeb.Controllers
         {
             ViewData["pageNum"] = pageNum;
             ViewData["Search"] = SearchText;
-            Models.ProductModel model = new();
+            Models.ProductModel_Dto model = new();
             return View(model);
         }
 
         // POST: ProductController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Models.ProductModel model, int pageNum, string SearchText)
+        public async Task<ActionResult> Create(Models.ProductModel_Dto model, int pageNum, string SearchText)
         {
             if (ModelState.IsValid)
             {
@@ -75,7 +75,7 @@ namespace AvazehWeb.Controllers
         // POST: ProductController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(Models.ProductModel model, int pageNum, string SearchText)
+        public async Task<ActionResult> Edit(Models.ProductModel_Dto model, int pageNum, string SearchText)
         {
             if (ModelState.IsValid)
             {
