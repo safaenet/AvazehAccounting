@@ -150,11 +150,11 @@ else
                     <td class="text-left">
                         <div class="w-50 btn-group" role="group">
                             <div id="delete_@(item.Id)" class="w-50 btn-group">
-                                <a asp-action="Edit" asp-route-Id="@(item.Id)" asp-route-pageNum="@(thisPageNumber)" class="btn btn-outline-primary rounded btn-sm mr-1">Edit</a>
+                                <a asp-action="Edit" asp-route-Id="@(item.Id)" class="btn btn-outline-primary rounded btn-sm mr-1">Edit</a>
                                 <button onclick="ToggleConfirmDelete(@(item.Id), true)" class="btn btn-outline-danger rounded btn-sm">Delete</button>
                             </div>
                             <div id="confirmDelete_@(item.Id)" class="w-50 btn-group" style="display:none">
-                                <form asp-action="Delete" asp-route-Id="@(item.Id)" asp-route-pageNum="@(thisPageNumber)" method="post">
+                                <form asp-action="Delete" asp-route-Id="@(item.Id)" method="post">
                                     <button type="submit" class="btn btn-danger rounded btn-sm">Yes</button>
                                 </form>
                                 <button onclick="ToggleConfirmDelete(@(item.Id), false)" class="btn btn-primary rounded btn-sm ml-1">No</button>

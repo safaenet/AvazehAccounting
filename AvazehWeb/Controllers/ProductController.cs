@@ -92,7 +92,6 @@ namespace AvazehWeb.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ItemId"] = Id;
-            //ViewData["Search"] = SearchText;
             return View(nameof(Edit), model);
         }
 

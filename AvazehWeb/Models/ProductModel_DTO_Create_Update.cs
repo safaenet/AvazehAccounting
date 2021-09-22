@@ -25,9 +25,9 @@ namespace AvazehWeb.Models //DTO Models
         [StringLength(15, ErrorMessage = "Maximum length is 15")]
         public string Barcode { get; set; }
 
-        [Display(Name ="Count", Prompt ="Count. Max length is 50 characters")]
+        [Display(Name = "Count", Prompt = "Count. Max length is 50 characters")]
         [StringLength(50, ErrorMessage = "Maximum length is 50")]
-        public string CountString { get; set; }
+        public string CountString { get; set; } = "0";
 
         [Display(Name = "Description")]
         public string Descriptions { get; set; }
