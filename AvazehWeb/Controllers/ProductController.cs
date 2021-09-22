@@ -1,4 +1,6 @@
-﻿using DataLibraryCore.DataAccess.Interfaces;
+﻿using AvazehWeb.Logics;
+using AvazehWeb.Models;
+using DataLibraryCore.DataAccess.Interfaces;
 using DataLibraryCore.DataAccess.SqlServer;
 using DataLibraryCore.Models;
 using Microsoft.AspNetCore.Http;
@@ -26,7 +28,7 @@ namespace AvazehWeb.Controllers
             ViewData["CurrentPage"] = Manager.CurrentPage;
             ViewData["Search"] = SearchText;
             ViewData["PagesCount"] = Manager.PagesCount;
-            var modelList = Logics.Mapper.MapProductModel(Manager.Items);
+            var modelList = Manager.Items;
             return View(modelList);
         }
 
@@ -42,18 +44,18 @@ namespace AvazehWeb.Controllers
         {
             ViewData["pageNum"] = pageNum;
             ViewData["Search"] = SearchText;
-            Models.ProductModel_Dto model = new();
+            ProductModel_DTO_Create_Update model = new();
             return View(model);
         }
 
         // POST: ProductController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Models.ProductModel_Dto model, int pageNum, string SearchText)
+        public async Task<ActionResult> Create(ProductModel_DTO_Create_Update model, int pageNum, string SearchText)
         {
-            if (ModelState.IsValid)
+            var item = model.AsDaL();
+            if (ModelState.IsValid && Manager.Processor.ValidateItem(item).IsValid)
             {
-                var item = Logics.Mapper.MapProductModel(model);
                 await Manager.Processor.CreateItemAsync(item).ConfigureAwait(false);
                 return RedirectToAction(nameof(Index), new { Id = pageNum, SearchText });
             }
@@ -63,23 +65,24 @@ namespace AvazehWeb.Controllers
         }
 
         // GET: ProductController/Edit/5
-        public async Task<ActionResult> Edit(int id, int pageNum, string SearchText)
+        public async Task<ActionResult> Edit(int Id, int pageNum, string SearchText)
         {
             ViewData["pageNum"] = pageNum;
             ViewData["Search"] = SearchText;
-            var model = await Manager.Processor.LoadSingleItemAsync(id);
-            var m = Logics.Mapper.MapProductModel(model);
+            ViewData["ItemId"] = Id;
+            var model = await Manager.Processor.LoadSingleItemAsync(Id);
+            var m = model.AsDto();
             return View(m);
         }
 
         // POST: ProductController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(Models.ProductModel_Dto model, int pageNum, string SearchText)
+        public async Task<ActionResult> Edit(ProductModel_DTO_Create_Update model, int pageNum, string SearchText)
         {
-            if (ModelState.IsValid)
+            var item = model.AsDaL();
+            if (ModelState.IsValid && Manager.Processor.ValidateItem(item).IsValid)
             {
-                var item = Logics.Mapper.MapProductModel(model);
                 await Manager.Processor.UpdateItemAsync(item).ConfigureAwait(false);
                 return RedirectToAction(nameof(Index), new { Id = pageNum, SearchText });
             }

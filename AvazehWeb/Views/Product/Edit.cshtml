@@ -1,8 +1,9 @@
-﻿@model ProductModel
+﻿@model ProductModel_DTO_Create_Update
 
 @{
     ViewData["Title"] = "Edit";
     int pageNum = (int)ViewData["pageNum"];
+    int ItemId = (int)ViewData["ItemId"];
     string Search = ViewData["Search"] == null ? "" : ViewData["Search"].ToString();
 }
 
@@ -10,7 +11,7 @@
     <h1>Edit Product:&nbsp</h1>
     <h5 class="mt-3">@Model.ProductName</h5>
 </div>
-<h4>Product ID:&nbsp@(Model.Id)</h4>
+<h4>Product ID:&nbsp@(ItemId)</h4>
 <hr/>
 <div class="row">
     <div class="col-md-4">
@@ -50,25 +51,6 @@
                 <input type="submit" value="Save" asp-route-pageNum="@(pageNum)" asp-route-SearchText="@(Search)" class="btn btn-primary w-50" />
                 <a asp-action="Index" asp-route-Id="@(pageNum)" asp-route-SearchText="@(Search)" class="btn btn-danger ml-1 w-25">Back</a>
             </div>
-            <div class="card-group">
-                <div class="alert alert-secondary mr-1">
-                    Date Created:&nbsp;@(Model.DateCreated)
-                </div>
-                <div class="alert alert-secondary">
-                    Time Created:&nbsp;@(Model.TimeCreated)
-                </div>
-            </div>
-            @if (!string.IsNullOrEmpty(Model.DateUpdated) && !string.IsNullOrEmpty(Model.TimeUpdated))
-            {
-            <div class="card-group">
-                <div class="alert alert-secondary mr-1">
-                    Date Updated:&nbsp;@(Model.DateUpdated)
-                </div>
-                <div class="alert alert-secondary">
-                    Time Updated:&nbsp;@(Model.TimeUpdated)
-                </div>
-            </div>
-            }
         </form>
     </div>
 </div>

@@ -43,7 +43,7 @@ namespace AvazehWebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateItemAsync(ProductModel_DTO_Create_Update model)
         {
-            var newItem = model.AsDaLModel();
+            var newItem = model.AsDaL();
             var validate = Manager.Processor.ValidateItem(newItem);
             if (!validate.IsValid) return BadRequest("Model is not valid");
             await Manager.Processor.CreateItemAsync(newItem);
@@ -54,7 +54,7 @@ namespace AvazehWebAPI.Controllers
         public async Task<ActionResult> UpdateItemAsync(int ID, ProductModel_DTO_Create_Update model)
         {
             if (model is null) return BadRequest("Model is not valid");
-            var updatedModel = model.AsDaLModel();
+            var updatedModel = model.AsDaL();
             var validate = Manager.Processor.ValidateItem(updatedModel);
             if (!validate.IsValid) return BadRequest("Model is not valid");
             updatedModel.Id = ID;
