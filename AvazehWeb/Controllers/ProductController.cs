@@ -12,21 +12,21 @@ namespace AvazehWeb.Controllers
 {
     public class ProductController : Controller
     {
-        public ProductController(IProductCollectionManager pcm)
+        public ProductController(IProductCollectionManager manager)
         {
-            PCM = pcm;
+            Manager = manager;
         }
-        private readonly IProductCollectionManager PCM;
+        private readonly IProductCollectionManager Manager;
 
         // GET: ProductController
         public async Task<ActionResult> Index(int Id = 1, string SearchText = "")
         {
-            if (!PCM.Initialized || PCM.SearchValue != SearchText) PCM.GenerateWhereClause(SearchText);
-            if (PCM.CurrentPage != Id) await PCM.GotoPageAsync(Id);
-            ViewData["CurrentPage"] = PCM.CurrentPage;
+            if (!Manager.Initialized || Manager.SearchValue != SearchText) Manager.GenerateWhereClause(SearchText);
+            if (Manager.CurrentPage != Id) await Manager.GotoPageAsync(Id);
+            ViewData["CurrentPage"] = Manager.CurrentPage;
             ViewData["Search"] = SearchText;
-            ViewData["PagesCount"] = PCM.PagesCount;
-            var modelList = Logics.Mapper.MapProductModel(PCM.Items);
+            ViewData["PagesCount"] = Manager.PagesCount;
+            var modelList = Logics.Mapper.MapProductModel(Manager.Items);
             return View(modelList);
         }
 
@@ -54,7 +54,7 @@ namespace AvazehWeb.Controllers
             if (ModelState.IsValid)
             {
                 var item = Logics.Mapper.MapProductModel(model);
-                await PCM.Processor.CreateItemAsync(item).ConfigureAwait(false);
+                await Manager.Processor.CreateItemAsync(item).ConfigureAwait(false);
                 return RedirectToAction(nameof(Index), new { Id = pageNum, SearchText });
             }
             ViewData["pageNum"] = pageNum;
@@ -67,7 +67,7 @@ namespace AvazehWeb.Controllers
         {
             ViewData["pageNum"] = pageNum;
             ViewData["Search"] = SearchText;
-            var model = await PCM.Processor.LoadSingleItemAsync(id);
+            var model = await Manager.Processor.LoadSingleItemAsync(id);
             var m = Logics.Mapper.MapProductModel(model);
             return View(m);
         }
@@ -80,7 +80,7 @@ namespace AvazehWeb.Controllers
             if (ModelState.IsValid)
             {
                 var item = Logics.Mapper.MapProductModel(model);
-                await PCM.Processor.UpdateItemAsync(item).ConfigureAwait(false);
+                await Manager.Processor.UpdateItemAsync(item).ConfigureAwait(false);
                 return RedirectToAction(nameof(Index), new { Id = pageNum, SearchText });
             }
             ViewData["pageNum"] = pageNum;
@@ -93,7 +93,7 @@ namespace AvazehWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int Id, int pageNum, string SearchText)
         {
-            await PCM.Processor.DeleteItemByIdAsync(Id);
+            await Manager.Processor.DeleteItemByIdAsync(Id);
             return RedirectToAction(nameof(Index), new { Id = pageNum, SearchText });
         }
     }

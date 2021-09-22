@@ -31,10 +31,10 @@ namespace AvazehWeb
                 .AddScoped<IInvoiceCollectionManager, InvoiceCollectionManager>()
                 .AddScoped<IChequeCollectionManager, ChequeCollectionManager>()
 
-                .AddTransient<IProductProcessor, SqlProductProcessor>()
-                .AddTransient<ICustomerProcessor, SqlCustomerProcessor>()
-                .AddTransient<IInvoiceProcessor, SqlInvoiceProcessor>()
-                .AddTransient<IChequeProcessor, SqlChequeProcessor>()
+                .AddScoped<IProductProcessor, SqlProductProcessor>()
+                .AddScoped<ICustomerProcessor, SqlCustomerProcessor>()
+                .AddScoped<IInvoiceProcessor, SqlInvoiceProcessor>()
+                .AddScoped<IChequeProcessor, SqlChequeProcessor>()
                 .AddSingleton<IDataAccess, SqlDataAccess>();
 
             services.AddControllersWithViews();
