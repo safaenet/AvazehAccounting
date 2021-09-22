@@ -77,14 +77,16 @@ namespace AvazehWeb.Controllers
         // POST: ProductController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(ProductModel_DTO_Create_Update model, int pageNum, string SearchText)
+        public async Task<ActionResult> Edit(ProductModel_DTO_Create_Update model, int Id, int pageNum, string SearchText)
         {
             var item = model.AsDaL();
+            item.Id = Id;
             if (ModelState.IsValid && Manager.Processor.ValidateItem(item).IsValid)
             {
                 await Manager.Processor.UpdateItemAsync(item).ConfigureAwait(false);
                 return RedirectToAction(nameof(Index), new { Id = pageNum, SearchText });
             }
+            ViewData["ItemId"] = Id;
             ViewData["pageNum"] = pageNum;
             ViewData["Search"] = SearchText;
             return View(nameof(Edit), model);

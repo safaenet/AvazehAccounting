@@ -48,7 +48,7 @@
                 <span asp-validation-for="Descriptions" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" asp-route-pageNum="@(pageNum)" asp-route-SearchText="@(Search)" class="btn btn-primary w-50" />
+                <input type="submit" value="Save" asp-route-Id="@(ItemId)" asp-route-pageNum="@(pageNum)" asp-route-SearchText="@(Search)" class="btn btn-primary w-50" />
                 <a asp-action="Index" asp-route-Id="@(pageNum)" asp-route-SearchText="@(Search)" class="btn btn-danger ml-1 w-25">Back</a>
             </div>
         </form>
