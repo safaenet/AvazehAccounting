@@ -5,7 +5,7 @@
     [ProductId] INT NOT NULL, 
     [BuyPrice] BIGINT NOT NULL , 
     [SellPrice] BIGINT NOT NULL , 
-    [CountString] NCHAR(50) NOT NULL,
+    [CountString] NVARCHAR(50) NOT NULL,
     [CountValue] FLOAT NOT NULL,
     [DateCreated] CHAR(10) NOT NULL, 
     [TimeCreated] CHAR(8) NOT NULL, 
