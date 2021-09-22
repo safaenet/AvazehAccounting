@@ -1,5 +1,4 @@
-﻿using AvazehWeb.Logics;
-using AvazehWeb.Models;
+﻿using AvazehWeb.Models;
 using DataLibraryCore.DataAccess.Interfaces;
 using DataLibraryCore.DataAccess.SqlServer;
 using DataLibraryCore.Models;

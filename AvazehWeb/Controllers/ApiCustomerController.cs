@@ -1,4 +1,4 @@
-﻿using AvazehWeb.Logics;
+﻿using AvazehWeb;
 using AvazehWeb.Models;
 using DataLibraryCore.DataAccess.CollectionManagers;
 using DataLibraryCore.DataAccess.Interfaces;
@@ -24,7 +24,7 @@ namespace AvazehWebAPI.Controllers
 
         //GET /Product?Id=1&SearchText=sometext
         [HttpGet]
-        public async Task<ActionResult<ProductItemsCollection_DTO>> GetItemsAsync(int Page = 1, string SearchText = "")
+        public async Task<ActionResult<CustomerItemsCollection_DTO>> GetItemsAsync(int Page = 1, string SearchText = "")
         {
             Manager.GenerateWhereClause(SearchText);
             await Manager.GotoPageAsync(Page);
@@ -41,7 +41,7 @@ namespace AvazehWebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateItemAsync(ProductModel_DTO_Create_Update model)
+        public async Task<ActionResult> CreateItemAsync(CustomerModel_DTO_Create_Update model)
         {
             var newItem = model.AsDaL();
             var validate = Manager.Processor.ValidateItem(newItem);
@@ -50,14 +50,14 @@ namespace AvazehWebAPI.Controllers
             return Ok("Successfully created the new item");
         }
 
-        [HttpPut("{ID}")]
-        public async Task<ActionResult> UpdateItemAsync(int ID, ProductModel_DTO_Create_Update model)
+        [HttpPut("{Id}")]
+        public async Task<ActionResult> UpdateItemAsync(int Id, CustomerModel_DTO_Create_Update model)
         {
             if (model is null) return BadRequest("Model is not valid");
             var updatedModel = model.AsDaL();
             var validate = Manager.Processor.ValidateItem(updatedModel);
             if (!validate.IsValid) return BadRequest("Model is not valid");
-            updatedModel.Id = ID;
+            updatedModel.Id = Id;
             if (await Manager.Processor.UpdateItemAsync(updatedModel) == 0) return NotFound();
             return Ok("Successfully updated the item");
         }

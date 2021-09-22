@@ -1,4 +1,4 @@
-﻿using AvazehWeb.Logics;
+﻿using AvazehWeb;
 using AvazehWeb.Models;
 using DataLibraryCore.DataAccess.CollectionManagers;
 using DataLibraryCore.DataAccess.Interfaces;
