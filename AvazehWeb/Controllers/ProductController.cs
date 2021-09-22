@@ -20,29 +20,38 @@ namespace AvazehWeb.Controllers
         private readonly IProductCollectionManager Manager;
 
         // GET: ProductController
-        public async Task<ActionResult> Index(int Id = 1, string SearchText = "")
+        [HttpGet]
+        public async Task<ActionResult> Index()
         {
+            var CurrentTempPage = HttpContext.Session.GetInt32("CurrentPage");
+            int CurrentPage = CurrentTempPage == null ? 1 : (int)CurrentTempPage;
+            var SearchText = HttpContext.Session.GetString("TextToSearch");
             if (!Manager.Initialized || Manager.SearchValue != SearchText) Manager.GenerateWhereClause(SearchText);
-            if (Manager.CurrentPage != Id) await Manager.GotoPageAsync(Id);
-            ViewData["CurrentPage"] = Manager.CurrentPage;
-            ViewData["Search"] = SearchText;
+            if (Manager.CurrentPage != CurrentPage) await Manager.GotoPageAsync(CurrentPage);
             ViewData["PagesCount"] = Manager.PagesCount;
             var modelList = Manager.Items;
             return View(modelList);
+        }
+
+        [HttpGet]
+        public ActionResult GotoPage(int Id)
+        {
+            HttpContext.Session.SetInt32("CurrentPage", Id);
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Index(string TextToSearch)
         {
-            return RedirectToAction(nameof(Index), new { Id = 1, SearchText = TextToSearch });
+            if (TextToSearch != null)
+                HttpContext.Session.SetString("TextToSearch", TextToSearch);
+            return RedirectToAction(nameof(GotoPage), new { Id = 1 });
         }
 
         // GET: ProductController/Create
-        public ActionResult Create(int pageNum, string SearchText)
+        public ActionResult Create()
         {
-            ViewData["pageNum"] = pageNum;
-            ViewData["Search"] = SearchText;
             ProductModel_DTO_Create_Update model = new();
             return View(model);
         }
@@ -50,24 +59,20 @@ namespace AvazehWeb.Controllers
         // POST: ProductController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(ProductModel_DTO_Create_Update model, int pageNum, string SearchText)
+        public async Task<ActionResult> Create(ProductModel_DTO_Create_Update model)
         {
             var item = model.AsDaL();
             if (ModelState.IsValid && Manager.Processor.ValidateItem(item).IsValid)
             {
                 await Manager.Processor.CreateItemAsync(item).ConfigureAwait(false);
-                return RedirectToAction(nameof(Index), new { Id = pageNum, SearchText });
+                return RedirectToAction(nameof(Index));
             }
-            ViewData["pageNum"] = pageNum;
-            ViewData["Search"] = SearchText;
             return View(nameof(Create), model);
         }
 
         // GET: ProductController/Edit/5
-        public async Task<ActionResult> Edit(int Id, int pageNum, string SearchText)
+        public async Task<ActionResult> Edit(int Id)
         {
-            ViewData["pageNum"] = pageNum;
-            ViewData["Search"] = SearchText;
             ViewData["ItemId"] = Id;
             var model = await Manager.Processor.LoadSingleItemAsync(Id);
             var m = model.AsDto();
@@ -77,28 +82,27 @@ namespace AvazehWeb.Controllers
         // POST: ProductController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(ProductModel_DTO_Create_Update model, int Id, int pageNum, string SearchText)
+        public async Task<ActionResult> Edit(ProductModel_DTO_Create_Update model, int Id)
         {
             var item = model.AsDaL();
             item.Id = Id;
             if (ModelState.IsValid && Manager.Processor.ValidateItem(item).IsValid)
             {
                 await Manager.Processor.UpdateItemAsync(item).ConfigureAwait(false);
-                return RedirectToAction(nameof(Index), new { Id = pageNum, SearchText });
+                return RedirectToAction(nameof(Index));
             }
             ViewData["ItemId"] = Id;
-            ViewData["pageNum"] = pageNum;
-            ViewData["Search"] = SearchText;
+            //ViewData["Search"] = SearchText;
             return View(nameof(Edit), model);
         }
 
         // POST: ProductController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int Id, int pageNum, string SearchText)
+        public async Task<ActionResult> Delete(int Id)
         {
             await Manager.Processor.DeleteItemByIdAsync(Id);
-            return RedirectToAction(nameof(Index), new { Id = pageNum, SearchText });
+            return RedirectToAction(nameof(Index));
         }
     }
 }

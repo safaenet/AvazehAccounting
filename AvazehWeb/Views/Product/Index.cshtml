@@ -1,10 +1,13 @@
 ﻿@model IEnumerable<DataLibraryCore.Models.ProductModel>
 
+@using Microsoft.AspNetCore.Http;
 @{
+
     ViewData["Title"] = "List of Products";
-    int thisPageNumber = (int)ViewData["CurrentPage"];
-    string Search = ViewData["Search"].ToString();
     int pagesCount = (int)ViewData["PagesCount"];
+    int? thisTempPageNumber = Context.Session.GetInt32("CurrentPage");
+    int thisPageNumber = thisTempPageNumber == null ? 1 : (int)thisTempPageNumber;
+    string SearchText = Context.Session.GetString("TextToSearch");
     string PrevButtonStatus = thisPageNumber <= 1 ? "disabled" : "";
     string NextButtonStatus = thisPageNumber >= pagesCount ? "disabled" : "";
     int navbarMaxItems = 15;
@@ -12,55 +15,55 @@
 
 <h1>Products</h1>
 
-    <div class="btn-group mb-1">
-        <a asp-action="Create" asp-route-pageNum="@(thisPageNumber)" asp-route-SearchText="@(Search)" class="btn btn-danger rounded mr-2 rounded"><i class="material-icons align-text-top">add_circle_outline</i>&nbsp; Create</a>
-        <form method="post">
-            <div class="btn-group">
-                <button type="submit" class="btn btn-primary mr-1 rounded btn-group w-75"><i class="material-icons align-text-top">search</i>&nbsp; Search</button>
-                <input type="text" id="TextToSearch" value="@(Search)" name="TextToSearch" placeholder="Search" class="form-control" />
-            </div>
-        </form>
-    </div>
-    <nav>
-        <ul class="pagination">
-            <li class="page-item @PrevButtonStatus">
-                <a class="page-link" asp-action="Index" asp-route-Id="@(thisPageNumber==1?thisPageNumber: thisPageNumber - 1)" asp-route-SearchText="@(Search)" tabindex="-1">Previous</a>
-            </li>
-            @{
-                if (pagesCount <= navbarMaxItems)
+<div class="btn-group mb-1">
+    <a asp-action="Create" class="btn btn-danger rounded mr-2 rounded"><i class="material-icons align-text-top">add_circle_outline</i>&nbsp; Create</a>
+    <form method="post">
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary mr-1 rounded btn-group w-75"><i class="material-icons align-text-top">search</i>&nbsp; Search</button>
+            <input type="text" id="TextToSearch" value="@(SearchText)" name="TextToSearch" placeholder="Search" class="form-control" />
+        </div>
+    </form>
+</div>
+<nav>
+    <ul class="pagination">
+        <li class="page-item @PrevButtonStatus">
+            <a class="page-link" asp-action="GotoPage" asp-route-Id="@(thisPageNumber==1?thisPageNumber: thisPageNumber - 1)" tabindex="-1">Previous</a>
+        </li>
+        @{
+            if (pagesCount <= navbarMaxItems)
+            {
+                for (int i = 1; i <= pagesCount; i++)
                 {
-                    for (int i = 1; i <= pagesCount; i++)
-                    {
-                        <li class="page-item @(i == thisPageNumber ? "active" : "")">
-                            <a class="page-link" asp-action="Index" asp-route-Id="@i" asp-route-SearchText="@(Search)">@i<span class="sr-only">(current)</span></a>
-                        </li>
-                    }
-                }
-                else
-                {
-                    for (int i = 1; i <= navbarMaxItems / 2; i++)
-                    {
-                        <li class="page-item @(i == thisPageNumber ? "active" : "")">
-                            <a class="page-link" asp-action="Index" asp-route-Id="@i" asp-route-SearchText="@(Search)">@i<span class="sr-only">(current)</span></a>
-                        </li>
-                    }
-                    <li class="page-item disabled">
-                        <a class="page-link">...</a>
+                    <li class="page-item @(i == thisPageNumber ? "active" : "")">
+                        <a class="page-link" asp-action="GotoPage" asp-route-Id="@i">@i<span class="sr-only">(current)</span></a>
                     </li>
-                    for (int i = pagesCount - (navbarMaxItems / 2) + 1; i <= pagesCount; i++)
-                    {
-                        <li class="page-item @(i == thisPageNumber ? "active" : "")">
-                            <a class="page-link" asp-action="Index" asp-route-Id="@i" asp-route-SearchText="@(Search)">@i<span class="sr-only">(current)</span></a>
-                        </li>
-                    }
                 }
             }
+            else
+            {
+                for (int i = 1; i <= navbarMaxItems / 2; i++)
+                {
+                    <li class="page-item @(i == thisPageNumber ? "active" : "")">
+                        <a class="page-link" asp-action="GotoPage" asp-route-Id="@i">@i<span class="sr-only">(current)</span></a>
+                    </li>
+                }
+                <li class="page-item disabled">
+                    <a class="page-link">...</a>
+                </li>
+                for (int i = pagesCount - (navbarMaxItems / 2) + 1; i <= pagesCount; i++)
+                {
+                    <li class="page-item @(i == thisPageNumber ? "active" : "")">
+                        <a class="page-link" asp-action="GotoPage" asp-route-Id="@i">@i<span class="sr-only">(current)</span></a>
+                    </li>
+                }
+            }
+        }
 
-            <li class="page-item @NextButtonStatus">
-                <a class="page-link" asp-action="Index" asp-route-Id="@(thisPageNumber + 1)">Next</a>
-            </li>
-        </ul>
-    </nav>
+        <li class="page-item @NextButtonStatus">
+            <a class="page-link" asp-action="GotoPage" asp-route-Id="@(thisPageNumber + 1)">Next</a>
+        </li>
+    </ul>
+</nav>
 
 @if (Model == null || Model.Count() == 0)
 {
@@ -147,11 +150,11 @@ else
                     <td class="text-left">
                         <div class="w-50 btn-group" role="group">
                             <div id="delete_@(item.Id)" class="w-50 btn-group">
-                                <a asp-action="Edit" asp-route-Id="@(item.Id)" asp-route-pageNum="@(thisPageNumber)" asp-route-SearchText="@(Search)" class="btn btn-outline-primary rounded btn-sm mr-1">Edit</a>
+                                <a asp-action="Edit" asp-route-Id="@(item.Id)" asp-route-pageNum="@(thisPageNumber)" class="btn btn-outline-primary rounded btn-sm mr-1">Edit</a>
                                 <button onclick="ToggleConfirmDelete(@(item.Id), true)" class="btn btn-outline-danger rounded btn-sm">Delete</button>
                             </div>
                             <div id="confirmDelete_@(item.Id)" class="w-50 btn-group" style="display:none">
-                                <form asp-action="Delete" asp-route-Id="@(item.Id)" asp-route-pageNum="@(thisPageNumber)" asp-route-SearchText="@(Search)" method="post">
+                                <form asp-action="Delete" asp-route-Id="@(item.Id)" asp-route-pageNum="@(thisPageNumber)" method="post">
                                     <button type="submit" class="btn btn-danger rounded btn-sm">Yes</button>
                                 </form>
                                 <button onclick="ToggleConfirmDelete(@(item.Id), false)" class="btn btn-primary rounded btn-sm ml-1">No</button>
@@ -165,7 +168,7 @@ else
     <nav>
         <ul class="pagination">
             <li class="page-item @PrevButtonStatus">
-                <a class="page-link" asp-action="Index" asp-route-Id="@(thisPageNumber==1?thisPageNumber: thisPageNumber - 1)" asp-route-SearchText="@(Search)" tabindex="-1">Previous</a>
+                <a class="page-link" asp-action="GotoPage" asp-route-Id="@(thisPageNumber==1?thisPageNumber: thisPageNumber - 1)" tabindex="-1">Previous</a>
             </li>
             @{
                 if (pagesCount <= navbarMaxItems)
@@ -173,7 +176,7 @@ else
                     for (int i = 1; i <= pagesCount; i++)
                     {
                         <li class="page-item @(i == thisPageNumber ? "active" : "")">
-                            <a class="page-link" asp-action="Index" asp-route-Id="@i" asp-route-SearchText="@(Search)">@i<span class="sr-only">(current)</span></a>
+                            <a class="page-link" asp-action="GotoPage" asp-route-Id="@i">@i<span class="sr-only">(current)</span></a>
                         </li>
                     }
                 }
@@ -182,7 +185,7 @@ else
                     for (int i = 1; i <= navbarMaxItems / 2; i++)
                     {
                         <li class="page-item @(i == thisPageNumber ? "active" : "")">
-                            <a class="page-link" asp-action="Index" asp-route-Id="@i" asp-route-SearchText="@(Search)">@i<span class="sr-only">(current)</span></a>
+                            <a class="page-link" asp-action="GotoPage" asp-route-Id="@i">@i<span class="sr-only">(current)</span></a>
                         </li>
                     }
                     <li class="page-item disabled">
@@ -191,14 +194,14 @@ else
                     for (int i = pagesCount - (navbarMaxItems / 2) + 1; i <= pagesCount; i++)
                     {
                         <li class="page-item @(i == thisPageNumber ? "active" : "")">
-                            <a class="page-link" asp-action="Index" asp-route-Id="@i" asp-route-SearchText="@(Search)">@i<span class="sr-only">(current)</span></a>
+                            <a class="page-link" asp-action="GotoPage" asp-route-Id="@i">@i<span class="sr-only">(current)</span></a>
                         </li>
                     }
                 }
             }
 
             <li class="page-item @NextButtonStatus">
-                <a class="page-link" asp-action="Index" asp-route-Id="@(thisPageNumber + 1)">Next</a>
+                <a class="page-link" asp-action="GotoPage" asp-route-Id="@(thisPageNumber + 1)">Next</a>
             </li>
             <li class="ml-2"><button class="page-link" onclick="GotoTopOfPage()">Goto Top</button></li>
         </ul>
@@ -206,10 +209,10 @@ else
 }
 @section Scripts{
     <script src="~/js/MyScripts.js"></script>
-<script>
-    function GotoTopOfPage() {
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-    }
-</script>
+    <script>
+        function GotoTopOfPage() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
 }

@@ -2,8 +2,6 @@
 
 @{
     ViewData["Title"] = "Create New";
-    int pageNum = (int)ViewData["pageNum"];
-    string Search = ViewData["Search"] == null ? "" : ViewData["Search"].ToString();
 }
 
     <h1>Create New Product</h1>
@@ -43,8 +41,8 @@
                 <span asp-validation-for="Descriptions" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" asp-route-pageNum="@(pageNum)" asp-route-SearchText="@(Search)" class="btn btn-primary w-50"/>
-                <a asp-action="Index" asp-route-Id="@(pageNum)" asp-route-SearchText="@(Search)" class="btn btn-danger ml-1 w-25">Back</a>
+                <input type="submit" value="Save" class="btn btn-primary w-50"/>
+                <a asp-action="Index" class="btn btn-danger ml-1 w-25">Back</a>
             </div>
         </form>
     </div>
