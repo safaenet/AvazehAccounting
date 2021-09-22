@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace AvazehWebAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
         public ProductController(IProductCollectionManager manager)
