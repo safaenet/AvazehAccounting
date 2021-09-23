@@ -14,7 +14,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
 {
     public class SqlDataAccess : Interfaces.IDataAccess
     {
-        public string GetConnectionString(string DB = "secondary") => SettingsDataAccess.AppConfiguration().GetConnectionString(DB);
+        public string GetConnectionString(string DB = "default") => SettingsDataAccess.AppConfiguration().GetConnectionString(DB);
 
         public ObservableCollection<T> LoadData<T, U>(string sql, U param)
         {
