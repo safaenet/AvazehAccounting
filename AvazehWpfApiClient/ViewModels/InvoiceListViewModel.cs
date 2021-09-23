@@ -1,7 +1,7 @@
 ﻿using Caliburn.Micro;
-using DataLibraryCore.DataAccess.Interfaces;
-using DataLibraryCore.DataAccess.SqlServer;
-using DataLibraryCore.Models;
+using AvazehWpfApiClient.DataAccess.Interfaces;
+using AvazehWpfApiClient.DataAccess.SqlServer;
+using AvazehWpfApiClient.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

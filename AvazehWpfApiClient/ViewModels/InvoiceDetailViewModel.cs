@@ -1,6 +1,6 @@
 ﻿using Caliburn.Micro;
-using DataLibraryCore.DataAccess.SqlServer;
-using DataLibraryCore.Models;
+using AvazehWpfApiClient.DataAccess.SqlServer;
+using AvazehWpfApiClient.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
 using System.Windows.Data;
-using DataLibraryCore.DataAccess.Interfaces;
+using AvazehWpfApiClient.DataAccess.Interfaces;
 
 namespace AvazehWpf.ViewModels
 {

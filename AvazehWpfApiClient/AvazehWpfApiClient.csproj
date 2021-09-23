@@ -9,6 +9,8 @@
   <ItemGroup>
     <PackageReference Include="Caliburn.Micro" Version="4.0.173" />
     <PackageReference Include="Caliburn.Micro.Core" Version="4.0.173" />
+    <PackageReference Include="DotNetStandardCalculator" Version="1.0.0" />
+    <PackageReference Include="FluentValidation" Version="10.3.3" />
     <PackageReference Include="FluentWPF" Version="0.10.0" />
     <PackageReference Include="MaterialDesignColors" Version="2.0.3" />
     <PackageReference Include="MaterialDesignThemes" Version="4.2.1" />

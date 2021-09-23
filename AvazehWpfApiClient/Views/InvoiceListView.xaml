@@ -11,7 +11,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:InvoiceListViewModel}"
-        xmlns:dlc="clr-namespace:DataLibraryCore.Models;assembly=DataLibraryCore"
+        xmlns:dlc="clr-namespace:AvazehWpfApiClient.Models;assembly=DataLibraryCore"
         fw:AcrylicWindow.Enabled="True"
         Title="Invoices" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1030" Height="650" fw:AcrylicWindow.AcrylicWindowStyle="NoIcon">
