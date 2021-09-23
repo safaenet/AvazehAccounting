@@ -1,8 +1,4 @@
 ﻿using Caliburn.Micro;
-using DataLibraryCore.DataAccess.CollectionManagers;
-using DataLibraryCore.DataAccess.Interfaces;
-using DataLibraryCore.DataAccess.SqlServer;
-using DataLibraryCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

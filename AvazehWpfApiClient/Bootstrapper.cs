@@ -1,8 +1,6 @@
 ﻿using AvazehWpf.ViewModels;
+using AvazehWpfApiClient.Logics;
 using Caliburn.Micro;
-using DataLibraryCore.DataAccess.CollectionManagers;
-using DataLibraryCore.DataAccess.Interfaces;
-using DataLibraryCore.DataAccess.SqlServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,26 +22,15 @@ namespace AvazehWpf
             Container.Instance(Container);
             Container
                 .Singleton<IWindowManager, WindowManager>()
-                .Singleton<IEventAggregator, EventAggregator>();
+                .Singleton<IEventAggregator, EventAggregator>()
+                .Singleton<IApiProcessor, ApiProcessor>();
+
             GetType().Assembly.GetTypes()
                 .Where(type => type.IsClass)
                 .Where(type => type.Name.EndsWith("ViewModel"))
                 .ToList()
                 .ForEach(ViewModelType => Container.RegisterPerRequest(
                     ViewModelType, ViewModelType.ToString(), ViewModelType));
-
-            Container
-                .PerRequest<IProductCollectionManager, ProductCollectionManager>()
-                .PerRequest<ICustomerCollectionManager, CustomerCollectionManager>()
-                .PerRequest<IInvoiceCollectionManager, InvoiceCollectionManager>()
-                .PerRequest<IChequeCollectionManager, ChequeCollectionManager>()
-
-                .PerRequest<IProductProcessor, SqlProductProcessor>()
-                .PerRequest<ICustomerProcessor, SqlCustomerProcessor>()
-                .PerRequest<IInvoiceProcessor, SqlInvoiceProcessor>()
-                .PerRequest<IChequeProcessor, SqlChequeProcessor>()
-
-                .RegisterSingleton(typeof(IDataAccess), nameof(IDataAccess), typeof(SqlDataAccess));
         }
 
         protected override IEnumerable<object> GetAllInstances(Type serviceType)
