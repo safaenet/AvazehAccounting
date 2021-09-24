@@ -1,36 +1,38 @@
-﻿using AvazehWpfApiClient.Models;
+﻿using AvazehWpfApiClient.DataAccess.Interfaces;
+using AvazehWpfApiClient.Models;
 using FluentValidation.Results;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace AvazehWpfApiClient.DataAccess.Interfaces
 {
-    public partial interface IProductCollectionManager
+    public interface ICollectionManager<T>
     {
-        IProductProcessor Processor { get; init; }
-        event EventHandler FirstPageLoaded;
-        event EventHandler WhereClauseChanged;
-        event EventHandler NextPageLoading;
-        event EventHandler NextPageLoaded;
-        event EventHandler PreviousPageLoading;
-        event EventHandler PreviousPageLoaded;
+        IApiProcessor ApiProcessor { get; init; }
         int CurrentPage { get; }
-        bool Initialized { get; }
-        ObservableCollection<ProductModel> Items { get; set; }
+        ObservableCollection<T> Items { get; set; }
         int? MaxID { get; }
         int? MinID { get; }
         int PagesCount { get; }
         int PageSize { get; set; }
-        string SearchValue { get; }
-        string WhereClause { get; set; }
+        string SearchValue { get; set; }
 
-        bool DeleteItemFromCollectionById(int Id);
-        bool DeleteItemFromDbById(int Id);
-        int GenerateWhereClause(string val, bool run = false, SqlSearchMode mode = SqlSearchMode.OR);
-        ProductModel GetItemFromCollectionById(int Id);
-        int GotoPage(int PageNumber);
-        int LoadFirstPage();
-        int LoadNextPage();
-        int LoadPreviousPage();
+        event EventHandler FirstPageLoaded;
+        event EventHandler NextPageLoaded;
+        event EventHandler NextPageLoading;
+        event EventHandler PreviousPageLoaded;
+        event EventHandler PreviousPageLoading;
+        event EventHandler WhereClauseChanged;
+
+        Task<T> CreateItemAsync(T item);
+        Task<bool> DeleteItemAsync(int Id);
+        T GetItemFromCollectionById(int Id);
+        Task<int> GotoPageAsync(int PageNumber);
+        Task<int> LoadFirstPageAsync();
+        Task<int> LoadNextPageAsync();
+        Task<int> LoadPreviousPageAsync();
+        Task<T> UpdateItemAsync(T item);
+        ValidationResult ValidateItem(T product);
     }
 }

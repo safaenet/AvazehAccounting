@@ -1,4 +1,6 @@
-﻿using Caliburn.Micro;
+﻿using AvazehWpfApiClient.DataAccess.Interfaces;
+using AvazehWpfApiClient.Models;
+using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,14 +15,14 @@ namespace AvazehWpf.ViewModels
 {
     public class ProductListViewModel : Screen
     {
-        public ProductListViewModel(IProductCollectionManager manager)
+        public ProductListViewModel(ICollectionManager manager)
         {
             PCM = manager;
             _SelectedProduct = new();
             PCM.LoadFirstPage();
         }
 
-        private IProductCollectionManager _PCM;
+        private ICollectionManager _PCM;
         private ProductModel _SelectedProduct;
 
         public ProductModel SelectedProduct
@@ -29,7 +31,7 @@ namespace AvazehWpf.ViewModels
             set { _SelectedProduct = value; NotifyOfPropertyChange(() => SelectedProduct); }
         }
 
-        public IProductCollectionManager PCM
+        public ICollectionManager PCM
         {
             get { return _PCM; }
             set

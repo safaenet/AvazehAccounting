@@ -24,9 +24,10 @@ namespace AvazehWebAPI.Controllers
 
         //GET /Product?Id=1&SearchText=sometext
         [HttpGet]
-        public async Task<ActionResult<ProductItemsCollection_DTO>> GetItemsAsync(int Page = 1, string SearchText = "")
+        public async Task<ActionResult<ProductItemsCollection_DTO>> GetItemsAsync(int Page = 1, string SearchText = "", int PageSize = 50)
         {
             Manager.GenerateWhereClause(SearchText);
+            Manager.PageSize = PageSize;
             await Manager.GotoPageAsync(Page);
             if (Manager.Items == null || Manager.Items.Count == 0) return NotFound("List is empty");
             return Manager.AsDto();
@@ -41,23 +42,23 @@ namespace AvazehWebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateItemAsync(ProductModel_DTO_Create_Update model)
+        public async Task<ActionResult<ProductModel>> CreateItemAsync(ProductModel_DTO_Create_Update model)
         {
             var newItem = model.AsDaL();
-            if(!Manager.Processor.ValidateItem(newItem).IsValid) return BadRequest("Model is not valid");
+            if(!Manager.Processor.ValidateItem(newItem).IsValid) return BadRequest(0);
             await Manager.Processor.CreateItemAsync(newItem);
-            return Ok("Successfully created the new item");
+            return newItem;
         }
 
         [HttpPut("{Id}")]
-        public async Task<ActionResult> UpdateItemAsync(int Id, ProductModel_DTO_Create_Update model)
+        public async Task<ActionResult<ProductModel>> UpdateItemAsync(int Id, ProductModel_DTO_Create_Update model)
         {
             if (model is null) return BadRequest("Model is not valid");
             var updatedModel = model.AsDaL();
             if (!Manager.Processor.ValidateItem(updatedModel).IsValid) return BadRequest("Model is not valid");
             updatedModel.Id = Id;
             if (await Manager.Processor.UpdateItemAsync(updatedModel) == 0) return NotFound();
-            return Ok("Successfully updated the item");
+            return updatedModel;
         }
 
         [HttpDelete]

@@ -14,7 +14,7 @@ namespace AvazehWpf.ViewModels
 {
     public class ProductDetailViewModel : ViewAware
     {
-        public ProductDetailViewModel(IProductCollectionManager manager, ProductModel Product)
+        public ProductDetailViewModel(ICollectionManager manager, ProductModel Product)
         {
             Manager = manager;
             if (Product != null)
@@ -25,7 +25,7 @@ namespace AvazehWpf.ViewModels
             }
         }
 
-        private readonly IProductCollectionManager Manager;
+        private readonly ICollectionManager Manager;
         private ProductModel _Product;
         private ProductModel _BackupProduct;
         private bool _CancelAndClose = true;

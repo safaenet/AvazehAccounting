@@ -1,5 +1,5 @@
 ﻿using AvazehWpf.ViewModels;
-using AvazehWpfApiClient.Logics;
+using AvazehWpfApiClient.DataAccess;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;

@@ -11,7 +11,6 @@ namespace AvazehWeb.Models
         public IEnumerable<ProductModel> Items { get; init; }
         public int PagesCount { get; init; }
         public int CurrentPage { get; init; }
-        public int PageSize { get; init; }
         public string SearchValue { get; init; }
     }
 }

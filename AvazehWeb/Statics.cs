@@ -42,7 +42,6 @@ namespace AvazehWeb
                 Items = manager.Items,
                 PagesCount = manager.PagesCount,
                 CurrentPage = manager.CurrentPage,
-                PageSize = manager.PageSize,
                 SearchValue = manager.SearchValue
             };
         }
