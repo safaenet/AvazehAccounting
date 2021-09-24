@@ -7,7 +7,7 @@ namespace AvazehWpfApiClient.Models.Validators
 {
     public class CustomerValidator : AbstractValidator<CustomerModel>
     {
-        internal CustomerValidator()
+        public CustomerValidator()
         {
             RuleFor(c => c.FirstName)
                 .Cascade(CascadeMode.Stop)
@@ -19,6 +19,9 @@ namespace AvazehWpfApiClient.Models.Validators
 
             RuleFor(c => c.CompanyName)
                 .MaximumLength(50).WithMessage("{PropertyName} cannot be more than 50 characters ({TotalLength})");
+
+            RuleFor(c => c.EmailAddress)
+                .EmailAddress().WithMessage("{PropertyName} is not valid");
 
             //RuleFor(c => c.DateJoined)
             //    .NotEmpty().WithMessage("{PropertyName} cannot be empty")

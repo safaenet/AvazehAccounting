@@ -9,7 +9,7 @@ namespace AvazehWpfApiClient.Models.Validators
 {
     public class ProductValidator : AbstractValidator<ProductModel>
     {
-        internal ProductValidator()
+        public ProductValidator()
         {
             RuleFor(p => p.ProductName).Cascade(CascadeMode.Stop)
                 .NotEmpty().WithMessage("{PropertyName} cannot be empty")

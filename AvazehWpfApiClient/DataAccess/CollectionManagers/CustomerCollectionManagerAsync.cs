@@ -41,6 +41,11 @@ namespace AvazehWpfApiClient.DataAccess.CollectionManagers
         {
             return Items.SingleOrDefault(i => i.Id == Id);
         }
+
+        public async Task<T> GetItemById(int Id)
+        {
+            return await ApiProcessor.GetItemAsync<T>(Key, Id);
+        }
         public async Task<T> CreateItemAsync(T item)
         {
             if (item == null || !ValidateItem(item).IsValid) return null;

@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace AvazehWpfApiClient.DataAccess.CollectionManagers
 {
-    public abstract class ProductCollectionManagerAsync<T, U, V> : ICollectionManager<T> where T : ProductModel where U : ProductModel_DTO_Create_Update where V : ProductValidator, new()
+    public abstract class InvoiceCollectionManagerAsync
     {
-        public ProductCollectionManagerAsync(IApiProcessor apiProcessor)
+        public InvoiceCollectionManagerAsync(IApiProcessor apiProcessor)
         {
             ApiProcessor = apiProcessor;
         }
@@ -25,10 +25,10 @@ namespace AvazehWpfApiClient.DataAccess.CollectionManagers
         public event EventHandler NextPageLoaded;
         public event EventHandler PreviousPageLoading;
         public event EventHandler PreviousPageLoaded;
-        private const string Key = "Product";
+        private const string Key = "Invoice";
         public IApiProcessor ApiProcessor { get; init; }
 
-        public ObservableCollection<T> Items { get; set; }
+        public ObservableCollection<InvoiceListModel> Items { get; set; }
         public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
 
@@ -37,28 +37,28 @@ namespace AvazehWpfApiClient.DataAccess.CollectionManagers
         public int PageSize { get; set; } = 50;
         public int PagesCount { get; private set; }
         public int CurrentPage { get; private set; }
-        public T GetItemFromCollectionById(int Id)
+        public InvoiceListModel GetItemFromCollectionById(int Id)
         {
             return Items.SingleOrDefault(i => i.Id == Id);
         }
 
-        public async Task<T> GetItemById(int Id)
+        public async Task<InvoiceModel> GetItemById(int Id)
         {
-            return await ApiProcessor.GetItemAsync<T>(Key, Id);
+            return await ApiProcessor.GetItemAsync<InvoiceModel>(Key, Id);
         }
 
-        public async Task<T> CreateItemAsync(T item)
+        public async Task<InvoiceModel> CreateItemAsync(InvoiceModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return null;
             var newItem = item.AsDto();
-            return await ApiProcessor.CreateItemAsync<U, T>(Key, newItem as U);
+            return await ApiProcessor.CreateItemAsync<InvoiceModel_DTO_Create_Update, InvoiceModel>(Key, newItem);
         }
 
-        public async Task<T> UpdateItemAsync(T item)
+        public async Task<InvoiceModel> UpdateItemAsync(InvoiceModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return null;
             var newItem = item.AsDto();
-            return await ApiProcessor.UpdateItemAsync<U, T>(Key, item.Id, newItem as U);
+            return await ApiProcessor.UpdateItemAsync<InvoiceModel_DTO_Create_Update, InvoiceModel>(Key, item.Id, newItem);
         }
 
         public async Task<bool> DeleteItemAsync(int Id)
@@ -71,9 +71,9 @@ namespace AvazehWpfApiClient.DataAccess.CollectionManagers
             return false;
         }
 
-        public ValidationResult ValidateItem(T item)
+        public ValidationResult ValidateItem(InvoiceModel item)
         {
-            V validator = new();
+            InvoiceValidator validator = new();
             var result = validator.Validate(item);
             return result;
         }
@@ -83,7 +83,7 @@ namespace AvazehWpfApiClient.DataAccess.CollectionManagers
             PageLoadEventArgs eventArgs = new();
             PageLoading?.Invoke(this, eventArgs);
             if (eventArgs.Cancel) return 0;
-            var collection = await ApiProcessor.GetCollectionAsync<ItemsCollection_DTO<T>>(Key, PageNumber, SearchValue, PageSize);
+            var collection = await ApiProcessor.GetCollectionAsync<ItemsCollection_DTO<InvoiceListModel>>(Key, PageNumber, SearchValue, PageSize);
             Items = collection.Items;
             CurrentPage = collection.CurrentPage;
             PagesCount = collection.PagesCount;

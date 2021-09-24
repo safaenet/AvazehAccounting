@@ -30,6 +30,7 @@ namespace AvazehWpfApiClient.DataAccess.Interfaces
         Task<T> CreateItemAsync(T item);
         Task<bool> DeleteItemAsync(int Id);
         T GetItemFromCollectionById(int Id);
+        Task<T> GetItemById(int Id);
         Task<int> GotoPageAsync(int PageNumber);
         Task<int> LoadFirstPageAsync();
         Task<int> LoadNextPageAsync();

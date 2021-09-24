@@ -53,5 +53,32 @@ namespace AvazehWpfApiClient
                 Events = model.Events
             };
         }
+
+        public static InvoiceModel_DTO_Create_Update AsDto(this InvoiceModel model)
+        {
+            return new InvoiceModel_DTO_Create_Update()
+            {
+                CustomerId = model.Customer.Id,
+                DiscountType = model.DiscountType,
+                DiscountValue = model.DiscountValue,
+                Descriptions = model.Descriptions,
+                LifeStatus = model.LifeStatus
+            };
+        }
+
+        public static InvoiceListModel AsListModel(this InvoiceModel model)
+        {
+            return new InvoiceListModel()
+            {
+                Id = model.Id,
+                CustomerId = model.Customer.Id,
+                CustomerFullName = model.Customer.FullName,
+                DateCreated = model.DateCreated,
+                DateUpdated = model.DateUpdated,
+                TotalInvoiceSum = model.TotalInvoiceSum,
+                TotalPayments = model.TotalPayments,
+                LifeStatus = model.LifeStatus
+            };
+        }
     }
 }

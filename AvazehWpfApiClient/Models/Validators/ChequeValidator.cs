@@ -7,7 +7,7 @@ namespace AvazehWpfApiClient.Models.Validators
 {
     public class ChequeValidator : AbstractValidator<ChequeModel>
     {
-        internal ChequeValidator()
+        public ChequeValidator()
         {
             RuleFor(c => c.Drawer)
                 .Cascade(CascadeMode.Stop)

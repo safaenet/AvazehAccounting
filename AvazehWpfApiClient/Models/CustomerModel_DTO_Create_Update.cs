@@ -25,11 +25,12 @@ namespace AvazehWpfApiClient.Models
 
         [Display(Name = "Email Address", Prompt = "Email Address. Max length is 100 characters")]
         [StringLength(100, ErrorMessage = "Maximum length is 100")]
+        [EmailAddress(ErrorMessage = "Email is not valid")]
         public string EmailAddress { get; set; }
 
         [Display(Name = "Post Address", Prompt = "Post Address. Max length is 100 characters")]
         public string PostAddress { get; set; }
-
+        
         public ObservableCollection<PhoneNumberModel> PhoneNumbers { get; set; }
 
         [Display(Name = "Description")]
