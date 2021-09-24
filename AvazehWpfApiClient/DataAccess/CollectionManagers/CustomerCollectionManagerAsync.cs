@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace AvazehWpfApiClient.DataAccess.CollectionManagers
 {
-    public class ProductCollectionManager : ICollectionManager<ProductModel>
+    public class CustomerCollectionManagerAsync : ICollectionManager<CustomerModel>
     {
-        public ProductCollectionManager(IApiProcessor apiProcessor)
+        public CustomerCollectionManagerAsync(IApiProcessor apiProcessor)
         {
             ApiProcessor = apiProcessor;
         }
@@ -25,10 +25,10 @@ namespace AvazehWpfApiClient.DataAccess.CollectionManagers
         public event EventHandler NextPageLoaded;
         public event EventHandler PreviousPageLoading;
         public event EventHandler PreviousPageLoaded;
-        private const string Key = "Product";
+        private const string Key = "Customer";
         public IApiProcessor ApiProcessor { get; init; }
 
-        public ObservableCollection<ProductModel> Items { get; set; }
+        public ObservableCollection<CustomerModel> Items { get; set; }
         public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
 
@@ -37,22 +37,22 @@ namespace AvazehWpfApiClient.DataAccess.CollectionManagers
         public int PageSize { get; set; } = 50;
         public int PagesCount { get; private set; }
         public int CurrentPage { get; private set; }
-        public ProductModel GetItemFromCollectionById(int Id)
+        public CustomerModel GetItemFromCollectionById(int Id)
         {
             return Items.SingleOrDefault(i => i.Id == Id);
         }
-        public async Task<ProductModel> CreateItemAsync(ProductModel item)
+        public async Task<CustomerModel> CreateItemAsync(CustomerModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return null;
             var newItem = item.AsDto();
-            return await ApiProcessor.CreateItemAsync<ProductModel_DTO_Create_Update, ProductModel>(Key, newItem);
+            return await ApiProcessor.CreateItemAsync<CustomerModel_DTO_Create_Update, CustomerModel>(Key, newItem);
         }
 
-        public async Task<ProductModel> UpdateItemAsync(ProductModel item)
+        public async Task<CustomerModel> UpdateItemAsync(CustomerModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return null;
             var newItem = item.AsDto();
-            return await ApiProcessor.UpdateItemAsync<ProductModel_DTO_Create_Update, ProductModel>(Key, item.Id, newItem);
+            return await ApiProcessor.UpdateItemAsync<CustomerModel_DTO_Create_Update, CustomerModel>(Key, item.Id, newItem);
         }
 
         public async Task<bool> DeleteItemAsync(int Id)
@@ -65,9 +65,9 @@ namespace AvazehWpfApiClient.DataAccess.CollectionManagers
             return false;
         }
 
-        public ValidationResult ValidateItem(ProductModel item)
+        public ValidationResult ValidateItem(CustomerModel item)
         {
-            ProductValidator validator = new();
+            CustomerValidator validator = new();
             var result = validator.Validate(item);
             return result;
         }
@@ -77,7 +77,7 @@ namespace AvazehWpfApiClient.DataAccess.CollectionManagers
             PageLoadEventArgs eventArgs = new();
             PageLoading?.Invoke(this, eventArgs);
             if (eventArgs.Cancel) return 0;
-            var collection = await ApiProcessor.GetCollectionAsync<ItemsCollection_DTO<ProductModel>>(Key, PageNumber, SearchValue, PageSize);
+            var collection = await ApiProcessor.GetCollectionAsync<ItemsCollection_DTO<CustomerModel>>(Key, PageNumber, SearchValue, PageSize);
             Items = collection.Items;
             CurrentPage = collection.CurrentPage;
             PagesCount = collection.PagesCount;

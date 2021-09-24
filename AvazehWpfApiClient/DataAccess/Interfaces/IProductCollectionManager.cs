@@ -18,12 +18,14 @@ namespace AvazehWpfApiClient.DataAccess.Interfaces
         int PageSize { get; set; }
         string SearchValue { get; set; }
 
+        event EventHandler WhereClauseChanged;
+        event EventHandler PageLoading;
+        event EventHandler PageLoaded;
         event EventHandler FirstPageLoaded;
         event EventHandler NextPageLoaded;
         event EventHandler NextPageLoading;
         event EventHandler PreviousPageLoaded;
         event EventHandler PreviousPageLoading;
-        event EventHandler WhereClauseChanged;
 
         Task<T> CreateItemAsync(T item);
         Task<bool> DeleteItemAsync(int Id);
@@ -33,6 +35,6 @@ namespace AvazehWpfApiClient.DataAccess.Interfaces
         Task<int> LoadNextPageAsync();
         Task<int> LoadPreviousPageAsync();
         Task<T> UpdateItemAsync(T item);
-        ValidationResult ValidateItem(T product);
+        ValidationResult ValidateItem(T item);
     }
 }

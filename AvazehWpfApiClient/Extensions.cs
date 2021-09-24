@@ -21,5 +21,19 @@ namespace AvazehWpfApiClient
                 Descriptions = model.Descriptions
             };
         }
+
+        public static CustomerModel_DTO_Create_Update AsDto(this CustomerModel model)
+        {
+            return new CustomerModel_DTO_Create_Update()
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                CompanyName = model.CompanyName,
+                EmailAddress = model.EmailAddress,
+                PostAddress = model.PostAddress,
+                PhoneNumbers = model.PhoneNumbers,
+                Descriptions = model.Descriptions
+            };
+        }
     }
 }

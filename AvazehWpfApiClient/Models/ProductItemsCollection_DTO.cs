@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace AvazehWpfApiClient.Models
 {
-    public class ProductItemsCollection_DTO
+    public class ItemsCollection_DTO<T>
     {
-        public ObservableCollection<ProductModel> Items { get; init; }
+        public ObservableCollection<T> Items { get; init; }
         public int PagesCount { get; init; }
         public int CurrentPage { get; init; }
         public string SearchValue { get; init; }
