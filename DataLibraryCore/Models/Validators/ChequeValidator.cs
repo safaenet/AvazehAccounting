@@ -22,8 +22,7 @@ namespace DataLibraryCore.Models.Validators
             RuleFor(c => c.PayAmount)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty().WithMessage("{PropertyName} cannot be empty")
-                .GreaterThan(-1).WithMessage("{PropertyName} must be >= 0")
-                .NotEqual(0).WithMessage("{PropertyName} cannot be zero");
+                .GreaterThan(0).WithMessage("{PropertyName} must be >= 0");
 
             RuleFor(c => c.About)
                 .MaximumLength(100).WithMessage("{PropertyName} cannot be more than 100 characters ({TotalLength})");

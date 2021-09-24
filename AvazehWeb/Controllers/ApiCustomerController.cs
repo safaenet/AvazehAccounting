@@ -41,17 +41,17 @@ namespace AvazehWebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateItemAsync(CustomerModel_DTO_Create_Update model)
+        public async Task<ActionResult<CustomerModel>> CreateItemAsync(CustomerModel_DTO_Create_Update model)
         {
             var newItem = model.AsDaL();
             var validate = Manager.Processor.ValidateItem(newItem);
             if (!validate.IsValid) return BadRequest("Model is not valid");
             await Manager.Processor.CreateItemAsync(newItem);
-            return Ok("Successfully created the new item");
+            return newItem;
         }
 
         [HttpPut("{Id}")]
-        public async Task<ActionResult> UpdateItemAsync(int Id, CustomerModel_DTO_Create_Update model)
+        public async Task<ActionResult<CustomerModel>> UpdateItemAsync(int Id, CustomerModel_DTO_Create_Update model)
         {
             if (model is null) return BadRequest("Model is not valid");
             var updatedModel = model.AsDaL();
@@ -59,7 +59,7 @@ namespace AvazehWebAPI.Controllers
             if (!validate.IsValid) return BadRequest("Model is not valid");
             updatedModel.Id = Id;
             if (await Manager.Processor.UpdateItemAsync(updatedModel) == 0) return NotFound();
-            return Ok("Successfully updated the item");
+            return updatedModel;
         }
 
         [HttpDelete]

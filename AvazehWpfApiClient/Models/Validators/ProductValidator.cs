@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AvazehWpfApiClient.Models.Validators
 {
-    internal class ProductValidator : AbstractValidator<ProductModel>
+    public class ProductValidator : AbstractValidator<ProductModel>
     {
         internal ProductValidator()
         {

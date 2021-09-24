@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AvazehWpfApiClient.DataAccess.CollectionManagers
 {
-    public class CustomerCollectionManagerAsync : ICollectionManager<CustomerModel>
+    public abstract class CustomerCollectionManagerAsync<T, U, V> : ICollectionManager<T> where T : CustomerModel where U : CustomerModel_DTO_Create_Update where V : CustomerValidator, new()
     {
         public CustomerCollectionManagerAsync(IApiProcessor apiProcessor)
         {
@@ -28,7 +28,7 @@ namespace AvazehWpfApiClient.DataAccess.CollectionManagers
         private const string Key = "Customer";
         public IApiProcessor ApiProcessor { get; init; }
 
-        public ObservableCollection<CustomerModel> Items { get; set; }
+        public ObservableCollection<T> Items { get; set; }
         public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
 
@@ -37,22 +37,22 @@ namespace AvazehWpfApiClient.DataAccess.CollectionManagers
         public int PageSize { get; set; } = 50;
         public int PagesCount { get; private set; }
         public int CurrentPage { get; private set; }
-        public CustomerModel GetItemFromCollectionById(int Id)
+        public T GetItemFromCollectionById(int Id)
         {
             return Items.SingleOrDefault(i => i.Id == Id);
         }
-        public async Task<CustomerModel> CreateItemAsync(CustomerModel item)
+        public async Task<T> CreateItemAsync(T item)
         {
             if (item == null || !ValidateItem(item).IsValid) return null;
             var newItem = item.AsDto();
-            return await ApiProcessor.CreateItemAsync<CustomerModel_DTO_Create_Update, CustomerModel>(Key, newItem);
+            return await ApiProcessor.CreateItemAsync<U, T>(Key, newItem as U);
         }
 
-        public async Task<CustomerModel> UpdateItemAsync(CustomerModel item)
+        public async Task<T> UpdateItemAsync(T item)
         {
             if (item == null || !ValidateItem(item).IsValid) return null;
             var newItem = item.AsDto();
-            return await ApiProcessor.UpdateItemAsync<CustomerModel_DTO_Create_Update, CustomerModel>(Key, item.Id, newItem);
+            return await ApiProcessor.UpdateItemAsync<U, T>(Key, item.Id, newItem as U);
         }
 
         public async Task<bool> DeleteItemAsync(int Id)
@@ -65,9 +65,9 @@ namespace AvazehWpfApiClient.DataAccess.CollectionManagers
             return false;
         }
 
-        public ValidationResult ValidateItem(CustomerModel item)
+        public ValidationResult ValidateItem(T item)
         {
-            CustomerValidator validator = new();
+            V validator = new();
             var result = validator.Validate(item);
             return result;
         }
@@ -77,7 +77,7 @@ namespace AvazehWpfApiClient.DataAccess.CollectionManagers
             PageLoadEventArgs eventArgs = new();
             PageLoading?.Invoke(this, eventArgs);
             if (eventArgs.Cancel) return 0;
-            var collection = await ApiProcessor.GetCollectionAsync<ItemsCollection_DTO<CustomerModel>>(Key, PageNumber, SearchValue, PageSize);
+            var collection = await ApiProcessor.GetCollectionAsync<ItemsCollection_DTO<T>>(Key, PageNumber, SearchValue, PageSize);
             Items = collection.Items;
             CurrentPage = collection.CurrentPage;
             PagesCount = collection.PagesCount;

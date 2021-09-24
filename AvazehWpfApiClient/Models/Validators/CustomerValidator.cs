@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AvazehWpfApiClient.Models.Validators
 {
-    internal class CustomerValidator : AbstractValidator<CustomerModel>
+    public class CustomerValidator : AbstractValidator<CustomerModel>
     {
         internal CustomerValidator()
         {

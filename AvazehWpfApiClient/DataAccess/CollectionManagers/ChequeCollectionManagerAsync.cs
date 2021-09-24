@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace AvazehWpfApiClient.DataAccess.CollectionManagers
 {
-    public abstract class ProductCollectionManagerAsync<T, U, V> : ICollectionManager<T> where T : ProductModel where U : ProductModel_DTO_Create_Update where V : ProductValidator, new()
+    public abstract class ChequeCollectionManagerAsync<T, U, V> : ICollectionManager<T> where T : ChequeModel where U : ChequeModel_DTO_Create_Update where V : ChequeValidator, new()
     {
-        public ProductCollectionManagerAsync(IApiProcessor apiProcessor)
+        public ChequeCollectionManagerAsync(IApiProcessor apiProcessor)
         {
             ApiProcessor = apiProcessor;
         }
@@ -25,7 +25,7 @@ namespace AvazehWpfApiClient.DataAccess.CollectionManagers
         public event EventHandler NextPageLoaded;
         public event EventHandler PreviousPageLoading;
         public event EventHandler PreviousPageLoaded;
-        private const string Key = "Product";
+        private const string Key = "Cheque";
         public IApiProcessor ApiProcessor { get; init; }
 
         public ObservableCollection<T> Items { get; set; }

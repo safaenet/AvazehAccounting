@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using AvazehWpfApiClient.Models;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace AvazehWpfApiClient.DataAccess.Interfaces
