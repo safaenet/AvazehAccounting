@@ -3,15 +3,13 @@ using AvazehWpfApiClient.Models;
 using AvazehWpfApiClient.Models.Validators;
 using FluentValidation.Results;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AvazehWpfApiClient.DataAccess.CollectionManagers
 {
-    public abstract class InvoiceCollectionManagerAsync
+    public partial class InvoiceCollectionManagerAsync
     {
         public InvoiceCollectionManagerAsync(IApiProcessor apiProcessor)
         {
