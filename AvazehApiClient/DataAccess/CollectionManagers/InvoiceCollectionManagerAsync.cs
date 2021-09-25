@@ -30,6 +30,8 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
 
         public string SearchValue { get; set; }
+        InvoiceLifeStatus? LifeStatus { get; set; }
+        InvoiceFinancialStatus? FinStatus { get; set; }
 
         public int PageSize { get; set; } = 50;
         public int PagesCount { get; private set; }
@@ -82,7 +84,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
             PageLoadEventArgs eventArgs = new();
             PageLoading?.Invoke(this, eventArgs);
             if (eventArgs.Cancel) return 0;
-            var collection = await ApiProcessor.GetCollectionAsync<ItemsCollection_DTO<InvoiceListModel>>(Key, PageNumber, SearchValue, PageSize);
+            var collection = await ApiProcessor.GetInvoiceCollectionAsync<ItemsCollection_DTO<InvoiceListModel>>(Key, PageNumber, SearchValue, LifeStatus, FinStatus, PageSize);
             Items = collection.Items;
             CurrentPage = collection.CurrentPage;
             PagesCount = collection.PagesCount;

@@ -12,6 +12,5 @@ namespace AvazehApiClient.Models
         public ObservableCollection<T> Items { get; init; }
         public int PagesCount { get; init; }
         public int CurrentPage { get; init; }
-        public string SearchValue { get; init; }
     }
 }

@@ -18,6 +18,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
         private const string Key = "Invoice";
         private IApiProcessor ApiProcessor { get; init; }
         public InvoiceModel Invoice { get; set; }
+        public long CustomerTotalBalance { get; private set; }
 
         public InvoiceItemModel GetItemFromCollectionById(int Id)
         {

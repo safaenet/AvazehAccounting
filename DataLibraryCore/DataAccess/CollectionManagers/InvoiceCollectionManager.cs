@@ -42,6 +42,8 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         }
 
         public string SearchValue { get; private set; }
+        public InvoiceLifeStatus? LifeStatus { get; private set; }
+        public InvoiceFinancialStatus? FinStatus { get; private set; }
         public int PageSize { get; set; } = 50;
         public int PagesCount => TotalQueryCount == 0 ? 0 : (int)Math.Ceiling((double)TotalQueryCount / PageSize);
         private protected int TotalQueryCount { get; set; }
@@ -113,11 +115,13 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             return false;
         }
 
-        public int GenerateWhereClause(string val, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, bool run = false, SqlSearchMode mode = SqlSearchMode.OR)
+        public int GenerateWhereClause(string val, InvoiceLifeStatus? lifeStatus, InvoiceFinancialStatus? finStatus, bool run = false, SqlSearchMode mode = SqlSearchMode.OR)
         {
-            if (val == SearchValue) return 0;
+            if (val == SearchValue && LifeStatus == lifeStatus && FinStatus == finStatus) return 0;
             SearchValue = val;
-            WhereClause = Processor.GenerateWhereClause(val, LifeStatus, FinStatus, mode);
+            LifeStatus = lifeStatus;
+            FinStatus = finStatus;
+            WhereClause = Processor.GenerateWhereClause(val, lifeStatus, finStatus, mode);
             if (run) LoadFirstPage();
             return Items == null ? 0 : Items.Count;
         }

@@ -22,6 +22,8 @@ namespace DataLibraryCore.DataAccess.Interfaces
         int PagesCount { get; }
         int PageSize { get; set; }
         string SearchValue { get; }
+        InvoiceLifeStatus? LifeStatus { get; }
+        InvoiceFinancialStatus? FinStatus { get; }
         double TotalBalance { get; }
         double TotalPayments { get; }
         string WhereClause { get; set; }

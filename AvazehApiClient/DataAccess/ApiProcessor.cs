@@ -29,6 +29,15 @@ namespace AvazehApiClient.DataAccess
             return null;
         }
 
+        public async Task<T> GetInvoiceCollectionAsync<T>(string Key, int Page = 1, string SearchText = "", InvoiceLifeStatus? LifeStatus = null, InvoiceFinancialStatus? FinStatus = null, int PageSize = 50) where T : class
+        {
+            var Url = $"{Key}?Page={Page}&SearchText={SearchText}&LifeStatus={LifeStatus}&FinStatus={FinStatus}&PageSize={PageSize}";
+            var response = await ApiClient.GetAsync(Url);
+            if (response.IsSuccessStatusCode)
+                return await response.Content.ReadAsAsync<T>();
+            return null;
+        }
+
         public async Task<T> GetItemAsync<T>(string Key, int Id) where T : class
         {
             var Url = $"{Key}/{Id}";
