@@ -8,7 +8,7 @@ using System.Linq;
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
     public partial class ChequeCollectionManager<TModel, TProcessor> : ICollectionManager<TModel, TProcessor>
-        where TModel : ChequeModel where TProcessor : IChequeProcessor
+        where TModel : ChequeModel where TProcessor : IProcessor<TModel>
     {
         public ChequeCollectionManager(TProcessor processor)
         {

@@ -11,7 +11,7 @@ using System.Text;
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
     public partial class CustomerCollectionManager<TModel, TProcessor> : ICollectionManager<TModel, TProcessor>
-        where TModel : CustomerModel where TProcessor : ICustomerProcessor
+        where TModel : CustomerModel where TProcessor : IProcessor<TModel>
     {
         public CustomerCollectionManager(TProcessor processor)
         {
