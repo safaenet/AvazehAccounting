@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public partial class SqlChequeProcessor : IChequeProcessor
+    public partial class SqlChequeProcessor<TModel, TSub, TValidator> : IProcessor<TModel>
     {
-        public async Task<int> CreateItemAsync(ChequeModel item)
+        public async Task<int> CreateItemAsync(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             var dp = new DynamicParameters();
@@ -39,7 +39,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return OutputId;
         }
 
-        public async Task<int> UpdateItemAsync(ChequeModel item)
+        public async Task<int> UpdateItemAsync(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             var AffectedCount = await DataAccess.SaveDataAsync(UpdateChequeQuery, item);
@@ -52,16 +52,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return AffectedCount;
         }
 
-        private async Task<int> InsertChequeEventsToDatabaseAsync(ChequeModel cheque)
+        private async Task<int> InsertChequeEventsToDatabaseAsync(TModel cheque)
         {
             if (cheque == null || cheque.Events == null || cheque.Events.Count == 0) return 0;
-            ObservableCollection<ChequeEventModel> events = new();
+            ObservableCollection<TSub> events = new();
             foreach (var e in cheque.Events)
             {
                 if (true)
                 {
                     e.ChequeId = cheque.Id;
-                    events.Add(e);
+                    events.Add(e as TSub);
                 }
             }
             if (events.Count == 0) return 0;
@@ -82,7 +82,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
         }
 
-        public async Task<ObservableCollection<ChequeModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.DESC, string OrderBy = "DueDate")
+        public async Task<ObservableCollection<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.DESC, string OrderBy = "DueDate")
         {
             string sqlTemp = $@"INSERT @cheques SELECT * FROM Cheques
                                 { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
@@ -90,7 +90,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             string query = string.Format(SelectChequeQuery, sqlTemp);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
             var reader = await conn.QueryMultipleAsync(query, null);
-            var Mapped = reader.MapObservableCollectionOfChequesAsync<ChequeModel, ChequeEventModel, int>
+            var Mapped = reader.MapObservableCollectionOfChequesAsync<TModel, TSub, int>
                       (
                          cheque => cheque.Id,
                          e => e.ChequeId,
@@ -99,7 +99,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return await Mapped;
         }
 
-        public async Task<ChequeModel> LoadSingleItemAsync(int Id)
+        public async Task<TModel> LoadSingleItemAsync(int Id)
         {
             var outPut = await LoadManyItemsAsync(0, 1, $"[Id] = { Id }");
             return outPut.FirstOrDefault();

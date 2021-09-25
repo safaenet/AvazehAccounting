@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public partial class SqlProductProcessor : IProductProcessor
+    public partial class SqlProductProcessor<TModel, TValidator> : IProcessor<TModel>
     {
-        public async Task<int> CreateItemAsync(ProductModel item)
+        public async Task<int> CreateItemAsync(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             item.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
@@ -34,7 +34,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return OutputId;
         }
 
-        public async Task<int> UpdateItemAsync(ProductModel item)
+        public async Task<int> UpdateItemAsync(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             item.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
@@ -56,16 +56,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
         }
 
-        public async Task<ObservableCollection<ProductModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.ASC, string OrderBy = "Id")
+        public async Task<ObservableCollection<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.ASC, string OrderBy = "Id")
         {
             string sql = $@"SET NOCOUNT ON
                             SELECT * FROM Products
                             { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
                             ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
-            return await DataAccess.LoadDataAsync<ProductModel, DynamicParameters>(sql, null);
+            return await DataAccess.LoadDataAsync<TModel, DynamicParameters>(sql, null);
         }
 
-        public async Task<ProductModel> LoadSingleItemAsync(int Id)
+        public async Task<TModel> LoadSingleItemAsync(int Id)
         {
             var outPut = await LoadManyItemsAsync(0, 1, $"[Id] = { Id }");
             return outPut.FirstOrDefault();

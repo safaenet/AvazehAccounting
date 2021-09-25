@@ -15,7 +15,8 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public partial class SqlProductProcessor : IProductProcessor
+    public partial class SqlProductProcessor<TModel, TValidator> : IProcessor<TModel>
+        where TModel : ProductModel where TValidator : ProductValidator, new()
     {
         public SqlProductProcessor(IDataAccess dataAcess)
         {
@@ -31,7 +32,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             WHERE Id = @id";
         private readonly string DeleteProductQuery = @"DELETE FROM Products WHERE Id = @id";
 
-        public int CreateItem(ProductModel item)
+        public int CreateItem(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             item.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
@@ -52,7 +53,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return OutputId;
         }
 
-        public int UpdateItem(ProductModel item)
+        public int UpdateItem(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             item.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
@@ -74,16 +75,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return DataAccess.ExecuteScalar<int, DynamicParameters>(sqlTemp, null);
         }
 
-        public ObservableCollection<ProductModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.ASC, string OrderBy = "Id")
+        public ObservableCollection<TModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.ASC, string OrderBy = "Id")
         {
             string sql = $@"SET NOCOUNT ON
                             SELECT * FROM Products
                             { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
                             ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
-            return DataAccess.LoadData<ProductModel, DynamicParameters>(sql, null);
+            return DataAccess.LoadData<TModel, DynamicParameters>(sql, null);
         }
 
-        public ProductModel LoadSingleItem(int Id)
+        public TModel LoadSingleItem(int Id)
         {
             return LoadManyItems(0, 1, $"[Id] = { Id }").FirstOrDefault();
         }
@@ -104,9 +105,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
                       {mode} [Descriptions] LIKE {criteria} )";
         }
 
-        public ValidationResult ValidateItem(ProductModel product)
+        public ValidationResult ValidateItem(TModel product)
         {
-            ProductValidator validator = new();
+            TValidator validator = new();
             var result = validator.Validate(product);
             return result;
         }

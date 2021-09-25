@@ -14,7 +14,8 @@ using DataLibraryCore.DataAccess.Interfaces;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public partial class SqlCustomerProcessor : ICustomerProcessor
+    public partial class SqlCustomerProcessor<TModel, TSub, TValidator> : IProcessor<TModel>
+        where TModel : CustomerModel where TSub : PhoneNumberModel where TValidator : CustomerValidator, new()
     {
         public SqlCustomerProcessor(IDataAccess dataAcess)
         {
@@ -44,7 +45,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             SELECT * FROM PhoneNumbers WHERE CustomerId IN (SELECT c.Id FROM @customers c);";
         private readonly string DeleteCustomerQuery = @"DELETE FROM Customers WHERE Id = @id";
 
-        public int CreateItem(CustomerModel item)
+        public int CreateItem(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             var dp = new DynamicParameters();
@@ -66,7 +67,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return OutputId;
         }
 
-        public int UpdateItem(CustomerModel item)
+        public int UpdateItem(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             var AffectedCount = DataAccess.SaveData(UpdateCustomerQuery, item);
@@ -79,16 +80,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return AffectedCount;
         }
 
-        private int InsertPhoneNumbersToDatabase(CustomerModel customer)
+        private int InsertPhoneNumbersToDatabase(TModel customer)
         {
             if (customer == null || customer.PhoneNumbers == null || customer.PhoneNumbers.Count == 0) return 0;
-            ObservableCollection<PhoneNumberModel> phones = new();
+            ObservableCollection<TSub> phones = new();
             foreach (var phone in customer.PhoneNumbers)
             {
                 if (!string.IsNullOrEmpty(phone.PhoneNumber) && !string.IsNullOrWhiteSpace(phone.PhoneNumber))
                 {
                     phone.CustomerId = customer.Id;
-                    phones.Add(phone);
+                    phones.Add(phone as TSub);
                 }
             }
             if (phones.Count == 0) return 0;
@@ -109,7 +110,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return DataAccess.ExecuteScalar<int, DynamicParameters>(sqlTemp, null);
         }
 
-        public ObservableCollection<CustomerModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.ASC, string OrderBy = "FirstName")
+        public ObservableCollection<TModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.ASC, string OrderBy = "FirstName")
         {
             var sqlInsert = $@"INSERT @customers SELECT * FROM Customers
                                { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
@@ -117,10 +118,10 @@ namespace DataLibraryCore.DataAccess.SqlServer
             var query = string.Format(SelectCustomersQuery, sqlInsert);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
             var reader = conn.QueryMultiple(query, null);
-            return reader.MapObservableCollectionOfCustomers();
+            return reader.MapObservableCollectionOfCustomers() as ObservableCollection<TModel>;
         }
 
-        public CustomerModel LoadSingleItem(int Id)
+        public TModel LoadSingleItem(int Id)
         {
             return LoadManyItems(0, 1, $"[Id] = { Id }").FirstOrDefault();
         }
@@ -138,9 +139,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
                              {mode} [Descriptions] LIKE { criteria } )";
         }
 
-        public ValidationResult ValidateItem(CustomerModel customer)
+        public ValidationResult ValidateItem(TModel customer)
         {
-            CustomerValidator validator = new();
+            TValidator validator = new();
             var result = validator.Validate(customer);
             return result;
         }

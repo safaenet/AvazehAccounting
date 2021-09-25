@@ -5,9 +5,9 @@ using System.Text;
 
 namespace DataLibraryCore.Models.Validators
 {
-    internal class InvoiceValidator : AbstractValidator<InvoiceModel>
+    public class InvoiceValidator : AbstractValidator<InvoiceModel>
     {
-        internal InvoiceValidator()
+        public InvoiceValidator()
         {
             RuleFor(i => i.Customer.Id)
                 .Cascade(CascadeMode.Stop)

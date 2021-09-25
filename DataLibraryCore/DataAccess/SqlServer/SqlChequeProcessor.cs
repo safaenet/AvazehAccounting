@@ -15,7 +15,8 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public partial class SqlChequeProcessor : IChequeProcessor
+    public partial class SqlChequeProcessor<TModel, TSub, TValidator> : IProcessor<TModel>
+        where TModel : ChequeModel where TSub : ChequeEventModel where TValidator : ChequeValidator, new()
     {
         public SqlChequeProcessor(IDataAccess dataAcess)
         {
@@ -49,7 +50,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             SELECT * FROM ChequeEvents WHERE ChequeId IN (SELECT c.Id FROM @cheques c);";
         private readonly string DeleteChequeQuery = @"DELETE FROM Cheques WHERE Id = @id";
 
-        public int CreateItem(ChequeModel item)
+        public int CreateItem(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             var dp = new DynamicParameters();
@@ -74,7 +75,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return OutputId;
         }
 
-        public int UpdateItem(ChequeModel item)
+        public int UpdateItem(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             var AffectedCount = DataAccess.SaveData(UpdateChequeQuery, item);
@@ -87,16 +88,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return AffectedCount;
         }
 
-        private int InsertChequeEventsToDatabase(ChequeModel cheque)
+        private int InsertChequeEventsToDatabase(TModel cheque)
         {
             if (cheque == null || cheque.Events == null || cheque.Events.Count == 0) return 0;
-            ObservableCollection<ChequeEventModel> events = new();
+            ObservableCollection<TSub> events = new();
             foreach (var e in cheque.Events)
             {
                 if (true)
                 {
                     e.ChequeId = cheque.Id;
-                    events.Add(e);
+                    events.Add(e as TSub);
                 }
             }
             if (events.Count == 0) return 0;
@@ -117,7 +118,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return DataAccess.ExecuteScalar<int, DynamicParameters>(sqlTemp, null);
         }
 
-        public ObservableCollection<ChequeModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.DESC, string OrderBy = "DueDate")
+        public ObservableCollection<TModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.DESC, string OrderBy = "DueDate")
         {
             string sqlTemp = $@"INSERT @cheques SELECT * FROM Cheques
                                 { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
@@ -125,7 +126,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             string query = string.Format(SelectChequeQuery, sqlTemp);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
             var reader = conn.QueryMultiple(query, null);
-            var Mapped = reader.MapObservableCollectionOfCheques<ChequeModel, ChequeEventModel, int>
+            var Mapped = reader.MapObservableCollectionOfCheques<TModel, TSub, int>
                       (
                          cheque => cheque.Id,
                          e => e.ChequeId,
@@ -134,7 +135,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return Mapped;
         }
 
-        public ChequeModel LoadSingleItem(int Id)
+        public TModel LoadSingleItem(int Id)
         {
             return LoadManyItems(0, 1, $"[Id] = { Id }").FirstOrDefault();
         }
@@ -155,9 +156,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
                       {mode} [Descriptions] LIKE { criteria } )";
         }
 
-        public ValidationResult ValidateItem(ChequeModel cheque)
+        public ValidationResult ValidateItem(TModel cheque)
         {
-            ChequeValidator validator = new();
+            TValidator validator = new();
             var result = validator.Validate(cheque);
             return result;
         }

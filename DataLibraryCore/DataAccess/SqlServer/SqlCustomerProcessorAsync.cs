@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public partial class SqlCustomerProcessor : ICustomerProcessor
+    public partial class SqlCustomerProcessor<TModel, TSub, TValidator> : IProcessor<TModel>
     {
-        public async Task<int> CreateItemAsync(CustomerModel item)
+        public async Task<int> CreateItemAsync(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             var dp = new DynamicParameters();
@@ -36,7 +36,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return OutputId;
         }
 
-        public async Task<int> UpdateItemAsync(CustomerModel item)
+        public async Task<int> UpdateItemAsync(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             var AffectedCount = await DataAccess.SaveDataAsync(UpdateCustomerQuery, item);
@@ -49,16 +49,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return AffectedCount;
         }
 
-        private async Task<int> InsertPhoneNumbersToDatabaseAsync(CustomerModel customer)
+        private async Task<int> InsertPhoneNumbersToDatabaseAsync(TModel customer)
         {
             if (customer == null || customer.PhoneNumbers == null || customer.PhoneNumbers.Count == 0) return 0;
-            ObservableCollection<PhoneNumberModel> phones = new();
+            ObservableCollection<TSub> phones = new();
             foreach (var phone in customer.PhoneNumbers)
             {
                 if (!string.IsNullOrEmpty(phone.PhoneNumber) && !string.IsNullOrWhiteSpace(phone.PhoneNumber))
                 {
                     phone.CustomerId = customer.Id;
-                    phones.Add(phone);
+                    phones.Add(phone as TSub);
                 }
             }
             if (phones.Count == 0) return 0;
@@ -79,7 +79,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
         }
 
-        public async Task<ObservableCollection<CustomerModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.ASC, string OrderBy = "FirstName")
+        public async Task<ObservableCollection<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.ASC, string OrderBy = "FirstName")
         {
             var sqlInsert = $@"INSERT @customers SELECT * FROM Customers
                                { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
@@ -87,10 +87,10 @@ namespace DataLibraryCore.DataAccess.SqlServer
             var query = string.Format(SelectCustomersQuery, sqlInsert);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
             var reader = await conn.QueryMultipleAsync(query, null);
-            return await reader.MapObservableCollectionOfCustomersAsync();
+            return await reader.MapObservableCollectionOfCustomersAsync() as ObservableCollection<TModel>;
         }
 
-        public async Task<CustomerModel> LoadSingleItemAsync(int Id)
+        public async Task<TModel> LoadSingleItemAsync(int Id)
         {
             var outPut = await LoadManyItemsAsync(0, 1, $"[Id] = { Id }");
             return outPut.FirstOrDefault();

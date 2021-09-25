@@ -5,9 +5,9 @@ using System.Text;
 
 namespace DataLibraryCore.Models.Validators
 {
-    internal class ChequeValidator : AbstractValidator<ChequeModel>
+    public class ChequeValidator : AbstractValidator<ChequeModel>
     {
-        internal ChequeValidator()
+        public ChequeValidator()
         {
             RuleFor(c => c.Drawer)
                 .Cascade(CascadeMode.Stop)

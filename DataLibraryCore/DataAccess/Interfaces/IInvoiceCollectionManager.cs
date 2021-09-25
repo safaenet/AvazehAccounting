@@ -2,10 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.Interfaces
 {
-    public partial interface IInvoiceCollectionManager
+    public interface IInvoiceCollectionManager
     {
         IInvoiceProcessor Processor { get; init; }
         event EventHandler FirstPageLoaded;
@@ -27,7 +28,6 @@ namespace DataLibraryCore.DataAccess.Interfaces
         double TotalBalance { get; }
         double TotalPayments { get; }
         string WhereClause { get; set; }
-
         bool DeleteItemFromCollectionById(int Id);
         bool DeleteItemFromDbById(int Id);
         int GenerateWhereClause(string val, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, bool run = false, SqlSearchMode mode = SqlSearchMode.OR);
@@ -36,5 +36,11 @@ namespace DataLibraryCore.DataAccess.Interfaces
         int LoadFirstPage();
         int LoadNextPage();
         int LoadPreviousPage();
+
+        Task<bool> DeleteItemFromDbByIdAsync(int Id);
+        Task<int> GotoPageAsync(int PageNumber);
+        Task<int> LoadFirstPageAsync();
+        Task<int> LoadNextPageAsync();
+        Task<int> LoadPreviousPageAsync();
     }
 }
