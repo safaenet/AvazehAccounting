@@ -25,8 +25,6 @@ namespace DataLibraryCore.DataAccess.Interfaces
         string SearchValue { get; }
         InvoiceLifeStatus? LifeStatus { get; }
         InvoiceFinancialStatus? FinStatus { get; }
-        double TotalBalance { get; }
-        double TotalPayments { get; }
         string WhereClause { get; set; }
         bool DeleteItemFromCollectionById(int Id);
         bool DeleteItemFromDbById(int Id);

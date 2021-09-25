@@ -26,8 +26,6 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         public ObservableCollection<InvoiceListModel> Items { get; set; }
         public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
-        public double TotalBalance => Items.Sum(x => x.TotalBalance);
-        public double TotalPayments => Items.Sum(x => x.TotalPayments);
 
         private protected string _WhereClause;
         public string WhereClause
