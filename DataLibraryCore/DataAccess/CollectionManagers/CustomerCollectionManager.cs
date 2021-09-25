@@ -10,9 +10,10 @@ using System.Text;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public partial class CustomerCollectionManager : ICustomerCollectionManager
+    public partial class CustomerCollectionManager<TModel, TProcessor> : ICollectionManager<TModel, TProcessor>
+        where TModel : CustomerModel where TProcessor : ICustomerProcessor
     {
-        public CustomerCollectionManager(ICustomerProcessor processor)
+        public CustomerCollectionManager(TProcessor processor)
         {
             Processor = processor;
         }
@@ -23,11 +24,11 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         public event EventHandler PreviousPageLoading;
         public event EventHandler PreviousPageLoaded;
         public bool Initialized { get; private set; }
-        public ICustomerProcessor Processor { get; init; }
-        public ObservableCollection<CustomerModel> Items { get; set; }
+        public TProcessor Processor { get; init; }
+        public ObservableCollection<TModel> Items { get; set; }
         public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
-        public CustomerModel GetItemFromCollectionById(int Id)
+        public TModel GetItemFromCollectionById(int Id)
         {
             return Items.SingleOrDefault(i => i.Id == Id);
         }
@@ -80,7 +81,7 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             if (PagesCount == 0) PageNumber = 1;
             else if (PageNumber > PagesCount) PageNumber = PagesCount;
             else if (PageNumber < 1) PageNumber = 1;
-            Items = Processor.LoadManyItems((PageNumber - 1) * PageSize, PageSize, WhereClause);
+            Items = Processor.LoadManyItems((PageNumber - 1) * PageSize, PageSize, WhereClause) as ObservableCollection<TModel>;
             CurrentPage = Items == null || Items.Count == 0 ? 0 : PageNumber;
             return Items == null ? 0 : Items.Count;
         }

@@ -35,14 +35,13 @@ namespace AvazehWeb
             };
         }
 
-        internal static ProductItemsCollection_DTO AsDto(this IProductCollectionManager manager)
+        internal static ItemsCollection_DTO AsDto(this IProductCollectionManager manager)
         {
-            return new ProductItemsCollection_DTO()
+            return new ItemsCollection_DTO()
             {
                 Items = manager.Items,
                 PagesCount = manager.PagesCount,
-                CurrentPage = manager.CurrentPage,
-                SearchValue = manager.SearchValue
+                CurrentPage = manager.CurrentPage
             };
         }
 

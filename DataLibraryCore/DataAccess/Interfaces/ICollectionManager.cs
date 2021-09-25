@@ -2,12 +2,13 @@
 using FluentValidation.Results;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.Interfaces
 {
-    public partial interface IProductCollectionManager
+    public interface ICollectionManager<TModel, TProcessor>
     {
-        IProductProcessor Processor { get; init; }
+        TProcessor Processor { get; init; }
         event EventHandler FirstPageLoaded;
         event EventHandler WhereClauseChanged;
         event EventHandler NextPageLoading;
@@ -16,7 +17,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
         event EventHandler PreviousPageLoaded;
         int CurrentPage { get; }
         bool Initialized { get; }
-        ObservableCollection<ProductModel> Items { get; set; }
+        ObservableCollection<TModel> Items { get; set; }
         int? MaxID { get; }
         int? MinID { get; }
         int PagesCount { get; }
@@ -27,10 +28,15 @@ namespace DataLibraryCore.DataAccess.Interfaces
         bool DeleteItemFromCollectionById(int Id);
         bool DeleteItemFromDbById(int Id);
         int GenerateWhereClause(string val, bool run = false, SqlSearchMode mode = SqlSearchMode.OR);
-        ProductModel GetItemFromCollectionById(int Id);
+        TModel GetItemFromCollectionById(int Id);
         int GotoPage(int PageNumber);
         int LoadFirstPage();
         int LoadNextPage();
         int LoadPreviousPage();
+        Task<bool> DeleteItemFromDbByIdAsync(int Id);
+        Task<int> GotoPageAsync(int PageNumber);
+        Task<int> LoadFirstPageAsync();
+        Task<int> LoadNextPageAsync();
+        Task<int> LoadPreviousPageAsync();
     }
 }

@@ -12,54 +12,55 @@ using System.Threading.Tasks;
 namespace AvazehWebAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class CustomerController : ControllerBase
+    [Route("api/v1/[controller]")]
+    public class CustomerController<TDal, TDto, TCollection, TManager> : ControllerBase
+        where TDal : CustomerModel where TDto : CustomerModel_DTO_Create_Update
+        where TCollection : ItemsCollection_DTO<TDal> where TManager : ICustomerCollectionManager
     {
-        public CustomerController(ICustomerCollectionManager manager)
+        public CustomerController(TManager manager)
         {
             Manager = manager;
         }
 
-        private readonly ICustomerCollectionManager Manager;
+        private readonly TManager Manager;
 
         //GET /Product?Id=1&SearchText=sometext
         [HttpGet]
-        public async Task<ActionResult<CustomerItemsCollection_DTO>> GetItemsAsync(int Page = 1, string SearchText = "")
+        public async Task<ActionResult<TCollection>> GetItemsAsync(int Page = 1, string SearchText = "", int PageSize = 50)
         {
             Manager.GenerateWhereClause(SearchText);
+            Manager.PageSize = PageSize;
             await Manager.GotoPageAsync(Page);
             if (Manager.Items == null || Manager.Items.Count == 0) return NotFound("List is empty");
             return Manager.AsDto();
         }
 
         [HttpGet("{Id}")]
-        public async Task<ActionResult<CustomerModel>> GetItemAsync(int Id)
+        public async Task<ActionResult<TDal>> GetItemAsync(int Id)
         {
             var item = await Manager.Processor.LoadSingleItemAsync(Id);
             if (item is null) return NotFound("Couldn't find specific Item");
-            return item;
+            return item as TDal;
         }
 
         [HttpPost]
-        public async Task<ActionResult<CustomerModel>> CreateItemAsync(CustomerModel_DTO_Create_Update model)
+        public async Task<ActionResult<TDal>> CreateItemAsync(TDto model)
         {
             var newItem = model.AsDaL();
-            var validate = Manager.Processor.ValidateItem(newItem);
-            if (!validate.IsValid) return BadRequest("Model is not valid");
+            if (!Manager.Processor.ValidateItem(newItem).IsValid) return BadRequest(0);
             await Manager.Processor.CreateItemAsync(newItem);
-            return newItem;
+            return newItem as TDal;
         }
 
         [HttpPut("{Id}")]
-        public async Task<ActionResult<CustomerModel>> UpdateItemAsync(int Id, CustomerModel_DTO_Create_Update model)
+        public async Task<ActionResult<TDal>> UpdateItemAsync(int Id, TDto model)
         {
             if (model is null) return BadRequest("Model is not valid");
             var updatedModel = model.AsDaL();
-            var validate = Manager.Processor.ValidateItem(updatedModel);
-            if (!validate.IsValid) return BadRequest("Model is not valid");
+            if (!Manager.Processor.ValidateItem(updatedModel).IsValid) return BadRequest("Model is not valid");
             updatedModel.Id = Id;
             if (await Manager.Processor.UpdateItemAsync(updatedModel) == 0) return NotFound();
-            return updatedModel;
+            return updatedModel as TDal;
         }
 
         [HttpDelete]

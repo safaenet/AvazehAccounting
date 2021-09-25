@@ -2,13 +2,14 @@
 using DataLibraryCore.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public partial class ProductCollectionManager : IProductCollectionManager
+    public partial class ProductCollectionManager<TModel, TProcessor> : ICollectionManager<TModel, TProcessor>
     {
         public async Task<bool> DeleteItemFromDbByIdAsync(int Id)
         {
@@ -35,7 +36,7 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             if (PagesCount == 0) PageNumber = 1;
             else if (PageNumber > PagesCount) PageNumber = PagesCount;
             else if (PageNumber < 1) PageNumber = 1;
-            Items = await Processor.LoadManyItemsAsync((PageNumber - 1) * PageSize, PageSize, WhereClause);
+            Items = await Processor.LoadManyItemsAsync((PageNumber - 1) * PageSize, PageSize, WhereClause) as ObservableCollection<TModel>;
             CurrentPage = Items == null || Items.Count == 0 ? 0 : PageNumber;
             return Items == null ? 0 : Items.Count;
         }

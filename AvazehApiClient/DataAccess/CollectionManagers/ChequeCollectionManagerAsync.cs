@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AvazehApiClient.DataAccess.CollectionManagers
 {
-    public class ChequeCollectionManagerAsync<TDalModel, TDtoModel, TValidator> : ICollectionManager<TDalModel> where TDalModel : ChequeModel where TDtoModel : ChequeModel_DTO_Create_Update where TValidator : ChequeValidator, new()
+    public class ChequeCollectionManagerAsync<TDalModel, TDtoModel, TValidator> : ICollectionManager<TDalModel>where TDalModel : ChequeModel where TDtoModel : ChequeModel_DTO_Create_Update where TValidator : ChequeValidator, new()
     {
         public ChequeCollectionManagerAsync(IApiProcessor apiProcessor)
         {
