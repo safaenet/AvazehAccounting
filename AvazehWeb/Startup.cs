@@ -1,6 +1,7 @@
 using DataLibraryCore.DataAccess.CollectionManagers;
 using DataLibraryCore.DataAccess.Interfaces;
 using DataLibraryCore.DataAccess.SqlServer;
+using DataLibraryCore.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,15 +27,16 @@ namespace AvazehWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IProductCollectionManager, ProductCollectionManager>()
-                .AddScoped<ICustomerCollectionManager, CustomerCollectionManager>()
+            services
+                .AddScoped<ICollectionManager<ProductModel, IDataAccess>, ICollectionManager<ProductModel, IProcessor<ProductModel>>>()
+                .AddScoped<ICollectionManager<CustomerModel, IDataAccess>, ICollectionManager<CustomerModel, IProcessor<CustomerModel>>>()
                 .AddScoped<IInvoiceCollectionManager, InvoiceCollectionManager>()
-                .AddScoped<IChequeCollectionManager, ChequeCollectionManager>()
+                .AddScoped<ICollectionManager<ChequeModel, IDataAccess>, ICollectionManager<ChequeModel, IProcessor<ChequeModel>>>()
 
-                .AddScoped<IProductProcessor, SqlProductProcessor>()
-                .AddScoped<ICustomerProcessor, SqlCustomerProcessor>()
+                .AddScoped<IProcessor<ProductModel>, IProcessor<ProductModel>>()
+                .AddScoped<IProcessor<CustomerModel>, IProcessor<CustomerModel>>()
                 .AddScoped<IInvoiceProcessor, SqlInvoiceProcessor>()
-                .AddScoped<IChequeProcessor, SqlChequeProcessor>()
+                .AddScoped<IProcessor<ChequeModel>, IProcessor<ChequeModel>>()
                 .AddSingleton<IDataAccess, SqlDataAccess>();
 
             services.AddControllersWithViews();
