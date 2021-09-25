@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataLibraryCore.Models.Validators
+namespace AvazehApiClient.Models.Validators
 {
-    internal class InvoiceValidator : AbstractValidator<InvoiceModel>
+    public class InvoiceValidator : AbstractValidator<InvoiceModel>
     {
-        internal InvoiceValidator()
+        public InvoiceValidator()
         {
             RuleFor(i => i.Customer.Id)
                 .Cascade(CascadeMode.Stop)
@@ -81,7 +81,6 @@ namespace DataLibraryCore.Models.Validators
                 //    .Length(8).WithMessage("{PropertyName} cannot be more than 8 characters ({TotalLength})");
 
                 item.RuleFor(x => x.Delivered).NotEmpty().WithMessage("{PropertyName} cannot be empty");
-                item.RuleFor(x => x.Descriptions).MaximumLength(50).WithMessage("{PropertyName} cannot be more than 50 characters ({TotalLength})");
             });
         }
     }
