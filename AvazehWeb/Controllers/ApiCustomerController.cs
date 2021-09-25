@@ -15,7 +15,7 @@ namespace AvazehWebAPI.Controllers
     [Route("api/v1/[controller]")]
     public class CustomerController<TDal, TDto, TCollection, TManager> : ControllerBase
         where TDal : CustomerModel where TDto : CustomerModel_DTO_Create_Update
-        where TCollection : ItemsCollection_DTO<TDal> where TManager : ICustomerCollectionManager
+        where TCollection : ItemsCollection_DTO<TDal> where TManager : CustomerCollectionManager<TDal, IProcessor<TDal>>
     {
         public CustomerController(TManager manager)
         {

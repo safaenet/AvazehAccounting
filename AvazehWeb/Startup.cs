@@ -2,6 +2,7 @@ using DataLibraryCore.DataAccess.CollectionManagers;
 using DataLibraryCore.DataAccess.Interfaces;
 using DataLibraryCore.DataAccess.SqlServer;
 using DataLibraryCore.Models;
+using DataLibraryCore.Models.Validators;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,10 +29,10 @@ namespace AvazehWeb
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddScoped<ICollectionManager<ProductModel, IDataAccess>, ICollectionManager<ProductModel, IProcessor<ProductModel>>>()
-                .AddScoped<ICollectionManager<CustomerModel, IDataAccess>, ICollectionManager<CustomerModel, IProcessor<CustomerModel>>>()
+                .AddScoped<ICollectionManager<ProductModel, IDataAccess>, ICollectionManager<ProductModel, IDataAccess>>()
+                .AddScoped<ICollectionManager<CustomerModel, IDataAccess>, ICollectionManager<CustomerModel, IDataAccess>>()
                 .AddScoped<IInvoiceCollectionManager, InvoiceCollectionManager>()
-                .AddScoped<ICollectionManager<ChequeModel, IDataAccess>, ICollectionManager<ChequeModel, IProcessor<ChequeModel>>>()
+                .AddScoped<ICollectionManager<ChequeModel, IDataAccess>, ICollectionManager<ChequeModel, IDataAccess>>()
 
                 .AddScoped<IProcessor<ProductModel>, IProcessor<ProductModel>>()
                 .AddScoped<IProcessor<CustomerModel>, IProcessor<CustomerModel>>()
