@@ -100,6 +100,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
 
         public async Task<int> LoadPreviousPageAsync()
         {
+            if (CurrentPage == 1) return 0;
             PageLoadEventArgs eventArgs = new();
             PreviousPageLoading?.Invoke(this, eventArgs);
             if (eventArgs.Cancel) return 0;
@@ -110,6 +111,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
 
         public async Task<int> LoadNextPageAsync()
         {
+            if (CurrentPage == PagesCount) return 0;
             PageLoadEventArgs eventArgs = new();
             NextPageLoading?.Invoke(this, eventArgs);
             if (eventArgs.Cancel) return 0;

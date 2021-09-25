@@ -11,12 +11,14 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
 {
     public partial class InvoiceManagerAsync
     {
-        public InvoiceManagerAsync(IApiProcessor apiProcessor)
+        public InvoiceManagerAsync(IApiProcessor apiProcessor, IInvoiceCollectionManagerAsync collectionManager)
         {
             ApiProcessor = apiProcessor;
+            CollectionManager = collectionManager;
         }
-        private const string Key = "Invoice";
+        private const string KeyItem = "InvoiceItem";
         private IApiProcessor ApiProcessor { get; init; }
+        public IInvoiceCollectionManagerAsync CollectionManager { get; init; }
         public InvoiceModel Invoice { get; set; }
         public long CustomerTotalBalance { get; private set; }
 
@@ -27,26 +29,26 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
 
         public async Task<InvoiceItemModel> GetItemById(int Id)
         {
-            return await ApiProcessor.GetItemAsync<InvoiceItemModel>(Key, Id);
+            return await ApiProcessor.GetItemAsync<InvoiceItemModel>(KeyItem, Id);
         }
 
         public async Task<InvoiceItemModel> CreateItemAsync(InvoiceItemModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return null;
             var newItem = item.AsDto();
-            return await ApiProcessor.CreateItemAsync<InvoiceItemModel_DTO_Create_Update, InvoiceItemModel>(Key, newItem);
+            return await ApiProcessor.CreateItemAsync<InvoiceItemModel_DTO_Create_Update, InvoiceItemModel>(KeyItem, newItem);
         }
 
         public async Task<InvoiceItemModel> UpdateItemAsync(InvoiceItemModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return null;
             var newItem = item.AsDto();
-            return await ApiProcessor.UpdateItemAsync<InvoiceItemModel_DTO_Create_Update, InvoiceItemModel>(Key, item.Id, newItem);
+            return await ApiProcessor.UpdateItemAsync<InvoiceItemModel_DTO_Create_Update, InvoiceItemModel>(KeyItem, item.Id, newItem);
         }
 
         public async Task<bool> DeleteItemAsync(int Id)
         {
-            if (await ApiProcessor.DeleteItemAsync(Key, Id))
+            if (await ApiProcessor.DeleteItemAsync(KeyItem, Id))
             {
                 Invoice.Items.Remove(GetItemFromCollectionById(Id));
                 return true;
@@ -59,11 +61,6 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
             InvoiceItemValidator validator = new();
             var result = validator.Validate(item);
             return result;
-        }
-
-        public double GetTotalOrRestTotalBalanceOfCustomer(int CustomerId, int InvoiceId = 0)
-        {
-            throw new NotImplementedException();
         }
     }
 }

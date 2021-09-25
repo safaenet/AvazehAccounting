@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AvazehApiClient.DataAccess.CollectionManagers
 {
-    public class InvoiceCollectionManagerAsync
+    public class InvoiceCollectionManagerAsync : IInvoiceCollectionManagerAsync
     {
         public InvoiceCollectionManagerAsync(IApiProcessor apiProcessor)
         {
@@ -41,9 +41,9 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
             return Items.SingleOrDefault(i => i.Id == Id);
         }
 
-        public async Task<InvoiceModel> GetItemById(int Id)
+        public async Task<InvoiceModel_DTO_Read> GetItemById(int Id)
         {
-            return await ApiProcessor.GetItemAsync<InvoiceModel>(Key, Id);
+            return await ApiProcessor.GetItemAsync<InvoiceModel_DTO_Read>(Key, Id);
         }
 
         public async Task<InvoiceModel> CreateItemAsync(InvoiceModel item)
@@ -70,6 +70,11 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
                 return true;
             }
             return false;
+        }
+
+        public double GetTotalBalanceOfCustomer(int CustomerId)
+        {
+            throw new NotImplementedException();
         }
 
         public ValidationResult ValidateItem(InvoiceModel item)
@@ -101,6 +106,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
 
         public async Task<int> LoadPreviousPageAsync()
         {
+            if (CurrentPage == 1) return 0;
             PageLoadEventArgs eventArgs = new();
             PreviousPageLoading?.Invoke(this, eventArgs);
             if (eventArgs.Cancel) return 0;
@@ -111,6 +117,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
 
         public async Task<int> LoadNextPageAsync()
         {
+            if (CurrentPage == PagesCount) return 0;
             PageLoadEventArgs eventArgs = new();
             NextPageLoading?.Invoke(this, eventArgs);
             if (eventArgs.Cancel) return 0;

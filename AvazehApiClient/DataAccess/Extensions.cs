@@ -96,5 +96,15 @@ namespace AvazehApiClient.DataAccess
                 Descriptions = model.Descriptions
             };
         }
+
+        public static InvoicePaymentModel_DTO_Create_Update AsDto(this InvoicePaymentModel model)
+        {
+            return new InvoicePaymentModel_DTO_Create_Update()
+            {
+                InvoiceId = model.InvoiceId,
+                PayAmount = model.PayAmount,
+                Descriptions = model.Descriptions
+            };
+        }
     }
 }
