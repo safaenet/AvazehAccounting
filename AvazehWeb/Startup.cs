@@ -29,16 +29,18 @@ namespace AvazehWeb
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddScoped<ICollectionManager<ProductModel, IProcessor<ProductModel>>, ICollectionManager<ProductModel, IProcessor<ProductModel>>>()
-                .AddScoped<ICollectionManager<CustomerModel, IProcessor<CustomerModel>>, ICollectionManager<CustomerModel, IProcessor<CustomerModel>>>()
-                .AddScoped<ICollectionManager<ChequeModel, IProcessor<ChequeModel>>, ICollectionManager<ChequeModel, IProcessor<ChequeModel>>>()
-                .AddScoped<IInvoiceCollectionManager, InvoiceCollectionManager>()
-
-                .AddScoped<IProcessor<ProductModel>, IProcessor<ProductModel>>()
-                .AddScoped<IProcessor<CustomerModel>, IProcessor<CustomerModel>>()
-                .AddScoped<IProcessor<ChequeModel>, IProcessor<ChequeModel>>()
+                .AddScoped<IProcessor<ProductModel>, SqlProductProcessor<ProductModel, ProductValidator>>()
+                .AddScoped<IProcessor<CustomerModel>, SqlCustomerProcessor<CustomerModel, PhoneNumberModel, CustomerValidator>>()
+                .AddScoped<IProcessor<ChequeModel>, SqlChequeProcessor<ChequeModel, ChequeEventModel, ChequeValidator>>()
                 .AddScoped<IInvoiceProcessor, SqlInvoiceProcessor>()
-                .AddSingleton<IDataAccess, SqlDataAccess>();
+                .AddSingleton<IDataAccess, SqlDataAccess>()
+
+                .AddScoped<ICollectionManager<ProductModel, IProcessor<ProductModel>>, ProductCollectionManager<ProductModel, IProcessor<ProductModel>>>()
+                .AddScoped<ICollectionManager<CustomerModel, IProcessor<CustomerModel>>, CustomerCollectionManager<CustomerModel, IProcessor<CustomerModel>>>()
+                .AddScoped<ICollectionManager<ChequeModel, IProcessor<ChequeModel>>, ChequeCollectionManager<ChequeModel, IProcessor<ChequeModel>>>()
+                .AddScoped<IInvoiceCollectionManager, InvoiceCollectionManager>();
+
+                
 
             services.AddControllersWithViews();
             services.AddDistributedMemoryCache();
