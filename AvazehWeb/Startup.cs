@@ -29,15 +29,15 @@ namespace AvazehWeb
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddScoped<ICollectionManager<ProductModel, IDataAccess>, ICollectionManager<ProductModel, IDataAccess>>()
-                .AddScoped<ICollectionManager<CustomerModel, IDataAccess>, ICollectionManager<CustomerModel, IDataAccess>>()
+                .AddScoped<ICollectionManager<ProductModel, IProcessor<ProductModel>>, ICollectionManager<ProductModel, IProcessor<ProductModel>>>()
+                .AddScoped<ICollectionManager<CustomerModel, IProcessor<CustomerModel>>, ICollectionManager<CustomerModel, IProcessor<CustomerModel>>>()
+                .AddScoped<ICollectionManager<ChequeModel, IProcessor<ChequeModel>>, ICollectionManager<ChequeModel, IProcessor<ChequeModel>>>()
                 .AddScoped<IInvoiceCollectionManager, InvoiceCollectionManager>()
-                .AddScoped<ICollectionManager<ChequeModel, IDataAccess>, ICollectionManager<ChequeModel, IDataAccess>>()
 
                 .AddScoped<IProcessor<ProductModel>, IProcessor<ProductModel>>()
                 .AddScoped<IProcessor<CustomerModel>, IProcessor<CustomerModel>>()
-                .AddScoped<IInvoiceProcessor, SqlInvoiceProcessor>()
                 .AddScoped<IProcessor<ChequeModel>, IProcessor<ChequeModel>>()
+                .AddScoped<IInvoiceProcessor, SqlInvoiceProcessor>()
                 .AddSingleton<IDataAccess, SqlDataAccess>();
 
             services.AddControllersWithViews();
