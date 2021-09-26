@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public partial class ChequeCollectionManager<TModel, TProcessor> : ICollectionManager<TModel, TProcessor>
+    public partial class ChequeCollectionManager : ICollectionManager<ChequeModel, IProcessor<ChequeModel>>
     {
         public async Task<bool> DeleteItemFromDbByIdAsync(int Id)
         {

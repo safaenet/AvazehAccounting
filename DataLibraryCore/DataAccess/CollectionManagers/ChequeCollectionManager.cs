@@ -7,10 +7,9 @@ using System.Linq;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public partial class ChequeCollectionManager<TModel, TProcessor> : ICollectionManager<TModel, TProcessor>
-        where TModel : ChequeModel where TProcessor : IProcessor<TModel>
+    public partial class ChequeCollectionManager : ICollectionManager<ChequeModel, IProcessor<ChequeModel>>
     {
-        public ChequeCollectionManager(TProcessor processor)
+        public ChequeCollectionManager(IProcessor<ChequeModel> processor)
         {
             Processor = processor;
         }
@@ -21,12 +20,12 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         public event EventHandler PreviousPageLoading;
         public event EventHandler PreviousPageLoaded;
         public bool Initialized { get; private set; }
-        public TProcessor Processor { get; init; }
-        public ObservableCollection<TModel> Items { get; set; }
+        public IProcessor<ChequeModel> Processor { get; init; }
+        public ObservableCollection<ChequeModel> Items { get; set; }
         public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
 
-        public TModel GetItemFromCollectionById(int Id)
+        public ChequeModel GetItemFromCollectionById(int Id)
         {
             return Items.SingleOrDefault(i => i.Id == Id);
         }

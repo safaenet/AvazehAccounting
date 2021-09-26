@@ -1,4 +1,5 @@
 ﻿using DataLibraryCore.DataAccess.Interfaces;
+using DataLibraryCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public partial class CustomerCollectionManager<TModel, TProcessor> : ICollectionManager<TModel, TProcessor>
+    public partial class CustomerCollectionManager : ICollectionManager<CustomerModel, IProcessor<CustomerModel>>
     {
         public async Task<bool> DeleteItemFromDbByIdAsync(int Id)
         {

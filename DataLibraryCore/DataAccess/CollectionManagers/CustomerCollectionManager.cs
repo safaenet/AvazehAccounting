@@ -10,10 +10,9 @@ using System.Text;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public partial class CustomerCollectionManager<TModel, TProcessor> : ICollectionManager<TModel, TProcessor>
-        where TModel : CustomerModel where TProcessor : IProcessor<TModel>
+    public partial class CustomerCollectionManager : ICollectionManager<CustomerModel, IProcessor<CustomerModel>>
     {
-        public CustomerCollectionManager(TProcessor processor)
+        public CustomerCollectionManager(IProcessor<CustomerModel> processor)
         {
             Processor = processor;
         }
@@ -24,11 +23,11 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         public event EventHandler PreviousPageLoading;
         public event EventHandler PreviousPageLoaded;
         public bool Initialized { get; private set; }
-        public TProcessor Processor { get; init; }
-        public ObservableCollection<TModel> Items { get; set; }
+        public IProcessor<CustomerModel> Processor { get; init; }
+        public ObservableCollection<CustomerModel> Items { get; set; }
         public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
-        public TModel GetItemFromCollectionById(int Id)
+        public CustomerModel GetItemFromCollectionById(int Id)
         {
             return Items.SingleOrDefault(i => i.Id == Id);
         }
