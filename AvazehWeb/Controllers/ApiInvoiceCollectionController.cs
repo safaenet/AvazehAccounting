@@ -13,26 +13,24 @@ namespace AvazehWebAPI.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class InvoicesController<TDal, TDto, TCollection, TManager> : ControllerBase
-        where TDal : InvoiceModel where TDto : InvoiceModel_DTO_Create_Update
-        where TCollection : ItemsCollection_DTO<InvoiceListModel> where TManager : IInvoiceCollectionManager
+    public class InvoicesController : ControllerBase
     {
-        public InvoicesController(TManager manager)
+        public InvoicesController(IInvoiceCollectionManager manager)
         {
             Manager = manager;
         }
 
-        private readonly TManager Manager;
+        private readonly IInvoiceCollectionManager Manager;
 
         //GET /Customer?Id=1&SearchText=sometext
         [HttpGet]
-        public async Task<ActionResult<TCollection>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "Id", OrderType orderType = OrderType.DESC, InvoiceLifeStatus? LifeStatus = InvoiceLifeStatus.Active, InvoiceFinancialStatus? FinStatus = null, int PageSize = 50)
+        public async Task<ActionResult<ItemsCollection_DTO<InvoiceListModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "Id", OrderType orderType = OrderType.DESC, InvoiceLifeStatus? LifeStatus = InvoiceLifeStatus.Active, InvoiceFinancialStatus? FinStatus = null, int PageSize = 50)
         {
             Manager.GenerateWhereClause(SearchText, OrderBy, orderType, LifeStatus, FinStatus);
             Manager.PageSize = PageSize;
             await Manager.GotoPageAsync(Page);
             if (Manager.Items == null || Manager.Items.Count == 0) return NotFound("List is empty");
-            return Manager.AsDto<InvoiceListModel>() as TCollection;
+            return Manager.AsDto<InvoiceListModel>();
         }
 
         [HttpGet("{Id}")]
@@ -46,23 +44,23 @@ namespace AvazehWebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TDal>> CreateItemAsync(TDto model)
+        public async Task<ActionResult<InvoiceModel>> CreateItemAsync(InvoiceModel_DTO_Create_Update model)
         {
             var newItem = model.AsDaL();
             if (!Manager.Processor.ValidateItem(newItem).IsValid) return BadRequest(0);
             await Manager.Processor.CreateItemAsync(newItem);
-            return newItem as TDal;
+            return newItem;
         }
 
         [HttpPut("{Id}")]
-        public async Task<ActionResult<TDal>> UpdateItemAsync(int Id, TDto model)
+        public async Task<ActionResult<InvoiceModel>> UpdateItemAsync(int Id, InvoiceModel_DTO_Create_Update model)
         {
             if (model is null) return BadRequest("Model is not valid");
             var updatedModel = model.AsDaL();
             if (!Manager.Processor.ValidateItem(updatedModel).IsValid) return BadRequest("Model is not valid");
             updatedModel.Id = Id;
             if (await Manager.Processor.UpdateItemAsync(updatedModel) == 0) return NotFound();
-            return updatedModel as TDal;
+            return updatedModel;
         }
 
         [HttpDelete]

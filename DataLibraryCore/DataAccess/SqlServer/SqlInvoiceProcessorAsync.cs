@@ -111,8 +111,12 @@ namespace DataLibraryCore.DataAccess.SqlServer
         }
         public async Task<int> GetTotalQueryCountAsync(string WhereClause)
         {
-            var sqlTemp = $@"SELECT COUNT([Id]) FROM Invoices
-                             { (string.IsNullOrEmpty(WhereClause) ? "" : " WHERE ") } { WhereClause }";
+            var sqlTemp = $@"SELECT COUNT(i.[Id]) FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id
+                LEFT JOIN (SELECT SUM(ii.[CountValue] * ii.SellPrice) AS TotalSellValue, ii.[InvoiceId]
+	            FROM InvoiceItems ii GROUP BY ii.[InvoiceId]) sp ON i.Id=sp.InvoiceId
+                LEFT JOIN (SELECT SUM(ips.[PayAmount]) AS TotalPayments, ips.[InvoiceId]
+	            FROM InvoicePayments ips GROUP BY ips.[InvoiceId]) pays ON i.Id=pays.InvoiceId
+                { (string.IsNullOrEmpty(WhereClause) ? "" : " WHERE ") } { WhereClause }";
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
         }
 
