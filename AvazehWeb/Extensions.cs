@@ -74,7 +74,7 @@ namespace AvazehWeb
             };
         }
 
-        internal static ChequeModel AsDal(this ChequeModel_DTO_Create_Update model)
+        internal static ChequeModel AsDaL(this ChequeModel_DTO_Create_Update model)
         {
             return new ChequeModel()
             {

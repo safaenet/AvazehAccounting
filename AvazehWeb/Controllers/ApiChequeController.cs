@@ -24,7 +24,7 @@ namespace AvazehWebAPI.Controllers
 
         private readonly TManager Manager;
 
-        //GET /Customer?Id=1&SearchText=sometext
+        //GET /Cheque?Id=1&SearchText=sometext
         [HttpGet]
         public async Task<ActionResult<TCollection>> GetItemsAsync(int Page = 1, string SearchText = "", int PageSize = 50)
         {
