@@ -12,7 +12,7 @@ namespace DataLibraryCore.Models
         public long BuyPrice { get; set; } = 0;
         public long SellPrice { get; set; } = 0;
         public string  Barcode { get; set; }
-        public string CountString { get; set; }
+        public string CountString { get; set; } = "0";
         public string DateCreated { get; set; }
         public string TimeCreated { get; set; }
         public string DateUpdated { get; set; }
