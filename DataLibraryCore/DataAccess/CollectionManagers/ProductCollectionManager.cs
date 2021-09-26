@@ -10,10 +10,9 @@ using System.Text;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public partial class ProductCollectionManager<TModel, TProcessor> : ICollectionManager<TModel, TProcessor>
-        where TModel : ProductModel where TProcessor : IProcessor<TModel>
+    public partial class ProductCollectionManager : ICollectionManager<ProductModel, IProcessor<ProductModel>>
     {
-        public ProductCollectionManager(TProcessor processor)
+        public ProductCollectionManager(IProcessor<ProductModel> processor)
         {
             Processor = processor;
         }
@@ -24,12 +23,12 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         public event EventHandler PreviousPageLoading;
         public event EventHandler PreviousPageLoaded;
         public bool Initialized { get; private set; }
-        public TProcessor Processor { get; init; }
+        public IProcessor<ProductModel> Processor { get; init; }
 
-        public ObservableCollection<TModel> Items { get; set; }
+        public ObservableCollection<ProductModel> Items { get; set; }
         public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
-        public TModel GetItemFromCollectionById(int Id)
+        public ProductModel GetItemFromCollectionById(int Id)
         {
             return Items.SingleOrDefault(i => i.Id == Id);
         }
@@ -81,7 +80,7 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             if (PagesCount == 0) PageNumber = 1;
             else if (PageNumber > PagesCount) PageNumber = PagesCount;
             else if (PageNumber < 1) PageNumber = 1;
-            Items = Processor.LoadManyItems((PageNumber - 1) * PageSize, PageSize, WhereClause) as ObservableCollection<TModel>;
+            Items = Processor.LoadManyItems((PageNumber - 1) * PageSize, PageSize, WhereClause) as ObservableCollection<ProductModel>;
             CurrentPage = Items == null || Items.Count == 0 ? 0 : PageNumber;
             return Items == null ? 0 : Items.Count;
         }
