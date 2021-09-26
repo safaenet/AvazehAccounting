@@ -1,6 +1,8 @@
 ﻿using AvazehWeb.Models;
 using DataLibraryCore.DataAccess.Interfaces;
+using DataLibraryCore.DataAccess.SqlServer;
 using DataLibraryCore.Models;
+using DataLibraryCore.Models.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +43,16 @@ namespace AvazehWeb
             return new ItemsCollection_DTO<TDal>()
             {
                 Items = manager.Items,
+                PagesCount = manager.PagesCount,
+                CurrentPage = manager.CurrentPage
+            };
+        }
+
+        internal static ItemsCollection_DTO<TDalList> AsDto<TDalList>(this IInvoiceCollectionManager manager)
+        {
+            return new ItemsCollection_DTO<TDalList>()
+            {
+                Items = manager.Items as IEnumerable<TDalList>,
                 PagesCount = manager.PagesCount,
                 CurrentPage = manager.CurrentPage
             };
@@ -107,6 +119,31 @@ namespace AvazehWeb
                 Identifier = model.Identifier,
                 Descriptions = model.Descriptions,
                 Events = model.Events
+            };
+        }
+
+        internal static InvoiceModel AsDaL(this InvoiceModel_DTO_Create_Update model)
+        {
+            var processor = new SqlCustomerProcessor<CustomerModel, PhoneNumberModel, CustomerValidator>(new SqlDataAccess()); //Should be edited to get instance from DI container
+            return new InvoiceModel()
+            {
+                Customer = processor.LoadSingleItem(model.CustomerId),
+                DiscountType = model.DiscountType,
+                DiscountValue = model.DiscountValue,
+                Descriptions = model.Descriptions,
+                LifeStatus = model.LifeStatus
+            };
+        }
+
+        internal static InvoiceModel_DTO_Create_Update AsDto(this InvoiceModel model)
+        {
+            return new InvoiceModel_DTO_Create_Update()
+            {
+                CustomerId = model.Customer.Id, 
+                DiscountType = model.DiscountType,
+                DiscountValue = model.DiscountValue,
+                Descriptions = model.Descriptions,
+                LifeStatus = model.LifeStatus
             };
         }
     }

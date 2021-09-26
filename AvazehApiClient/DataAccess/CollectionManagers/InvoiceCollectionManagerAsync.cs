@@ -72,11 +72,6 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
             return false;
         }
 
-        public double GetTotalBalanceOfCustomer(int CustomerId)
-        {
-            throw new NotImplementedException();
-        }
-
         public ValidationResult ValidateItem(InvoiceModel item)
         {
             InvoiceValidator validator = new();
