@@ -26,9 +26,9 @@ namespace AvazehWebAPI.Controllers
 
         //GET /Cheque?Id=1&SearchText=sometext
         [HttpGet]
-        public async Task<ActionResult<TCollection>> GetItemsAsync(int Page = 1, string SearchText = "", int PageSize = 50)
+        public async Task<ActionResult<TCollection>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "DueDate", OrderType orderType = OrderType.DESC, int PageSize = 50)
         {
-            Manager.GenerateWhereClause(SearchText);
+            Manager.GenerateWhereClause(SearchText, OrderBy, orderType);
             Manager.PageSize = PageSize;
             await Manager.GotoPageAsync(Page);
             if (Manager.Items == null || Manager.Items.Count == 0) return NotFound("List is empty");

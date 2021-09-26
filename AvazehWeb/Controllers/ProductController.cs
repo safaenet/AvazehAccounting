@@ -27,7 +27,7 @@ namespace AvazehWeb.Controllers
             var CurrentTempPage = HttpContext.Session.GetInt32("CurrentPage");
             int CurrentPage = CurrentTempPage == null ? 1 : (int)CurrentTempPage;
             var SearchText = HttpContext.Session.GetString("TextToSearch");
-            if (!Manager.Initialized || Manager.SearchValue != SearchText) Manager.GenerateWhereClause(SearchText);
+            if (!Manager.Initialized || Manager.SearchValue != SearchText) Manager.GenerateWhereClause(SearchText, "ProductName", OrderType.ASC);
             if (Manager.CurrentPage != CurrentPage) await Manager.GotoPageAsync(CurrentPage);
             ViewData["PagesCount"] = Manager.PagesCount;
             var modelList = Manager.Items;
