@@ -35,7 +35,7 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             if (PagesCount == 0) PageNumber = 1;
             else if (PageNumber > PagesCount) PageNumber = PagesCount;
             else if (PageNumber < 1) PageNumber = 1;
-            Items = await Processor.LoadManyItemsAsync((PageNumber - 1) * PageSize, PageSize, WhereClause) as ObservableCollection<TModel>;
+            Items = await Processor.LoadManyItemsAsync((PageNumber - 1) * PageSize, PageSize, WhereClause, QueryOrderBy, QueryOrderType);
             CurrentPage = Items == null || Items.Count == 0 ? 0 : PageNumber;
             return Items == null ? 0 : Items.Count;
         }

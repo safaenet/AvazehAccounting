@@ -15,7 +15,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
         double GetTotalOrRestTotalBalanceOfCustomer(int CustomerId, int InvoiceId = 0);
         int GetTotalQueryCount(string WhereClause);
         int InsertSubItemToDatabase(InvoiceItemModel item);
-        ObservableCollection<InvoiceListModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.DESC, string OrderBy = "Id");
+        ObservableCollection<InvoiceListModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, string OrderBy, OrderType Order);
         InvoiceModel LoadSingleItem(int Id);
         int UpdateItem(InvoiceModel invoice);
         int UpdateSubItemInDatabase(InvoiceItemModel item);
@@ -29,7 +29,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
         Task<double> GetTotalOrRestTotalBalanceOfCustomerAsync(int CustomerId, int InvoiceId = 0);
         Task<int> GetTotalQueryCountAsync(string WhereClause);
         Task<int> InsertSubItemToDatabaseAsync(InvoiceItemModel item);
-        Task<ObservableCollection<InvoiceListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.DESC, string OrderBy = "Id");
+        Task<ObservableCollection<InvoiceListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy, OrderType Order);
         Task<InvoiceModel> LoadSingleItemAsync(int Id);
         Task<int> UpdateItemAsync(InvoiceModel invoice);
         Task<int> UpdateSubItemInDatabaseAsync(InvoiceItemModel item);

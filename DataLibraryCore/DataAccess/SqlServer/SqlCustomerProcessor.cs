@@ -23,6 +23,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
         }
 
         private readonly IDataAccess DataAccess;
+        private const string QueryOrderBy = "FirstName";
+        private const OrderType QueryOrderType = OrderType.ASC;
         private readonly string CreateCustomerQuery = @"INSERT INTO Customers (FirstName, LastName, CompanyName, EmailAddress, PostAddress, DateJoined, Descriptions)
             VALUES (@firstName, @lastName, @companyName, @emailAddress, @postAddress, @dateJoined, @descriptions);
             SELECT @id = @@IDENTITY;";
@@ -110,7 +112,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return DataAccess.ExecuteScalar<int, DynamicParameters>(sqlTemp, null);
         }
 
-        public ObservableCollection<TModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.ASC, string OrderBy = "FirstName")
+        public ObservableCollection<TModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
         {
             var sqlInsert = $@"INSERT @customers SELECT * FROM Customers
                                { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }

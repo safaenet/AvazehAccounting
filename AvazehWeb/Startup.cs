@@ -30,15 +30,17 @@ namespace AvazehWeb
         {
             services
                 .AddScoped<IProcessor<ProductModel>, SqlProductProcessor<ProductModel, ProductValidator>>()
-                .AddScoped<IProcessor<CustomerModel>, SqlCustomerProcessor<CustomerModel, PhoneNumberModel, CustomerValidator>>()
-                .AddScoped<IProcessor<ChequeModel>, SqlChequeProcessor<ChequeModel, ChequeEventModel, ChequeValidator>>()
-                .AddScoped<IInvoiceProcessor, SqlInvoiceProcessor>()
+                //.AddScoped<IProcessor<CustomerModel>, SqlCustomerProcessor<CustomerModel, PhoneNumberModel, CustomerValidator>>()
+                //.AddScoped<IProcessor<ChequeModel>, SqlChequeProcessor<ChequeModel, ChequeEventModel, ChequeValidator>>()
+                //.AddScoped<IInvoiceProcessor, SqlInvoiceProcessor>()
                 .AddSingleton<IDataAccess, SqlDataAccess>()
 
-                .AddScoped<ICollectionManager<ProductModel, SqlProductProcessor<ProductModel, ProductValidator>>, ProductCollectionManager<ProductModel, SqlProductProcessor<ProductModel, ProductValidator>>>()
-                .AddScoped<ICollectionManager<CustomerModel, IProcessor<CustomerModel>>, CustomerCollectionManager<CustomerModel, IProcessor<CustomerModel>>>()
-                .AddScoped<ICollectionManager<ChequeModel, IProcessor<ChequeModel>>, ChequeCollectionManager<ChequeModel, IProcessor<ChequeModel>>>()
-                .AddScoped<IInvoiceCollectionManager, InvoiceCollectionManager>();
+                //.AddScoped<ICollectionManager<ProductModel, IProcessor<ProductModel>>, ProductCollectionManager>()
+                .AddTransient(typeof(ICollectionManager<ProductModel, IProcessor<ProductModel>>), typeof(ProductCollectionManager));
+
+                //.AddScoped<ICollectionManager<CustomerModel, IProcessor<CustomerModel>>, CustomerCollectionManager<CustomerModel, IProcessor<CustomerModel>>>()
+                //.AddScoped<ICollectionManager<ChequeModel, IProcessor<ChequeModel>>, ChequeCollectionManager<ChequeModel, IProcessor<ChequeModel>>>()
+                //.AddScoped<IInvoiceCollectionManager, InvoiceCollectionManager>();
 
                 
 

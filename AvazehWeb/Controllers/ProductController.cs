@@ -14,11 +14,11 @@ namespace AvazehWeb.Controllers
 {
     public class ProductController : Controller
     {
-        public ProductController(ProductCollectionManager<ProductModel, IProcessor<ProductModel>> manager)
+        public ProductController(ICollectionManager<ProductModel, IProcessor<ProductModel>> manager)
         {
             Manager = manager;
         }
-        private readonly ProductCollectionManager<ProductModel, IProcessor<ProductModel>> Manager;
+        private readonly ICollectionManager<ProductModel, IProcessor<ProductModel>> Manager;
 
         // GET: ProductController
         [HttpGet]

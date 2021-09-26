@@ -52,13 +52,37 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             get => _WhereClause;
             set
             {
+                if (_WhereClause != value)
+                    Initialized = false;
                 _WhereClause = value;
                 WhereClauseChanged?.Invoke(this, null);
-                Initialized = false;
             }
         }
 
         public string SearchValue { get; private set; }
+        private protected string _QueryOrderBy;
+        private protected OrderType _OrderType;
+
+        public string QueryOrderBy
+        {
+            get => _QueryOrderBy;
+            private set
+            {
+                if (QueryOrderBy != value)
+                    Initialized = false;
+                _QueryOrderBy = value;
+            }
+        }
+        public OrderType QueryOrderType
+        {
+            get => _OrderType;
+            private set
+            {
+                if (_OrderType != value)
+                    Initialized = false;
+                _OrderType = value;
+            }
+        }
 
         public int PageSize { get; set; } = 50;
         public int PagesCount => TotalQueryCount == 0 ? 0 : (int)Math.Ceiling((double)TotalQueryCount / PageSize);
@@ -80,7 +104,7 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             if (PagesCount == 0) PageNumber = 1;
             else if (PageNumber > PagesCount) PageNumber = PagesCount;
             else if (PageNumber < 1) PageNumber = 1;
-            Items = Processor.LoadManyItems((PageNumber - 1) * PageSize, PageSize, WhereClause) as ObservableCollection<ProductModel>;
+            Items = Processor.LoadManyItems((PageNumber - 1) * PageSize, PageSize, WhereClause, QueryOrderBy, QueryOrderType);
             CurrentPage = Items == null || Items.Count == 0 ? 0 : PageNumber;
             return Items == null ? 0 : Items.Count;
         }
@@ -112,10 +136,12 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             return result;
         }
 
-        public int GenerateWhereClause(string val, bool run = false, SqlSearchMode mode = SqlSearchMode.OR)
+        public int GenerateWhereClause(string val, string OrderBy, OrderType orderType, bool run = false, SqlSearchMode mode = SqlSearchMode.OR)
         {
-            if (val == SearchValue) return 0;
+            if (val == SearchValue && OrderBy == QueryOrderBy && orderType == QueryOrderType) return 0;
             SearchValue = val;
+            QueryOrderBy = OrderBy;
+            QueryOrderType = orderType;
             WhereClause = Processor.GenerateWhereClause(val, mode);
             if (run) LoadFirstPage();
             return Items == null ? 0 : Items.Count;

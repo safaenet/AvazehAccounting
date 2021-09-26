@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public partial class ProductCollectionManager<TModel, TProcessor> : ICollectionManager<TModel, TProcessor>
+    public partial class ProductCollectionManager : ICollectionManager<ProductModel, IProcessor<ProductModel>>
     {
         public async Task<bool> DeleteItemFromDbByIdAsync(int Id)
         {
@@ -36,7 +36,7 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             if (PagesCount == 0) PageNumber = 1;
             else if (PageNumber > PagesCount) PageNumber = PagesCount;
             else if (PageNumber < 1) PageNumber = 1;
-            Items = await Processor.LoadManyItemsAsync((PageNumber - 1) * PageSize, PageSize, WhereClause) as ObservableCollection<TModel>;
+            Items = await Processor.LoadManyItemsAsync((PageNumber - 1) * PageSize, PageSize, WhereClause, QueryOrderBy, QueryOrderType);
             CurrentPage = Items == null || Items.Count == 0 ? 0 : PageNumber;
             return Items == null ? 0 : Items.Count;
         }

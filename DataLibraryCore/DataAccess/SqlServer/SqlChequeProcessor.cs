@@ -24,6 +24,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
         }
 
         private readonly IDataAccess DataAccess;
+        private const string QueryOrderBy = "DueDate";
+        private const OrderType QueryOrderType = OrderType.DESC;
         private readonly string CreateChequeQuery = @"INSERT INTO Cheques (Drawer, Orderer, PayAmount, About, IssueDate, DueDate, BankName, Serial, Identifier, Descriptions)
             VALUES (@drawer, @orderer, @payAmount, @about, @issueDate, @dueDate, @bankName, @serial, @identifier, @descriptions);
             SELECT @id = @@IDENTITY;";
@@ -118,7 +120,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return DataAccess.ExecuteScalar<int, DynamicParameters>(sqlTemp, null);
         }
 
-        public ObservableCollection<TModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.DESC, string OrderBy = "DueDate")
+        public ObservableCollection<TModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
         {
             string sqlTemp = $@"INSERT @cheques SELECT * FROM Cheques
                                 { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }

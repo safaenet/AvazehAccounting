@@ -23,11 +23,13 @@ namespace DataLibraryCore.DataAccess.Interfaces
         int PagesCount { get; }
         int PageSize { get; set; }
         string SearchValue { get; }
+        string QueryOrderBy { get; }
+        OrderType QueryOrderType { get; }
         string WhereClause { get; set; }
 
         bool DeleteItemFromCollectionById(int Id);
         bool DeleteItemFromDbById(int Id);
-        int GenerateWhereClause(string val, bool run = false, SqlSearchMode mode = SqlSearchMode.OR);
+        int GenerateWhereClause(string val, string OrderBy, OrderType orderType, bool run = false, SqlSearchMode mode = SqlSearchMode.OR);
         TModel GetItemFromCollectionById(int Id);
         int GotoPage(int PageNumber);
         int LoadFirstPage();

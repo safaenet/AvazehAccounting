@@ -24,6 +24,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
         }
 
         private readonly IDataAccess DataAccess;
+        private const string QueryOrderBy = "ProductName";
+        private const OrderType QueryOrderType = OrderType.ASC;
         private readonly string CreateProductQuery = @"INSERT INTO Products (ProductName, BuyPrice, SellPrice, Barcode, CountString, DateCreated, TimeCreated, Descriptions)
             VALUES (@productName, @buyPrice, @sellPrice, @barcode, @countString, @dateCreated, @timeCreated, @descriptions);
             SELECT @id = @@IDENTITY;";
@@ -75,7 +77,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return DataAccess.ExecuteScalar<int, DynamicParameters>(sqlTemp, null);
         }
 
-        public ObservableCollection<TModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.ASC, string OrderBy = "Id")
+        public ObservableCollection<TModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
         {
             string sql = $@"SET NOCOUNT ON
                             SELECT * FROM Products
@@ -89,7 +91,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return LoadManyItems(0, 1, $"[Id] = { Id }").FirstOrDefault();
         }
 
-        public string GenerateWhereClause(string val, SqlSearchMode mode = SqlSearchMode.OR)
+        public string GenerateWhereClause(string val, SqlSearchMode mode)
         {
             var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
             return @$"(CAST([Id] AS varchar) LIKE {criteria}
