@@ -1,4 +1,5 @@
 ﻿using AvazehWeb.Models;
+using DataLibraryCore.DataAccess.CollectionManagers;
 using DataLibraryCore.DataAccess.Interfaces;
 using DataLibraryCore.DataAccess.SqlServer;
 using DataLibraryCore.Models;
@@ -13,11 +14,11 @@ namespace AvazehWeb.Controllers
 {
     public class ProductController : Controller
     {
-        public ProductController(IProductCollectionManager manager)
+        public ProductController(ProductCollectionManager<ProductModel, IProcessor<ProductModel>> manager)
         {
             Manager = manager;
         }
-        private readonly IProductCollectionManager Manager;
+        private readonly ProductCollectionManager<ProductModel, IProcessor<ProductModel>> Manager;
 
         // GET: ProductController
         [HttpGet]

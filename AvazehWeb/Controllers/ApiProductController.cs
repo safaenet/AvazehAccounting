@@ -15,7 +15,7 @@ namespace AvazehWebAPI.Controllers
     [Route("api/v1/[controller]")]
     public class ProductController<TDal, TDto, TCollection, TManager> : ControllerBase
         where TDal : ProductModel where TDto : ProductModel_DTO_Create_Update
-        where TCollection : ItemsCollection_DTO<TDal> where TManager : IProductCollectionManager
+        where TCollection : ItemsCollection_DTO<TDal> where TManager : ICollectionManager<TDal, IProcessor<TDal>>
     {
         public ProductController(TManager manager)
         {
@@ -32,7 +32,7 @@ namespace AvazehWebAPI.Controllers
             Manager.PageSize = PageSize;
             await Manager.GotoPageAsync(Page);
             if (Manager.Items == null || Manager.Items.Count == 0) return NotFound("List is empty");
-            return Manager.AsDto();
+            return Manager.AsDto() as TCollection;
         }
 
         [HttpGet("{Id}")]
@@ -40,15 +40,15 @@ namespace AvazehWebAPI.Controllers
         {
             var item = await Manager.Processor.LoadSingleItemAsync(Id);
             if (item is null) return NotFound("Couldn't find specific Item");
-            return item as TDal;
+            return item;
         }
 
         [HttpPost]
         public async Task<ActionResult<TDal>> CreateItemAsync(TDto model)
         {
             var newItem = model.AsDaL();
-            if(!Manager.Processor.ValidateItem(newItem).IsValid) return BadRequest(0);
-            await Manager.Processor.CreateItemAsync(newItem);
+            if(!Manager.Processor.ValidateItem(newItem as TDal).IsValid) return BadRequest(0);
+            await Manager.Processor.CreateItemAsync(newItem as TDal);
             return newItem as TDal;
         }
 
@@ -57,9 +57,9 @@ namespace AvazehWebAPI.Controllers
         {
             if (model is null) return BadRequest("Model is not valid");
             var updatedModel = model.AsDaL();
-            if (!Manager.Processor.ValidateItem(updatedModel).IsValid) return BadRequest("Model is not valid");
+            if (!Manager.Processor.ValidateItem(updatedModel as TDal).IsValid) return BadRequest("Model is not valid");
             updatedModel.Id = Id;
-            if (await Manager.Processor.UpdateItemAsync(updatedModel) == 0) return NotFound();
+            if (await Manager.Processor.UpdateItemAsync(updatedModel as TDal) == 0) return NotFound();
             return updatedModel as TDal;
         }
 
