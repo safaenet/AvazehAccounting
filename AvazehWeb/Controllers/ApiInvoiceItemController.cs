@@ -24,17 +24,6 @@ namespace AvazehWebAPI.Controllers
 
         private readonly TManager Manager;
 
-        //GET /Customer?Id=1&SearchText=sometext
-        [HttpGet]
-        public async Task<ActionResult<TCollection>> GetItemsAsync(int Page = 1, string SearchText = "", int PageSize = 50)
-        {
-            Manager.GenerateWhereClause(SearchText);
-            Manager.PageSize = PageSize;
-            await Manager.GotoPageAsync(Page);
-            if (Manager.Items == null || Manager.Items.Count == 0) return NotFound("List is empty");
-            return Manager.AsDto() as TCollection;
-        }
-
         [HttpGet("{Id}")]
         public async Task<ActionResult<TDal>> GetItemAsync(int Id)
         {

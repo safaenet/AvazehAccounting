@@ -146,5 +146,34 @@ namespace AvazehWeb
                 LifeStatus = model.LifeStatus
             };
         }
+
+        internal static InvoiceItemModel AsDaL(this InvoiceItemModel_DTO_Create_Update model)
+        {
+            var processor = new SqlProductProcessor<ProductModel, ProductValidator>(new SqlDataAccess()); //Should be edited to get instance from DI container
+            return new InvoiceItemModel()
+            {
+                InvoiceId = model.InvoiceId,
+                Product = processor.LoadSingleItem(model.ProductId),
+                BuyPrice = model.BuyPrice,
+                SellPrice = model.SellPrice,
+                CountString = model.CountString,
+                Delivered = model.Delivered,
+                Descriptions = model.Descriptions
+            };
+        }
+
+        internal static InvoiceItemModel_DTO_Create_Update AsDto(this InvoiceItemModel model)
+        {
+            return new InvoiceItemModel_DTO_Create_Update()
+            {
+                InvoiceId = model.InvoiceId,
+                ProductId = model.Product.Id,
+                BuyPrice = model.BuyPrice,
+                SellPrice = model.SellPrice,
+                CountString = model.CountString,
+                Delivered = model.Delivered,
+                Descriptions = model.Descriptions
+            };
+        }
     }
 }
