@@ -14,7 +14,7 @@ namespace AvazehApiClient.Models
         public ProductModel Product { get; set; }
         public long BuyPrice { get; set; }
         public long SellPrice { get; set; }
-        public string CountString { get; set; }
+        public string CountString { get; set; } = "0";
         public string DateCreated { get; set; }
         public string TimeCreated { get; set; }
         public string DateUpdated { get; set; }

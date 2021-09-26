@@ -12,7 +12,7 @@ namespace AvazehWeb.Models
         public DiscountTypes DiscountType { get; set; }
 
         [Display(Name = "Discount Value")]
-        [Range(0, double.MaxValue, ErrorMessage = "Field must be greater than Zero")]
+        [Range(0, double.MaxValue, ErrorMessage = "Field must be >= Zero")]
         public double DiscountValue { get; set; }
 
         [Display(Name = "Description")]

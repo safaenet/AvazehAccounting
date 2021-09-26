@@ -33,15 +33,20 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private readonly string UpdateInvoiceQuery = @"UPDATE Invoices SET CustomerId = @customerId, DateCreated = @dateCreated, TimeCreated = @timeCreated,
             DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, DiscountType = @discountType,
             DiscountValue = @discountValue, Descriptions = @descriptions, LifeStatus = @lifeStatus WHERE Id = @id";
-        private readonly string InsertSubItemQuery = @"INSERT INTO InvoiceItems (InvoiceId, ProductId, BuyPrice, SellPrice, CountString, CountValue, DateCreated,
+        private readonly string InsertInvoiceItemQuery = @"INSERT INTO InvoiceItems (InvoiceId, ProductId, BuyPrice, SellPrice, CountString, CountValue, DateCreated,
             TimeCreated, Delivered, Descriptions)
             VALUES (@invoiceId, @productId, @buyPrice, @sellPrice, @countString, @dateCreated, @timeCreated, @delivered, @descriptions);
             SELECT @id = @@IDENTITY;";
-        private readonly string UpdateSubItemQuery = @$"UPDATE InvoiceItems SET ProductId = @productId, BuyPrice = @buyPrice, SellPrice = @sellPrice,
+        private readonly string UpdateInvoiceItemQuery = @$"UPDATE InvoiceItems SET ProductId = @productId, BuyPrice = @buyPrice, SellPrice = @sellPrice,
             CountString = @countString, CountValue = @countValue, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
             Delivered = @delivered, Descriptions = @descriptions WHERE [Id] = @id";
         private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Invoices SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated WHERE Id = @id";
-        private readonly string DeleteSubItemQuery = @$"DELETE FROM InvoiceItems WHERE [Id] = @id";
+        private readonly string DeleteInvoiceItemQuery = @$"DELETE FROM InvoiceItems WHERE [Id] = @id";
+        private readonly string InsertInvoicePaymentQuery = @$"INSERT INTO InvoicePayments (InvoiceId, DateCreated, TimeCreated, PayAmount, Descriptions)
+            VALUES (@invoiceId, @dateCreated, @timeCreated, @payAmount, @descriptions); SELECT @id = @@IDENTITY;";
+        private readonly string UpdateInvoicePaymentQuery = @$"UPDATE InvoicePayments SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
+            PayAmount = @payAmount, Descriptions = @descriptions WHERE [Id] = @id";
+        private readonly string DeleteInvoicePaymentQuery = @$"DELETE FROM InvoicePayments WHERE [Id] = @id";
         private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON
             DECLARE @invoices TABLE(
 	        [Id] [int],
@@ -106,7 +111,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return DataAccess.SaveData(UpdateInvoiceQuery, item);
         }
 
-        public int InsertSubItemToDatabase(InvoiceItemModel item)
+        public int InsertInvoiceItemToDatabase(InvoiceItemModel item)
         {
             if (item == null || !item.IsCountStringValid) return 0;
             item.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
@@ -122,7 +127,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@timeCreated", item.TimeCreated);
             dp.Add("@delivered", item.Delivered);
             dp.Add("@descriptions", item.Descriptions);
-            var AffectedCount = DataAccess.SaveData(InsertSubItemQuery, dp);
+            var AffectedCount = DataAccess.SaveData(InsertInvoiceItemQuery, dp);
             if (AffectedCount > 0)
             {
                 item.Id = dp.Get<int>("@id");
@@ -131,7 +136,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return AffectedCount;
         }
 
-        public int UpdateSubItemInDatabase(InvoiceItemModel item)
+        public int UpdateInvoiceItemInDatabase(InvoiceItemModel item)
         {
             if (item == null || !item.IsCountStringValid) return 0;
             item.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
@@ -146,15 +151,62 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@timeUpdated", item.TimeUpdated);
             dp.Add("@delivered", item.Delivered);
             dp.Add("@descriptions", item.Descriptions);
-            var AffectedCount = DataAccess.SaveData(UpdateSubItemQuery, item);
+            var AffectedCount = DataAccess.SaveData(UpdateInvoiceItemQuery, item);
             if (AffectedCount > 0) UpdateItemUpdateDateAndUpdateTime(item.InvoiceId);
             return AffectedCount;
         }
 
-        public int DeleteSubItemFromDatabase(InvoiceItemModel item)
+        public int DeleteInvoiceItemFromDatabase(int ItemId)
         {
-            var AffectedCount = DataAccess.SaveData(DeleteSubItemQuery, item);
+            var InvoiceId = GetInvoiceIdFromInvoiceItemId(ItemId);
+            if (InvoiceId == 0) return 0;
+            var AffectedCount = DataAccess.SaveData(DeleteInvoiceItemQuery, ItemId);
+            if (AffectedCount > 0) UpdateItemUpdateDateAndUpdateTime(InvoiceId);
+            return AffectedCount;
+        }
+
+        public int InsertInvoicePaymentToDatabase(InvoicePaymentModel item)
+        {
+            if (item == null) return 0;
+            item.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
+            item.TimeCreated = PersianCalendarModel.GetCurrentTime();
+            DynamicParameters dp = new();
+            dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
+            dp.Add("@invoiceId", item.InvoiceId);
+            dp.Add("@dateCreated", item.DateCreated);
+            dp.Add("@timeCreated", item.TimeCreated);
+            dp.Add("@payAmount", item.PayAmount);
+            dp.Add("@descriptions", item.Descriptions);
+            var AffectedCount = DataAccess.SaveData(InsertInvoicePaymentQuery, dp);
+            if (AffectedCount > 0)
+            {
+                item.Id = dp.Get<int>("@id");
+                UpdateItemUpdateDateAndUpdateTime(item.InvoiceId);
+            }
+            return AffectedCount;
+        }
+
+        public int UpdateInvoicePaymentInDatabase(InvoicePaymentModel item)
+        {
+            if (item == null) return 0;
+            item.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
+            item.TimeUpdated = PersianCalendarModel.GetCurrentTime();
+            DynamicParameters dp = new();
+            dp.Add("@dateUpdated", item.DateUpdated);
+            dp.Add("@timeUpdated", item.TimeUpdated);
+            dp.Add("@payAmount", item.PayAmount);
+            dp.Add("@descriptions", item.Descriptions);
+            var AffectedCount = DataAccess.SaveData(UpdateInvoicePaymentQuery, item);
             if (AffectedCount > 0) UpdateItemUpdateDateAndUpdateTime(item.InvoiceId);
+            return AffectedCount;
+        }
+
+        public int DeleteInvoicePaymentFromDatabase(int PaymentId)
+        {
+            var InvoiceId = GetInvoiceIdFromInvoiceItemId(PaymentId);
+            if (InvoiceId == 0) return 0;
+            var AffectedCount = DataAccess.SaveData(DeleteInvoicePaymentQuery, PaymentId);
+            if (AffectedCount > 0) UpdateItemUpdateDateAndUpdateTime(InvoiceId);
             return AffectedCount;
         }
 
@@ -165,6 +217,18 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@dateUpdated", PersianCalendarModel.GetCurrentPersianDate());
             dp.Add("@timeUpdated", PersianCalendarModel.GetCurrentTime());
             DataAccess.SaveData(UpdateSubItemDateAndTimeQuery, dp);
+        }
+
+        private int GetInvoiceIdFromInvoiceItemId(int Id)
+        {
+            var query = $"SELECT InvoiceId FROM InvoiceItems WHERE Id = { Id }";
+            return DataAccess.ExecuteScalar<int, DynamicParameters>(query, null);
+        }
+
+        private int GetInvoiceIdFromInvoicePaymentId(int Id)
+        {
+            var query = $"SELECT InvoiceId FROM InvoicePayments WHERE Id = { Id }";
+            return DataAccess.ExecuteScalar<int, DynamicParameters>(query, null);
         }
 
         public int DeleteItemById(int Id)
@@ -290,10 +354,24 @@ namespace DataLibraryCore.DataAccess.SqlServer
                       {(FinStatus == null ? "" : $" AND ISNULL(dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue), 0) - ISNULL(pays.TotalPayments, 0) { finStatusOperand } 0 ")}";
         }
 
-        public ValidationResult ValidateItem(InvoiceModel invoice)
+        public ValidationResult ValidateItem(InvoiceModel item)
         {
             InvoiceValidator validator = new();
-            var result = validator.Validate(invoice);
+            var result = validator.Validate(item);
+            return result;
+        }
+
+        public ValidationResult ValidateItem(InvoiceItemModel item)
+        {
+            InvoiceItemValidator validator = new();
+            var result = validator.Validate(item);
+            return result;
+        }
+
+        public ValidationResult ValidateItem(InvoicePaymentModel item)
+        {
+            InvoicePaymentValidator validator = new();
+            var result = validator.Validate(item);
             return result;
         }
     }
