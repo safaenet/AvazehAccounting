@@ -13,11 +13,11 @@ namespace AvazehWebAPI.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class InvoiceItemController<TDal, TDto, TManager> : ControllerBase
-        where TDal : InvoiceItemModel where TDto : InvoiceItemModel_DTO_Create_Update
+    public class InvoicePaymentController<TDal, TDto, TManager> : ControllerBase
+        where TDal : InvoicePaymentModel where TDto : InvoicePaymentModel_DTO_Create_Update
         where TManager : ICollectionManager<TDal, IProcessor<TDal>>
     {
-        public InvoiceItemController(TManager manager)
+        public InvoicePaymentController(TManager manager)
         {
             Manager = manager;
         }

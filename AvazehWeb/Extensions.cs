@@ -175,5 +175,25 @@ namespace AvazehWeb
                 Descriptions = model.Descriptions
             };
         }
+
+        internal static InvoicePaymentModel AsDaL(this InvoicePaymentModel_DTO_Create_Update model)
+        {
+            return new InvoicePaymentModel()
+            {
+                InvoiceId = model.InvoiceId,
+                PayAmount = model.PayAmount,
+                Descriptions = model.Descriptions
+            };
+        }
+
+        internal static InvoicePaymentModel_DTO_Create_Update AsDto(this InvoicePaymentModel model)
+        {
+            return new InvoicePaymentModel_DTO_Create_Update()
+            {
+                InvoiceId = model.InvoiceId,
+                PayAmount = model.PayAmount,
+                Descriptions = model.Descriptions
+            };
+        }
     }
 }
