@@ -1,4 +1,6 @@
-﻿using AvazehWpf.ViewModels;
+﻿using AvazehApiClient.DataAccess;
+using AvazehApiClient.DataAccess.Interfaces;
+using AvazehWpf.ViewModels;
 using AvazehWpfApiClient.DataAccess;
 using Caliburn.Micro;
 using System;
