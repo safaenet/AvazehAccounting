@@ -227,7 +227,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         public int DeleteInvoicePaymentFromDatabase(int PaymentId)
         {
-            var InvoiceId = GetInvoiceIdFromInvoiceItemId(PaymentId);
+            var InvoiceId = GetInvoiceIdFromInvoicePaymentId(PaymentId);
             if (InvoiceId == 0) return 0;
             var AffectedCount = DataAccess.SaveData(DeleteInvoicePaymentQuery, PaymentId);
             if (AffectedCount > 0) UpdateItemUpdateDateAndUpdateTime(InvoiceId);

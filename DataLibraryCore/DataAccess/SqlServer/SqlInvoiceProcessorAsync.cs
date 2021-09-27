@@ -151,7 +151,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         public async Task<int> DeleteInvoicePaymentFromDatabaseAsync(int PaymentId)
         {
-            var InvoiceId = GetInvoiceIdFromInvoiceItemId(PaymentId);
+            var InvoiceId = GetInvoiceIdFromInvoicePaymentId(PaymentId);
             if (InvoiceId == 0) return 0;
             var AffectedCount = await DataAccess.SaveDataAsync(DeleteInvoicePaymentQuery, PaymentId);
             if (AffectedCount > 0) await UpdateItemUpdateDateAndUpdateTimeAsync(InvoiceId);
