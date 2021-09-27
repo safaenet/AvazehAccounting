@@ -14,7 +14,8 @@ namespace DataLibraryCore.DataAccess
         public static InvoiceModel MapToSingleInvoice(this SqlMapper.GridReader reader)
         {
             InvoiceModel invoice = reader.Read<InvoiceModel, CustomerModel, InvoiceModel>(
-                (i, c) => { i.Customer = c; return i; }, splitOn: "CustId").Single();
+                (i, c) => { i.Customer = c; return i; }, splitOn: "CustId").SingleOrDefault();
+            if (invoice is null) return null;
 
             var ItemsDic = reader.Read<InvoiceItemModel, ProductModel, InvoiceItemModel>(
                 (it, p) => { it.Product = p; return it; }, splitOn: "pId")

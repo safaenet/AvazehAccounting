@@ -23,6 +23,11 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public SqlInvoiceProcessor(IDataAccess dataAcess)
         {
             DataAccess = dataAcess;
+            if (FluentMapper.EntityMaps.IsEmpty)
+            {
+                FluentMapper.Initialize(config => config.AddMap(new CustomerModelMapper()));
+                FluentMapper.Initialize(config => config.AddMap(new ProductModelMapper()));
+            }
         }
 
         private readonly IDataAccess DataAccess;
@@ -82,6 +87,11 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id WHERE it.InvoiceId IN (SELECT i.Id FROM @invoices i);
             SELECT * FROM InvoicePayments WHERE InvoiceId IN (SELECT i.Id FROM @invoices i);
             SELECT * FROM PhoneNumbers WHERE CustomerId IN (SELECT i.CustomerId FROM @invoices i);";
+        private readonly string GetSingleInvoiceItemQuery = @"SELECT it.*, p.[Id] AS pId,
+                p.[ProductName], p.[BuyPrice] AS pBuyPrice, p.[SellPrice] AS pSellPrice, p.[Barcode],
+                p.[CountString] AS pCountString, p.[DateCreated] AS pDateCreated, p.[TimeCreated] AS pTimeCreated,
+                p.[DateUpdated] AS pDateUpdated, p.[TimeUpdated] AS pTimeUpdated, p.[Descriptions] AS pDescriptions
+                FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id WHERE it.Id = {0}";
 
         public int CreateItem(InvoiceModel item)
         {
@@ -113,14 +123,10 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         public InvoiceItemModel GetInvoiceItemFromDatabase(int Id)
         {
-            string GetSingleInvoiceItemQuery = @"SELECT it.*, p.[Id] AS pId
-                p.[ProductName], p.[BuyPrice] AS pBuyPrice, p.[SellPrice] AS pSellPrice, p.[Barcode],
-                p.[CountString] AS pCountString, p.[DateCreated] AS pDateCreated, p.[TimeCreated] AS pTimeCreated,
-                p.[DateUpdated] AS pDateUpdated, p.[TimeUpdated] AS pTimeUpdated, p.[Descriptions] AS pDescriptions
-                FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id WHERE it.Id = {0}";
+            var sql = string.Format(GetSingleInvoiceItemQuery, Id);
             IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
             return conn.Query<InvoiceItemModel, ProductModel, InvoiceItemModel>
-                (GetSingleInvoiceItemQuery, (it, p) => { it.Product = p; return it; }, splitOn: "pId").SingleOrDefault();
+                (sql, (it, p) => { it.Product = p; return it; }, splitOn: "pId").SingleOrDefault();
         }
 
         public int InsertInvoiceItemToDatabase(InvoiceItemModel item)
@@ -293,11 +299,6 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public InvoiceModel LoadSingleItem(int Id)
         {
             var query = string.Format(LoadSingleItemQuery, Id);
-            if (FluentMapper.EntityMaps.IsEmpty)
-            {
-                FluentMapper.Initialize(config => config.AddMap(new CustomerModelMapper()));
-                FluentMapper.Initialize(config => config.AddMap(new ProductModelMapper()));
-            }
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
             return conn.QueryMultiple(query).MapToSingleInvoice();
         }

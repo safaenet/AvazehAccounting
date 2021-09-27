@@ -45,14 +45,10 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         public async Task<InvoiceItemModel> GetInvoiceItemFromDatabaseAsync(int Id)
         {
-            string GetSingleInvoiceItemQuery = @"SELECT it.*, p.[Id] AS pId
-                p.[ProductName], p.[BuyPrice] AS pBuyPrice, p.[SellPrice] AS pSellPrice, p.[Barcode],
-                p.[CountString] AS pCountString, p.[DateCreated] AS pDateCreated, p.[TimeCreated] AS pTimeCreated,
-                p.[DateUpdated] AS pDateUpdated, p.[TimeUpdated] AS pTimeUpdated, p.[Descriptions] AS pDescriptions
-                FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id WHERE it.Id = {0}";
+            var sql = string.Format(GetSingleInvoiceItemQuery, Id);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
             var result = await conn.QueryAsync<InvoiceItemModel, ProductModel, InvoiceItemModel>
-                (GetSingleInvoiceItemQuery, (it, p) => { it.Product = p; return it; }, splitOn: "pId");
+                (sql, (it, p) => { it.Product = p; return it; }, splitOn: "pId");
             return result.SingleOrDefault();
         }
 
@@ -219,11 +215,6 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public async Task<InvoiceModel> LoadSingleItemAsync(int Id)
         {
             var query = string.Format(LoadSingleItemQuery, Id);
-            if (FluentMapper.EntityMaps.IsEmpty)
-            {
-                FluentMapper.Initialize(config => config.AddMap(new CustomerModelMapper()));
-                FluentMapper.Initialize(config => config.AddMap(new ProductModelMapper()));
-            }
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
             var outPut = await conn.QueryMultipleAsync(query);
             return outPut.MapToSingleInvoice();
