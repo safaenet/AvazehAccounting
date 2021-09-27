@@ -1,12 +1,10 @@
 ﻿using AvazehApiClient.DataAccess;
 using AvazehApiClient.DataAccess.Interfaces;
 using AvazehWpf.ViewModels;
-using AvazehWpfApiClient.DataAccess;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
 
 namespace AvazehWpf
