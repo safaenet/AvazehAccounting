@@ -22,13 +22,13 @@ namespace AvazehWebAPI.Controllers
 
         private readonly IInvoiceProcessor Processor;
 
-        //[HttpGet("{Id}")]
-        //public async Task<ActionResult<InvoiceItemModel>> GetItemAsync(int Id)
-        //{
-        //    var item = await Processor.LoadSingleItemAsync(Id);
-        //    if (item is null) return NotFound("Couldn't find specific Item");
-        //    return item;
-        //}
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<InvoiceItemModel>> GetItemAsync(int Id)
+        {
+            var item = await Processor.GetInvoiceItemFromDatabaseAsync(Id);
+            if (item is null) return NotFound("Couldn't find specific Item");
+            return item;
+        }
 
         [HttpPost]
         public async Task<ActionResult<InvoiceItemModel>> CreateItemAsync(InvoiceItemModel_DTO_Create_Update model)

@@ -111,6 +111,18 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return DataAccess.SaveData(UpdateInvoiceQuery, item);
         }
 
+        public InvoiceItemModel GetInvoiceItemFromDatabase(int Id)
+        {
+            string GetSingleInvoiceItemQuery = @"SELECT it.*, p.[Id] AS pId
+                p.[ProductName], p.[BuyPrice] AS pBuyPrice, p.[SellPrice] AS pSellPrice, p.[Barcode],
+                p.[CountString] AS pCountString, p.[DateCreated] AS pDateCreated, p.[TimeCreated] AS pTimeCreated,
+                p.[DateUpdated] AS pDateUpdated, p.[TimeUpdated] AS pTimeUpdated, p.[Descriptions] AS pDescriptions
+                FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id WHERE it.Id = {0}";
+            IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
+            return conn.Query<InvoiceItemModel, ProductModel, InvoiceItemModel>
+                (GetSingleInvoiceItemQuery, (it, p) => { it.Product = p; return it; }, splitOn: "pId").SingleOrDefault();
+        }
+
         public int InsertInvoiceItemToDatabase(InvoiceItemModel item)
         {
             if (item == null || !item.IsCountStringValid) return 0;
@@ -163,6 +175,12 @@ namespace DataLibraryCore.DataAccess.SqlServer
             var AffectedCount = DataAccess.SaveData(DeleteInvoiceItemQuery, ItemId);
             if (AffectedCount > 0) UpdateItemUpdateDateAndUpdateTime(InvoiceId);
             return AffectedCount;
+        }
+
+        public InvoicePaymentModel GetInvoicePaymentFromDatabase(int Id)
+        {
+            string GetInvoicePaymentQuery = $"SELECT * FROM InvoicePayments WHERE Id = { Id }";
+            return DataAccess.LoadData<InvoicePaymentModel, DynamicParameters>(GetInvoicePaymentQuery, null).SingleOrDefault();
         }
 
         public int InsertInvoicePaymentToDatabase(InvoicePaymentModel item)

@@ -43,6 +43,19 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return await DataAccess.SaveDataAsync(UpdateInvoiceQuery, item);
         }
 
+        public async Task<InvoiceItemModel> GetInvoiceItemFromDatabaseAsync(int Id)
+        {
+            string GetSingleInvoiceItemQuery = @"SELECT it.*, p.[Id] AS pId
+                p.[ProductName], p.[BuyPrice] AS pBuyPrice, p.[SellPrice] AS pSellPrice, p.[Barcode],
+                p.[CountString] AS pCountString, p.[DateCreated] AS pDateCreated, p.[TimeCreated] AS pTimeCreated,
+                p.[DateUpdated] AS pDateUpdated, p.[TimeUpdated] AS pTimeUpdated, p.[Descriptions] AS pDescriptions
+                FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id WHERE it.Id = {0}";
+            using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
+            var result = await conn.QueryAsync<InvoiceItemModel, ProductModel, InvoiceItemModel>
+                (GetSingleInvoiceItemQuery, (it, p) => { it.Product = p; return it; }, splitOn: "pId");
+            return result.SingleOrDefault();
+        }
+
         public async Task<int> InsertInvoiceItemToDatabaseAsync(InvoiceItemModel item)
         {
             if (item == null || !item.IsCountStringValid) return 0;
@@ -95,6 +108,13 @@ namespace DataLibraryCore.DataAccess.SqlServer
             var AffectedCount = await DataAccess.SaveDataAsync(DeleteInvoiceItemQuery, ItemId);
             if (AffectedCount > 0) await UpdateItemUpdateDateAndUpdateTimeAsync(InvoiceId);
             return AffectedCount;
+        }
+
+        public async Task<InvoicePaymentModel> GetInvoicePaymentFromDatabaseAsync(int Id)
+        {
+            string GetInvoicePaymentQuery = $"SELECT * FROM InvoicePayments WHERE Id = { Id }";
+            var result = await DataAccess.LoadDataAsync<InvoicePaymentModel, DynamicParameters>(GetInvoicePaymentQuery, null);
+            return result.SingleOrDefault();
         }
 
         public async Task<int> InsertInvoicePaymentToDatabaseAsync(InvoicePaymentModel item)

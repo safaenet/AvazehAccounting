@@ -15,27 +15,27 @@ namespace AvazehWebAPI.Controllers
     [Route("api/v1/[controller]")]
     public class InvoicePaymentController : ControllerBase
     {
-        public InvoicePaymentController(IInvoiceProcessor manager)
+        public InvoicePaymentController(IInvoiceProcessor processor)
         {
-            Manager = manager;
+            Processor = processor;
         }
 
-        private readonly IInvoiceProcessor Manager;
+        private readonly IInvoiceProcessor Processor;
 
-        //[HttpGet("{Id}")]
-        //public async Task<ActionResult<InvoicePaymentModel>> GetItemAsync(int Id)
-        //{
-        //    var item = await Manager.LoadSingleItemAsync(Id);
-        //    if (item is null) return NotFound("Couldn't find specific Item");
-        //    return item;
-        //}
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<InvoicePaymentModel>> GetItemAsync(int Id)
+        {
+            var item = await Processor.GetInvoicePaymentFromDatabaseAsync(Id);
+            if (item is null) return NotFound("Couldn't find specific Item");
+            return item;
+        }
 
         [HttpPost]
         public async Task<ActionResult<InvoicePaymentModel>> CreateItemAsync(InvoicePaymentModel_DTO_Create_Update model)
         {
             var newItem = model.AsDaL();
-            if (!Manager.ValidateItem(newItem).IsValid) return BadRequest(0);
-            await Manager.InsertInvoicePaymentToDatabaseAsync(newItem);
+            if (!Processor.ValidateItem(newItem).IsValid) return BadRequest(0);
+            await Processor.InsertInvoicePaymentToDatabaseAsync(newItem);
             return newItem;
         }
 
@@ -44,16 +44,16 @@ namespace AvazehWebAPI.Controllers
         {
             if (model is null) return BadRequest("Model is not valid");
             var updatedModel = model.AsDaL();
-            if (!Manager.ValidateItem(updatedModel).IsValid) return BadRequest("Model is not valid");
+            if (!Processor.ValidateItem(updatedModel).IsValid) return BadRequest("Model is not valid");
             updatedModel.Id = Id;
-            if (await Manager.UpdateInvoicePaymentInDatabaseAsync(updatedModel) == 0) return NotFound();
+            if (await Processor.UpdateInvoicePaymentInDatabaseAsync(updatedModel) == 0) return NotFound();
             return updatedModel;
         }
 
         [HttpDelete]
         public async Task<ActionResult> DeleteItemAsync(int Id)
         {
-            if (await Manager.DeleteInvoicePaymentFromDatabaseAsync(Id) > 0) return Ok("Successfully deleted the item");
+            if (await Processor.DeleteInvoicePaymentFromDatabaseAsync(Id) > 0) return Ok("Successfully deleted the item");
             return NotFound("Item not found");
         }
     }
