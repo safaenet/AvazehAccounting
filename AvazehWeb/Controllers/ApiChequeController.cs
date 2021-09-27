@@ -13,30 +13,28 @@ namespace AvazehWebAPI.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class ChequeController<TDal, TDto, TCollection, TManager> : ControllerBase
-        where TDal : ChequeModel where TDto : ChequeModel_DTO_Create_Update
-        where TCollection : ItemsCollection_DTO<TDal> where TManager : ICollectionManager<TDal, IProcessor<TDal>>
+    public class ChequeController : ControllerBase
     {
-        public ChequeController(TManager manager)
+        public ChequeController(ICollectionManager<ChequeModel, IProcessor<ChequeModel>> manager)
         {
             Manager = manager;
         }
 
-        private readonly TManager Manager;
+        private readonly ICollectionManager<ChequeModel, IProcessor<ChequeModel>> Manager;
 
         //GET /Cheque?Id=1&SearchText=sometext
         [HttpGet]
-        public async Task<ActionResult<TCollection>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "DueDate", OrderType orderType = OrderType.DESC, int PageSize = 50)
+        public async Task<ActionResult<ItemsCollection_DTO<ChequeModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "DueDate", OrderType orderType = OrderType.DESC, int PageSize = 50)
         {
             Manager.GenerateWhereClause(SearchText, OrderBy, orderType);
             Manager.PageSize = PageSize;
             await Manager.GotoPageAsync(Page);
             if (Manager.Items == null || Manager.Items.Count == 0) return NotFound("List is empty");
-            return Manager.AsDto() as TCollection;
+            return Manager.AsDto();
         }
 
         [HttpGet("{Id}")]
-        public async Task<ActionResult<TDal>> GetItemAsync(int Id)
+        public async Task<ActionResult<ChequeModel>> GetItemAsync(int Id)
         {
             var item = await Manager.Processor.LoadSingleItemAsync(Id);
             if (item is null) return NotFound("Couldn't find specific Item");
@@ -44,23 +42,23 @@ namespace AvazehWebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TDal>> CreateItemAsync(TDto model)
+        public async Task<ActionResult<ChequeModel>> CreateItemAsync(ChequeModel_DTO_Create_Update model)
         {
             var newItem = model.AsDaL();
-            if (!Manager.Processor.ValidateItem(newItem as TDal).IsValid) return BadRequest(0);
-            await Manager.Processor.CreateItemAsync(newItem as TDal);
-            return newItem as TDal;
+            if (!Manager.Processor.ValidateItem(newItem as ChequeModel).IsValid) return BadRequest(0);
+            await Manager.Processor.CreateItemAsync(newItem as ChequeModel);
+            return newItem as ChequeModel;
         }
 
         [HttpPut("{Id}")]
-        public async Task<ActionResult<TDal>> UpdateItemAsync(int Id, TDto model)
+        public async Task<ActionResult<ChequeModel>> UpdateItemAsync(int Id, ChequeModel_DTO_Create_Update model)
         {
             if (model is null) return BadRequest("Model is not valid");
             var updatedModel = model.AsDaL();
-            if (!Manager.Processor.ValidateItem(updatedModel as TDal).IsValid) return BadRequest("Model is not valid");
+            if (!Manager.Processor.ValidateItem(updatedModel as ChequeModel).IsValid) return BadRequest("Model is not valid");
             updatedModel.Id = Id;
-            if (await Manager.Processor.UpdateItemAsync(updatedModel as TDal) == 0) return NotFound();
-            return updatedModel as TDal;
+            if (await Manager.Processor.UpdateItemAsync(updatedModel as ChequeModel) == 0) return NotFound();
+            return updatedModel as ChequeModel;
         }
 
         [HttpDelete]
