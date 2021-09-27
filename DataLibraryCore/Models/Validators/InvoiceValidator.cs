@@ -12,7 +12,7 @@ namespace DataLibraryCore.Models.Validators
             RuleFor(i => i.Customer.Id)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty().WithMessage("{PropertyName} cannot be empty")
-                .NotEqual(0).WithMessage("{PropertyName} of Phone Number cannot be Zero");
+                .NotEqual(0).WithMessage("{PropertyName} cannot be Zero");
 
             RuleFor(i => i.LifeStatus).NotEmpty().WithMessage("{PropertyName} cannot be empty");
 

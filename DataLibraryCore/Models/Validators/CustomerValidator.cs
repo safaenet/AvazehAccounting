@@ -20,11 +20,6 @@ namespace DataLibraryCore.Models.Validators
             RuleFor(c => c.CompanyName)
                 .MaximumLength(50).WithMessage("{PropertyName} cannot be more than 50 characters ({TotalLength})");
 
-            //RuleFor(c => c.DateJoined)
-            //    .NotEmpty().WithMessage("{PropertyName} cannot be empty")
-            //    .Matches(@"([12]\d{3}\/(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01]))$").WithMessage("{PropertyName} is not valid")
-            //    .Length(10).WithMessage("{PropertyName} cannot be more than 10 characters ({TotalLength})");
-
             RuleForEach(c => c.PhoneNumbers).Cascade(CascadeMode.Stop).ChildRules(p =>
             {
                 p.RuleFor(x => x.PhoneNumber).MaximumLength(15).WithMessage("{PropertyName} cannot be more than 15 characters ({TotalLength})");
