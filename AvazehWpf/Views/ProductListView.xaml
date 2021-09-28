@@ -6,23 +6,12 @@
         xmlns:cal="http://www.caliburnproject.org"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:AvazehWpf" mc:Ignorable="d"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:ProductListViewModel}"
         Title="Products" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1100" Height="650">
     <Grid>
-        <Grid.Resources>
-            <Style TargetType="TextBox">
-                <Setter Property="TextAlignment" Value="Center"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="BorderBrush" Value="Black"/>
-                <Setter Property="Margin" Value="0,2,0,2"/>
-                <Setter Property="Height" Value="25"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-            </Style>
-        </Grid.Resources>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3"/>
             <ColumnDefinition Width="200" MaxWidth="200"/>
@@ -49,7 +38,7 @@
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
                             <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="PackageVariantClosed" Margin="0,2,5,2"/>
+                                <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Product Name" Margin="0,2,0,2"/>
                             </StackPanel>
                             <TextBox Text="{Binding SelectedProduct.ProductName, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200"/>
@@ -57,7 +46,7 @@
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
                             <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="CashMultiple" Margin="0,2,5,2"/>
+                                <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Buy Price" Margin="0,2,0,2"/>
                             </StackPanel>
                             <TextBox Text="{Binding SelectedProduct.BuyPrice, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200"/>
@@ -65,7 +54,7 @@
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
                             <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="CashMultiple" Margin="0,2,5,2"/>
+                                <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Sell Price" Margin="0,2,0,2"/>
                             </StackPanel>
                             <TextBox Text="{Binding SelectedProduct.SellPrice, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200"/>
@@ -73,7 +62,7 @@
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
                             <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="Barcode" Margin="0,2,5,2"/>
+                                <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Barcode" Margin="0,2,0,2"/>
                             </StackPanel>
                             <TextBox Text="{Binding SelectedProduct.Barcode, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200"/>
@@ -82,7 +71,7 @@
 
                     <DockPanel LastChildFill="True"  Grid.Row="1" DockPanel.Dock="Bottom" Margin="0,0,0,5">
                         <StackPanel DockPanel.Dock = "Top" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="SemanticWeb" Margin="0,2,5,2"/>
+                            <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Description Text" Margin="0,2,0,2"/>
                         </StackPanel>
                         <TextBox Text="{Binding SelectedProduct.Descriptions, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MinHeight="50" Height="auto" VerticalContentAlignment="Top" BorderThickness="1" MaxWidth="200"/>
@@ -93,19 +82,19 @@
                 <StackPanel Orientation="Vertical">
                     <Button cal:Message.Attach="[Event Click] = [Action AddNewProduct()]" Height="25" Margin="0,0,0,3">
                         <StackPanel Width="110" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="PackageDown" Margin="3"/>
+                            <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock Text="Add New" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                     <Button cal:Message.Attach="[Event Click] = [Action EditProduct()]" Height="25" Margin="0,0,0,3">
                         <StackPanel Width="110" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Edit" Margin="3"/>
+                            <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock Text="Edit" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                     <Button cal:Message.Attach="[Event Click] = [Action DeleteProduct()]" Height="25">
                         <StackPanel Width="110" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Delete" Margin="3"/>
+                            <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock Text="Delete" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
@@ -126,9 +115,9 @@
                 </Grid.ColumnDefinitions>
                 <Button x:Name="Search" Grid.Column="0" Height="25" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="DatabaseSearch" Margin="3"/>
+                        <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock Text="Search" VerticalAlignment="Center" Margin="30,0,30,0"/>
-                        <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="3" HorizontalAlignment="Right"/>
+                        <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
                 <TextBox x:Name="SearchText" Grid.Column="1" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]">
@@ -142,14 +131,14 @@
                 </Grid.ColumnDefinitions>
                 <Button x:Name="PreviousPage" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="ArrowLeftCircle" Margin="3"/>
+                        <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock Text="Previous" VerticalAlignment="Center" Margin="30,0,30,0"/>
                     </StackPanel>
                 </Button>
                 <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Next" VerticalAlignment="Center" Margin="30,0,30,0"/>
-                        <materialDesign:PackIcon Kind="ArrowRightCircle" Margin="3" HorizontalAlignment="Right"/>
+                        <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
             </Grid>
