@@ -20,18 +20,18 @@ namespace AvazehApiClient.DataAccess
         }
         private HttpClient ApiClient { get; set; }
 
-        public async Task<T> GetCollectionAsync<T>(string Key, int Page = 1, string SearchText = "", int PageSize = 50) where T : class
+        public async Task<T> GetCollectionAsync<T>(string Key, string OrderBy, OrderType orderType, int Page = 1, string SearchText = "", int PageSize = 50) where T : class
         {
-            var Url = $"{Key}?Page={Page}&SearchText={SearchText}&PageSize={PageSize}";
+            var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&Page={Page}&SearchText={SearchText}&PageSize={PageSize}";
             var response = await ApiClient.GetAsync(Url);
             if (response.IsSuccessStatusCode)
                 return await response.Content.ReadAsAsync<T>();
             return null;
         }
 
-        public async Task<T> GetInvoiceCollectionAsync<T>(string Key, int Page = 1, string SearchText = "", InvoiceLifeStatus? LifeStatus = null, InvoiceFinancialStatus? FinStatus = null, int PageSize = 50) where T : class
+        public async Task<T> GetInvoiceCollectionAsync<T>(string Key, string OrderBy, OrderType orderType, int Page = 1, string SearchText = "", InvoiceLifeStatus? LifeStatus = null, InvoiceFinancialStatus? FinStatus = null, int PageSize = 50) where T : class
         {
-            var Url = $"{Key}?Page={Page}&SearchText={SearchText}&LifeStatus={LifeStatus}&FinStatus={FinStatus}&PageSize={PageSize}";
+            var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&Page={Page}&SearchText={SearchText}&LifeStatus={LifeStatus}&FinStatus={FinStatus}&PageSize={PageSize}";
             var response = await ApiClient.GetAsync(Url);
             if (response.IsSuccessStatusCode)
                 return await response.Content.ReadAsAsync<T>();

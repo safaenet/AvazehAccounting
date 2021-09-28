@@ -11,14 +11,14 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
 {
     public partial class InvoiceManagerAsync
     {
-        public InvoiceManagerAsync(IApiProcessor apiProcessor, IInvoiceCollectionManagerAsync collectionManager)
+        public InvoiceManagerAsync(IApiProcessor apiProcessor, IInvoiceCollectionManager collectionManager)
         {
             ApiProcessor = apiProcessor;
             CollectionManager = collectionManager;
         }
         private const string KeyItem = "InvoiceItem";
         private IApiProcessor ApiProcessor { get; init; }
-        public IInvoiceCollectionManagerAsync CollectionManager { get; init; }
+        public IInvoiceCollectionManager CollectionManager { get; init; }
         public InvoiceModel Invoice { get; set; }
         public long CustomerTotalBalance { get; private set; }
 

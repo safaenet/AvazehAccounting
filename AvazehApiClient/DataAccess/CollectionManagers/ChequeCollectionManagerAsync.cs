@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AvazehApiClient.DataAccess.CollectionManagers
 {
-    public class ChequeCollectionManagerAsync<TDalModel, TDtoModel, TValidator> : ICollectionManager<TDalModel>where TDalModel : ChequeModel where TDtoModel : ChequeModel_DTO_Create_Update where TValidator : ChequeValidator, new()
+    public class ChequeCollectionManagerAsync<TDalModel, TDtoModel, TValidator> : ICollectionManager<TDalModel> where TDalModel : ChequeModel where TDtoModel : ChequeModel_DTO_Create_Update where TValidator : ChequeValidator, new()
     {
         public ChequeCollectionManagerAsync(IApiProcessor apiProcessor)
         {
@@ -32,6 +32,8 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
 
         public string SearchValue { get; set; }
+        public string QueryOrderBy { get; set; } = "DueDate";
+        public OrderType QueryOrderType { get; set; } = OrderType.DESC;
 
         public int PageSize { get; set; } = 50;
         public int PagesCount { get; private set; }
@@ -83,7 +85,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
             PageLoadEventArgs eventArgs = new();
             PageLoading?.Invoke(this, eventArgs);
             if (eventArgs.Cancel) return 0;
-            var collection = await ApiProcessor.GetCollectionAsync<ItemsCollection_DTO<TDalModel>>(Key, PageNumber, SearchValue, PageSize);
+            var collection = await ApiProcessor.GetCollectionAsync<ItemsCollection_DTO<TDalModel>>(Key, QueryOrderBy, QueryOrderType, PageNumber, SearchValue, PageSize);
             Items = collection.Items;
             CurrentPage = collection.CurrentPage;
             PagesCount = collection.PagesCount;

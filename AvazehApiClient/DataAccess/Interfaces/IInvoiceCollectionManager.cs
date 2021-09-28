@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AvazehApiClient.DataAccess.Interfaces
 {
-    public interface IInvoiceCollectionManagerAsync
+    public interface IInvoiceCollectionManager
     {
         IApiProcessor ApiProcessor { get; init; }
         int CurrentPage { get; }
@@ -17,6 +17,8 @@ namespace AvazehApiClient.DataAccess.Interfaces
         int PagesCount { get; }
         int PageSize { get; set; }
         string SearchValue { get; set; }
+        string QueryOrderBy { get; set; }
+        OrderType QueryOrderType { get; set; }
 
         event EventHandler FirstPageLoaded;
         event EventHandler NextPageLoaded;

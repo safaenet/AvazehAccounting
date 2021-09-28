@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AvazehApiClient.DataAccess.CollectionManagers
 {
-    public class InvoiceCollectionManagerAsync : IInvoiceCollectionManagerAsync
+    public class InvoiceCollectionManagerAsync : IInvoiceCollectionManager
     {
         public InvoiceCollectionManagerAsync(IApiProcessor apiProcessor)
         {
@@ -30,6 +30,8 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
 
         public string SearchValue { get; set; }
+        public string QueryOrderBy { get; set; } = "Id";
+        public OrderType QueryOrderType { get; set; } = OrderType.DESC;
         InvoiceLifeStatus? LifeStatus { get; set; }
         InvoiceFinancialStatus? FinStatus { get; set; }
 
@@ -84,7 +86,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
             PageLoadEventArgs eventArgs = new();
             PageLoading?.Invoke(this, eventArgs);
             if (eventArgs.Cancel) return 0;
-            var collection = await ApiProcessor.GetInvoiceCollectionAsync<ItemsCollection_DTO<InvoiceListModel>>(Key, PageNumber, SearchValue, LifeStatus, FinStatus, PageSize);
+            var collection = await ApiProcessor.GetInvoiceCollectionAsync<ItemsCollection_DTO<InvoiceListModel>>(Key, QueryOrderBy, QueryOrderType, PageNumber, SearchValue, LifeStatus, FinStatus, PageSize);
             Items = collection.Items;
             CurrentPage = collection.CurrentPage;
             PagesCount = collection.PagesCount;

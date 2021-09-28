@@ -17,6 +17,8 @@ namespace AvazehApiClient.DataAccess.Interfaces
         int PagesCount { get; }
         int PageSize { get; set; }
         string SearchValue { get; set; }
+        string QueryOrderBy { get; set; }
+        OrderType QueryOrderType { get; set; }
 
         event EventHandler PageLoading;
         event EventHandler PageLoaded;

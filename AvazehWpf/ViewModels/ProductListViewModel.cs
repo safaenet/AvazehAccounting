@@ -1,39 +1,33 @@
-﻿using AvazehWpfApiClient.DataAccess.Interfaces;
-using AvazehWpfApiClient.Models;
+﻿using AvazehApiClient.DataAccess.Interfaces;
+using AvazehApiClient.Models;
 using Caliburn.Micro;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace AvazehWpf.ViewModels
 {
     public class ProductListViewModel : Screen
     {
-        public ProductListViewModel(ICollectionManager manager)
+        public ProductListViewModel(ICollectionManager<ProductModel> manager)
         {
             PCM = manager;
             _SelectedProduct = new();
-            PCM.LoadFirstPage();
+            Search();
         }
 
-        private ICollectionManager _PCM;
+        private ICollectionManager<ProductModel> _PCM;
         private ProductModel _SelectedProduct;
 
         public ProductModel SelectedProduct
         {
-            get { return _SelectedProduct; }
+            get => _SelectedProduct;
             set { _SelectedProduct = value; NotifyOfPropertyChange(() => SelectedProduct); }
         }
 
-        public ICollectionManager PCM
+        public ICollectionManager<ProductModel> PCM
         {
-            get { return _PCM; }
+            get => _PCM;
             set
             {
                 _PCM = value;
@@ -59,7 +53,7 @@ namespace AvazehWpf.ViewModels
         {
             ProductModel newProduct = new();
             WindowManager wm = new();
-            wm.ShowDialogAsync(new ProductDetailViewModel(PCM, newProduct));
+            //wm.ShowDialogAsync(new ProductDetailViewModel(PCM, newProduct));
             if (newProduct != null) Products.Add(newProduct);
         }
 
@@ -77,7 +71,8 @@ namespace AvazehWpf.ViewModels
 
         public void Search()
         {
-            PCM.GenerateWhereClause(SearchText, true);
+            PCM.SearchValue = SearchText;
+            PCM.LoadFirstPageAsync();
             NotifyOfPropertyChange(() => Products);
         }
 
@@ -94,7 +89,7 @@ namespace AvazehWpf.ViewModels
         public void EditProduct()
         {
             WindowManager wm = new();
-            wm.ShowDialogAsync(new ProductDetailViewModel(PCM, SelectedProduct));
+            //wm.ShowDialogAsync(new ProductDetailViewModel(PCM, SelectedProduct));
             NotifyOfPropertyChange(() => Products);
             NotifyOfPropertyChange(() => SelectedProduct);
         }
@@ -104,8 +99,8 @@ namespace AvazehWpf.ViewModels
             if (SelectedProduct == null) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete {SelectedProduct.ProductName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
-            var output = PCM.Processor.DeleteItemByIdAsync(SelectedProduct.Id);
-            if (output.Result > 0) Products.Remove(SelectedProduct);
+            var output = PCM.DeleteItemAsync(SelectedProduct.Id);
+            if (output.Result) Products.Remove(SelectedProduct);
             else MessageBox.Show($"Product with ID: {SelectedProduct.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
