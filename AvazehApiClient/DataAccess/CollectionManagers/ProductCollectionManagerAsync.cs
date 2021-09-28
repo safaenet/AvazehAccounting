@@ -32,7 +32,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
 
         public string SearchValue { get; set; }
-        public string QueryOrderBy { get; set; } = "ProductName";
+        public string QueryOrderBy { get; set; } = "Id";
         public OrderType QueryOrderType { get; set; } = OrderType.ASC;
 
         public int PageSize { get; set; } = 50;
@@ -97,7 +97,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
         public async Task<int> LoadFirstPageAsync()
         {
             var result = await GotoPageAsync(1);
-            FirstPageLoaded?.Invoke(this, null);
+            //FirstPageLoaded?.Invoke(this, null);
             return result;
         }
 

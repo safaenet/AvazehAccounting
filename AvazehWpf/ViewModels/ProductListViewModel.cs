@@ -2,6 +2,7 @@
 using AvazehApiClient.Models;
 using Caliburn.Micro;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -13,7 +14,7 @@ namespace AvazehWpf.ViewModels
         {
             PCM = manager;
             _SelectedProduct = new();
-            Search();
+            Search().ConfigureAwait(true);
         }
 
         private ICollectionManager<ProductModel> _PCM;
@@ -57,22 +58,22 @@ namespace AvazehWpf.ViewModels
             if (newProduct != null) Products.Add(newProduct);
         }
 
-        public void PreviousPage()
+        public async Task PreviousPage()
         {
-            PCM.LoadPreviousPageAsync();
+            await PCM.LoadPreviousPageAsync();
             NotifyOfPropertyChange(() => Products);
         }
 
-        public void NextPage()
+        public async Task NextPage()
         {
-            PCM.LoadNextPageAsync();
+            await PCM.LoadNextPageAsync();
             NotifyOfPropertyChange(() => Products);
         }
 
-        public void Search()
+        public async Task Search()
         {
             PCM.SearchValue = SearchText;
-            PCM.LoadFirstPageAsync();
+            await PCM.LoadFirstPageAsync();
             NotifyOfPropertyChange(() => Products);
         }
 
@@ -86,7 +87,7 @@ namespace AvazehWpf.ViewModels
             }
         }
 
-        public void EditProduct()
+        public async Task EditProduct()
         {
             WindowManager wm = new();
             //wm.ShowDialogAsync(new ProductDetailViewModel(PCM, SelectedProduct));
@@ -94,7 +95,7 @@ namespace AvazehWpf.ViewModels
             NotifyOfPropertyChange(() => SelectedProduct);
         }
 
-        public void DeleteProduct()
+        public async Task DeleteProduct()
         {
             if (SelectedProduct == null) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete {SelectedProduct.ProductName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
