@@ -1,13 +1,9 @@
-﻿using AvazehWeb.Models;
-using DataLibraryCore.DataAccess.CollectionManagers;
-using DataLibraryCore.DataAccess.Interfaces;
-using DataLibraryCore.DataAccess.SqlServer;
-using DataLibraryCore.Models;
+﻿using DataLibraryCore.DataAccess.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using SharedLibrary.DalModels;
+using SharedLibrary.DtoModels;
+using SharedLibrary.Enums;
 using System.Threading.Tasks;
 
 namespace AvazehWeb.Controllers

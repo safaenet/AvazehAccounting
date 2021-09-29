@@ -1,5 +1,5 @@
-﻿using DataLibraryCore.Models;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
+using SharedLibrary.Enums;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 

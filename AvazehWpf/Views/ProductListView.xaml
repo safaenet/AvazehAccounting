@@ -12,6 +12,14 @@
         Title="Products" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1100" Height="650" fw:AcrylicWindow.Enabled="True">
     <Grid fw:PointerTracker.Enabled="True">
+        <Grid.Resources>
+            <Style TargetType="TextBox">
+                <Setter Property="TextAlignment" Value="Center"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Height" Value="25"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+            </Style>
+        </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3"/>
             <ColumnDefinition Width="200" MaxWidth="200"/>
@@ -41,7 +49,7 @@
                                 <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Product Name" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedProduct.ProductName, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200"/>
+                            <TextBox Text="{Binding SelectedProduct.ProductName, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
@@ -49,7 +57,7 @@
                                 <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Buy Price" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedProduct.BuyPrice, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200"/>
+                            <TextBox Text="{Binding SelectedProduct.BuyPrice, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
@@ -57,7 +65,7 @@
                                 <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Sell Price" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedProduct.SellPrice, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200"/>
+                            <TextBox Text="{Binding SelectedProduct.SellPrice, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
@@ -65,7 +73,7 @@
                                 <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Barcode" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedProduct.Barcode, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200"/>
+                            <TextBox Text="{Binding SelectedProduct.Barcode, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
                         </StackPanel>
                     </StackPanel>
 
@@ -74,25 +82,25 @@
                             <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Description Text" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding SelectedProduct.Descriptions, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MinHeight="50" Height="auto" VerticalContentAlignment="Top" BorderThickness="1" MaxWidth="200"/>
+                        <TextBox Text="{Binding SelectedProduct.Descriptions, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MinHeight="50" Height="auto" VerticalContentAlignment="Top" BorderThickness="1" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
                     </DockPanel>
                 </Grid>
             </ScrollViewer>
             <Grid Grid.Column="0" Grid.Row="1">
                 <StackPanel Orientation="Vertical">
-                    <Button cal:Message.Attach="[Event Click] = [Action AddNewProduct()]" Height="25" Margin="0,0,0,3">
+                    <Button cal:Message.Attach="[Event Click] = [Action AddNewProduct()]" Height="25" Margin="0,0,0,3" Style="{StaticResource ButtonRevealStyle}">
                         <StackPanel Width="110" Orientation="Horizontal">
                             <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock Text="Add New" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action EditProduct()]" Height="25" Margin="0,0,0,3">
+                    <Button cal:Message.Attach="[Event Click] = [Action EditProduct()]" Height="25" Margin="0,0,0,3" Style="{StaticResource ButtonRevealStyle}">
                         <StackPanel Width="110" Orientation="Horizontal">
                             <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock Text="Edit" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action DeleteProduct()]" Height="25">
+                    <Button cal:Message.Attach="[Event Click] = [Action DeleteProduct()]" Height="25" Style="{StaticResource ButtonRevealStyle}">
                         <StackPanel Width="110" Orientation="Horizontal">
                             <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock Text="Delete" VerticalAlignment="Center"/>
@@ -113,15 +121,14 @@
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Style="{StaticResource ButtonRevealStyle}" x:Name="Search" Grid.Column="0" Height="25" Margin="0,0,0,0">
+                <Button x:Name="Search" Grid.Column="0" Height="25" Margin="0,0,0,0" Style="{StaticResource ButtonRevealStyle}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock Text="Search" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <TextBox  Style="{StaticResource TextBoxRevealStyle}" x:Name="SearchText" Grid.Column="1" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]" >
-                </TextBox>
+                <TextBox x:Name="SearchText" Grid.Column="1" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]" Style="{StaticResource TextBoxRevealStyle}"/>
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -129,13 +136,13 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="PreviousPage" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
+                <Button x:Name="PreviousPage" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0" Style="{StaticResource ButtonRevealStyle}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock Text="Previous" VerticalAlignment="Center" Margin="30,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,0,0">
+                <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,0,0" Style="{StaticResource ButtonRevealStyle}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Next" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>

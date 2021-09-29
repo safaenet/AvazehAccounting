@@ -1,6 +1,7 @@
-﻿using AvazehApiClient.DataAccess.Interfaces;
-using AvazehApiClient.Models;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
+using SharedLibrary.DalModels;
+using SharedLibrary.DtoModels;
+using SharedLibrary.Enums;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;

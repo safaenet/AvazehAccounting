@@ -1,5 +1,4 @@
-﻿using AvazehApiClient.Models;
-using System.Net.Http;
+﻿using SharedLibrary.Enums;
 using System.Threading.Tasks;
 
 namespace AvazehApiClient.DataAccess.Interfaces

@@ -1,12 +1,9 @@
 ﻿using DataLibraryCore.DataAccess.Interfaces;
-using DataLibraryCore.DataAccess.SqlServer;
-using DataLibraryCore.Models;
-using FluentValidation.Results;
+using SharedLibrary.DalModels;
+using SharedLibrary.Enums;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {

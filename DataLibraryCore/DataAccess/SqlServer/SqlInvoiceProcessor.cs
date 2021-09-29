@@ -1,20 +1,18 @@
 ﻿using Dapper;
 using DataLibraryCore.Models;
-using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Text;
-using DataLibraryCore.DataAccess.SqlServer;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Collections.ObjectModel;
-using DataLibraryCore.Models.Validators;
 using FluentValidation.Results;
-using System.Reflection;
-using System.ComponentModel;
 using Dapper.FluentMap.Mapping;
 using Dapper.FluentMap;
 using DataLibraryCore.DataAccess.Interfaces;
+using SharedLibrary.Enums;
+using SharedLibrary.DalModels;
+using SharedLibrary.Validators;
+using SharedLibrary.DtoModels;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {

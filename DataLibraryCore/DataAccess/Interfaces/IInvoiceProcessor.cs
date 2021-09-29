@@ -1,5 +1,6 @@
-﻿using DataLibraryCore.Models;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
+using SharedLibrary.DalModels;
+using SharedLibrary.Enums;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;

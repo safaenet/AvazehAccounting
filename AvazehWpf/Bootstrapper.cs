@@ -1,10 +1,11 @@
 ﻿using AvazehApiClient.DataAccess;
 using AvazehApiClient.DataAccess.CollectionManagers;
 using AvazehApiClient.DataAccess.Interfaces;
-using AvazehApiClient.Models;
-using AvazehApiClient.Models.Validators;
 using AvazehWpf.ViewModels;
 using Caliburn.Micro;
+using SharedLibrary.DalModels;
+using SharedLibrary.DtoModels;
+using SharedLibrary.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;

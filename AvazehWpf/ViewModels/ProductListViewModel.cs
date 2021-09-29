@@ -1,6 +1,6 @@
 ﻿using AvazehApiClient.DataAccess.Interfaces;
-using AvazehApiClient.Models;
 using Caliburn.Micro;
+using SharedLibrary.DalModels;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
@@ -100,8 +100,8 @@ namespace AvazehWpf.ViewModels
             if (SelectedProduct == null) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete {SelectedProduct.ProductName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
-            var output = PCM.DeleteItemAsync(SelectedProduct.Id);
-            if (output.Result) Products.Remove(SelectedProduct);
+            var output = await PCM.DeleteItemAsync(SelectedProduct.Id);
+            if (output) Products.Remove(SelectedProduct);
             else MessageBox.Show($"Product with ID: {SelectedProduct.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }

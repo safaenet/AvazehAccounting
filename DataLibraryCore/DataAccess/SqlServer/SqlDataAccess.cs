@@ -1,12 +1,7 @@
 ﻿using Dapper;
-using System;
-using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using DataLibraryCore.Models;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 

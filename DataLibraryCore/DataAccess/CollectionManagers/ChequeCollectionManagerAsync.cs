@@ -1,5 +1,6 @@
 ﻿using DataLibraryCore.DataAccess.Interfaces;
 using DataLibraryCore.Models;
+using SharedLibrary.DalModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

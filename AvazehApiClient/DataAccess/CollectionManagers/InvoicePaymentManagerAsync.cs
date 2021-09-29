@@ -1,10 +1,8 @@
-﻿using AvazehApiClient.Models;
-using AvazehApiClient.Models.Validators;
-using FluentValidation.Results;
-using System;
-using System.Collections.Generic;
+﻿using FluentValidation.Results;
+using SharedLibrary.DalModels;
+using SharedLibrary.DtoModels;
+using SharedLibrary.Validators;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AvazehApiClient.DataAccess.CollectionManagers

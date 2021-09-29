@@ -1,13 +1,10 @@
 ﻿using Dapper;
 using DataLibraryCore.DataAccess.Interfaces;
-using DataLibraryCore.Models;
-using System;
-using System.Collections.Generic;
+using SharedLibrary.Enums;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.SqlServer

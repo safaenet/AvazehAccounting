@@ -2,6 +2,8 @@
 using DataLibraryCore.DataAccess.SqlServer;
 using DataLibraryCore.Models;
 using FluentValidation.Results;
+using SharedLibrary.DalModels;
+using SharedLibrary.Enums;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

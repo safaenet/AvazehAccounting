@@ -1,10 +1,5 @@
 ﻿using DataLibraryCore.DataAccess.Interfaces;
-using DataLibraryCore.Models;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
+using SharedLibrary.DalModels;
 using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers

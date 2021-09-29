@@ -1,12 +1,8 @@
 ﻿using AvazehWeb;
-using AvazehWeb.Models;
-using DataLibraryCore.DataAccess.CollectionManagers;
 using DataLibraryCore.DataAccess.Interfaces;
-using DataLibraryCore.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using SharedLibrary.DalModels;
+using SharedLibrary.DtoModels;
 using System.Threading.Tasks;
 
 namespace AvazehWebAPI.Controllers

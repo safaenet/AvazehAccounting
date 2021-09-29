@@ -1,6 +1,6 @@
 ﻿using DataLibraryCore.DataAccess.Interfaces;
-using DataLibraryCore.Models;
-using FluentValidation.Results;
+using SharedLibrary.DalModels;
+using SharedLibrary.Enums;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;

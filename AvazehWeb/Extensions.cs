@@ -1,12 +1,9 @@
-﻿using AvazehWeb.Models;
-using DataLibraryCore.DataAccess.Interfaces;
+﻿using DataLibraryCore.DataAccess.Interfaces;
 using DataLibraryCore.DataAccess.SqlServer;
-using DataLibraryCore.Models;
-using DataLibraryCore.Models.Validators;
-using System;
+using SharedLibrary.DalModels;
+using SharedLibrary.DtoModels;
+using SharedLibrary.Validators;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AvazehWeb
 {
