@@ -120,7 +120,7 @@
                         <TextBlock Text="inventory_2" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <TextBox Style="{StaticResource TextBoxRevealStyle}" x:Name="SearchText" Grid.Column="1" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]" >
+                <TextBox  Style="{StaticResource TextBoxRevealStyle}" x:Name="SearchText" Grid.Column="1" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]" >
                 </TextBox>
             </Grid>
             <Grid Grid.Row="1">

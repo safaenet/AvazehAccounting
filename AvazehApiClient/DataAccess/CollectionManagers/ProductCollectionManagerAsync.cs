@@ -87,17 +87,18 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
             PageLoading?.Invoke(this, eventArgs);
             if (eventArgs.Cancel) return 0;
             var collection = await ApiProcessor.GetCollectionAsync<ItemsCollection_DTO<TDalModel>>(Key, QueryOrderBy, QueryOrderType, PageNumber, SearchValue, PageSize);
-            Items = collection.Items;
-            CurrentPage = collection.CurrentPage;
-            PagesCount = collection.PagesCount;
+
+            Items = collection?.Items;
+            CurrentPage = collection is null ? 0 : collection.CurrentPage;
+            PagesCount = collection is null ? 0 : collection.PagesCount;
             PageLoaded?.Invoke(this, null);
-            return Items == null ? 0 : Items.Count;
+            return Items is null ? 0 : Items.Count;
         }
 
         public async Task<int> LoadFirstPageAsync()
         {
             var result = await GotoPageAsync(1);
-            //FirstPageLoaded?.Invoke(this, null);
+            FirstPageLoaded?.Invoke(this, null);
             return result;
         }
 
