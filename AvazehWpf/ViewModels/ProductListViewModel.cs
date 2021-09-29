@@ -77,13 +77,13 @@ namespace AvazehWpf.ViewModels
             NotifyOfPropertyChange(() => Products);
         }
 
-        public void SearchBoxKeyDownHandler(ActionExecutionContext context)
+        public async Task SearchBoxKeyDownHandler(ActionExecutionContext context)
         {
             var keyArgs = context.EventArgs as KeyEventArgs;
 
             if (keyArgs != null && keyArgs.Key == Key.Enter)
             {
-                Search();
+                await Search();
             }
         }
 
