@@ -3,7 +3,6 @@ using DataLibraryCore.DataAccess.SqlServer;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Validators;
-using System.Collections.Generic;
 
 namespace AvazehWeb
 {
@@ -45,11 +44,11 @@ namespace AvazehWeb
             };
         }
 
-        internal static ItemsCollection_DTO<TDalList> AsDto<TDalList>(this IInvoiceCollectionManager manager)
+        internal static ItemsCollection_DTO<InvoiceListModel> AsDto<TDalList>(this IInvoiceCollectionManager manager)
         {
-            return new ItemsCollection_DTO<TDalList>()
+            return new ItemsCollection_DTO<InvoiceListModel>()
             {
-                Items = manager.Items as IEnumerable<TDalList>,
+                Items = manager.Items,
                 PagesCount = manager.PagesCount,
                 CurrentPage = manager.CurrentPage
             };
