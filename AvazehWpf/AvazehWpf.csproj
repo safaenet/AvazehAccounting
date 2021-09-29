@@ -48,6 +48,7 @@
     <PackageReference Include="Caliburn.Micro.Core" Version="4.0.173" />
     <PackageReference Include="DotNetStandardCalculator" Version="1.0.0" />
     <PackageReference Include="FluentValidation" Version="10.3.3" />
+    <PackageReference Include="FluentWPF" Version="0.10.1" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
