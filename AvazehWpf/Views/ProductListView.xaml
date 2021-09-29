@@ -10,7 +10,7 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:ProductListViewModel}"
         Title="Products" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
-        Width="1100" Height="650" fw:AcrylicWindow.Enabled="True">
+        Width="1350" Height="650" fw:AcrylicWindow.Enabled="True">
     <Grid fw:PointerTracker.Enabled="True">
         <Grid.Resources>
             <Style TargetType="TextBox">
@@ -156,6 +156,8 @@
                     <DataGridTextColumn Header="Buy Price" Binding="{Binding Path=BuyPrice, Mode=OneWay}" Width="150"/>
                     <DataGridTextColumn Header="Sell Price" Binding="{Binding Path=SellPrice, Mode=OneWay}" Width="150"/>
                     <DataGridTextColumn Header="Barcode" Binding="{Binding Path=Barcode, Mode=OneWay}" Width="150"/>
+                    <DataGridTextColumn Header="Date Created" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="150"/>
+                    <DataGridTextColumn Header="Date Updated" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="150"/>
                     <DataGridTextColumn Header="Descriprions" Binding="{Binding Path=Descriprions, Mode=OneWay}" Width="150"/>
                 </DataGrid.Columns>
             </DataGrid>
