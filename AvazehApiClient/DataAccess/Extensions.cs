@@ -101,7 +101,7 @@ namespace AvazehApiClient.DataAccess
             };
         }
 
-        public static void Clone(this ProductModel From, ref ProductModel To)
+        public static void Clone(this ProductModel From, ProductModel To)
         {
             if (From == null || To == null) return;
             To.Id = From.Id;

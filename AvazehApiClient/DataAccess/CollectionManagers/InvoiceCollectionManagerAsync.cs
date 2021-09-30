@@ -83,17 +83,22 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
             return result;
         }
 
-        public async Task<int> GotoPageAsync(int PageNumber)
+        public async Task<int> GotoPageAsync(int PageNumber, bool Refresh = false)
         {
             PageLoadEventArgs eventArgs = new();
             PageLoading?.Invoke(this, eventArgs);
             if (eventArgs.Cancel) return 0;
-            var collection = await ApiProcessor.GetInvoiceCollectionAsync<ItemsCollection_DTO<InvoiceListModel>>(Key, QueryOrderBy, QueryOrderType, PageNumber, SearchValue, LifeStatus, FinStatus, PageSize);
+            var collection = await ApiProcessor.GetInvoiceCollectionAsync<ItemsCollection_DTO<InvoiceListModel>>(Key, QueryOrderBy, QueryOrderType, PageNumber, SearchValue, LifeStatus, FinStatus, PageSize, Refresh);
             Items = collection.Items;
             CurrentPage = collection.CurrentPage;
             PagesCount = collection.PagesCount;
             PageLoaded?.Invoke(this, null);
             return Items == null ? 0 : Items.Count;
+        }
+
+        public async Task<int> RefreshPage()
+        {
+            return await GotoPageAsync(CurrentPage, true);
         }
 
         public async Task<int> LoadFirstPageAsync()

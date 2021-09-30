@@ -33,7 +33,8 @@ namespace AvazehApiClient.DataAccess.Interfaces
         Task<bool> DeleteItemAsync(int Id);
         Task<InvoiceModel_DTO_Read> GetItemById(int Id);
         InvoiceListModel GetItemFromCollectionById(int Id);
-        Task<int> GotoPageAsync(int PageNumber);
+        Task<int> GotoPageAsync(int PageNumber, bool Refresh);
+        Task<int> RefreshPage();
         Task<int> LoadFirstPageAsync();
         Task<int> LoadNextPageAsync();
         Task<int> LoadPreviousPageAsync();

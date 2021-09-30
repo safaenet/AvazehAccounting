@@ -31,7 +31,8 @@ namespace AvazehApiClient.DataAccess.Interfaces
         Task<bool> DeleteItemAsync(int Id);
         T GetItemFromCollectionById(int Id);
         Task<T> GetItemById(int Id);
-        Task<int> GotoPageAsync(int PageNumber);
+        Task<int> GotoPageAsync(int PageNumber, bool Refresh);
+        Task<int> RefreshPage();
         Task<int> LoadFirstPageAsync();
         Task<int> LoadNextPageAsync();
         Task<int> LoadPreviousPageAsync();

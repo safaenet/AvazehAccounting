@@ -57,7 +57,7 @@
                         <materialDesign:PackIcon Kind="Package" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="ID" Margin="20,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.Id}" IsReadOnly="True" MaxWidth="200"/>
+                    <TextBox Text="{Binding BackupProduct.Id}" IsReadOnly="True" MaxWidth="200"/>
                 </StackPanel>
                 
                 <StackPanel Grid.Row="1"  Orientation="Vertical" Margin="0,0,0,10">
@@ -65,7 +65,7 @@
                         <materialDesign:PackIcon Kind="PackageVariantClosed" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Product Name" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.ProductName}" MaxLength="100" MaxWidth="200"/>
+                    <TextBox Text="{Binding BackupProduct.ProductName}" MaxLength="100" MaxWidth="200"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,0,0,10">
@@ -73,7 +73,7 @@
                         <materialDesign:PackIcon Kind="CashMultiple" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Buy Price" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.BuyPrice}" MaxWidth="200"/>
+                    <TextBox Text="{Binding BackupProduct.BuyPrice}" MaxWidth="200"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="3" Orientation="Vertical" Margin="0,0,0,10">
@@ -81,7 +81,7 @@
                         <materialDesign:PackIcon Kind="CashMultiple" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Sell Price" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.SellPrice}" MaxWidth="200"/>
+                    <TextBox Text="{Binding BackupProduct.SellPrice}" MaxWidth="200"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="4" Orientation="Vertical" Margin="0,0,0,10">
@@ -89,7 +89,7 @@
                         <materialDesign:PackIcon Kind="Barcode" Margin="0,2,0,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Barcode" Margin="15,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.Barcode}" MaxLength="15" MaxWidth="200"/>
+                    <TextBox Text="{Binding BackupProduct.Barcode}" MaxLength="15" MaxWidth="200"/>
                 </StackPanel>
             </Grid>
             <DockPanel Grid.Column="1" LastChildFill="True" DockPanel.Dock="Bottom" Margin="0,0,10,10">
@@ -97,7 +97,7 @@
                     <materialDesign:PackIcon Kind="SemanticWeb" Margin="0,2,5,2"/>
                     <TextBlock TextAlignment="Center" Text="Description" Margin="0,2,0,2"/>
                 </StackPanel>
-                <TextBox Text="{Binding Product.Descriptions}" TextWrapping="Wrap" MinHeight="50" Height="auto" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top" BorderThickness="1"/>
+                <TextBox Text="{Binding BackupProduct.Descriptions}" TextWrapping="Wrap" MinHeight="50" Height="auto" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top" BorderThickness="1"/>
             </DockPanel>
         </Grid>
 

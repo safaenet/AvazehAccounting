@@ -54,7 +54,7 @@ namespace AvazehWpf.ViewModels
         {
             ProductModel newProduct = new();
             WindowManager wm = new();
-            wm.ShowDialogAsync(new ProductDetailViewModel(PCM, newProduct));
+            wm.ShowDialogAsync(new ProductDetailViewModel(PCM, newProduct, RefreshPage));
             if (newProduct != null) Products.Add(newProduct);
         }
 
@@ -67,6 +67,12 @@ namespace AvazehWpf.ViewModels
         public async Task NextPage()
         {
             await PCM.LoadNextPageAsync();
+            NotifyOfPropertyChange(() => Products);
+        }
+
+        public async Task RefreshPage()
+        {
+            await PCM.RefreshPage();
             NotifyOfPropertyChange(() => Products);
         }
 
@@ -90,7 +96,7 @@ namespace AvazehWpf.ViewModels
         public async Task EditProduct()
         {
             WindowManager wm = new();
-            await wm.ShowDialogAsync(new ProductDetailViewModel(PCM, SelectedProduct));
+            await wm.ShowWindowAsync(new ProductDetailViewModel(PCM, SelectedProduct, RefreshPage));
             NotifyOfPropertyChange(() => Products);
             NotifyOfPropertyChange(() => SelectedProduct);
         }

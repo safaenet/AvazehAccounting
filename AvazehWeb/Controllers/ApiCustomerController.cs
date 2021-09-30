@@ -21,10 +21,11 @@ namespace AvazehWebAPI.Controllers
 
         //GET /Customer?Id=1&SearchText=sometext
         [HttpGet]
-        public async Task<ActionResult<ItemsCollection_DTO<CustomerModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "FirstName", OrderType orderType = OrderType.ASC, int PageSize = 50)
+        public async Task<ActionResult<ItemsCollection_DTO<CustomerModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "FirstName", OrderType orderType = OrderType.ASC, int PageSize = 50, bool ForceLoad = false)
         {
             Manager.GenerateWhereClause(SearchText, OrderBy, orderType);
             Manager.PageSize = PageSize;
+            if (ForceLoad) Manager.Initialized = false;
             await Manager.GotoPageAsync(Page);
             if (Manager.Items == null || Manager.Items.Count == 0) return NotFound("List is empty");
             return Manager.AsDto();

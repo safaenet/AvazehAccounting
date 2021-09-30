@@ -19,7 +19,7 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         public event EventHandler NextPageLoaded;
         public event EventHandler PreviousPageLoading;
         public event EventHandler PreviousPageLoaded;
-        public bool Initialized { get; private set; }
+        public bool Initialized { get; set; }
         public IProcessor<CustomerModel> Processor { get; init; }
         public ObservableCollection<CustomerModel> Items { get; set; }
         public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);

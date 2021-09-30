@@ -24,7 +24,7 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         public event EventHandler NextPageLoaded;
         public event EventHandler PreviousPageLoading;
         public event EventHandler PreviousPageLoaded;
-        public bool Initialized { get; private set; }
+        public bool Initialized { get; set; }
         public IProcessor<ProductModel> Processor { get; init; }
 
         public ObservableCollection<ProductModel> Items { get; set; }
