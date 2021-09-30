@@ -54,7 +54,7 @@ namespace AvazehWpf.ViewModels
         {
             ProductModel newProduct = new();
             WindowManager wm = new();
-            //wm.ShowDialogAsync(new ProductDetailViewModel(PCM, newProduct));
+            wm.ShowDialogAsync(new ProductDetailViewModel(PCM, newProduct));
             if (newProduct != null) Products.Add(newProduct);
         }
 
@@ -90,7 +90,7 @@ namespace AvazehWpf.ViewModels
         public async Task EditProduct()
         {
             WindowManager wm = new();
-            //wm.ShowDialogAsync(new ProductDetailViewModel(PCM, SelectedProduct));
+            await wm.ShowDialogAsync(new ProductDetailViewModel(PCM, SelectedProduct));
             NotifyOfPropertyChange(() => Products);
             NotifyOfPropertyChange(() => SelectedProduct);
         }

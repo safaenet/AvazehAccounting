@@ -100,5 +100,21 @@ namespace AvazehApiClient.DataAccess
                 Descriptions = model.Descriptions
             };
         }
+
+        public static void Clone(this ProductModel From, ref ProductModel To)
+        {
+            if (From == null || To == null) return;
+            To.Id = From.Id;
+            To.ProductName = From.ProductName;
+            To.BuyPrice = From.BuyPrice;
+            To.SellPrice = From.SellPrice;
+            To.Barcode = From.Barcode;
+            To.CountString = From.CountString;
+            To.DateCreated = From.DateCreated;
+            To.TimeCreated = From.TimeCreated;
+            To.DateUpdated = From.DateUpdated;
+            To.TimeUpdated = From.TimeUpdated;
+            To.Descriptions = From.Descriptions;
+        }
     }
 }

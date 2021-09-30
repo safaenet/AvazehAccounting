@@ -23,8 +23,7 @@ namespace AvazehWpf
 
         protected override void Configure()
         {
-            Container.Instance(Container);
-            Container
+            Container.Instance(Container)
                 .Singleton<IWindowManager, WindowManager>()
                 .Singleton<IEventAggregator, EventAggregator>();
             GetType().Assembly.GetTypes()

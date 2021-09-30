@@ -32,7 +32,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
 
         public string SearchValue { get; set; }
-        public string QueryOrderBy { get; set; } = "Id";
+        public string QueryOrderBy { get; set; } = "ProductName";
         public OrderType QueryOrderType { get; set; } = OrderType.ASC;
 
         public int PageSize { get; set; } = 50;

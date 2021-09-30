@@ -22,7 +22,6 @@
     <Page Remove="Views\CustomerListView.xaml" />
     <Page Remove="Views\InvoiceDetailView.xaml" />
     <Page Remove="Views\InvoiceListView.xaml" />
-    <Page Remove="Views\ProductDetailView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,6 +46,7 @@
     <PackageReference Include="Caliburn.Micro" Version="4.0.173" />
     <PackageReference Include="Caliburn.Micro.Core" Version="4.0.173" />
     <PackageReference Include="FluentWPF" Version="0.10.1" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.2.1" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
