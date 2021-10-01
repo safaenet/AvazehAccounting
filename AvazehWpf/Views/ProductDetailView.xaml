@@ -106,7 +106,7 @@
                         <materialDesign:PackIcon Kind="CashMultiple" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Count" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupProduct.CountString}" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding BackupProduct.CountString}" ToolTip="{Binding BackupProduct.CountValue}" Style="{StaticResource TextBoxRevealStyle}"/>
                 </StackPanel>
                 
                 <DockPanel Grid.Row="1" LastChildFill="True" DockPanel.Dock="Bottom" Margin="0,0,10,10">
