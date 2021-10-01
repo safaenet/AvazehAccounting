@@ -26,7 +26,6 @@ namespace AvazehWpf.ViewModels
             set { _SelectedCustomer = value; NotifyOfPropertyChange(() => SelectedCustomer); }
         }
 
-
         public ICollectionManager<CustomerModel> CCM
         {
             get { return _CCM; }
@@ -97,8 +96,6 @@ namespace AvazehWpf.ViewModels
             if (Customers == null || Customers.Count == 0) return;
             WindowManager wm = new();
             await wm.ShowWindowAsync(new CustomerDetailViewModel(CCM, SelectedCustomer, RefreshPage));
-            NotifyOfPropertyChange(() => Customers);
-            NotifyOfPropertyChange(() => SelectedCustomer);
         }
 
         public async Task DeleteCustomer()

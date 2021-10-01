@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <Page Remove="Views\InvoiceDetailView.xaml" />
-    <Page Remove="Views\InvoiceListView.xaml" />
   </ItemGroup>
 
   <ItemGroup>

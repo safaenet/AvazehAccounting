@@ -20,6 +20,8 @@ namespace AvazehApiClient.DataAccess.Interfaces
         string SearchValue { get; set; }
         string QueryOrderBy { get; set; }
         OrderType QueryOrderType { get; set; }
+        InvoiceLifeStatus? LifeStatus { get; set; }
+        InvoiceFinancialStatus? FinStatus { get; set; }
 
         event EventHandler FirstPageLoaded;
         event EventHandler NextPageLoaded;

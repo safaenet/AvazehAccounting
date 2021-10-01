@@ -58,7 +58,7 @@ namespace AvazehWpf
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
-            DisplayRootViewFor<ChequeListViewModel>();
+            DisplayRootViewFor<InvoiceListViewModel>();
         }
     }
 }

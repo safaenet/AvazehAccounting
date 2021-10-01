@@ -97,8 +97,6 @@ namespace AvazehWpf.ViewModels
             if (Cheques == null || Cheques.Count == 0) return;
             WindowManager wm = new();
             await wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, SelectedCheque, RefreshPage));
-            NotifyOfPropertyChange(() => Cheques);
-            NotifyOfPropertyChange(() => SelectedCheque);
         }
 
         public async Task DeleteCheque()

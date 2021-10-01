@@ -34,8 +34,8 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
         public string SearchValue { get; set; }
         public string QueryOrderBy { get; set; } = "Id";
         public OrderType QueryOrderType { get; set; } = OrderType.DESC;
-        InvoiceLifeStatus? LifeStatus { get; set; }
-        InvoiceFinancialStatus? FinStatus { get; set; }
+        public InvoiceLifeStatus? LifeStatus { get; set; }
+        public InvoiceFinancialStatus? FinStatus { get; set; }
 
         public int PageSize { get; set; } = 50;
         public int PagesCount { get; private set; }
@@ -89,12 +89,9 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
             PageLoading?.Invoke(this, eventArgs);
             if (eventArgs.Cancel) return 0;
             var collection = await ApiProcessor.GetInvoiceCollectionAsync<ItemsCollection_DTO<InvoiceListModel>>(Key, QueryOrderBy, QueryOrderType, PageNumber, SearchValue, LifeStatus, FinStatus, PageSize, Refresh);
-            if (collection is not null)
-            {
-                Items = collection.Items;
-                CurrentPage = collection.CurrentPage;
-                PagesCount = collection.PagesCount;
-            }
+            Items = collection?.Items;
+            CurrentPage = collection is null ? 0 : collection.CurrentPage;
+            PagesCount = collection is null ? 0 : collection.PagesCount;
             PageLoaded?.Invoke(this, null);
             return Items == null ? 0 : Items.Count;
         }

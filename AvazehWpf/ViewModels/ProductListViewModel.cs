@@ -97,8 +97,6 @@ namespace AvazehWpf.ViewModels
             if (Products == null || Products.Count == 0) return;
             WindowManager wm = new();
             await wm.ShowWindowAsync(new ProductDetailViewModel(PCM, SelectedProduct, RefreshPage));
-            NotifyOfPropertyChange(() => Products);
-            NotifyOfPropertyChange(() => SelectedProduct);
         }
 
         public async Task DeleteProduct()

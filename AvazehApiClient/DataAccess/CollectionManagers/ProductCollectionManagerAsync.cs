@@ -87,12 +87,9 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
             PageLoading?.Invoke(this, eventArgs);
             if (eventArgs.Cancel) return 0;
             var collection = await ApiProcessor.GetCollectionAsync<ItemsCollection_DTO<TDalModel>>(Key, QueryOrderBy, QueryOrderType, PageNumber, SearchValue, PageSize, Refresh);
-            if (collection is not null)
-            {
-                Items = collection.Items;
-                CurrentPage = collection is null ? 0 : collection.CurrentPage;
-                PagesCount = collection is null ? 0 : collection.PagesCount;
-            }
+            Items = collection?.Items;
+            CurrentPage = collection is null ? 0 : collection.CurrentPage;
+            PagesCount = collection is null ? 0 : collection.PagesCount;
             PageLoaded?.Invoke(this, null);
             return Items is null ? 0 : Items.Count;
         }
