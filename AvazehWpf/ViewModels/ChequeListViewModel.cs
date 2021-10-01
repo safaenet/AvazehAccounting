@@ -94,6 +94,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditCheque()
         {
+            if (Cheques == null || Cheques.Count == 0) return;
             WindowManager wm = new();
             await wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, SelectedCheque, RefreshPage));
             NotifyOfPropertyChange(() => Cheques);
@@ -102,7 +103,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteCheque()
         {
-            if (SelectedCheque == null) return;
+            if (Cheques == null || Cheques.Count == 0 || SelectedCheque == null || SelectedCheque.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete cheque from {SelectedCheque.Drawer}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
             var output = await CCM.DeleteItemAsync(SelectedCheque.Id);

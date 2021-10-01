@@ -94,6 +94,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditProduct()
         {
+            if (Products == null || Products.Count == 0) return;
             WindowManager wm = new();
             await wm.ShowWindowAsync(new ProductDetailViewModel(PCM, SelectedProduct, RefreshPage));
             NotifyOfPropertyChange(() => Products);
@@ -102,7 +103,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteProduct()
         {
-            if (SelectedProduct == null) return;
+            if (Products == null || Products.Count == 0 || SelectedProduct == null || SelectedProduct.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete {SelectedProduct.ProductName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
             var output = await PCM.DeleteItemAsync(SelectedProduct.Id);

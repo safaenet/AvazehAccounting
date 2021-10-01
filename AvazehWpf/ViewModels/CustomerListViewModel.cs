@@ -94,6 +94,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditCustomer()
         {
+            if (Customers == null || Customers.Count == 0) return;
             WindowManager wm = new();
             await wm.ShowWindowAsync(new CustomerDetailViewModel(CCM, SelectedCustomer, RefreshPage));
             NotifyOfPropertyChange(() => Customers);
@@ -102,7 +103,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteCustomer()
         {
-            if (SelectedCustomer == null) return;
+            if (Customers == null || Customers.Count == 0 || SelectedCustomer == null || SelectedCustomer.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete {SelectedCustomer.FullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
             var output = await CCM.DeleteItemAsync(SelectedCustomer.Id);
