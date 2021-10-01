@@ -76,6 +76,14 @@
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
                             <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <TextBlock Text="qr_code" Margin="0,0,2,0" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="Count" Margin="0,2,0,2"/>
+                            </StackPanel>
+                            <TextBox Text="{Binding SelectedProduct.CountString, Mode=OneWay}" ToolTip="{Binding Path=SelectedProduct.CountValue}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical" Margin="0,0,0,10">
+                            <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
                                 <TextBlock Text="event_available" Margin="0,0,2,0" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Date Created" Margin="0,2,0,2"/>
                             </StackPanel>
