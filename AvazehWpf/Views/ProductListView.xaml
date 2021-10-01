@@ -167,11 +167,12 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Path=Id, Mode=OneWay}" Width="80"/>
                     <DataGridTextColumn Header="Product Name" Binding="{Binding Path=ProductName, Mode=OneWay}" Width="150"/>
-                    <DataGridTextColumn Header="Buy Price" Binding="{Binding Path=BuyPrice, Mode=OneWay}" Width="150"/>
-                    <DataGridTextColumn Header="Sell Price" Binding="{Binding Path=SellPrice, Mode=OneWay}" Width="150"/>
+                    <DataGridTextColumn Header="Buy Price" Binding="{Binding Path=BuyPrice, Mode=OneWay}" Width="110"/>
+                    <DataGridTextColumn Header="Sell Price" Binding="{Binding Path=SellPrice, Mode=OneWay}" Width="110"/>
                     <DataGridTextColumn Header="Barcode" Binding="{Binding Path=Barcode, Mode=OneWay}" Width="150"/>
-                    <DataGridTextColumn Header="Date Created" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="150"/>
-                    <DataGridTextColumn Header="Date Updated" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="150"/>
+                    <DataGridTextColumn Header="Count" Binding="{Binding Path=CountString, Mode=OneWay}" Width="70"/>
+                    <DataGridTextColumn Header="Date Created" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="110"/>
+                    <DataGridTextColumn Header="Date Updated" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="120"/>
                     <DataGridTextColumn Header="Descriprions" Binding="{Binding Path=Descriprions, Mode=OneWay}" Width="150"/>
                 </DataGrid.Columns>
             </DataGrid>
