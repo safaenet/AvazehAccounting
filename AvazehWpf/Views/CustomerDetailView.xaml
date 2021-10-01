@@ -56,7 +56,7 @@
                             <materialDesign:PackIcon Kind="Account" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="First Name" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Path=Customer.FirstName}" MaxLength="50" MaxWidth="200"/>
+                        <TextBox Text="{Binding BackupCustomer.FirstName}" MaxLength="50" MaxWidth="200"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Vertical" Margin="0,0,0,10" VerticalAlignment="Top">
@@ -64,7 +64,7 @@
                             <materialDesign:PackIcon Kind="CardAccountDetails" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Last Name" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Path=Customer.LastName}" MaxLength="50" MaxWidth="200"/>
+                        <TextBox Text="{Binding BackupCustomer.LastName}" MaxLength="50" MaxWidth="200"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Vertical" Margin="0,0,0,10">
@@ -72,7 +72,7 @@
                             <materialDesign:PackIcon Kind="Domain" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Company Name" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Path=Customer.CompanyName}" MaxLength="50" MaxWidth="200"/>
+                        <TextBox Text="{Binding BackupCustomer.CompanyName}" MaxLength="50" MaxWidth="200"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Vertical" Margin="0,0,0,10">
@@ -80,7 +80,7 @@
                             <materialDesign:PackIcon Kind="Email" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Email Address" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Path=Customer.EmailAddress}" MaxLength="50" MaxWidth="200"/>
+                        <TextBox Text="{Binding BackupCustomer.EmailAddress}" MaxLength="50" MaxWidth="200"/>
                     </StackPanel>
                     
                     <DockPanel Grid.Column="0" Grid.Row="4" LastChildFill="True" DockPanel.Dock="Bottom">
@@ -88,7 +88,7 @@
                             <materialDesign:PackIcon Kind="MapMarker" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Post Address" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Path=Customer.PostAddress}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="30" Height="auto" VerticalContentAlignment="Top" BorderThickness="1" MaxWidth="200"/>
+                        <TextBox Text="{Binding BackupCustomer.PostAddress}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="30" Height="auto" VerticalContentAlignment="Top" BorderThickness="1" MaxWidth="200"/>
                     </DockPanel>
                 </Grid>
 
@@ -106,7 +106,7 @@
                         <materialDesign:PackIcon Kind="CardAccountDetails" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="ID" Margin="20,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Path=Customer.Id}" IsReadOnly="True" MaxLength="10" MaxWidth="200"/>
+                    <TextBox Text="{Binding BackupCustomer.Id}" IsReadOnly="True" MaxLength="10" MaxWidth="200"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Orientation="Vertical" Margin="0,0,0,10">
@@ -114,7 +114,7 @@
                         <materialDesign:PackIcon Kind="DateRange" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Date Joined" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Path=Customer.DateJoined}" IsReadOnly="True" MaxLength="10" MaxWidth="200"/>
+                    <TextBox Text="{Binding BackupCustomer.DateJoined}" IsReadOnly="True" MaxLength="10" MaxWidth="200"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,0,0,10">
@@ -144,7 +144,7 @@
                         <materialDesign:PackIcon Kind="CommentAccount" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Description" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Path=Customer.Descriptions}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="50" Height="auto" VerticalContentAlignment="Top" BorderThickness="1" MaxWidth="200"/>
+                    <TextBox Text="{Binding BackupCustomer.Descriptions}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="50" Height="auto" VerticalContentAlignment="Top" BorderThickness="1" MaxWidth="200"/>
                 </DockPanel>
             </Grid>
         </Grid>

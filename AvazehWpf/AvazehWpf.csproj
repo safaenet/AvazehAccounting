@@ -18,8 +18,6 @@
   <ItemGroup>
     <Page Remove="Views\ChequeDetailView.xaml" />
     <Page Remove="Views\ChequeListView.xaml" />
-    <Page Remove="Views\CustomerDetailView.xaml" />
-    <Page Remove="Views\CustomerListView.xaml" />
     <Page Remove="Views\InvoiceDetailView.xaml" />
     <Page Remove="Views\InvoiceListView.xaml" />
   </ItemGroup>

@@ -8,6 +8,7 @@ using DataLibraryCore.DataAccess.Interfaces;
 using SharedLibrary.DalModels;
 using SharedLibrary.Validators;
 using SharedLibrary.Enums;
+using DataLibraryCore.Models;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
@@ -47,6 +48,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public int CreateItem(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
+            item.DateJoined= PersianCalendarModel.GetCurrentPersianDate();
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@firstName", item.FirstName);

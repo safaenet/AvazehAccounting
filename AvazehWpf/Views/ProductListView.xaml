@@ -11,12 +11,6 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:ProductListViewModel}"
         Title="Products" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1350" Height="650" fw:AcrylicWindow.Enabled="True">
-    <!--<Window.Resources>
-        <Style TargetType="TextBox">
-            <Setter Property="Height" Value="25"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-        </Style>
-    </Window.Resources>-->
     <Grid fw:PointerTracker.Enabled="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3"/>
@@ -76,7 +70,7 @@
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
                             <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <TextBlock Text="qr_code" Margin="0,0,2,0" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
+                                <TextBlock Text="score" Margin="0,0,2,0" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Count" Margin="0,2,0,2"/>
                             </StackPanel>
                             <TextBox Text="{Binding SelectedProduct.CountString, Mode=OneWay}" ToolTip="{Binding Path=SelectedProduct.CountValue}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
@@ -104,7 +98,7 @@
                             <TextBlock Text="description" Margin="0,0,2,0" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Description" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding SelectedProduct.Descriptions, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MinHeight="50" Height="auto" VerticalContentAlignment="Top" BorderThickness="1" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
+                        <TextBox Text="{Binding SelectedProduct.Descriptions, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MinHeight="50" Height="auto" VerticalContentAlignment="Top" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
                     </DockPanel>
                 </Grid>
             </ScrollViewer>
@@ -178,7 +172,7 @@
                     <DataGridTextColumn Header="Buy Price" Binding="{Binding Path=BuyPrice, Mode=OneWay}" Width="110"/>
                     <DataGridTextColumn Header="Sell Price" Binding="{Binding Path=SellPrice, Mode=OneWay}" Width="110"/>
                     <DataGridTextColumn Header="Barcode" Binding="{Binding Path=Barcode, Mode=OneWay}" Width="150"/>
-                    <DataGridTextColumn Header="Count" Binding="{Binding Path=CountString, Mode=OneWay}" Width="70">
+                    <DataGridTextColumn Header="Count" Binding="{Binding Path=CountString, Mode=OneWay}" Width="80">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Setter Property="ToolTip" Value="{Binding Path=CountValue}" />
@@ -187,7 +181,7 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="Date Created" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="110"/>
                     <DataGridTextColumn Header="Date Updated" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="120"/>
-                    <DataGridTextColumn Header="Descriprions" Binding="{Binding Path=Descriprions, Mode=OneWay}" Width="150"/>
+                    <DataGridTextColumn Header="Descriptions" Binding="{Binding Path=Descriptions, Mode=OneWay}" Width="150"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

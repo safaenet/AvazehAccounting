@@ -116,5 +116,26 @@ namespace AvazehApiClient.DataAccess
             To.TimeUpdated = From.TimeUpdated;
             To.Descriptions = From.Descriptions;
         }
+
+        public static void Clone(this CustomerModel From, CustomerModel To)
+        {
+            if (From == null || To == null) return;
+            To.Id = From.Id;
+            To.FirstName = From.FirstName;
+            To.LastName = From.LastName;
+            To.CompanyName = From.CompanyName;
+            To.EmailAddress = From.EmailAddress;
+            To.PostAddress = From.PostAddress;
+            To.DateJoined = From.DateJoined;
+            To.Descriptions = From.Descriptions;
+            if (From.PhoneNumbers != null)
+            {
+                To.PhoneNumbers = new System.Collections.ObjectModel.ObservableCollection<PhoneNumberModel>();
+                foreach (var phone in From.PhoneNumbers)
+                {
+                    To.PhoneNumbers.Add(phone);
+                }
+            }
+        }
     }
 }
