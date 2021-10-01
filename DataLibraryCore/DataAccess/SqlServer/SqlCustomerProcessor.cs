@@ -71,6 +71,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public int UpdateItem(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
+            if(item.DateJoined is null) item.DateJoined = PersianCalendarModel.GetCurrentPersianDate();
             var AffectedCount = DataAccess.SaveData(UpdateCustomerQuery, item);
             if (AffectedCount > 0)
             {

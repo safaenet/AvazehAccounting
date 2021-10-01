@@ -1,156 +1,137 @@
-﻿//using Caliburn.Micro;
-//using System;
-//using System.Linq;
-//using System.Windows;
+﻿using AvazehApiClient.DataAccess;
+using AvazehApiClient.DataAccess.Interfaces;
+using Caliburn.Micro;
+using SharedLibrary.DalModels;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 
-//namespace AvazehWpf.ViewModels
-//{
-//    public class ChequeDetailViewModel : ViewAware
-//    {
-//        public ChequeDetailViewModel(IChequeCollectionManager manager, ChequeModel Cheque)
-//        {
-//            Manager = manager;
-//            if (Cheque != null)
-//            {
-//                if (Cheque.Id == 0) Cheque.IssueDate = PersianCalendarModel.GetCurrentPersianDate();
-//                this.Cheque = Cheque;
-//                _BackupCheque = new ChequeModel();
-//                CloneCheque(Cheque, ref _BackupCheque);
-//            }
-//        }
+namespace AvazehWpf.ViewModels
+{
+    public class ChequeDetailViewModel : ViewAware
+    {
+        public ChequeDetailViewModel(ICollectionManager<ChequeModel> manager, ChequeModel Cheque, Func<Task> callBack)
+        {
+            Manager = manager;
+            CallBackFunc = callBack;
+            if (Cheque is not null)
+            {
+                BackupCheque = new();
+                this.Cheque = Cheque;
+                Cheque.Clone(BackupCheque);
+            }
+        }
 
-//        private readonly IChequeCollectionManager Manager;
-//        private ChequeModel _Cheque;
-//        private readonly ChequeModel _BackupCheque;
-//        private bool _CancelAndClose = true;
+        private readonly ICollectionManager<ChequeModel> Manager;
+        private ChequeModel _Cheque;
+        private ChequeModel _BackupCheque;
+        private Func<Task> CallBackFunc;
 
-//        public ChequeModel Cheque
-//        {
-//            get { return _Cheque; }
-//            set { _Cheque = value; NotifyOfPropertyChange(() => Cheque); }
-//        }
+        public ChequeModel Cheque
+        {
+            get => _Cheque;
+            set { _Cheque = value; NotifyOfPropertyChange(() => Cheque); }
+        }
 
-//        public void AddNewEvent()
-//        {
-//            ChequeEventModel newEvent = new();
-//            if (Cheque.Events == null)
-//            {
-//                Cheque.Events = new();
-//                NotifyOfPropertyChange(() => Cheque);
-//            }
-//            newEvent.ChequeId = Cheque.Id;
-//            Cheque.Events.Add(newEvent);
-//        }
+        public ChequeModel BackupCheque
+        {
+            get => _BackupCheque;
+            set
+            {
+                _BackupCheque = value;
+                NotifyOfPropertyChange(() => BackupCheque);
+            }
+        }
 
-//        public void DeleteEvent()
-//        {
-//            if (Cheque != null && Cheque.Events != null && Cheque.Events.Any()) Cheque.Events.RemoveAt(Cheque.Events.Count - 1);
-//        }
+        public void AddNewEvent()
+        {
+            ChequeEventModel newEvent = new();
+            if (BackupCheque.Events == null)
+            {
+                BackupCheque.Events = new();
+                NotifyOfPropertyChange(() => BackupCheque);
+            }
+            newEvent.ChequeId = BackupCheque.Id;
+            BackupCheque.Events.Add(newEvent);
+        }
 
-//        public void DeleteAndClose()
-//        {
-//            if (Cheque == null) return;
-//            var result = MessageBox.Show("Are you sure ?", $"Delete cheque of {Cheque.Drawer}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
-//            if (result == MessageBoxResult.No) return;
-//            if (Manager.Processor.DeleteItemById(Cheque.Id) == 0) MessageBox.Show($"Cheque with ID: {Cheque.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-//            _CancelAndClose = false;
-//            CloseWindow();
-//        }
+        public void DeleteEvent()
+        {
+            if (BackupCheque == null || BackupCheque.Events == null || !BackupCheque.Events.Any()) return;
+            BackupCheque.Events.RemoveAt(BackupCheque.Events.Count - 1);
+        }
 
-//        public void CloseWindow()
-//        {
-//            (GetView() as Window).Close();
-//        }
+        public async Task DeleteAndClose()
+        {
+            if (Cheque == null) return;
+            var result = MessageBox.Show("Are you sure ?", $"Delete cheque of {Cheque.Drawer}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+            if (result == MessageBoxResult.No) return;
+            if (await Manager.DeleteItemAsync(Cheque.Id) == false) MessageBox.Show($"Cheque with ID: {Cheque.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            CloseWindow();
+        }
 
-//        public void SaveAndNew()
-//        {
-//            if (SaveToDatabase() == 0) return;
-//            _CancelAndClose = false;
-//            Cheque = new ChequeModel();
-//            WindowManager wm = new();
-//            wm.ShowWindowAsync(new ChequeDetailViewModel(Manager, Cheque));
-//            CloseWindow();
-//        }
+        public void CloseWindow()
+        {
+            (GetView() as Window).Close();
+        }
 
-//        public void CancelAndClose()
-//        {
-//            _CancelAndClose = true;
-//            CloseWindow();
-//        }
+        public async Task SaveAndNew()
+        {
+            if (await SaveToDatabase() == false) return;
+            var newCheque = new ChequeModel();
+            WindowManager wm = new();
+            await wm.ShowWindowAsync(new ChequeDetailViewModel(Manager, newCheque, CallBackFunc));
+            CloseWindow();
+        }
 
-//        public void SaveAndClose()
-//        {
-//            if (SaveToDatabase() == 0) return;
-//            _CancelAndClose = false;
-//            CloseWindow();
-//        }
+        public void CancelAndClose()
+        {
+            CloseWindow();
+        }
 
-//        private int SaveToDatabase()
-//        {
-//            if (String.IsNullOrEmpty(Cheque.IssueDate)) Cheque.IssueDate = PersianCalendarModel.GetCurrentPersianDate();
-//            var validate = Manager.Processor.ValidateItem(Cheque);
-//            if (validate.IsValid)
-//            {
-//                if (Cheque == null)
-//                {
-//                    var result = MessageBox.Show("Cheque is not assigned, Nothing will be saved; Close anyway ?", "Close", MessageBoxButton.YesNo, MessageBoxImage.Question);
-//                    if (result == MessageBoxResult.Yes) CloseWindow();
-//                }
-//                int outPut;
-//                if (Cheque.Id == 0) //It's a new Cheque
-//                {
-//                    outPut = Manager.Processor.CreateItem(Cheque);
-//                    if (outPut == 0) MessageBox.Show($"There was a problem when saving to Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-//                }
-//                else //Update Cheque
-//                {
+        public async Task SaveAndClose()
+        {
+            if (await SaveToDatabase() == false) return;
+            CloseWindow();
+        }
 
-//                    outPut = Manager.Processor.UpdateItem(Cheque);
-//                    if (outPut == 0) MessageBox.Show($"There was a problem when updating the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-//                }
-//                return outPut;
-//            }
-//            else
-//            {
-//                string str = "";
-//                foreach (var error in validate.Errors)
-//                {
-//                    str += error.ErrorMessage + "\n";
-//                }
-//                MessageBox.Show(str);
-//                return 0;
-//            }
-//        }
+        private async Task<bool> SaveToDatabase()
+        {
+            if (BackupCheque == null) return false;
+            var validate = Manager.ValidateItem(BackupCheque);
+            if (validate.IsValid)
+            {
+                ChequeModel outPut;
+                if (Cheque.Id == 0) //It's a new Cheque
+                    outPut = await Manager.CreateItemAsync(BackupCheque);
+                else //Update Cheque
+                    outPut = await Manager.UpdateItemAsync(BackupCheque);
+                if (outPut is null)
+                {
+                    MessageBox.Show($"There was a problem when saving to Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+                outPut.Clone(BackupCheque);
+                BackupCheque.Clone(Cheque);
+                return true;
+            }
+            else
+            {
+                var str = "";
+                foreach (var error in validate.Errors)
+                {
+                    str += error.ErrorMessage + "\n";
+                }
+                MessageBox.Show(str);
+                return false;
+            }
+        }
 
-//        private static void CloneCheque(ChequeModel From, ref ChequeModel To)
-//        {
-//            if (From == null || To == null) return;
-//            To.Id = From.Id;
-//            To.Drawer = From.Drawer;
-//            To.Orderer = From.Orderer;
-//            To.PayAmount = From.PayAmount;
-//            To.About = From.About;
-//            To.IssueDate = From.IssueDate;
-//            To.DueDate = From.DueDate;
-//            To.BankName = From.BankName;
-//            To.Serial = From.Serial;
-//            To.Identifier = From.Identifier;
-//            To.Descriptions = From.Descriptions;
-//            if (From.Events != null)
-//                To.Events = new(From.Events);
-//        }
-
-//        public void ClosingWindow()
-//        {
-//            if (_CancelAndClose)
-//            {
-//                CloneCheque(_BackupCheque, ref _Cheque);
-//            }
-//        }
-
-//        public void ShowSel(object sender, EventArgs e)
-//        {
-//            //MessageBox.Show(sender.ToString());
-//        }
-//    }
-//}
+        public void ClosingWindow()
+        {
+            Cheque.Clone(BackupCheque);
+            CallBackFunc();
+        }
+    }
+}

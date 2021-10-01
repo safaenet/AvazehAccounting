@@ -54,8 +54,7 @@ namespace AvazehWpf.ViewModels
         {
             ProductModel newProduct = new();
             WindowManager wm = new();
-            wm.ShowDialogAsync(new ProductDetailViewModel(PCM, newProduct, RefreshPage));
-            if (newProduct != null) Products.Add(newProduct);
+            wm.ShowWindowAsync(new ProductDetailViewModel(PCM, newProduct, RefreshPage));
         }
 
         public async Task PreviousPage()

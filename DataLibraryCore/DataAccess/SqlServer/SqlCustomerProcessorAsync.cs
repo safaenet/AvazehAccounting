@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using DataLibraryCore.DataAccess.Interfaces;
+using DataLibraryCore.Models;
 using SharedLibrary.Enums;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -14,6 +15,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public async Task<int> CreateItemAsync(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
+            item.DateJoined = PersianCalendarModel.GetCurrentPersianDate();
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@firstName", item.FirstName);
@@ -36,6 +38,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public async Task<int> UpdateItemAsync(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
+            if (item.DateJoined is null) item.DateJoined = PersianCalendarModel.GetCurrentPersianDate();
             var AffectedCount = await DataAccess.SaveDataAsync(UpdateCustomerQuery, item);
             if (AffectedCount > 0)
             {

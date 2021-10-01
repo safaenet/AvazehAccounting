@@ -130,10 +130,32 @@ namespace AvazehApiClient.DataAccess
             To.Descriptions = From.Descriptions;
             if (From.PhoneNumbers != null)
             {
-                To.PhoneNumbers = new System.Collections.ObjectModel.ObservableCollection<PhoneNumberModel>();
+                To.PhoneNumbers = new();
                 foreach (var phone in From.PhoneNumbers)
-                {
                     To.PhoneNumbers.Add(phone);
+            }
+        }
+
+        public static void Clone(this ChequeModel From, ChequeModel To)
+        {
+            if (From == null || To == null) return;
+            To.Id = From.Id;
+            To.Drawer = From.Drawer;
+            To.Orderer = From.Orderer;
+            To.PayAmount = From.PayAmount;
+            To.About = From.About;
+            To.IssueDate = From.IssueDate;
+            To.DueDate = From.DueDate;
+            To.BankName = From.BankName;
+            To.Serial = From.Serial;
+            To.Identifier = From.Identifier;
+            To.Descriptions = From.Descriptions;
+            if (From.Events != null)
+            {
+                To.Events = new();
+                foreach (var Event in From.Events)
+                {
+                    To.Events.Add(Event);
                 }
             }
         }

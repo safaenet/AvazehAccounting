@@ -10,8 +10,8 @@
         xmlns:local="clr-namespace:AvazehWpf" mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
+        xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary"
         d:DataContext="{d:DesignInstance Type=viewmodels:ChequeDetailViewModel}"
-        xmlns:dlc="clr-namespace:AvazehWpfApiClient.Models;assembly=DataLibraryCore"
         fw:AcrylicWindow.Enabled="True"
         Title="Cheque" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="640" MinHeight="350" Height="auto" fw:AcrylicWindow.AcrylicWindowStyle="NoIcon"
@@ -30,17 +30,6 @@
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Row="1" Grid.Column="1">
-            <Grid.Resources>
-                <Style TargetType="TextBox">
-                    <Setter Property="TextAlignment" Value="Center"/>
-                    <Setter Property="BorderThickness" Value="1"/>
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Margin" Value="0,2,0,2"/>
-                    <Setter Property="Height" Value="25"/>
-                    <Setter Property="VerticalContentAlignment" Value="Center"/>
-                </Style>
-            </Grid.Resources>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -61,7 +50,7 @@
                             <materialDesign:PackIcon Kind="AccountDetails" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Orderer Name" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Cheque.Orderer}" MaxLength="50" MaxWidth="200"/>
+                        <TextBox Text="{Binding BackupCheque.Orderer}" MaxLength="50" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Vertical" VerticalAlignment="Top">
@@ -69,7 +58,7 @@
                             <materialDesign:PackIcon Kind="CalendarImport" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Due Date" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Cheque.DueDate}" MaxLength="50" MaxWidth="200"/>
+                        <TextBox Text="{Binding BackupCheque.DueDate}" MaxLength="50" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Vertical">
@@ -77,7 +66,7 @@
                             <materialDesign:PackIcon Kind="Numeric" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Identifier" Margin="5,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Cheque.Identifier}" MaxLength="50" MaxWidth="200"/>
+                        <TextBox Text="{Binding BackupCheque.Identifier}" MaxLength="50" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                     </StackPanel>
 
                     <DockPanel Grid.Column="0" Grid.Row="3" LastChildFill="True" DockPanel.Dock="Bottom">
@@ -85,7 +74,7 @@
                             <materialDesign:PackIcon Kind="Information" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="About" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Cheque.About}" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" MinHeight="30" Height="auto" VerticalContentAlignment="Top" BorderThickness="1" MaxWidth="200"/>
+                        <TextBox Text="{Binding BackupCheque.About}" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" MinHeight="30" Height="auto" VerticalContentAlignment="Top" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
                     </DockPanel>
                 </Grid>
             </Grid>
@@ -103,7 +92,7 @@
                         <materialDesign:PackIcon Kind="AccountEdit" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Drawer Name" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Cheque.Drawer}" MaxLength="10" MaxWidth="200"/>
+                    <TextBox Text="{Binding BackupCheque.Drawer}" MaxLength="10" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Orientation="Vertical">
@@ -111,7 +100,7 @@
                         <materialDesign:PackIcon Kind="CalendarEdit" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Issue Date" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Cheque.IssueDate}" MaxLength="10" MaxWidth="200"/>
+                    <TextBox Text="{Binding BackupCheque.IssueDate}" MaxLength="10" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Orientation="Vertical">
@@ -119,7 +108,7 @@
                         <materialDesign:PackIcon Kind="Numeric" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Serial Number" Margin="5,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Cheque.Serial}" MaxLength="10" MaxWidth="200"/>
+                    <TextBox Text="{Binding BackupCheque.Serial}" MaxLength="10" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <DockPanel LastChildFill="True"  Grid.Row="3" DockPanel.Dock="Bottom">
@@ -127,7 +116,7 @@
                         <materialDesign:PackIcon Kind="CommentAccount" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Description" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Cheque.Descriptions}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="50" Height="auto" VerticalContentAlignment="Top" BorderThickness="1" MaxWidth="200"/>
+                    <TextBox Text="{Binding BackupCheque.Descriptions}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="50" Height="auto" VerticalContentAlignment="Top" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
                 </DockPanel>
             </Grid>
 
@@ -144,7 +133,7 @@
                         <materialDesign:PackIcon Kind="CardAccountDetails" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="ID" Margin="20,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Cheque.Id}" IsReadOnly="True" MaxLength="10" MaxWidth="200"/>
+                    <TextBox Text="{Binding BackupCheque.Id}" IsReadOnly="True" MaxLength="10" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Orientation="Vertical">
@@ -152,7 +141,7 @@
                         <materialDesign:PackIcon Kind="AccountDetails" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Payment Amount" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Cheque.PayAmount}" MaxLength="10" MaxWidth="200"/>
+                    <TextBox Text="{Binding BackupCheque.PayAmount}" MaxLength="10" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Orientation="Vertical">
@@ -160,7 +149,7 @@
                         <materialDesign:PackIcon Kind="Bank" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Bank Name" Margin="5,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Cheque.BankName}" MaxLength="10" MaxWidth="200"/>
+                    <TextBox Text="{Binding BackupCheque.BankName}" MaxLength="10" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <ScrollViewer Grid.Row="3">
@@ -176,7 +165,7 @@
                             </Button>
                         </StackPanel>
 
-                        <ItemsControl ItemsSource="{Binding Cheque.Events}">
+                        <ItemsControl ItemsSource="{Binding BackupCheque.Events}">
                             <ItemsControl.Resources>
                                 <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
                                     <ObjectDataProvider.MethodParameters>
@@ -212,25 +201,25 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="CancelAndClose" Grid.Column="0" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,5,5,0">
+            <Button x:Name="CancelAndClose" Grid.Column="0" Style="{StaticResource ButtonRevealStyle}" Margin="0,5,5,0">
                 <StackPanel Width="80" Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="Cancel" Margin="3"/>
                     <TextBlock Text="Cancel" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="DeleteAndClose" Grid.Column="1" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,5,5,0">
+            <Button x:Name="DeleteAndClose" Grid.Column="1" Style="{StaticResource ButtonRevealStyle}" Margin="0,5,5,0">
                 <StackPanel Width="120" Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="Delete" Margin="3"/>
                     <TextBlock Text="Delete and Close" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="SaveAndNew" Grid.Column="2" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,5,5,0">
+            <Button x:Name="SaveAndNew" Grid.Column="2" Style="{StaticResource ButtonRevealStyle}" Margin="0,5,5,0">
                 <StackPanel Width="110" Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="ContentSaveMove" Margin="3"/>
                     <TextBlock Text="Save and New" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="SaveAndClose" Grid.Column="3" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,5,5,0">
+            <Button x:Name="SaveAndClose" Grid.Column="3" Style="{StaticResource ButtonRevealStyle}" Margin="0,5,5,0">
                 <StackPanel Width="110" Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="ContentSaveOff" Margin="3"/>
                     <TextBlock Text="Save and Close" VerticalAlignment="Center"/>

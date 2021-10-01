@@ -80,8 +80,7 @@ namespace AvazehWpf.ViewModels
 
         private async Task<bool> SaveToDatabase()
         {
-            if (BackupProduct == null)
-                return false;
+            if (BackupProduct == null) return false;
             var validate = Manager.ValidateItem(BackupProduct);
             if (validate.IsValid)
             {

@@ -7,7 +7,10 @@
         xmlns:cal="http://www.caliburnproject.org"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:AvazehWpf" mc:Ignorable="d"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" fw:AcrylicWindow.Enabled="True"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewmodels:CustomerDetailViewModel}"
+        fw:AcrylicWindow.Enabled="True"
         Title="Customer" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="460" MaxWidth="460" MinHeight="395" Height="500" fw:AcrylicWindow.AcrylicWindowStyle="NoIcon"
         cal:Message.Attach="[Event Closing] = [Action ClosingWindow]">
@@ -51,44 +54,44 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical" Margin="0,0,0,10" VerticalAlignment="Top">
+                    <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical" Margin="0,0,0,0" VerticalAlignment="Top">
                         <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="Account" Margin="0,2,5,2"/>
+                            <TextBlock Text="person_outline" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="First Name" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding BackupCustomer.FirstName}" MaxLength="50" MaxWidth="200"/>
+                        <TextBox Text="{Binding BackupCustomer.FirstName}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Vertical" Margin="0,0,0,10" VerticalAlignment="Top">
+                    <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Vertical" Margin="0,0,0,0" VerticalAlignment="Top">
                         <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="CardAccountDetails" Margin="0,2,5,2"/>
+                            <TextBlock Text="people" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Last Name" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding BackupCustomer.LastName}" MaxLength="50" MaxWidth="200"/>
+                        <TextBox Text="{Binding BackupCustomer.LastName}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Vertical" Margin="0,0,0,10">
+                    <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Vertical" Margin="0,0,0,0">
                         <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="Domain" Margin="0,2,5,2"/>
+                            <TextBlock Text="business" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Company Name" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding BackupCustomer.CompanyName}" MaxLength="50" MaxWidth="200"/>
+                        <TextBox Text="{Binding BackupCustomer.CompanyName}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Vertical" Margin="0,0,0,10">
+                    <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Vertical" Margin="0,0,0,0">
                         <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="Email" Margin="0,2,5,2"/>
+                            <TextBlock Text="business" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Email Address" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding BackupCustomer.EmailAddress}" MaxLength="50" MaxWidth="200"/>
+                        <TextBox Text="{Binding BackupCustomer.EmailAddress}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                     </StackPanel>
                     
                     <DockPanel Grid.Column="0" Grid.Row="4" LastChildFill="True" DockPanel.Dock="Bottom">
                         <StackPanel DockPanel.Dock = "Top" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="MapMarker" Margin="0,2,5,2"/>
+                            <TextBlock Text="location_on" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Post Address" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding BackupCustomer.PostAddress}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="30" Height="auto" VerticalContentAlignment="Top" BorderThickness="1" MaxWidth="200"/>
+                        <TextBox Text="{Binding BackupCustomer.PostAddress}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="30" Height="auto" VerticalContentAlignment="Top" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
                     </DockPanel>
                 </Grid>
 
@@ -103,36 +106,36 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,0,10">
                     <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="CardAccountDetails" Margin="0,2,5,2"/>
+                        <TextBlock Text="tag" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="ID" Margin="20,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupCustomer.Id}" IsReadOnly="True" MaxLength="10" MaxWidth="200"/>
+                    <TextBox Text="{Binding BackupCustomer.Id}" IsReadOnly="True" MaxLength="10" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                 </StackPanel>
 
-                <StackPanel Grid.Row="1" Orientation="Vertical" Margin="0,0,0,10">
+                <StackPanel Grid.Row="1" Orientation="Vertical" Margin="0,0,0,9">
                     <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="DateRange" Margin="0,2,5,2"/>
+                        <TextBlock Text="date_range" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Date Joined" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupCustomer.DateJoined}" IsReadOnly="True" MaxLength="10" MaxWidth="200"/>
+                    <TextBox Text="{Binding BackupCustomer.DateJoined}" IsReadOnly="True" MaxLength="10" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,0,0,10">
                     <StackPanel Width="165" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="Phone" Margin="0,2,5,2"/>
+                        <TextBlock Text="phone_iphone" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Phone Number(s)" Margin="0,2,0,2"/>
-                        <Button x:Name="AddNewPhoneNumber" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="5,0,0,0">
-                            <materialDesign:PackIcon Kind="Plus"/>
+                        <Button x:Name="AddNewPhoneNumber" Style="{StaticResource ButtonRevealStyle}" Margin="5,0,0,0">
+                            <TextBlock Text="add" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         </Button>
-                        <Button x:Name="DeletePhoneNumber" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="5,0,0,0">
-                            <materialDesign:PackIcon Kind="Minus"/>
+                        <Button x:Name="DeletePhoneNumber" Style="{StaticResource ButtonRevealStyle}" Margin="5,0,0,0">
+                            <TextBlock Text="remove" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         </Button>
                     </StackPanel>
-                    <ItemsControl ItemsSource="{Binding Customer.PhoneNumbers}">
+                    <ItemsControl ItemsSource="{Binding BackupCustomer.PhoneNumbers}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBox Text="{Binding Path=PhoneNumber}" Width="165" Margin="14,3,0,0"/>
+                                    <TextBox Text="{Binding PhoneNumber}" Width="200" MaxLength="16" Margin="14,3,0,0" Style="{StaticResource TextBoxRevealStyle}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -141,10 +144,10 @@
 
                 <DockPanel LastChildFill="True"  Grid.Row="3" DockPanel.Dock="Bottom">
                     <StackPanel DockPanel.Dock = "Top" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="CommentAccount" Margin="0,2,5,2"/>
+                        <TextBlock Text="description" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Description" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupCustomer.Descriptions}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="50" Height="auto" VerticalContentAlignment="Top" BorderThickness="1" MaxWidth="200"/>
+                    <TextBox Text="{Binding BackupCustomer.Descriptions}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="50" Height="auto" VerticalContentAlignment="Top" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
                 </DockPanel>
             </Grid>
         </Grid>
@@ -155,27 +158,27 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="CancelAndClose" Grid.Column="0" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,5,5,0">
+            <Button x:Name="CancelAndClose" Grid.Column="0" Style="{StaticResource ButtonRevealStyle}" Margin="0,5,5,0">
                 <StackPanel Width="80" Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="Cancel" Margin="3"/>
+                    <TextBlock Text="cancel" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                     <TextBlock Text="Cancel" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="DeleteAndClose" Grid.Column="1" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,5,5,0">
+            <Button x:Name="DeleteAndClose" Grid.Column="1" Style="{StaticResource ButtonRevealStyle}" Margin="0,5,5,0">
                 <StackPanel Width="120" Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="Delete" Margin="3"/>
+                    <TextBlock Text="highlight_off" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                     <TextBlock Text="Delete and Close" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="SaveAndNew" Grid.Column="2" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,5,5,0">
+            <Button x:Name="SaveAndNew" Grid.Column="2" Style="{StaticResource ButtonRevealStyle}" Margin="0,5,5,0">
                 <StackPanel Width="110" Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="ContentSaveMove" Margin="3"/>
+                    <TextBlock Text="save" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                     <TextBlock Text="Save and New" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="SaveAndClose" Grid.Column="3" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,5,5,0">
+            <Button x:Name="SaveAndClose" Grid.Column="3" Style="{StaticResource ButtonRevealStyle}" Margin="0,5,5,0">
                 <StackPanel Width="110" Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="ContentSaveOff" Margin="3"/>
+                    <TextBlock Text="save" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                     <TextBlock Text="Save and Close" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>

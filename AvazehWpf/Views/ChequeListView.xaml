@@ -14,17 +14,6 @@
         Title="Customers" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1350" Height="650" fw:AcrylicWindow.AcrylicWindowStyle="NoIcon">
     <Grid fw:PointerTracker.Enabled="True">
-        <Grid.Resources>
-            <Style TargetType="TextBox">
-                <Setter Property="TextAlignment" Value="Center"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="BorderBrush" Value="Black"/>
-                <Setter Property="Margin" Value="0,2,0,2"/>
-                <Setter Property="Height" Value="25"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-            </Style>
-        </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3"/>
             <ColumnDefinition Width="200" MaxWidth="200"/>
@@ -51,87 +40,87 @@
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,3">
                             <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="AccountEdit" Margin="0,2,5,2"/>
+                                <TextBlock Text="perm_identity" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Drawer Name" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedCheque.Drawer, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200"/>
+                            <TextBox Text="{Binding SelectedCheque.Drawer, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,3">
                             <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="AccountDetails" Margin="0,2,5,2"/>
+                                <TextBlock Text="perm_identity" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Orderer Name" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedCheque.Orderer, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200"/>
+                            <TextBox Text="{Binding SelectedCheque.Orderer, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,3">
                             <StackPanel Width="115" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="Cash" Margin="0,2,5,2"/>
+                                <TextBlock Text="payments" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Payment Amount" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedCheque.PayAmount, Mode=OneWay}" IsReadOnly="True" MaxWidth="200"/>
+                            <TextBox Text="{Binding SelectedCheque.PayAmount, Mode=OneWay}" IsReadOnly="True" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,3">
                             <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center" Margin="25,0,0,0">
-                                <materialDesign:PackIcon Kind="Information" Margin="0,2,5,2"/>
+                                <TextBlock Text="textsms" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="About" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedCheque.About, Mode=OneWay}" IsReadOnly="True" MaxLength="100" MaxWidth="200"/>
+                            <TextBox Text="{Binding SelectedCheque.About, Mode=OneWay}" IsReadOnly="True" MaxLength="100" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,3">
                             <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="CalendarImport" Margin="0,2,5,2"/>
+                                <TextBlock Text="date_range" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" Height="auto" TextAlignment="Center" Text="Due Date" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedCheque.DueDate, Mode=OneWay}" IsReadOnly="True" MaxLength="10" VerticalContentAlignment="Top" MaxWidth="200"/>
+                            <TextBox Text="{Binding SelectedCheque.DueDate, Mode=OneWay}" IsReadOnly="True" MaxLength="10" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,3">
                             <StackPanel Width="115" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="Numeric" Margin="0,2,5,2"/>
+                                <TextBlock Text="tag" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Identifier Number" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedCheque.Identifier, Mode=OneWay}" IsReadOnly="True" MaxLength="20" MaxWidth="200"/>
+                            <TextBox Text="{Binding SelectedCheque.Identifier, Mode=OneWay}" IsReadOnly="True" MaxLength="20" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,3">
                             <StackPanel Width="115" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="CalendarWeek" Margin="0,2,5,2"/>
+                                <TextBlock Text="event_available" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Last Event" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedCheque.LastEventString, Mode=OneWay}" IsReadOnly="True" MaxWidth="200"/>
+                            <TextBox Text="{Binding SelectedCheque.LastEventString, Mode=OneWay}" IsReadOnly="True" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                         </StackPanel>
                     </StackPanel>
 
                     <DockPanel LastChildFill="True"  Grid.Row="1" DockPanel.Dock="Bottom" Margin="0,0,0,3">
                         <StackPanel DockPanel.Dock = "Top" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="CommentAccount" Margin="0,2,5,2"/>
+                            <TextBlock Text="description" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Description Text" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding SelectedCheque.Descriptions, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MinHeight="50" Height="auto" VerticalContentAlignment="Top" BorderThickness="1" MaxWidth="200"/>
+                        <TextBox Text="{Binding SelectedCheque.Descriptions, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MinHeight="50" Height="auto" VerticalContentAlignment="Top" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
                     </DockPanel>
                 </Grid>
             </ScrollViewer>
             <Grid Grid.Column="0" Grid.Row="1">
                 <StackPanel Orientation="Vertical">
-                    <Button cal:Message.Attach="[Event Click] = [Action AddNewCheque()]" Height="25" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,0,3">
+                    <Button cal:Message.Attach="[Event Click] = [Action AddNewCheque()]" Height="25" Style="{StaticResource ButtonRevealStyle}" Margin="0,0,0,3">
                         <StackPanel Width="110" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="NoteAddOutline" Margin="3"/>
+                            <TextBlock Text="add" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock Text="Add New" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action EditCheque()]" Height="25" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,0,3">
+                    <Button cal:Message.Attach="[Event Click] = [Action EditCheque()]" Height="25" Style="{StaticResource ButtonRevealStyle}" Margin="0,0,0,3">
                         <StackPanel Width="110" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Edit" Margin="3"/>
+                            <TextBlock Text="edit" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock Text="Edit" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action DeleteCheque()]" Height="25" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent">
+                    <Button cal:Message.Attach="[Event Click] = [Action DeleteCheque()]" Height="25" Style="{StaticResource ButtonRevealStyle}">
                         <StackPanel Width="110" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Delete" Margin="3"/>
+                            <TextBlock Text="remove" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock Text="Delete" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
@@ -150,15 +139,14 @@
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="Search" Grid.Column="0" Height="25" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,0,0">
+                <Button x:Name="Search" Grid.Column="0" Height="25" Style="{StaticResource ButtonRevealStyle}" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="DatabaseSearch" Margin="3"/>
+                        <TextBlock Text="subdirectory_arrow_left" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock Text="Search" VerticalAlignment="Center" Margin="30,0,30,0"/>
-                        <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="3" HorizontalAlignment="Right"/>
+                        <TextBlock Text="search" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <TextBox x:Name="SearchText" Grid.Column="1" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]">
-                </TextBox>
+                <TextBox x:Name="SearchText" Grid.Column="1" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -166,16 +154,16 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="PreviousPage" Height="25" HorizontalAlignment="Left" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,0,0">
+                <Button x:Name="PreviousPage" Height="25" HorizontalAlignment="Left" Style="{StaticResource ButtonRevealStyle}" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="ArrowLeftCircle" Margin="3"/>
+                        <TextBlock Text="arrow_back_ios_new" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock Text="Previous" VerticalAlignment="Center" Margin="30,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,0,0">
+                <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" Style="{StaticResource ButtonRevealStyle}" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Next" VerticalAlignment="Center" Margin="30,0,30,0"/>
-                        <materialDesign:PackIcon Kind="ArrowRightCircle" Margin="3" HorizontalAlignment="Right"/>
+                        <TextBlock Text="arrow_forward_ios" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
             </Grid>

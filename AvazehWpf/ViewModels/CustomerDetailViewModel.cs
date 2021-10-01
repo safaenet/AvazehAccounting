@@ -30,7 +30,7 @@ namespace AvazehWpf.ViewModels
 
         public CustomerModel Customer
         {
-            get { return _Customer; }
+            get => _Customer;
             set { _Customer = value; NotifyOfPropertyChange(() => Customer); }
         }
 
@@ -46,11 +46,11 @@ namespace AvazehWpf.ViewModels
 
         public void AddNewPhoneNumber()
         {
-            PhoneNumberModel newPhone = new PhoneNumberModel();
+            PhoneNumberModel newPhone = new();
             if (BackupCustomer.PhoneNumbers == null)
             {
-                BackupCustomer.PhoneNumbers = new System.Collections.ObjectModel.ObservableCollection<PhoneNumberModel>();
-                NotifyOfPropertyChange(() => Customer);
+                BackupCustomer.PhoneNumbers = new();
+                NotifyOfPropertyChange(() => BackupCustomer);
             }
             newPhone.CustomerId = BackupCustomer.Id;
             BackupCustomer.PhoneNumbers.Add(newPhone);
@@ -90,7 +90,6 @@ namespace AvazehWpf.ViewModels
             CloseWindow();
         }
 
-
         public async Task SaveAndClose()
         {
             if (await SaveToDatabase() == false) return;
@@ -99,8 +98,7 @@ namespace AvazehWpf.ViewModels
 
         private async Task<bool> SaveToDatabase()
         {
-            if (BackupCustomer == null)
-                return false;
+            if (BackupCustomer == null) return false;
             var validate = Manager.ValidateItem(BackupCustomer);
             if (validate.IsValid)
             {

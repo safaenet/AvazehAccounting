@@ -1,14 +1,9 @@
 ﻿using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace AvazehWpf.ViewModels
@@ -60,8 +55,7 @@ namespace AvazehWpf.ViewModels
         {
             CustomerModel newCustomer = new();
             WindowManager wm = new();
-            wm.ShowDialogAsync(new CustomerDetailViewModel(CCM, newCustomer, RefreshPage));
-            if (newCustomer != null) Customers.Add(newCustomer);
+            wm.ShowWindowAsync(new CustomerDetailViewModel(CCM, newCustomer, RefreshPage));
         }
 
         public async Task PreviousPage()
@@ -92,7 +86,6 @@ namespace AvazehWpf.ViewModels
         public async Task SearchBoxKeyDownHandler(ActionExecutionContext context)
         {
             var keyArgs = context.EventArgs as KeyEventArgs;
-
             if (keyArgs != null && keyArgs.Key == Key.Enter)
             {
                 await Search();

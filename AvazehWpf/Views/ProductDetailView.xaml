@@ -57,7 +57,7 @@
                         <TextBlock Text="tag" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="ID" Margin="20,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupProduct.Id}" IsReadOnly="True" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding BackupProduct.Id}" IsReadOnly="True" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                 </StackPanel>
                 
                 <StackPanel Grid.Row="1"  Orientation="Vertical" Margin="0,0,0,0">
@@ -65,7 +65,7 @@
                         <TextBlock Text="inventory_2" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Product Name" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupProduct.ProductName}" MaxLength="100" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding BackupProduct.ProductName}" MaxLength="100" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,0,0,0">
@@ -73,7 +73,7 @@
                         <TextBlock Text="local_offer" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Buy Price" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupProduct.BuyPrice}" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding BackupProduct.BuyPrice}" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="3" Orientation="Vertical" Margin="0,0,0,0">
@@ -81,7 +81,7 @@
                         <TextBlock Text="local_offer" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Sell Price" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupProduct.SellPrice}" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding BackupProduct.SellPrice}" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="4" Orientation="Vertical" Margin="0,0,0,0">
@@ -89,7 +89,7 @@
                         <TextBlock Text="qr_code" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Barcode" Margin="15,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupProduct.Barcode}" MaxLength="15" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding BackupProduct.Barcode}" MaxLength="15" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                 </StackPanel>
             </Grid>
             <Grid Grid.Column="1">
@@ -106,7 +106,7 @@
                         <TextBlock Text="score" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Count" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupProduct.CountString}" ToolTip="{Binding BackupProduct.CountValue}" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding BackupProduct.CountString}" ToolTip="{Binding BackupProduct.CountValue}" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                 </StackPanel>
                 
                 <DockPanel Grid.Row="1" LastChildFill="True" DockPanel.Dock="Bottom" Margin="0,0,10,10">
