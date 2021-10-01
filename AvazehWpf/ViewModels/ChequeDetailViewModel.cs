@@ -64,7 +64,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteAndClose()
         {
-            if (Cheque == null) return;
+            if (Cheque == null || Cheque.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete cheque of {Cheque.Drawer}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
             if (await Manager.DeleteItemAsync(Cheque.Id) == false) MessageBox.Show($"Cheque with ID: {Cheque.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);

@@ -45,7 +45,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteAndClose()
         {
-            if (Product == null) return;
+            if (Product == null || Product.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete {Product.ProductName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
             if (await Manager.DeleteItemAsync(Product.Id) == false) MessageBox.Show($"Product with ID: {Product.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
