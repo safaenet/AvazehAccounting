@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Remove="Views\InvoiceDetailView.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="Fonts\MaterialIcons-Regular.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

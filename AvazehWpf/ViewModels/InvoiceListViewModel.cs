@@ -55,11 +55,10 @@ namespace AvazehWpf.ViewModels
         public int SelectedFinStatus { get; set; } = 1;
         public int SelectedLifeStatus { get; set; }
 
-        public void AddNewInvoice()
+        public async Task AddNewInvoice()
         {
-            InvoiceModel newInvoice = new();
             WindowManager wm = new();
-            //wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, newInvoice));
+            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, null, RefreshPage));
         }
 
         public async Task PreviousPage()
@@ -105,7 +104,7 @@ namespace AvazehWpf.ViewModels
             if (Invoices == null || Invoices.Count == 0) return;
             var invoiceDto = await ICM.GetItemById(SelectedInvoice.Id);
             WindowManager wm = new();
-            //wm.ShowDialogAsync(new InvoiceDetailViewModel(ICM, invoiceDto));
+            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, invoiceDto, RefreshPage));
         }
 
         public async Task DeleteInvoice()

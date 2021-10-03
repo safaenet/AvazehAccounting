@@ -16,16 +16,11 @@ namespace AvazehWpf.ViewModels
             Manager = manager;
             CallBackFunc = callBack;
             if (Customer is not null)
-            {
-                BackupCustomer = new();
                 this.Customer = Customer;
-                Customer.Clone(BackupCustomer);
-            }
         }
 
         private readonly ICollectionManager<CustomerModel> Manager;
         private CustomerModel _Customer;
-        private CustomerModel _BackupCustomer;
         private Func<Task> CallBackFunc;
 
         public CustomerModel Customer
@@ -34,32 +29,22 @@ namespace AvazehWpf.ViewModels
             set { _Customer = value; NotifyOfPropertyChange(() => Customer); }
         }
 
-        public CustomerModel BackupCustomer
-        {
-            get => _BackupCustomer;
-            set
-            {
-                _BackupCustomer = value;
-                NotifyOfPropertyChange(() => BackupCustomer);
-            }
-        }
-
         public void AddNewPhoneNumber()
         {
             PhoneNumberModel newPhone = new();
-            if (BackupCustomer.PhoneNumbers == null)
+            if (Customer.PhoneNumbers == null)
             {
-                BackupCustomer.PhoneNumbers = new();
-                NotifyOfPropertyChange(() => BackupCustomer);
+                Customer.PhoneNumbers = new();
+                NotifyOfPropertyChange(() => Customer);
             }
-            newPhone.CustomerId = BackupCustomer.Id;
-            BackupCustomer.PhoneNumbers.Add(newPhone);
+            newPhone.CustomerId = Customer.Id;
+            Customer.PhoneNumbers.Add(newPhone);
         }
 
         public void DeletePhoneNumber()
         {
-            if (BackupCustomer == null || BackupCustomer.PhoneNumbers == null || !BackupCustomer.PhoneNumbers.Any()) return;
-            BackupCustomer.PhoneNumbers.RemoveAt(BackupCustomer.PhoneNumbers.Count - 1);
+            if (Customer == null || Customer.PhoneNumbers == null || !Customer.PhoneNumbers.Any()) return;
+            Customer.PhoneNumbers.RemoveAt(Customer.PhoneNumbers.Count - 1);
         }
 
         public async Task DeleteAndClose()
@@ -98,22 +83,21 @@ namespace AvazehWpf.ViewModels
 
         private async Task<bool> SaveToDatabase()
         {
-            if (BackupCustomer == null) return false;
-            var validate = Manager.ValidateItem(BackupCustomer);
+            if (Customer == null) return false;
+            var validate = Manager.ValidateItem(Customer);
             if (validate.IsValid)
             {
                 CustomerModel outPut;
                 if (Customer.Id == 0) //It's a new Customer
-                    outPut = await Manager.CreateItemAsync(BackupCustomer);
+                    outPut = await Manager.CreateItemAsync(Customer);
                 else //Update Customer
-                    outPut = await Manager.UpdateItemAsync(BackupCustomer);
+                    outPut = await Manager.UpdateItemAsync(Customer);
                 if (outPut is null)
                 {
                     MessageBox.Show($"There was a problem when saving to Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return false;
                 }
-                outPut.Clone(BackupCustomer);
-                BackupCustomer.Clone(Customer);
+                outPut.Clone(Customer);
                 return true;
             }
             else
@@ -130,7 +114,6 @@ namespace AvazehWpf.ViewModels
 
         public void ClosingWindow()
         {
-            Customer.Clone(BackupCustomer);
             CallBackFunc();
         }
     }

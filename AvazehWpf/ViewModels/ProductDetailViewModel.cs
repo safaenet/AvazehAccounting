@@ -15,32 +15,18 @@ namespace AvazehWpf.ViewModels
             Manager = manager;
             CallBackFunc = callBack;
             if (Product is not null)
-            {
-                BackupProduct = new();
                 this.Product = Product;
-                Product.Clone(BackupProduct);
-            }
         }
 
         private readonly ICollectionManager<ProductModel> Manager;
         private ProductModel _Product;
-        private ProductModel _BackupProduct;
+        //private ProductModel _BackupProduct;
         private Func<Task> CallBackFunc;
 
         public ProductModel Product
         {
             get => _Product;
             set { _Product = value; NotifyOfPropertyChange(() => Product); }
-        }
-
-        public ProductModel BackupProduct
-        {
-            get => _BackupProduct;
-            set
-            {
-                _BackupProduct = value;
-                NotifyOfPropertyChange(() => BackupProduct);
-            }
         }
 
         public async Task DeleteAndClose()
@@ -80,22 +66,21 @@ namespace AvazehWpf.ViewModels
 
         private async Task<bool> SaveToDatabase()
         {
-            if (BackupProduct == null) return false;
-            var validate = Manager.ValidateItem(BackupProduct);
+            if (Product == null) return false;
+            var validate = Manager.ValidateItem(Product);
             if (validate.IsValid)
             {
                 ProductModel outPut;
                 if (Product.Id == 0) //It's a new Product
-                    outPut = await Manager.CreateItemAsync(BackupProduct);
+                    outPut = await Manager.CreateItemAsync(Product);
                 else //Update Product
-                    outPut = await Manager.UpdateItemAsync(BackupProduct);
+                    outPut = await Manager.UpdateItemAsync(Product);
                 if (outPut is null)
                 {
                     MessageBox.Show($"There was a problem when saving to Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return false;
                 }
-                outPut.Clone(BackupProduct);
-                BackupProduct.Clone(Product);
+                outPut.Clone(Product);
                 return true;
             }
             else
@@ -112,7 +97,6 @@ namespace AvazehWpf.ViewModels
 
         public void ClosingWindow()
         {
-            Product.Clone(BackupProduct);
             CallBackFunc();
         }
     }

@@ -52,9 +52,8 @@ namespace AvazehWpf.ViewModels
 
         public void AddNewCustomer()
         {
-            CustomerModel newCustomer = new();
             WindowManager wm = new();
-            wm.ShowWindowAsync(new CustomerDetailViewModel(CCM, newCustomer, RefreshPage));
+            wm.ShowWindowAsync(new CustomerDetailViewModel(CCM, null, RefreshPage));
         }
 
         public async Task PreviousPage()

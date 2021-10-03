@@ -14,7 +14,8 @@
         xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary"
         fw:AcrylicWindow.Enabled="True"
         Title="Invoice" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
-        Width="1200" Height="650" fw:AcrylicWindow.AcrylicWindowStyle="NoIcon">
+        Width="1200" Height="650" fw:AcrylicWindow.AcrylicWindowStyle="NoIcon"
+        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]">
     <Grid fw:PointerTracker.Enabled="True">
         <Grid.Resources>
             <Style TargetType="TextBox">

@@ -53,9 +53,8 @@ namespace AvazehWpf.ViewModels
 
         public void AddNewCheque()
         {
-            ChequeModel newCheque = new();
             WindowManager wm = new();
-            wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, newCheque, RefreshPage));
+            wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, null, RefreshPage));
         }
 
         public async Task PreviousPage()

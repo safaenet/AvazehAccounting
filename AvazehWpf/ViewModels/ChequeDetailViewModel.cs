@@ -16,16 +16,11 @@ namespace AvazehWpf.ViewModels
             Manager = manager;
             CallBackFunc = callBack;
             if (Cheque is not null)
-            {
-                BackupCheque = new();
                 this.Cheque = Cheque;
-                Cheque.Clone(BackupCheque);
-            }
         }
 
         private readonly ICollectionManager<ChequeModel> Manager;
         private ChequeModel _Cheque;
-        private ChequeModel _BackupCheque;
         private Func<Task> CallBackFunc;
 
         public ChequeModel Cheque
@@ -34,32 +29,22 @@ namespace AvazehWpf.ViewModels
             set { _Cheque = value; NotifyOfPropertyChange(() => Cheque); }
         }
 
-        public ChequeModel BackupCheque
-        {
-            get => _BackupCheque;
-            set
-            {
-                _BackupCheque = value;
-                NotifyOfPropertyChange(() => BackupCheque);
-            }
-        }
-
         public void AddNewEvent()
         {
             ChequeEventModel newEvent = new();
-            if (BackupCheque.Events == null)
+            if (Cheque.Events == null)
             {
-                BackupCheque.Events = new();
-                NotifyOfPropertyChange(() => BackupCheque);
+                Cheque.Events = new();
+                NotifyOfPropertyChange(() => Cheque);
             }
-            newEvent.ChequeId = BackupCheque.Id;
-            BackupCheque.Events.Add(newEvent);
+            newEvent.ChequeId = Cheque.Id;
+            Cheque.Events.Add(newEvent);
         }
 
         public void DeleteEvent()
         {
-            if (BackupCheque == null || BackupCheque.Events == null || !BackupCheque.Events.Any()) return;
-            BackupCheque.Events.RemoveAt(BackupCheque.Events.Count - 1);
+            if (Cheque == null || Cheque.Events == null || !Cheque.Events.Any()) return;
+            Cheque.Events.RemoveAt(Cheque.Events.Count - 1);
         }
 
         public async Task DeleteAndClose()
@@ -98,22 +83,21 @@ namespace AvazehWpf.ViewModels
 
         private async Task<bool> SaveToDatabase()
         {
-            if (BackupCheque == null) return false;
-            var validate = Manager.ValidateItem(BackupCheque);
+            if (Cheque == null) return false;
+            var validate = Manager.ValidateItem(Cheque);
             if (validate.IsValid)
             {
                 ChequeModel outPut;
                 if (Cheque.Id == 0) //It's a new Cheque
-                    outPut = await Manager.CreateItemAsync(BackupCheque);
+                    outPut = await Manager.CreateItemAsync(Cheque);
                 else //Update Cheque
-                    outPut = await Manager.UpdateItemAsync(BackupCheque);
+                    outPut = await Manager.UpdateItemAsync(Cheque);
                 if (outPut is null)
                 {
                     MessageBox.Show($"There was a problem when saving to Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return false;
                 }
-                outPut.Clone(BackupCheque);
-                BackupCheque.Clone(Cheque);
+                outPut.Clone(Cheque);
                 return true;
             }
             else
@@ -130,7 +114,6 @@ namespace AvazehWpf.ViewModels
 
         public void ClosingWindow()
         {
-            Cheque.Clone(BackupCheque);
             CallBackFunc();
         }
     }
