@@ -57,15 +57,15 @@
                         <TextBlock Text="tag" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="ID" Margin="20,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupProduct.Id}" IsReadOnly="True" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding Product.Id}" IsReadOnly="True" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                 </StackPanel>
-                
+
                 <StackPanel Grid.Row="1"  Orientation="Vertical" Margin="0,0,0,0">
                     <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
                         <TextBlock Text="inventory_2" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Product Name" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupProduct.ProductName}" MaxLength="100" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding Product.ProductName}" MaxLength="100" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,0,0,0">
@@ -73,7 +73,7 @@
                         <TextBlock Text="local_offer" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Buy Price" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupProduct.BuyPrice}" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding Product.BuyPrice}" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="3" Orientation="Vertical" Margin="0,0,0,0">
@@ -81,7 +81,7 @@
                         <TextBlock Text="local_offer" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Sell Price" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupProduct.SellPrice}" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding Product.SellPrice}" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="4" Orientation="Vertical" Margin="0,0,0,0">
@@ -89,7 +89,7 @@
                         <TextBlock Text="qr_code" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Barcode" Margin="15,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupProduct.Barcode}" MaxLength="15" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding Product.Barcode}" MaxLength="15" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                 </StackPanel>
             </Grid>
             <Grid Grid.Column="1">
@@ -106,22 +106,22 @@
                         <TextBlock Text="score" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Count" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupProduct.CountString}" ToolTip="{Binding BackupProduct.CountValue}" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding Product.CountString}" ToolTip="{Binding Product.CountValue}" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                 </StackPanel>
-                
+
                 <DockPanel Grid.Row="1" LastChildFill="True" DockPanel.Dock="Bottom" Margin="0,0,10,10">
                     <StackPanel DockPanel.Dock = "Top" Orientation="Horizontal" HorizontalAlignment="Center">
                         <TextBlock Text="description" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock TextAlignment="Center" Text="Description" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupProduct.Descriptions}" TextWrapping="Wrap" MinHeight="50" Height="auto" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding Product.Descriptions}" TextWrapping="Wrap" MinHeight="50" Height="auto" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top" Style="{StaticResource TextBoxRevealStyle}"/>
                 </DockPanel>
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
                     <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
                         <TextBlock Text="event_available" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Date Created: " Margin="5,2,0,2"/>
                     </StackPanel>
-                    <TextBlock Text="{Binding BackupProduct.DateCreated}" TextAlignment="Center"/>
+                    <TextBlock Text="{Binding Product.DateCreated}" TextAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,0,0,10">
@@ -129,26 +129,27 @@
                         <TextBlock Text="watch_later" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Time Created: " Margin="5,2,0,2"/>
                     </StackPanel>
-                    <TextBlock Text="{Binding BackupProduct.TimeCreated}" TextAlignment="Center"/>
+                    <TextBlock Text="{Binding Product.TimeCreated}" TextAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,0,0,10">
                     <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
                         <TextBlock Text="edit_calendar" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Date Updated: " Margin="5,2,0,2"/>
                     </StackPanel>
-                    <TextBlock Text="{Binding BackupProduct.DateUpdated}" TextAlignment="Center"/>
+                    <TextBlock Text="{Binding Product.DateUpdated}" TextAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,0,0,10">
                     <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
                         <TextBlock Text="watch_later" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Time Updated: " Margin="5,2,0,2"/>
                     </StackPanel>
-                    <TextBlock Text="{Binding BackupProduct.TimeUpdated}" TextAlignment="Center"/>
+                    <TextBlock Text="{Binding Product.TimeUpdated}" TextAlignment="Center"/>
                 </StackPanel>
             </Grid>
         </Grid>
 
-        <Grid Grid.Row="2" Grid.Column="1"> <!--For buttons-->
+        <Grid Grid.Row="2" Grid.Column="1">
+            <!--For buttons-->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>

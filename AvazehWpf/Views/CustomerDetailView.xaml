@@ -59,7 +59,7 @@
                             <TextBlock Text="person_outline" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="First Name" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding BackupCustomer.FirstName}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
+                        <TextBox Text="{Binding Customer.FirstName}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Vertical" Margin="0,0,0,0" VerticalAlignment="Top">
@@ -67,7 +67,7 @@
                             <TextBlock Text="people" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Last Name" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding BackupCustomer.LastName}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
+                        <TextBox Text="{Binding Customer.LastName}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Vertical" Margin="0,0,0,0">
@@ -75,7 +75,7 @@
                             <TextBlock Text="business" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Company Name" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding BackupCustomer.CompanyName}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
+                        <TextBox Text="{Binding Customer.CompanyName}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Vertical" Margin="0,0,0,0">
@@ -83,15 +83,15 @@
                             <TextBlock Text="business" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Email Address" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding BackupCustomer.EmailAddress}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
+                        <TextBox Text="{Binding Customer.EmailAddress}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                     </StackPanel>
-                    
+
                     <DockPanel Grid.Column="0" Grid.Row="4" LastChildFill="True" DockPanel.Dock="Bottom">
                         <StackPanel DockPanel.Dock = "Top" Orientation="Horizontal" HorizontalAlignment="Center">
                             <TextBlock Text="location_on" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Post Address" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding BackupCustomer.PostAddress}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="30" Height="auto" VerticalContentAlignment="Top" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
+                        <TextBox Text="{Binding Customer.PostAddress}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="30" Height="auto" VerticalContentAlignment="Top" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
                     </DockPanel>
                 </Grid>
 
@@ -109,7 +109,7 @@
                         <TextBlock Text="tag" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="ID" Margin="20,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupCustomer.Id}" IsReadOnly="True" MaxLength="10" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding Customer.Id}" IsReadOnly="True" MaxLength="10" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Orientation="Vertical" Margin="0,0,0,9">
@@ -117,7 +117,7 @@
                         <TextBlock Text="date_range" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Date Joined" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupCustomer.DateJoined}" IsReadOnly="True" MaxLength="10" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding Customer.DateJoined}" IsReadOnly="True" MaxLength="10" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,0,0,10">
@@ -131,7 +131,7 @@
                             <TextBlock Text="remove" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         </Button>
                     </StackPanel>
-                    <ItemsControl ItemsSource="{Binding BackupCustomer.PhoneNumbers}">
+                    <ItemsControl ItemsSource="{Binding Customer.PhoneNumbers}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -147,7 +147,7 @@
                         <TextBlock Text="description" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Description" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BackupCustomer.Descriptions}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="50" Height="auto" VerticalContentAlignment="Top" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding Customer.Descriptions}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="50" Height="auto" VerticalContentAlignment="Top" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
                 </DockPanel>
             </Grid>
         </Grid>
