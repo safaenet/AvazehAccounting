@@ -11,14 +11,16 @@ using AvazehApiClient.DataAccess.Interfaces;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using System.Threading.Tasks;
+using AvazehApiClient.DataAccess;
 
 namespace AvazehWpf.ViewModels
 {
     public class InvoiceDetailViewModel : ViewAware
     {
-        public InvoiceDetailViewModel(IInvoiceCollectionManager manager, InvoiceModel_DTO_Read invoiceDto, Func<Task> callBack)
+        public InvoiceDetailViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, InvoiceModel_DTO_Read invoiceDto, Func<Task> callBack)
         {
-            Manager = manager;
+            InvoiceManager = iManager;
+            Manager = dManager;
             CallBackFunc = callBack;
             if (invoiceDto is not null)
             {
@@ -30,9 +32,10 @@ namespace AvazehWpf.ViewModels
             ProductItemsForComboBox = GetProductItems();
         }
 
-        private readonly IInvoiceCollectionManager Manager;
+        private readonly IInvoiceCollectionManager InvoiceManager;
+        private readonly IInvoiceDetailManager Manager;
         private InvoiceModel _Invoice;
-        private Func<Task> CallBackFunc;
+        private readonly Func<Task> CallBackFunc;
         private Dictionary<int, string> productItems;
 
         public InvoiceItemModel SelectedItem { get; set; }
@@ -43,31 +46,47 @@ namespace AvazehWpf.ViewModels
 
         public InvoiceModel Invoice
         {
-            get { return _Invoice; }
+            get => _Invoice;
             set { _Invoice = value; NotifyOfPropertyChange(() => Invoice); }
         }
 
-        public void AddOrUpdateItem()
+        public async Task AddOrUpdateItem()
         {
-            if (Invoice == null) return;
-            if (Invoice.Items == null) Invoice.Items = new();
+            if (Invoice == null || WorkItem == null) return;
+            WorkItem.InvoiceId = Invoice.Id;
+            var validate = Manager.ValidateItem(WorkItem);
+            if (!validate.IsValid)
+            {
+                var str = "";
+                foreach (var error in validate.Errors)
+                    str += error.ErrorMessage + "\n";
+                MessageBox.Show(str, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             if (WorkItem.Id == 0) //New Item
             {
-
-                Invoice.Items.Add(WorkItem);
+                if (Invoice.Items == null) Invoice.Items = new();
+                var addedItem = await Manager.CreateItemAsync(WorkItem);
+                if (addedItem is not null) 
+                    Invoice.Items.Add(addedItem);
             }
             else //Edit Item
             {
-
+                var editedItem = await Manager.UpdateItemAsync(WorkItem);
+                var item = Invoice.Items.FirstOrDefault(x => x.Id == WorkItem.Id);
+                if (editedItem != null) editedItem.Clone(item);
             }
-            WorkItem = new();
+            WorkItem = null;
             NotifyOfPropertyChange(() => Invoice);
         }
 
-        public void DeleteItem()
+        public async Task DeleteItem()
         {
             if (Invoice == null || Invoice.Items == null || !Invoice.Items.Any()) return;
-            Invoice.Items.Remove(SelectedItem);
+            if (await Manager.DeleteItemAsync(SelectedItem.Id))
+                Invoice.Items.Remove(SelectedItem);
+            NotifyOfPropertyChange(() => Invoice);
         }
 
         public async Task DeleteInvoiceAndClose()
@@ -75,7 +94,7 @@ namespace AvazehWpf.ViewModels
             if (Invoice == null) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete Invoice for {Invoice.Customer.FullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
-            if (await Manager.DeleteItemAsync(Invoice.Id) == false) MessageBox.Show($"Invoice with ID: {Invoice.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            if (await InvoiceManager.DeleteItemAsync(Invoice.Id) == false) MessageBox.Show($"Invoice with ID: {Invoice.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             CloseWindow();
         }
 
@@ -84,9 +103,9 @@ namespace AvazehWpf.ViewModels
             (GetView() as Window).Close();
         }
 
-        public void ClosingWindow()
+        public async Task ClosingWindow()
         {
-            CallBackFunc();
+            await CallBackFunc?.Invoke();
         }
 
         private Dictionary<int, string> GetProductItems()

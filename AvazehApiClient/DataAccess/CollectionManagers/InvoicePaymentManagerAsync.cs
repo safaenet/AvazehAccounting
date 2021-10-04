@@ -1,4 +1,5 @@
-﻿using FluentValidation.Results;
+﻿using AvazehApiClient.DataAccess.Interfaces;
+using FluentValidation.Results;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Validators;
@@ -7,14 +8,9 @@ using System.Threading.Tasks;
 
 namespace AvazehApiClient.DataAccess.CollectionManagers
 {
-    public partial class InvoiceManagerAsync
+    public partial class InvoiceDetailManager : IInvoiceDetailManager
     {
         private const string KeyPayment = "InvoicePayment";
-
-        public InvoicePaymentModel GetPaymentFromCollectionById(int Id)
-        {
-            return Invoice.Payments.SingleOrDefault(i => i.Id == Id);
-        }
 
         public async Task<InvoicePaymentModel> GetPaymentById(int Id)
         {
@@ -38,10 +34,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
         public async Task<bool> DeletePaymentAsync(int Id)
         {
             if (await ApiProcessor.DeleteItemAsync(KeyPayment, Id))
-            {
-                Invoice.Payments.Remove(GetPaymentFromCollectionById(Id));
                 return true;
-            }
             return false;
         }
 

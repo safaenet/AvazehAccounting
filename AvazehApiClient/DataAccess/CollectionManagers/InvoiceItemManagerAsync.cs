@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using System.Threading.Tasks;
 using AvazehApiClient.DataAccess.Interfaces;
 using SharedLibrary.DalModels;
@@ -8,23 +7,15 @@ using SharedLibrary.Validators;
 
 namespace AvazehApiClient.DataAccess.CollectionManagers
 {
-    public partial class InvoiceManagerAsync
+    public partial class InvoiceDetailManager : IInvoiceDetailManager
     {
-        public InvoiceManagerAsync(IApiProcessor apiProcessor, IInvoiceCollectionManager collectionManager)
+        public InvoiceDetailManager(IApiProcessor apiProcessor)
         {
             ApiProcessor = apiProcessor;
-            CollectionManager = collectionManager;
         }
         private const string KeyItem = "InvoiceItem";
         private IApiProcessor ApiProcessor { get; init; }
-        public IInvoiceCollectionManager CollectionManager { get; init; }
-        public InvoiceModel Invoice { get; set; }
         public long CustomerTotalBalance { get; private set; }
-
-        public InvoiceItemModel GetItemFromCollectionById(int Id)
-        {
-            return Invoice.Items.SingleOrDefault(i => i.Id == Id);
-        }
 
         public async Task<InvoiceItemModel> GetItemById(int Id)
         {
@@ -48,10 +39,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
         public async Task<bool> DeleteItemAsync(int Id)
         {
             if (await ApiProcessor.DeleteItemAsync(KeyItem, Id))
-            {
-                Invoice.Items.Remove(GetItemFromCollectionById(Id));
                 return true;
-            }
             return false;
         }
 

@@ -92,8 +92,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task SearchBoxKeyDownHandler(ActionExecutionContext context)
         {
-            var keyArgs = context.EventArgs as KeyEventArgs;
-            if (keyArgs != null && keyArgs.Key == Key.Enter)
+            if (context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
             {
                 await Search();
             }

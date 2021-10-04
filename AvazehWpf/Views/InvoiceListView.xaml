@@ -69,10 +69,10 @@
                         <TextBlock Text="New Invoice" VerticalAlignment="Center" Margin="5,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <ComboBox BorderThickness="1" Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" Grid.Column="2"
+                <ComboBox Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" Grid.Column="2" BorderThickness="2" BorderBrush="DarkGray" Height="25"
                           ItemsSource="{Binding Source={StaticResource FinStatusItems}}" SelectedValuePath="Key" DisplayMemberPath="Value"
                           SelectedValue="{Binding SelectedFinStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action Search]"/>
-                <ComboBox BorderThickness="1" Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" Grid.Column="3"
+                <ComboBox Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" Grid.Column="3" BorderThickness="2" BorderBrush="DarkGray" Height="25"
                           ItemsSource="{Binding Source={StaticResource LifeStatusItems}}" SelectedValuePath="Key" DisplayMemberPath="Value"
                           SelectedValue="{Binding SelectedLifeStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action Search]"/>
                 <Button x:Name="Search" Grid.Column="4" Height="25" Style="{StaticResource ButtonRevealStyle}" Margin="0,0,0,0">

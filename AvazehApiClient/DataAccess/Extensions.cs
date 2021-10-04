@@ -103,7 +103,8 @@ namespace AvazehApiClient.DataAccess
 
         public static void Clone(this ProductModel From, ProductModel To)
         {
-            if (From == null || To == null) return;
+            if (To == null) return;
+            if (From == null) From = new();
             To.Id = From.Id;
             To.ProductName = From.ProductName;
             To.BuyPrice = From.BuyPrice;
@@ -119,7 +120,8 @@ namespace AvazehApiClient.DataAccess
 
         public static void Clone(this CustomerModel From, CustomerModel To)
         {
-            if (From == null || To == null) return;
+            if (To == null) return;
+            if (From == null) From = new();
             To.Id = From.Id;
             To.FirstName = From.FirstName;
             To.LastName = From.LastName;
@@ -138,7 +140,8 @@ namespace AvazehApiClient.DataAccess
 
         public static void Clone(this ChequeModel From, ChequeModel To)
         {
-            if (From == null || To == null) return;
+            if (To == null) return;
+            if (From == null) From = new();
             To.Id = From.Id;
             To.Drawer = From.Drawer;
             To.Orderer = From.Orderer;
@@ -158,6 +161,24 @@ namespace AvazehApiClient.DataAccess
                     To.Events.Add(Event);
                 }
             }
+        }
+
+        public static void Clone(this InvoiceItemModel From, InvoiceItemModel To)
+        {
+            if (To == null) return;
+            if (From == null) From = new();
+            From.Id = From.Id;
+            From.InvoiceId = To.InvoiceId;
+            From.BuyPrice = To.BuyPrice;
+            From.SellPrice = To.SellPrice;
+            From.CountString = To.CountString;
+            From.DateCreated = To.DateCreated;
+            From.TimeCreated = To.TimeCreated;
+            From.DateUpdated = To.DateUpdated;
+            From.TimeUpdated = To.TimeUpdated;
+            From.Delivered = To.Delivered;
+            From.Descriptions = To.Descriptions;
+            From.Product.Clone(To.Product);
         }
     }
 }

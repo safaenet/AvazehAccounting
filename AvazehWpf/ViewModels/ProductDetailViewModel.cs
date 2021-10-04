@@ -95,9 +95,9 @@ namespace AvazehWpf.ViewModels
             }
         }
 
-        public void ClosingWindow()
+        public async Task ClosingWindow()
         {
-            CallBackFunc();
+            await CallBackFunc?.Invoke();
         }
     }
 }
