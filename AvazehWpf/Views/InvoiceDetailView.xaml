@@ -222,7 +222,7 @@
                         <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="تعداد" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <TextBox Text="{Binding WorkItem.CountString, Mode=TwoWay}" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding WorkItem.CountString, Mode=TwoWay}" ToolTip="{Binding WorkItem.CountValue}" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                 </StackPanel>
                 
                 <StackPanel Grid.Column="7" Orientation="Vertical" Margin="0,0,0,0">
@@ -245,7 +245,13 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="نام کالا" Binding="{Binding Product.ProductName, Mode=OneWay}" Width="200"/>
                     <DataGridTextColumn Header="قیمت" Binding="{Binding SellPrice, Mode=OneWay}" Width="70"/>
-                    <DataGridTextColumn Header="تعداد" Binding="{Binding CountString, Mode=OneWay}" Width="60"/>
+                    <DataGridTextColumn Header="تعداد" Binding="{Binding CountString, Mode=OneWay}" Width="60">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="{Binding CountValue}" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding DateCreated, Mode=OneWay}" Width="87"/>
                     <DataGridTextColumn Header="ساعت ایجاد" Binding="{Binding TimeCreated, Mode=OneWay}" Width="100"/>
                     <DataGridTextColumn Header="تاریخ ویرایش" Binding="{Binding DateUpdated, Mode=OneWay}" Width="100"/>

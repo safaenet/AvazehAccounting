@@ -83,7 +83,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteItem()
         {
-            if (Invoice == null || Invoice.Items == null || !Invoice.Items.Any()) return;
+            if (Invoice == null || Invoice.Items == null || !Invoice.Items.Any() || SelectedItem == null) return;
             if (await Manager.DeleteItemAsync(SelectedItem.Id))
                 Invoice.Items.Remove(SelectedItem);
             NotifyOfPropertyChange(() => Invoice);
