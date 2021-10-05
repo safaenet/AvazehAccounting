@@ -29,7 +29,7 @@ namespace AvazehWpf.ViewModels
                 CustomerTotalBalance = invoiceDto.CustomerTotalBalance;
             }
             ProductNames = new();
-            ProductItemsForComboBox = GetProductItems();
+            //ProductItemsForComboBox = GetProductItems();
         }
 
         private readonly IInvoiceCollectionManager InvoiceManager;
@@ -41,7 +41,7 @@ namespace AvazehWpf.ViewModels
         public InvoiceItemModel SelectedItem { get; set; }
         public InvoiceItemModel WorkItem { get; set; }
         public int WorkItemProductId { get; set; }
-        public double CustomerTotalBalance { get; set; }
+        public double CustomerTotalBalance { get; private set; }
         public Dictionary<int, string> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
 
         public InvoiceModel Invoice

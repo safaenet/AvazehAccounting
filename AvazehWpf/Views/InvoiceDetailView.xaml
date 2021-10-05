@@ -17,6 +17,9 @@
         Width="1200" Height="650" fw:AcrylicWindow.AcrylicWindowStyle="NoIcon"
         cal:Message.Attach="[Event Closing] = [Action ClosingWindow]">
     <Grid fw:PointerTracker.Enabled="True">
+        <Grid.Resources>
+            <BooleanToVisibilityConverter x:Key="b2v" />
+        </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3"/>
             <ColumnDefinition Width="200" MaxWidth="200"/>
@@ -108,9 +111,6 @@
                     </DockPanel>
 
                     <StackPanel Grid.Row="2" Orientation="Vertical">
-                        <StackPanel.Resources>
-                            <BooleanToVisibilityConverter x:Key="b2v" />
-                        </StackPanel.Resources>
                         <StackPanel Orientation="Horizontal" Margin="0,0,3,3" HorizontalAlignment="Left">
                             <TextBlock Text="{Binding Invoice.TotalItemsSellSum, Mode=OneWay}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="135" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="جمع فاکتور" Margin="3,0,0,2" VerticalAlignment="Center"/>
@@ -147,13 +147,13 @@
                         </StackPanel>
                         
                         <StackPanel Orientation="Horizontal" Margin="0,0,3,3" HorizontalAlignment="Right">
-                            <TextBlock Text="{Binding Invoice.NetProfit}" Visibility="{Binding IsChecked, ElementName=ShowNetProfit,Converter={StaticResource b2v}}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="118" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Invoice.NetProfit}" Visibility="{Binding IsChecked, ElementName=ShowNetProfit, Converter={StaticResource b2v}}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="118" VerticalAlignment="Center"/>
                             <CheckBox x:Name="ShowNetProfit" FlowDirection="RightToLeft"><TextBlock Text="سود خالص" Margin="0,0,0,2"/></CheckBox>
                         </StackPanel>
                         
                         <StackPanel Orientation="Horizontal" Margin="0,0,3,0" HorizontalAlignment="Right">
-                            <TextBlock Text="{Binding Invoice.CurrentProfit}" Visibility="{Binding IsChecked, ElementName=ShowCurrentProfit,Converter={StaticResource b2v}}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="120" VerticalAlignment="Center"/>
-                            <CheckBox x:Name="ShowCurrentProfit" FlowDirection="RightToLeft"><TextBlock Text="سود جاری" Margin="0,0,0,2"/></CheckBox>
+                            <TextBlock Text="{Binding Invoice.CurrentProfit}" Visibility="{Binding IsChecked, ElementName=ShowNetProfit, Converter={StaticResource b2v}}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="120" VerticalAlignment="Center"/>
+                            <TextBlock Text="سود جاری" Margin="0,0,22,2"/>
                         </StackPanel>
                     </StackPanel>
                 </Grid>
@@ -190,7 +190,7 @@
                         <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="جمع کل" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <TextBox Text="{Binding WorkItem.TotalSellValue, Mode=OneWay}" IsReadOnly="True" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding WorkItem.TotalSellValue, Mode=OneWay}" ToolTip="{Binding WorkItem.NetProfit}" IsReadOnly="True" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                 </StackPanel>
                 
                 <StackPanel Grid.Column="3" Width="200" Orientation="Vertical" Margin="0,0,3,0">
@@ -206,15 +206,15 @@
                         <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="قیمت فروش" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <TextBox Text="{Binding WorkItem.SellPrice, Mode=TwoWay}" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding WorkItem.SellPrice, Mode=TwoWay}" ToolTip="{Binding WorkItem.TotalSellValue}" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                 </StackPanel>
-                
-                <StackPanel Grid.Column="5" Width="80" Orientation="Vertical" Margin="0,0,3,0">
+
+                <StackPanel Grid.Column="5" Visibility="{Binding IsChecked, ElementName=ShowNetProfit, Converter={StaticResource b2v}}" Width="80" Orientation="Vertical" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="قیمت خرید" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <TextBox Text="{Binding WorkItem.BuyPrice, Mode=TwoWay}" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding WorkItem.BuyPrice, Mode=TwoWay}" ToolTip="{Binding WorkItem.TotalBuyValue}" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
                 </StackPanel>
                 
                 <StackPanel Grid.Column="6" Width="80" Orientation="Vertical" Margin="0,0,3,0">
@@ -235,7 +235,7 @@
                     </StackPanel>
                     <ComboBox IsTextSearchEnabled="False" IsEditable="True" VerticalAlignment="Center" Margin="0,0,0,0"
                               cal:Message.Attach="[Event PreviewTextInput]=[Action PreviewTextInput_EnhanceComboSearch($source, $eventArgs)]; [Event PreviewKeyUp]=[Action PreviewKeyUp_EnhanceComboSearch($source, $eventArgs)]; [Event DataObject.Pasting]=[Action Pasting_EnhanceComboSearch($source, $eventArgs)]"
-                              BorderThickness="2" BorderBrush="DarkGray" Height="31" HorizontalContentAlignment="Center"
+                              BorderThickness="2" BorderBrush="DarkGray" Height="31"
                               ItemsSource="{Binding ProductItemsForComboBox}" SelectedValuePath="Key" DisplayMemberPath="Value"/>
                 </StackPanel>
             </Grid>
@@ -244,7 +244,20 @@
                       Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="نام کالا" Binding="{Binding Product.ProductName, Mode=OneWay}" Width="200"/>
-                    <DataGridTextColumn Header="قیمت" Binding="{Binding SellPrice, Mode=OneWay}" Width="70"/>
+                    <DataGridTextColumn Header="فی خرید" Binding="{Binding BuyPrice, Mode=OneWay}" Visibility="{Binding Source={x:Reference ShowNetProfit}, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" Width="90">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="{Binding TotalBuyValue}" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="قیمت" Binding="{Binding SellPrice, Mode=OneWay}" Width="70">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="{Binding TotalSellValue}" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="تعداد" Binding="{Binding CountString, Mode=OneWay}" Width="60">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell">
@@ -252,8 +265,14 @@
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
+                    <DataGridTextColumn Header="جمع کل" Binding="{Binding TotalSellValue, Mode=OneWay}" Width="100">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="{Binding NetProfit}" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding DateCreated, Mode=OneWay}" Width="87"/>
-                    <DataGridTextColumn Header="ساعت ایجاد" Binding="{Binding TimeCreated, Mode=OneWay}" Width="100"/>
                     <DataGridTextColumn Header="تاریخ ویرایش" Binding="{Binding DateUpdated, Mode=OneWay}" Width="100"/>
                     <DataGridTextColumn Header="ساعت ویرایش" Binding="{Binding TimeUpdated, Mode=OneWay}" Width="115"/>
                     <DataGridTextColumn Header="تحویل" Binding="{Binding Delivered, Mode=OneWay}" Width="70"/>

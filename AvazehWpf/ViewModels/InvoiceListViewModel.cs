@@ -1,4 +1,5 @@
-﻿using AvazehApiClient.DataAccess.Interfaces;
+﻿using AvazehApiClient.DataAccess.CollectionManagers;
+using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
@@ -58,7 +59,7 @@ namespace AvazehWpf.ViewModels
         public async Task AddNewInvoice()
         {
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, null, RefreshPage));
+            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, new InvoiceDetailManager(ICM.ApiProcessor), null, RefreshPage));
         }
 
         public async Task PreviousPage()
@@ -103,7 +104,7 @@ namespace AvazehWpf.ViewModels
             if (Invoices == null || Invoices.Count == 0) return;
             var invoiceDto = await ICM.GetItemById(SelectedInvoice.Id);
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, invoiceDto, RefreshPage));
+            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, new InvoiceDetailManager(ICM.ApiProcessor), invoiceDto, RefreshPage));
         }
 
         public async Task DeleteInvoice()
