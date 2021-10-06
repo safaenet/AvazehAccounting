@@ -234,9 +234,9 @@
                         <TextBlock TextAlignment="Center" Text="نام کالا" Margin="0,0,0,0"/>
                     </StackPanel>
                     <ComboBox IsTextSearchEnabled="False" IsEditable="True" VerticalAlignment="Center" Margin="0,0,0,0"
-                              cal:Message.Attach="[Event PreviewTextInput]=[Action PreviewTextInput_EnhanceComboSearch($source, $eventArgs)]; [Event PreviewKeyUp]=[Action PreviewKeyUp_EnhanceComboSearch($source, $eventArgs)]; [Event DataObject.Pasting]=[Action Pasting_EnhanceComboSearch($source, $eventArgs)]"
+                              cal:Message.Attach="[Event PreviewTextInput]=[Action ProductNames_PreviewTextInput($source, $eventArgs)]"
                               BorderThickness="2" BorderBrush="DarkGray" Height="31"
-                              ItemsSource="{Binding ProductItemsForComboBox}" SelectedValuePath="Key" DisplayMemberPath="Value"/>
+                              ItemsSource="{Binding ProductItemsForComboBox, Mode=TwoWay}" SelectedValuePath="Key" DisplayMemberPath="Value"/>
                 </StackPanel>
             </Grid>
             <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditItem()]" viewmodels:DataGridBehavior.DisplayRowNumber="True"

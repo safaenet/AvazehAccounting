@@ -12,6 +12,7 @@ using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using System.Threading.Tasks;
 using AvazehApiClient.DataAccess;
+using System.Collections.ObjectModel;
 
 namespace AvazehWpf.ViewModels
 {
@@ -29,7 +30,7 @@ namespace AvazehWpf.ViewModels
                 CustomerTotalBalance = invoiceDto.CustomerTotalBalance;
             }
             ProductNames = new();
-            //ProductItemsForComboBox = GetProductItems();
+            ProductItemsForComboBox = new();
         }
 
         private readonly IInvoiceCollectionManager InvoiceManager;
@@ -108,7 +109,27 @@ namespace AvazehWpf.ViewModels
             await CallBackFunc?.Invoke();
         }
 
-        private Dictionary<int, string> GetProductItems()
+        public async Task ProductNames_PreviewTextInput(object sender, EventArgs e)
+        {
+            var combo = sender as ComboBox;
+            combo.IsDropDownOpen = false;
+            //combo.Items.Clear();
+            var collection = await InvoiceManager.ApiProcessor.GetCollectionAsync<ItemsCollection_DTO<ProductModel>>("Product", "ProductName", SharedLibrary.Enums.OrderType.ASC, 1, combo.Text, int.MaxValue);
+            ProductItemsForComboBox.Clear();
+            if (collection != null)
+            {
+                foreach (var item in collection.Items.ToList())
+                {
+                    ProductItemsForComboBox.Add(item.Id, item.ProductName);
+                }
+            }
+            var a = combo.Template.FindName("PART_EditableTextBox", combo) as TextBox;
+            combo.IsDropDownOpen = true;
+            a.SelectionStart = a.Text.Length;
+            a.CaretIndex = a.Text.Length;
+        }
+
+        private Dictionary<int, string> GetProductComboboxItems()
         {
             //return Manager.Processor.GetProductItems();
             throw new NotImplementedException();
