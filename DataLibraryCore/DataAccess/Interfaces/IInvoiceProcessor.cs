@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
 using SharedLibrary.DalModels;
+using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,7 +13,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
         int CreateItem(InvoiceModel invoice);
         int DeleteItemById(int Id);
         int DeleteInvoiceItemFromDatabase(int ItemId);
-        Dictionary<int, string> GetProductItems();
+        List<ProductNamesForComboBox> GetProductItems(string SearchText);
         double GetTotalOrRestTotalBalanceOfCustomer(int CustomerId, int InvoiceId = 0);
         int GetTotalQueryCount(string WhereClause);
         InvoiceItemModel GetInvoiceItemFromDatabase(int Id);
@@ -33,7 +34,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
         Task<int> CreateItemAsync(InvoiceModel invoice);
         Task<int> DeleteItemByIdAsync(int Id);
         Task<int> DeleteInvoiceItemFromDatabaseAsync(int ItemId);
-        Task<Dictionary<int, string>> GetProductItemsAsync();
+        Task<List<ProductNamesForComboBox>> GetProductItemsAsync(string SearchText);
         Task<double> GetTotalOrRestTotalBalanceOfCustomerAsync(int CustomerId, int InvoiceId = 0);
         Task<int> GetTotalQueryCountAsync(string WhereClause);
         Task<InvoiceItemModel> GetInvoiceItemFromDatabaseAsync(int Id);

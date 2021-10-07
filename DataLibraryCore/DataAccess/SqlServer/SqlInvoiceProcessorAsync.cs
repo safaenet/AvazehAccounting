@@ -237,14 +237,13 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return await DataAccess.ExecuteScalarAsync<double, DynamicParameters>(sqlQuery, null);
         }
 
-        public async Task<Dictionary<int, string>> GetProductItemsAsync()
+        public async Task<List<ProductNamesForComboBox>> GetProductItemsAsync(string SearchText = null)
         {
-            Dictionary<int, string> choices = new();
-            string sql = $@"SELECT p.Id, p.ProductName FROM Products p";
+            var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [ProductName] LIKE '%{ SearchText }%'";
+            var sql = string.Format(GetProductItemsQuery, where);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
             var items = await conn.QueryAsync<ProductNamesForComboBox>(sql, null);
-            choices = items.ToDictionary(x => x.Id, x => x.ProductName);
-            return choices;
+            return items?.ToList();
         }
     }
 }

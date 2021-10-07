@@ -39,7 +39,8 @@ namespace AvazehWpf
                 .PerRequest<ICollectionManager<ProductModel>, ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>>()
                 .PerRequest<ICollectionManager<CustomerModel>, CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>>()
                 .PerRequest<ICollectionManager<ChequeModel>, ChequeCollectionManagerAsync<ChequeModel, ChequeModel_DTO_Create_Update, ChequeValidator>>()
-                .PerRequest<IInvoiceCollectionManager, InvoiceCollectionManagerAsync>();
+                .PerRequest<IInvoiceCollectionManager, InvoiceCollectionManagerAsync>()
+                .Singleton<InvoiceDetailSingleton>();
         }
 
         protected override IEnumerable<object> GetAllInstances(Type serviceType)

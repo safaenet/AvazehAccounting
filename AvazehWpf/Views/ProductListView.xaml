@@ -16,7 +16,6 @@
             <ColumnDefinition Width="3"/>
             <ColumnDefinition Width="200" MaxWidth="200"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="3"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="3"/>
@@ -144,7 +143,7 @@
                         <TextBlock Text="search" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <TextBox x:Name="SearchText" Grid.Column="1" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
+                <TextBox x:Name="SearchText" Grid.Column="1" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center" Margin="0,0,3,0"/>
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -158,7 +157,7 @@
                         <TextBlock Text="Previous" VerticalAlignment="Center" Margin="30,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,0,0" Style="{StaticResource ButtonRevealStyle}">
+                <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0" Style="{StaticResource ButtonRevealStyle}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Next" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <TextBlock Text="arrow_forward_ios" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>

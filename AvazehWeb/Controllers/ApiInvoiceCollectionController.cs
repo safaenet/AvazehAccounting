@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AvazehWebAPI.Controllers
@@ -39,6 +40,13 @@ namespace AvazehWebAPI.Controllers
             if (model.Invoice is null) return NotFound("Couldn't find specific Item");
             model.CustomerTotalBalance = await Manager.Processor.GetTotalOrRestTotalBalanceOfCustomerAsync(Id);
             return model;
+        }
+
+        [HttpGet("ProductItems")]
+        public async Task<ActionResult<List<ProductNamesForComboBox>>> GetProductItemsAsync(string SearchText)
+        {
+            var items = await Manager.Processor.GetProductItemsAsync(SearchText);
+            return items is null ? NotFound("Couldn't find any match") : items;
         }
 
         [HttpPost]

@@ -18,32 +18,34 @@ namespace AvazehWpf.ViewModels
 {
     public class InvoiceDetailViewModel : ViewAware
     {
-        public InvoiceDetailViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, InvoiceModel_DTO_Read invoiceDto, Func<Task> callBack)
+        public InvoiceDetailViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, InvoiceDetailSingleton singleton, InvoiceModel_DTO_Read invoiceDto, Func<Task> callBack)
         {
             InvoiceManager = iManager;
             Manager = dManager;
             CallBackFunc = callBack;
+            Singleton = singleton;
             if (invoiceDto is not null)
             {
                 Invoice = invoiceDto.Invoice;
                 //if (invoice.Id == 0) invoice.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
                 CustomerTotalBalance = invoiceDto.CustomerTotalBalance;
             }
-            ProductNames = new();
             ProductItemsForComboBox = new();
+            GetProductComboboxItems();
         }
 
         private readonly IInvoiceCollectionManager InvoiceManager;
         private readonly IInvoiceDetailManager Manager;
+        private InvoiceDetailSingleton Singleton;
         private InvoiceModel _Invoice;
         private readonly Func<Task> CallBackFunc;
-        private Dictionary<int, string> productItems;
+        private List<ProductNamesForComboBox> productItems;
 
         public InvoiceItemModel SelectedItem { get; set; }
         public InvoiceItemModel WorkItem { get; set; }
         public int WorkItemProductId { get; set; }
         public double CustomerTotalBalance { get; private set; }
-        public Dictionary<int, string> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
+        public List<ProductNamesForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
 
         public InvoiceModel Invoice
         {
@@ -109,123 +111,33 @@ namespace AvazehWpf.ViewModels
             await CallBackFunc?.Invoke();
         }
 
-        public async Task ProductNames_PreviewTextInput(object sender, EventArgs e)
+        public void ProductNames_PreviewTextInput(object sender, EventArgs e)
         {
             var combo = sender as ComboBox;
             combo.IsDropDownOpen = false;
             //combo.Items.Clear();
-            var collection = await InvoiceManager.ApiProcessor.GetCollectionAsync<ItemsCollection_DTO<ProductModel>>("Product", "ProductName", SharedLibrary.Enums.OrderType.ASC, 1, combo.Text, int.MaxValue);
             ProductItemsForComboBox.Clear();
-            if (collection != null)
+
+            if (Singleton.ProductItemsForCombobox != null)
             {
-                foreach (var item in collection.Items.ToList())
-                {
-                    ProductItemsForComboBox.Add(item.Id, item.ProductName);
-                }
+                var result = Singleton.ProductItemsForCombobox.Where(x => x.ProductName.Contains(combo.Text));
+                ProductItemsForComboBox = result?.ToList();
             }
+            NotifyOfPropertyChange(() => ProductItemsForComboBox);
             var a = combo.Template.FindName("PART_EditableTextBox", combo) as TextBox;
             combo.IsDropDownOpen = true;
             a.SelectionStart = a.Text.Length;
             a.CaretIndex = a.Text.Length;
         }
 
-        private Dictionary<int, string> GetProductComboboxItems()
+        private void GetProductComboboxItems()
         {
-            //return Manager.Processor.GetProductItems();
-            throw new NotImplementedException();
+            //ProductItemsForComboBox = Singleton.ProductItemsForCombobox.ToList();
         }
 
         void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();
-        }
-
-        #region Product ComboBox Suggestion Methods
-        public List<string> ProductNames { get; set; }
-        public static T GetChildOfType<T>(DependencyObject depObj) where T : DependencyObject
-        {
-            if (depObj == null) return null;
-
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
-            {
-                var child = VisualTreeHelper.GetChild(depObj, i);
-
-                var result = (child as T) ?? GetChildOfType<T>(child);
-                if (result != null) return result;
-            }
-            return null;
-        }
-
-        public void PreviewTextInput_EnhanceComboSearch(object sender, TextCompositionEventArgs e)
-        {
-            ComboBox cmb = (ComboBox)sender;
-
-            cmb.IsDropDownOpen = true;
-
-            if (!string.IsNullOrEmpty(cmb.Text))
-            {
-                string fullText = cmb.Text.Insert(GetChildOfType<TextBox>(cmb).CaretIndex, e.Text);
-                cmb.ItemsSource = ProductNames.Where(s => s.IndexOf(fullText, StringComparison.InvariantCultureIgnoreCase) != -1).ToList();
-            }
-            else if (!string.IsNullOrEmpty(e.Text))
-            {
-                cmb.ItemsSource = ProductNames.Where(s => s.IndexOf(e.Text, StringComparison.InvariantCultureIgnoreCase) != -1).ToList();
-            }
-            else
-            {
-                cmb.ItemsSource = ProductNames;
-            }
-        }
-
-        public void Pasting_EnhanceComboSearch(object sender, DataObjectPastingEventArgs e)
-        {
-            ComboBox cmb = (ComboBox)sender;
-
-            cmb.IsDropDownOpen = true;
-
-            string pastedText = (string)e.DataObject.GetData(typeof(string));
-            string fullText = cmb.Text.Insert(GetChildOfType<TextBox>(cmb).CaretIndex, pastedText);
-
-            if (!string.IsNullOrEmpty(fullText))
-            {
-                cmb.ItemsSource = ProductNames.Where(s => s.IndexOf(fullText, StringComparison.InvariantCultureIgnoreCase) != -1).ToList();
-            }
-            else
-            {
-                cmb.ItemsSource = ProductNames;
-            }
-        }
-
-        public void PreviewKeyUp_EnhanceComboSearch(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Back || e.Key == Key.Delete)
-            {
-                ComboBox cmb = (ComboBox)sender;
-
-                cmb.IsDropDownOpen = true;
-
-                if (!string.IsNullOrEmpty(cmb.Text))
-                {
-                    cmb.ItemsSource = ProductNames.Where(s => s.IndexOf(cmb.Text, StringComparison.InvariantCultureIgnoreCase) != -1).ToList();
-                }
-                else
-                {
-                    cmb.ItemsSource = ProductNames;
-                }
-            }
-        }
-        #endregion
-    }
-    public static class ProductNameItems //For ComboBox
-    {
-        public static Dictionary<int, string> GetProductItems()
-        {
-            Dictionary<int, string> choices = new();
-            //string sql = $@"SELECT p.Id, p.ProductName FROM Products p";
-            //using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
-            //var items = conn.Query<ProductModel>(sql, null);
-            //choices = items.ToDictionary(x => x.Id, x => x.ProductName);
-            return choices;
         }
     }
 

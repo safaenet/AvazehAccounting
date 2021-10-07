@@ -90,6 +90,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 p.[CountString] AS pCountString, p.[DateCreated] AS pDateCreated, p.[TimeCreated] AS pTimeCreated,
                 p.[DateUpdated] AS pDateUpdated, p.[TimeUpdated] AS pTimeUpdated, p.[Descriptions] AS pDescriptions
                 FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id WHERE it.Id = {0}";
+        private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] FROM Products {0}";
 
         public int CreateItem(InvoiceModel item)
         {
@@ -318,14 +319,13 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return DataAccess.ExecuteScalar<double, DynamicParameters>(sqlQuery, null);
         }
 
-        public Dictionary<int, string> GetProductItems()
+        public List<ProductNamesForComboBox> GetProductItems(string SearchText = null)
         {
-            Dictionary<int, string> choices = new();
-            string sql = $@"SELECT p.Id, p.ProductName FROM Products p";
+            var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [ProductName] = { SearchText }";
+            var sql = string.Format(GetProductItemsQuery, where);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
             var items = conn.Query<ProductNamesForComboBox>(sql, null);
-            choices = items.ToDictionary(x => x.Id, x => x.ProductName);
-            return choices;
+            return items?.ToList();
         }
 
         public string GenerateWhereClause(string val, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, SqlSearchMode mode = SqlSearchMode.OR)

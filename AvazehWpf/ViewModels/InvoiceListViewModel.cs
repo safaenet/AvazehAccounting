@@ -1,4 +1,5 @@
-﻿using AvazehApiClient.DataAccess.CollectionManagers;
+﻿using AvazehApiClient.DataAccess;
+using AvazehApiClient.DataAccess.CollectionManagers;
 using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
@@ -14,15 +15,17 @@ namespace AvazehWpf.ViewModels
 {
     public class InvoiceListViewModel : Screen
     {
-        public InvoiceListViewModel(IInvoiceCollectionManager manager)
+        public InvoiceListViewModel(IInvoiceCollectionManager manager, InvoiceDetailSingleton singleton)
         {
             ICM = manager;
             _SelectedInvoice = new();
+            Singleton = singleton;
             Search().ConfigureAwait(true);
         }
 
         private IInvoiceCollectionManager _ICM;
         private InvoiceListModel _SelectedInvoice;
+        private InvoiceDetailSingleton Singleton;
 
         public InvoiceListModel SelectedInvoice
         {
@@ -59,7 +62,7 @@ namespace AvazehWpf.ViewModels
         public async Task AddNewInvoice()
         {
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, new InvoiceDetailManager(ICM.ApiProcessor), null, RefreshPage));
+            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, new InvoiceDetailManager(ICM.ApiProcessor), Singleton, null, RefreshPage));
         }
 
         public async Task PreviousPage()
@@ -104,7 +107,7 @@ namespace AvazehWpf.ViewModels
             if (Invoices == null || Invoices.Count == 0) return;
             var invoiceDto = await ICM.GetItemById(SelectedInvoice.Id);
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, new InvoiceDetailManager(ICM.ApiProcessor), invoiceDto, RefreshPage));
+            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, new InvoiceDetailManager(ICM.ApiProcessor), Singleton, invoiceDto, RefreshPage));
         }
 
         public async Task DeleteInvoice()

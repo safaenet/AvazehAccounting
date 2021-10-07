@@ -5,6 +5,7 @@ using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
 using SharedLibrary.Validators;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -128,6 +129,12 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
             var result = await GotoPageAsync(CurrentPage + 1);
             NextPageLoaded?.Invoke(this, null);
             return result;
+        }
+
+        public async Task<List<ProductNamesForComboBox>> LoadProductItems(string SearchText = null)
+        {
+            var collection = await ApiProcessor.GetCollectionAsync<List<ProductNamesForComboBox>>(Key + "/ProductItems", SearchText);
+            return collection is null ? null : collection;
         }
     }
 }

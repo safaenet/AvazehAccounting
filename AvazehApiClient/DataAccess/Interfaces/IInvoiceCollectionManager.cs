@@ -3,6 +3,7 @@ using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -42,5 +43,6 @@ namespace AvazehApiClient.DataAccess.Interfaces
         Task<int> LoadPreviousPageAsync();
         Task<InvoiceModel> UpdateItemAsync(InvoiceModel item);
         ValidationResult ValidateItem(InvoiceModel item);
+        Task<List<ProductNamesForComboBox>> LoadProductItems(string SearchText = null);
     }
 }

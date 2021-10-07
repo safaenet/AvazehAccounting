@@ -24,7 +24,6 @@
             <ColumnDefinition Width="3"/>
             <ColumnDefinition Width="200" MaxWidth="200"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="3"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="3"/>
@@ -226,17 +225,14 @@
                 </StackPanel>
                 
                 <StackPanel Grid.Column="7" Orientation="Vertical" Margin="0,0,0,0">
-                    <StackPanel.Resources>
-                        <ObjectDataProvider x:Key="ProductNameItems" MethodName="GetProductItems" ObjectType="{x:Type viewmodels:ProductNameItems}"/>
-                    </StackPanel.Resources>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="نام کالا" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <ComboBox IsTextSearchEnabled="False" IsEditable="True" VerticalAlignment="Center" Margin="0,0,0,0"
+                    <ComboBox IsTextSearchEnabled="True" IsEditable="True" VerticalAlignment="Center" Margin="0,0,3,0"
                               cal:Message.Attach="[Event PreviewTextInput]=[Action ProductNames_PreviewTextInput($source, $eventArgs)]"
                               BorderThickness="2" BorderBrush="DarkGray" Height="31"
-                              ItemsSource="{Binding ProductItemsForComboBox, Mode=TwoWay}" SelectedValuePath="Key" DisplayMemberPath="Value"/>
+                              ItemsSource="{Binding ProductItemsForComboBox, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="ProductName"/>
                 </StackPanel>
             </Grid>
             <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditItem()]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
