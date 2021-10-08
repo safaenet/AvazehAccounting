@@ -64,6 +64,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@buyPrice", item.BuyPrice);
             dp.Add("@sellPrice", item.SellPrice);
             dp.Add("@countString", item.CountString);
+            dp.Add("@countValue", item.CountValue);
             dp.Add("@dateCreated", item.DateCreated);
             dp.Add("@timeCreated", item.TimeCreated);
             dp.Add("@delivered", item.Delivered);

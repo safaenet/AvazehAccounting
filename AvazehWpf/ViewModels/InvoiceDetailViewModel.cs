@@ -13,6 +13,8 @@ using SharedLibrary.DtoModels;
 using System.Threading.Tasks;
 using AvazehApiClient.DataAccess;
 using System.Collections.ObjectModel;
+using AvazehApiClient.DataAccess.CollectionManagers;
+using SharedLibrary.Validators;
 
 namespace AvazehWpf.ViewModels
 {
@@ -40,12 +42,21 @@ namespace AvazehWpf.ViewModels
         private InvoiceModel _Invoice;
         private readonly Func<Task> CallBackFunc;
         private List<ProductNamesForComboBox> productItems;
+        private InvoiceItemModel _workItem = new();
 
         public InvoiceItemModel SelectedItem { get; set; }
-        public InvoiceItemModel WorkItem { get; set; }
+        public InvoiceItemModel WorkItem { get => _workItem; set { _workItem = value; NotifyOfPropertyChange(() => WorkItem); } }
         public int WorkItemProductId { get; set; }
         public double CustomerTotalBalance { get; private set; }
         public List<ProductNamesForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
+        private ProductNamesForComboBox _selectedProductItem;
+
+        public ProductNamesForComboBox SelectedProductItem
+        {
+            get { return _selectedProductItem; }
+            set { _selectedProductItem = value; NotifyOfPropertyChange(() => SelectedProductItem); }
+        }
+
 
         public InvoiceModel Invoice
         {
@@ -53,10 +64,18 @@ namespace AvazehWpf.ViewModels
             set { _Invoice = value; NotifyOfPropertyChange(() => Invoice); }
         }
 
+        public void EditItem()
+        {
+            if (Invoice == null || SelectedItem == null) return;
+            WorkItem = SelectedItem;
+        }
+
         public async Task AddOrUpdateItem()
         {
-            if (Invoice == null || WorkItem == null) return;
+            if (Invoice == null || SelectedProductItem == null) return;
             WorkItem.InvoiceId = Invoice.Id;
+            ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(InvoiceManager.ApiProcessor);
+            WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
             var validate = Manager.ValidateItem(WorkItem);
             if (!validate.IsValid)
             {
@@ -71,7 +90,7 @@ namespace AvazehWpf.ViewModels
             {
                 if (Invoice.Items == null) Invoice.Items = new();
                 var addedItem = await Manager.CreateItemAsync(WorkItem);
-                if (addedItem is not null) 
+                if (addedItem is not null)
                     Invoice.Items.Add(addedItem);
             }
             else //Edit Item
@@ -80,7 +99,8 @@ namespace AvazehWpf.ViewModels
                 var item = Invoice.Items.FirstOrDefault(x => x.Id == WorkItem.Id);
                 if (editedItem != null) editedItem.Clone(item);
             }
-            WorkItem = null;
+            WorkItem = new();
+            SelectedProductItem = new();
             NotifyOfPropertyChange(() => Invoice);
         }
 
@@ -113,26 +133,26 @@ namespace AvazehWpf.ViewModels
 
         public void ProductNames_PreviewTextInput(object sender, EventArgs e)
         {
-            var combo = sender as ComboBox;
-            combo.IsDropDownOpen = false;
-            //combo.Items.Clear();
-            ProductItemsForComboBox.Clear();
+            //var combo = sender as ComboBox;
+            //combo.IsDropDownOpen = false;
+            ////combo.Items.Clear();
+            //ProductItemsForComboBox.Clear();
 
-            if (Singleton.ProductItemsForCombobox != null)
-            {
-                var result = Singleton.ProductItemsForCombobox.Where(x => x.ProductName.Contains(combo.Text));
-                ProductItemsForComboBox = result?.ToList();
-            }
-            NotifyOfPropertyChange(() => ProductItemsForComboBox);
-            var a = combo.Template.FindName("PART_EditableTextBox", combo) as TextBox;
-            combo.IsDropDownOpen = true;
-            a.SelectionStart = a.Text.Length;
-            a.CaretIndex = a.Text.Length;
+            //if (Singleton.ProductItemsForCombobox != null)
+            //{
+            //    var result = Singleton.ProductItemsForCombobox.Where(x => x.ProductName.Contains(combo.Text));
+            //    ProductItemsForComboBox = result?.ToList();
+            //}
+            //NotifyOfPropertyChange(() => ProductItemsForComboBox);
+            //var a = combo.Template.FindName("PART_EditableTextBox", combo) as TextBox;
+            //combo.IsDropDownOpen = true;
+            //a.SelectionStart = a.Text.Length;
+            //a.CaretIndex = a.Text.Length;
         }
 
         private void GetProductComboboxItems()
         {
-            //ProductItemsForComboBox = Singleton.ProductItemsForCombobox.ToList();
+            ProductItemsForComboBox = Singleton.ProductItemsForCombobox;
         }
 
         void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)

@@ -38,7 +38,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             DiscountValue = @discountValue, Descriptions = @descriptions, LifeStatus = @lifeStatus WHERE Id = @id";
         private readonly string InsertInvoiceItemQuery = @"INSERT INTO InvoiceItems (InvoiceId, ProductId, BuyPrice, SellPrice, CountString, CountValue, DateCreated,
             TimeCreated, Delivered, Descriptions)
-            VALUES (@invoiceId, @productId, @buyPrice, @sellPrice, @countString, @dateCreated, @timeCreated, @delivered, @descriptions);
+            VALUES (@invoiceId, @productId, @buyPrice, @sellPrice, @countString, @countValue, @dateCreated, @timeCreated, @delivered, @descriptions);
             SELECT @id = @@IDENTITY;";
         private readonly string UpdateInvoiceItemQuery = @$"UPDATE InvoiceItems SET ProductId = @productId, BuyPrice = @buyPrice, SellPrice = @sellPrice,
             CountString = @countString, CountValue = @countValue, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
@@ -140,6 +140,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@buyPrice", item.BuyPrice);
             dp.Add("@sellPrice", item.SellPrice);
             dp.Add("@countString", item.CountString);
+            dp.Add("@countValue", item.CountValue);
             dp.Add("@dateCreated", item.DateCreated);
             dp.Add("@timeCreated", item.TimeCreated);
             dp.Add("@delivered", item.Delivered);

@@ -232,7 +232,7 @@
                     <ComboBox IsTextSearchEnabled="True" IsEditable="True" VerticalAlignment="Center" Margin="0,0,3,0"
                               cal:Message.Attach="[Event PreviewTextInput]=[Action ProductNames_PreviewTextInput($source, $eventArgs)]"
                               BorderThickness="2" BorderBrush="DarkGray" Height="31"
-                              ItemsSource="{Binding ProductItemsForComboBox, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="ProductName"/>
+                              ItemsSource="{Binding ProductItemsForComboBox, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="ProductName" SelectedItem="{Binding SelectedProductItem, Mode=TwoWay}"/>
                 </StackPanel>
             </Grid>
             <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditItem()]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
