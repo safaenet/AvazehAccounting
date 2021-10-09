@@ -28,7 +28,7 @@ namespace AvazehWpf.ViewModels
             {
                 Invoice = invoiceDto.Invoice;
                 //if (invoice.Id == 0) invoice.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
-                CustomerTotalBalance = invoiceDto.CustomerTotalBalance;
+                CustomerPreviousTotalBalance = invoiceDto.CustomerTotalBalance - invoiceDto.Invoice.TotalBalance;
             }
             //ProductItemsForComboBox = new();
             GetProductComboboxItems();
@@ -45,7 +45,8 @@ namespace AvazehWpf.ViewModels
         public InvoiceItemModel SelectedItem { get; set; }
         public InvoiceItemModel WorkItem { get => _workItem; set { _workItem = value; NotifyOfPropertyChange(() => WorkItem); } }
         public int WorkItemProductId { get; set; }
-        public double CustomerTotalBalance { get; private set; }
+        public double CustomerPreviousTotalBalance { get; private set; }
+        public double CustomerTotalBalanceMinusThis => CustomerPreviousTotalBalance - (Invoice == null ? 0 : Invoice.TotalBalance);
         public List<ProductNamesForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
         private ProductNamesForComboBox _selectedProductItem;
 
