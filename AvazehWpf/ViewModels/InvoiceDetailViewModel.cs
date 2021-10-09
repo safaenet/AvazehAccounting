@@ -32,7 +32,7 @@ namespace AvazehWpf.ViewModels
                 //if (invoice.Id == 0) invoice.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
                 CustomerTotalBalance = invoiceDto.CustomerTotalBalance;
             }
-            ProductItemsForComboBox = new();
+            //ProductItemsForComboBox = new();
             GetProductComboboxItems();
         }
 
@@ -68,11 +68,12 @@ namespace AvazehWpf.ViewModels
         {
             if (Invoice == null || SelectedItem == null) return;
             WorkItem = SelectedItem;
+            SelectedProductItem = ProductItemsForComboBox.SingleOrDefault(x => x.Id == WorkItem.Product.Id);
         }
 
         public async Task AddOrUpdateItem()
         {
-            if (Invoice == null || SelectedProductItem == null) return;
+            if (Invoice == null || WorkItem == null || SelectedProductItem == null) return;
             WorkItem.InvoiceId = Invoice.Id;
             ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(InvoiceManager.ApiProcessor);
             WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
@@ -101,6 +102,8 @@ namespace AvazehWpf.ViewModels
             }
             WorkItem = new();
             SelectedProductItem = new();
+            WorkItem = null;
+            SelectedProductItem = null;
             NotifyOfPropertyChange(() => Invoice);
         }
 

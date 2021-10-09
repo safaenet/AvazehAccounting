@@ -84,6 +84,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             item.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
             item.TimeUpdated = PersianCalendarModel.GetCurrentTime();
             DynamicParameters dp = new();
+            dp.Add("@id", item.Id);
             dp.Add("@productId", item.Product.Id);
             dp.Add("@buyPrice", item.BuyPrice);
             dp.Add("@sellPrice", item.SellPrice);
@@ -93,7 +94,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@timeUpdated", item.TimeUpdated);
             dp.Add("@delivered", item.Delivered);
             dp.Add("@descriptions", item.Descriptions);
-            var AffectedCount = await DataAccess.SaveDataAsync(UpdateInvoiceItemQuery, item);
+            var AffectedCount = await DataAccess.SaveDataAsync(UpdateInvoiceItemQuery, dp);
             if (AffectedCount > 0) await UpdateItemUpdateDateAndUpdateTimeAsync(item.InvoiceId);
             return AffectedCount;
         }

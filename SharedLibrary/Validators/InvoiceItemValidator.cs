@@ -21,8 +21,7 @@ namespace SharedLibrary.Validators
 
             RuleFor(x => x.SellPrice).GreaterThan(-1).WithMessage("{PropertyName} must be >= 0");
 
-            RuleFor(x => x.CountString)
-                .MaximumLength(50).WithMessage("{PropertyName} cannot be more than 50 characters ({TotalLength})");
+            RuleFor(x => x.CountString).MaximumLength(50).WithMessage("{PropertyName} cannot be more than 50 characters ({TotalLength})");
             RuleFor(x => x.IsCountStringValid).Equal(true).WithMessage("Count is not valid");
             RuleFor(x => x.Descriptions).MaximumLength(50).WithMessage("{PropertyName} cannot be more than 50 characters ({TotalLength})");
         }
