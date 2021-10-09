@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Controls.Primitives;
 using AvazehApiClient.DataAccess.Interfaces;
@@ -12,7 +11,6 @@ using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using System.Threading.Tasks;
 using AvazehApiClient.DataAccess;
-using System.Collections.ObjectModel;
 using AvazehApiClient.DataAccess.CollectionManagers;
 using SharedLibrary.Validators;
 
