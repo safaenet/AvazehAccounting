@@ -12,5 +12,6 @@ namespace AvazehApiClient.DataAccess.Interfaces
         Task<U> CreateItemAsync<T, U>(string Key, T model) where U : class;
         Task<U> UpdateItemAsync<T, U>(string Key, int Id, T model) where U : class;
         Task<bool> DeleteItemAsync(string Key, int Id);
+        Task<T?> GetValueOrNullAsync<T>(string Key, int Id1, int Id2) where T : struct;
     }
 }

@@ -105,9 +105,8 @@ namespace AvazehWpf.ViewModels
         public async Task EditInvoice()
         {
             if (Invoices == null || Invoices.Count == 0 || SelectedInvoice == null) return;
-            var invoiceDto = await ICM.GetItemById(SelectedInvoice.Id);
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, new InvoiceDetailManager(ICM.ApiProcessor), Singleton, invoiceDto, RefreshPage));
+            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, new InvoiceDetailManager(ICM.ApiProcessor), Singleton, SelectedInvoice.Id, RefreshPage));
         }
 
         public async Task DeleteInvoice()

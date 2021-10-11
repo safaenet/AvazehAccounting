@@ -33,13 +33,10 @@ namespace AvazehWebAPI.Controllers
         }
 
         [HttpGet("{Id}")]
-        public async Task<ActionResult<InvoiceModel_DTO_Read>> GetItemAsync(int Id)
+        public async Task<ActionResult<InvoiceModel>> GetItemAsync(int Id)
         {
-            InvoiceModel_DTO_Read model = new();
-            model.Invoice = await Manager.Processor.LoadSingleItemAsync(Id);
-            if (model.Invoice is null) return NotFound("Couldn't find specific Item");
-            model.CustomerTotalBalance = await Manager.Processor.GetTotalOrRestTotalBalanceOfCustomerAsync(Id);
-            return model;
+            InvoiceModel model = await Manager.Processor.LoadSingleItemAsync(Id);
+            return model is null ? NotFound("Couldn't find specific Item") : model;
         }
 
         [HttpGet("ProductItems")]
@@ -47,6 +44,13 @@ namespace AvazehWebAPI.Controllers
         {
             var items = await Manager.Processor.GetProductItemsAsync(SearchText);
             return items is null ? NotFound("Couldn't find any match") : items;
+        }
+
+        [HttpGet("CustomerBalance")]
+        public async Task<ActionResult<double>> GetCustomerBalanceAsync(int CustomerId, int InvoiceId = 0)
+        {
+            var result = await Manager.Processor.GetTotalOrRestTotalBalanceOfCustomerAsync(CustomerId, InvoiceId);
+            return result;
         }
 
         [HttpPost]

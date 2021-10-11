@@ -34,7 +34,7 @@ namespace AvazehApiClient.DataAccess.Interfaces
 
         Task<InvoiceModel> CreateItemAsync(InvoiceModel item);
         Task<bool> DeleteItemAsync(int Id);
-        Task<InvoiceModel_DTO_Read> GetItemById(int Id);
+        Task<InvoiceModel> GetItemById(int Id);
         InvoiceListModel GetItemFromCollectionById(int Id);
         Task<int> GotoPageAsync(int PageNumber, bool Refresh);
         Task<int> RefreshPage();
@@ -44,5 +44,6 @@ namespace AvazehApiClient.DataAccess.Interfaces
         Task<InvoiceModel> UpdateItemAsync(InvoiceModel item);
         ValidationResult ValidateItem(InvoiceModel item);
         Task<List<ProductNamesForComboBox>> LoadProductItems(string SearchText = null);
+        Task<double> GetCustomerTotalBalanceById(int CustomerId, int InvoiceId = 0);
     }
 }

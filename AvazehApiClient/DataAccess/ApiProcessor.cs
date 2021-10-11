@@ -63,5 +63,12 @@ namespace AvazehApiClient.DataAccess
             var response = await ApiClient.DeleteAsync(Url);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<T?> GetValueOrNullAsync<T>(string Key, int Id1, int Id2) where T : struct
+        {
+            var Url = $"{Key}/{Id1}";
+            var response = await ApiClient.GetAsync(Url);
+            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+        }
     }
 }

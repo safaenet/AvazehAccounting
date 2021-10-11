@@ -18,19 +18,17 @@ namespace AvazehWpf.ViewModels
 {
     public class InvoiceDetailViewModel : ViewAware
     {
-        public InvoiceDetailViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, InvoiceDetailSingleton singleton, InvoiceModel_DTO_Read invoiceDto, Func<Task> callBack)
+        public InvoiceDetailViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, InvoiceDetailSingleton singleton, int? InvoiceId, Func<Task> callBack)
         {
             InvoiceManager = iManager;
             Manager = dManager;
             CallBackFunc = callBack;
             Singleton = singleton;
-            if (invoiceDto is not null)
+            if (InvoiceId is not null)
             {
-                Invoice = invoiceDto.Invoice;
-                //if (invoice.Id == 0) invoice.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
-                CustomerPreviousTotalBalance = invoiceDto.CustomerTotalBalance - invoiceDto.Invoice.TotalBalance;
+                ReloadInvoice(InvoiceId).ConfigureAwait(true);
+                ReloadCustomerBalance().ConfigureAwait(true);
             }
-            //ProductItemsForComboBox = new();
             GetProductComboboxItems();
         }
 
@@ -61,6 +59,18 @@ namespace AvazehWpf.ViewModels
         {
             get => _Invoice;
             set { _Invoice = value; NotifyOfPropertyChange(() => Invoice); }
+        }
+
+        private async Task ReloadInvoice(int? InvoiceId)
+        {
+            if(InvoiceId is null) return;
+            Invoice = await InvoiceManager.GetItemById((int)InvoiceId);
+        }
+
+        private async Task ReloadCustomerBalance()
+        {
+            if(Invoice is null) return;
+            CustomerPreviousTotalBalance = await InvoiceManager.GetCustomerTotalBalanceById(Invoice.Customer.Id, Invoice.Id);
         }
 
         public void EditItem()

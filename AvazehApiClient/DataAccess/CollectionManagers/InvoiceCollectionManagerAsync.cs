@@ -46,9 +46,9 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
             return Items.SingleOrDefault(i => i.Id == Id);
         }
 
-        public async Task<InvoiceModel_DTO_Read> GetItemById(int Id)
+        public async Task<InvoiceModel> GetItemById(int Id)
         {
-            return await ApiProcessor.GetItemAsync<InvoiceModel_DTO_Read>(Key, Id);
+            return await ApiProcessor.GetItemAsync<InvoiceModel>(Key, Id);
         }
 
         public async Task<InvoiceModel> CreateItemAsync(InvoiceModel item)
@@ -135,6 +135,11 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
         {
             var collection = await ApiProcessor.GetCollectionAsync<List<ProductNamesForComboBox>>(Key + "/ProductItems", SearchText);
             return collection is null ? null : collection;
+        }
+
+        public async Task<double> GetCustomerTotalBalanceById(int CustomerId, int InvoiceId = 0)
+        {
+            return (double)await ApiProcessor.GetValueOrNullAsync<double>(Key + "/CustomerBalance", CustomerId, InvoiceId);
         }
     }
 }

@@ -135,7 +135,7 @@ namespace AvazehWeb
         {
             return new InvoiceModel_DTO_Create_Update()
             {
-                CustomerId = model.Customer.Id, 
+                CustomerId = model.Customer.Id,
                 DiscountType = model.DiscountType,
                 DiscountValue = model.DiscountValue,
                 Descriptions = model.Descriptions,
