@@ -54,7 +54,6 @@ namespace AvazehWpf.ViewModels
             set { _selectedProductItem = value; NotifyOfPropertyChange(() => SelectedProductItem); }
         }
 
-
         public InvoiceModel Invoice
         {
             get => _Invoice;
@@ -73,7 +72,7 @@ namespace AvazehWpf.ViewModels
             CustomerPreviousTotalBalance = await InvoiceManager.GetCustomerTotalBalanceById(Invoice.Customer.Id, Invoice.Id);
         }
 
-        public void EditItem()
+        public void EditItem() //DataGrid doubleClick event
         {
             if (Invoice == null || SelectedItem == null) return;
             WorkItem = SelectedItem;
@@ -111,8 +110,6 @@ namespace AvazehWpf.ViewModels
             }
             WorkItem = new();
             SelectedProductItem = new();
-            WorkItem = null;
-            SelectedProductItem = null;
             NotifyOfPropertyChange(() => Invoice);
         }
 
@@ -145,8 +142,8 @@ namespace AvazehWpf.ViewModels
 
         public void ProductNames_PreviewTextInput(object sender, EventArgs e)
         {
-            //var combo = sender as ComboBox;
-            //combo.IsDropDownOpen = false;
+            var combo = sender as ComboBox;
+            combo.IsDropDownOpen = true;
             ////combo.Items.Clear();
             //ProductItemsForComboBox.Clear();
 
@@ -160,6 +157,14 @@ namespace AvazehWpf.ViewModels
             //combo.IsDropDownOpen = true;
             //a.SelectionStart = a.Text.Length;
             //a.CaretIndex = a.Text.Length;
+        }
+        public async Task ProductNames_SelectionChanged(object sender, EventArgs e)
+        {
+            var combo = sender as ComboBox;
+            ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(InvoiceManager.ApiProcessor);
+            WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
+            NotifyOfPropertyChange(() => WorkItem);
+            NotifyOfPropertyChange(() => WorkItem.Product);
         }
 
         private void GetProductComboboxItems()
