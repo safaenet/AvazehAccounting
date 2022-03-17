@@ -3,18 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
         xmlns:cal="http://www.caliburnproject.org"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:AvazehWpf" mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:ProductDetailViewModel}"
-        fw:AcrylicWindow.Enabled="True"
         Title="Product" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
-        Width="460" Height="363" ResizeMode="NoResize" fw:AcrylicWindow.AcrylicWindowStyle="NoIcon"
+        Width="460" Height="363" ResizeMode="NoResize"
         cal:Message.Attach="[Event Closing] = [Action ClosingWindow]">
-    <Grid fw:PointerTracker.Enabled="True">
+    <Grid>
         <Grid.Resources>
             <Style TargetType="TextBox">
                 <Setter Property="TextAlignment" Value="Center"/>
@@ -57,7 +55,7 @@
                         <TextBlock Text="tag" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="ID" Margin="20,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.Id}" IsReadOnly="True" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding Product.Id}" IsReadOnly="True" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1"  Orientation="Vertical" Margin="0,0,0,0">
@@ -65,7 +63,7 @@
                         <TextBlock Text="inventory_2" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Product Name" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.ProductName}" MaxLength="100" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding Product.ProductName}" MaxLength="100" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,0,0,0">
@@ -73,7 +71,7 @@
                         <TextBlock Text="local_offer" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Buy Price" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.BuyPrice}" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding Product.BuyPrice}" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="3" Orientation="Vertical" Margin="0,0,0,0">
@@ -81,7 +79,7 @@
                         <TextBlock Text="local_offer" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Sell Price" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.SellPrice}" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding Product.SellPrice}" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="4" Orientation="Vertical" Margin="0,0,0,0">
@@ -89,7 +87,7 @@
                         <TextBlock Text="qr_code" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Barcode" Margin="15,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.Barcode}" MaxLength="15" MaxWidth="200" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding Product.Barcode}" MaxLength="15" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
             </Grid>
             <Grid Grid.Column="1">
@@ -106,7 +104,7 @@
                         <TextBlock Text="score" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="Count" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.CountString}" ToolTip="{Binding Product.CountValue}" VerticalContentAlignment="Center" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding Product.CountString}" ToolTip="{Binding Product.CountValue}" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <DockPanel Grid.Row="1" LastChildFill="True" DockPanel.Dock="Bottom" Margin="0,0,10,10">
@@ -114,7 +112,7 @@
                         <TextBlock Text="description" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock TextAlignment="Center" Text="Description" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.Descriptions}" TextWrapping="Wrap" MinHeight="50" Height="auto" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top" Style="{StaticResource TextBoxRevealStyle}"/>
+                    <TextBox Text="{Binding Product.Descriptions}" TextWrapping="Wrap" MinHeight="50" Height="auto" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top"/>
                 </DockPanel>
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
                     <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
@@ -156,25 +154,25 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="CancelAndClose" Grid.Column="0" Style="{StaticResource ButtonRevealStyle}" Margin="0,5,5,0">
+            <Button x:Name="CancelAndClose" Grid.Column="0" Margin="0,5,5,0">
                 <StackPanel Width="80" Orientation="Horizontal">
                     <TextBlock Text="cancel" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                     <TextBlock Text="Cancel" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="DeleteAndClose" Grid.Column="1" Style="{StaticResource ButtonRevealStyle}" Margin="0,5,5,0">
+            <Button x:Name="DeleteAndClose" Grid.Column="1" Margin="0,5,5,0">
                 <StackPanel Width="120" Orientation="Horizontal">
                     <TextBlock Text="highlight_off" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                     <TextBlock Text="Delete and Close" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="SaveAndNew" Grid.Column="2" Style="{StaticResource ButtonRevealStyle}" Margin="0,5,5,0">
+            <Button x:Name="SaveAndNew" Grid.Column="2" Margin="0,5,5,0">
                 <StackPanel Width="110" Orientation="Horizontal">
                     <TextBlock Text="save" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                     <TextBlock Text="Save and New" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="SaveAndClose" Grid.Column="3" Style="{StaticResource ButtonRevealStyle}" Margin="0,5,5,0">
+            <Button x:Name="SaveAndClose" Grid.Column="3" Margin="0,5,5,0">
                 <StackPanel Width="110" Orientation="Horizontal">
                     <TextBlock Text="save" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                     <TextBlock Text="Save and Close" VerticalAlignment="Center"/>

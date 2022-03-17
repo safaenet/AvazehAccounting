@@ -3,17 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
         xmlns:cal="http://www.caliburnproject.org"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:AvazehWpf" mc:Ignorable="d"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:CustomerListViewModel}"
-        fw:AcrylicWindow.Enabled="True"
         Title="Customers" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1350" Height="650">
-    <Grid fw:PointerTracker.Enabled="True">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3"/>
             <ColumnDefinition Width="200" MaxWidth="200"/>
@@ -30,7 +27,7 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <ScrollViewer Grid.Column="0" Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <Grid fw:PointerTracker.Enabled="True">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="*"/>
@@ -42,7 +39,7 @@
                                 <TextBlock Text="person_outline" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="First Name" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Path=SelectedCustomer.FirstName, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding Path=SelectedCustomer.FirstName, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
@@ -50,7 +47,7 @@
                                 <TextBlock Text="people" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Last Name" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Path=SelectedCustomer.LastName, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding Path=SelectedCustomer.LastName, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
@@ -58,7 +55,7 @@
                                 <TextBlock Text="business" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Company Name" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Path=SelectedCustomer.CompanyName, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding Path=SelectedCustomer.CompanyName, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
@@ -80,7 +77,7 @@
                                 <TextBlock Text="email" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Email Address" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Path=SelectedCustomer.EmailAddress, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding Path=SelectedCustomer.EmailAddress, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
@@ -88,7 +85,7 @@
                                 <TextBlock Text="location_on" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" Height="auto" TextAlignment="Center" Text="Post Address" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Path=SelectedCustomer.PostAddress, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MinHeight="50" VerticalContentAlignment="Top" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
+                            <TextBox Text="{Binding Path=SelectedCustomer.PostAddress, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MinHeight="50" VerticalContentAlignment="Top" MaxWidth="200"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
@@ -96,7 +93,7 @@
                                 <TextBlock Text="date_range" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="Date Joined" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Path=SelectedCustomer.DateJoined, Mode=OneWay}" IsReadOnly="True" MaxLength="10" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding Path=SelectedCustomer.DateJoined, Mode=OneWay}" IsReadOnly="True" MaxLength="10" MaxWidth="200" VerticalContentAlignment="Center"/>
                         </StackPanel>
                     </StackPanel>
 
@@ -105,25 +102,25 @@
                             <TextBlock Text="description" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="Description Text" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding SelectedCustomer.Descriptions, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MinHeight="50" Height="auto" VerticalContentAlignment="Top" MaxWidth="200" Style="{StaticResource TextBoxRevealStyle}"/>
+                        <TextBox Text="{Binding SelectedCustomer.Descriptions, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MinHeight="50" Height="auto" VerticalContentAlignment="Top" MaxWidth="200"/>
                     </DockPanel>
                 </Grid>
             </ScrollViewer>
             <Grid Grid.Column="0" Grid.Row="1">
                 <StackPanel Orientation="Vertical">
-                    <Button cal:Message.Attach="[Event Click] = [Action AddNewCustomer()]" Height="25" Style="{StaticResource ButtonRevealStyle}" Margin="0,0,0,3">
+                    <Button cal:Message.Attach="[Event Click] = [Action AddNewCustomer()]" Height="25" Margin="0,0,0,3">
                         <StackPanel Width="110" Orientation="Horizontal">
                             <TextBlock Text="add" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock Text="Add New" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action EditCustomer()]" Height="25" Style="{StaticResource ButtonRevealStyle}" Margin="0,0,0,3">
+                    <Button cal:Message.Attach="[Event Click] = [Action EditCustomer()]" Height="25" Margin="0,0,0,3">
                         <StackPanel Width="110" Orientation="Horizontal">
                             <TextBlock Text="edit" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock Text="Edit" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action DeleteCustomer()]" Height="25" Style="{StaticResource ButtonRevealStyle}">
+                    <Button cal:Message.Attach="[Event Click] = [Action DeleteCustomer()]" Height="25">
                         <StackPanel Width="110" Orientation="Horizontal">
                             <TextBlock Text="remove" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                             <TextBlock Text="Delete" VerticalAlignment="Center"/>
@@ -144,14 +141,14 @@
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="Search" Grid.Column="0" Height="25" Style="{StaticResource ButtonRevealStyle}" Margin="0,0,0,0">
+                <Button x:Name="Search" Grid.Column="0" Height="25" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="subdirectory_arrow_left" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock Text="Search" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <TextBlock Text="search" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <TextBox x:Name="SearchText" Grid.Column="1" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]" Style="{StaticResource TextBoxRevealStyle}" VerticalContentAlignment="Center" Margin="0,0,3,0">
+                <TextBox x:Name="SearchText" Grid.Column="1" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]" VerticalContentAlignment="Center" Margin="0,0,3,0">
                 </TextBox>
             </Grid>
             <Grid Grid.Row="1">
@@ -160,13 +157,13 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="PreviousPage" Height="25" HorizontalAlignment="Left" Style="{StaticResource ButtonRevealStyle}" Margin="0,0,0,0">
+                <Button x:Name="PreviousPage" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
                         <StackPanel Orientation="Horizontal">
                         <TextBlock Text="arrow_back_ios_new" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock Text="Previous" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" Style="{StaticResource ButtonRevealStyle}" Margin="0,0,3,0">
+                    <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Next" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <TextBlock Text="arrow_forward_ios" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
