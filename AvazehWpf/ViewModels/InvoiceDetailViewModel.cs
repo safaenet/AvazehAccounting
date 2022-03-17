@@ -39,6 +39,7 @@ namespace AvazehWpf.ViewModels
         private readonly Func<Task> CallBackFunc;
         private List<ProductNamesForComboBox> productItems;
         private InvoiceItemModel _workItem = new();
+        private bool CanUpdateRowFromDB = true; //False when user is DoubleClicks on a row.
 
         public InvoiceItemModel SelectedItem { get; set; }
         public InvoiceItemModel WorkItem { get => _workItem; set { _workItem = value; NotifyOfPropertyChange(() => WorkItem); } }
@@ -75,8 +76,10 @@ namespace AvazehWpf.ViewModels
         public void EditItem() //DataGrid doubleClick event
         {
             if (Invoice == null || SelectedItem == null) return;
+            CanUpdateRowFromDB = false;
             WorkItem = SelectedItem;
-            SelectedProductItem = ProductItemsForComboBox.SingleOrDefault(x => x.Id == WorkItem.Product.Id);
+            SelectedProductItem = ProductItemsForComboBox.SingleOrDefault(x => x.Id == SelectedItem.Product.Id);
+            CanUpdateRowFromDB = true;
         }
 
         public async Task AddOrUpdateItem()
@@ -111,6 +114,8 @@ namespace AvazehWpf.ViewModels
             WorkItem = new();
             SelectedProductItem = new();
             NotifyOfPropertyChange(() => Invoice);
+            NotifyOfPropertyChange(() => Invoice.Items);
+            NotifyOfPropertyChange(() => SelectedProductItem);
         }
 
         public async Task DeleteItem()
@@ -160,11 +165,16 @@ namespace AvazehWpf.ViewModels
         }
         public async Task ProductNames_SelectionChanged(object sender, EventArgs e)
         {
-            var combo = sender as ComboBox;
+            //Update customerized prices here.
+            if (CanUpdateRowFromDB is false) return;
             ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(InvoiceManager.ApiProcessor);
             WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
+            WorkItem.BuyPrice = WorkItem.Product.BuyPrice;
+            WorkItem.SellPrice = WorkItem.Product.SellPrice;
             NotifyOfPropertyChange(() => WorkItem);
             NotifyOfPropertyChange(() => WorkItem.Product);
+            NotifyOfPropertyChange(() => Invoice);
+            NotifyOfPropertyChange(() => Invoice.Items);
         }
 
         private void GetProductComboboxItems()
