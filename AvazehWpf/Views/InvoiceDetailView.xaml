@@ -14,10 +14,10 @@
         Title="Invoice" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1200" Height="650"
         cal:Message.Attach="[Event Closing] = [Action ClosingWindow]">
-    <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="b2v"/>
-    </Window.Resources>
     <Grid>
+        <Grid.Resources>
+            <BooleanToVisibilityConverter x:Key="b2v"/>
+        </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3"/>
             <ColumnDefinition Width="200" MaxWidth="200"/>
@@ -51,7 +51,7 @@
                                 <materialDesign:PackIcon Kind="Phone" Margin="0,2,5,2"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره تماس" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <ComboBox ItemsSource="{Binding Invoice.Customer.PhoneNumbers}" SelectedIndex="0" BorderThickness="2" BorderBrush="DarkGray" Height="31">
+                            <ComboBox ItemsSource="{Binding Invoice.Customer.PhoneNumbers}" SelectedIndex="0" BorderThickness="2" BorderBrush="DarkGray">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding PhoneNumber, Mode=OneWay}"/>
@@ -89,7 +89,7 @@
                                         </ObjectDataProvider.MethodParameters>
                                     </ObjectDataProvider>
                                 </StackPanel.Resources>
-                                <ComboBox BorderThickness="2" BorderBrush="DarkGray" Height="31" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"
+                                <ComboBox BorderThickness="2" BorderBrush="DarkGray" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"
                                                   ItemsSource="{Binding Source={StaticResource dataFromEnum}}"
                                                   SelectedItem="{Binding Invoice.DiscountType, Mode=TwoWay}"/>
                                 <TextBlock TextAlignment="Center" Text="نوع" VerticalAlignment="Center" Margin="3,0,3,3"/>
@@ -229,7 +229,7 @@
                     </StackPanel>
                     <ComboBox IsTextSearchEnabled="True" IsEditable="True" VerticalAlignment="Center" Margin="0,0,3,0"
                               cal:Message.Attach="[Event PreviewTextInput]=[Action ProductNames_PreviewTextInput($source, $eventArgs)]; [Event SelectionChanged]=[Action ProductNames_SelectionChanged($source, $eventArgs)]"
-                              BorderThickness="2" BorderBrush="DarkGray" Height="31"
+                              BorderThickness="2" BorderBrush="DarkGray"
                               ItemsSource="{Binding ProductItemsForComboBox, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="ProductName" SelectedItem="{Binding SelectedProductItem, Mode=TwoWay}"/>
                 </StackPanel>
             </Grid>
@@ -238,7 +238,7 @@
                       Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="نام کالا" Binding="{Binding Product.ProductName, Mode=OneWay}" Width="200"/>
-                    <DataGridTextColumn Header="فی خرید" Binding="{Binding BuyPrice, Mode=OneWay}" Visibility="{Binding Source={x:Reference ShowNetProfit}, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" Width="90">
+                    <DataGridTextColumn Header="فی خرید" Binding="{Binding BuyPrice, Mode=OneWay}" Visibility="{Binding IsChecked,ElementName=ShowNetProfit,Converter={StaticResource b2v}}" Width="90">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Setter Property="ToolTip" Value="{Binding TotalBuyValue}"/>
