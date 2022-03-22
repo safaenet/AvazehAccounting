@@ -23,8 +23,13 @@ namespace DataLibraryCore.DataAccess.SqlServer
             DataAccess = dataAcess;
             if (FluentMapper.EntityMaps.IsEmpty)
             {
-                FluentMapper.Initialize(config => config.AddMap(new CustomerModelMapper()));
-                FluentMapper.Initialize(config => config.AddMap(new ProductModelMapper()));
+                try
+                {
+                    FluentMapper.Initialize(config => config.AddMap(new CustomerModelMapper()));
+                    FluentMapper.Initialize(config => config.AddMap(new ProductModelMapper()));
+                }
+                catch { }
+                
             }
         }
 

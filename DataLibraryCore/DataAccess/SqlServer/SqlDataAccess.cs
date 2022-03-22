@@ -32,7 +32,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public async Task<int> SaveDataAsync<T>(string sql, T data)
         {
             using IDbConnection conn = new SqlConnection(GetConnectionString());
-            return await conn.ExecuteAsync(sql, data);
+            var result = await conn.ExecuteAsync(sql, data);
+            return result;
         }
 
         public T ExecuteScalar<T, U>(string sql, U param)

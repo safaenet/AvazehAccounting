@@ -83,14 +83,15 @@ namespace AvazehWpf.ViewModels
             CanUpdateRowFromDB = false;
             EdittingItem = true;
             SelectedItem.Clone(WorkItem);
+            //WorkItem = SelectedItem;
             SelectedProductItem = ProductItemsForComboBox.SingleOrDefault(x => x.Id == SelectedItem.Product.Id);
             CanUpdateRowFromDB = true;
             NotifyOfPropertyChange(() => WorkItem);
         }
-
+        
         public async Task AddOrUpdateItem()
         {
-            if (Invoice == null || WorkItem == null || SelectedProductItem == null) return;
+            if (Invoice == null || WorkItem == null || SelectedProductItem == null || SelectedProductItem.Id == 0) return;
             WorkItem.InvoiceId = Invoice.Id;
             ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(InvoiceManager.ApiProcessor);
             WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
@@ -116,9 +117,8 @@ namespace AvazehWpf.ViewModels
                 var editedItem = await Manager.UpdateItemAsync(WorkItem);
                 var item = Invoice.Items.FirstOrDefault(x => x.Id == WorkItem.Id);
                 if (editedItem != null) editedItem.Clone(item);
-                //if (editedItem != null) item = editedItem;
                 EdittingItem = false;
-                //await ReloadInvoice(Invoice.Id);
+                RefreshDataGrid();
             }
             WorkItem = new();
             SelectedProductItem = new();
@@ -130,9 +130,21 @@ namespace AvazehWpf.ViewModels
         public async Task DeleteItem()
         {
             if (Invoice == null || Invoice.Items == null || !Invoice.Items.Any() || SelectedItem == null) return;
+            var result = MessageBox.Show("Are you sure you want to delete this row ?", "Delete", MessageBoxButton.YesNo,MessageBoxImage.Question, MessageBoxResult.No);
+            if(result == MessageBoxResult.No) return;
             if (await Manager.DeleteItemAsync(SelectedItem.Id))
                 Invoice.Items.Remove(SelectedItem);
+            RefreshDataGrid();
             NotifyOfPropertyChange(() => Invoice);
+        }
+
+        public void dg_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (Key.Delete == e.Key)
+            {
+                DeleteItem().ConfigureAwait(true);
+                e.Handled = true;
+            }
         }
 
         public async Task DeleteInvoiceAndClose()
@@ -144,6 +156,13 @@ namespace AvazehWpf.ViewModels
             CloseWindow();
         }
 
+        private void RefreshDataGrid()
+        {
+            InvoiceModel temp;
+            temp = Invoice;
+            Invoice = null;
+            Invoice = temp;
+        }
         public void CloseWindow()
         {
             (GetView() as Window).Close();
