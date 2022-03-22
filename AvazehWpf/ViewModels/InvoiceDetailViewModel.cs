@@ -14,6 +14,7 @@ using AvazehApiClient.DataAccess;
 using AvazehApiClient.DataAccess.CollectionManagers;
 using SharedLibrary.Validators;
 using System.Windows.Input;
+using System.Windows.Data;
 
 namespace AvazehWpf.ViewModels
 {
@@ -41,6 +42,7 @@ namespace AvazehWpf.ViewModels
         private List<ProductNamesForComboBox> productItems;
         private InvoiceItemModel _workItem = new();
         private bool CanUpdateRowFromDB = true; //False when user is DoubleClicks on a row.
+        private bool EdittingItem = false;
 
         public InvoiceItemModel SelectedItem { get; set; }
         public InvoiceItemModel WorkItem { get => _workItem; set { _workItem = value; NotifyOfPropertyChange(() => WorkItem); } }
@@ -49,6 +51,7 @@ namespace AvazehWpf.ViewModels
         public double CustomerTotalBalanceMinusThis => CustomerPreviousTotalBalance - (Invoice == null ? 0 : Invoice.TotalBalance);
         public List<ProductNamesForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
         private ProductNamesForComboBox _selectedProductItem;
+
 
         public ProductNamesForComboBox SelectedProductItem
         {
@@ -78,9 +81,11 @@ namespace AvazehWpf.ViewModels
         {
             if (Invoice == null || SelectedItem == null) return;
             CanUpdateRowFromDB = false;
+            EdittingItem = true;
             SelectedItem.Clone(WorkItem);
             SelectedProductItem = ProductItemsForComboBox.SingleOrDefault(x => x.Id == SelectedItem.Product.Id);
             CanUpdateRowFromDB = true;
+            NotifyOfPropertyChange(() => WorkItem);
         }
 
         public async Task AddOrUpdateItem()
@@ -99,7 +104,7 @@ namespace AvazehWpf.ViewModels
                 return;
             }
 
-            if (WorkItem.Id == 0) //New Item
+            if (EdittingItem == false) //New Item
             {
                 if (Invoice.Items == null) Invoice.Items = new();
                 var addedItem = await Manager.CreateItemAsync(WorkItem);
@@ -111,6 +116,9 @@ namespace AvazehWpf.ViewModels
                 var editedItem = await Manager.UpdateItemAsync(WorkItem);
                 var item = Invoice.Items.FirstOrDefault(x => x.Id == WorkItem.Id);
                 if (editedItem != null) editedItem.Clone(item);
+                //if (editedItem != null) item = editedItem;
+                EdittingItem = false;
+                //await ReloadInvoice(Invoice.Id);
             }
             WorkItem = new();
             SelectedProductItem = new();
@@ -184,7 +192,16 @@ namespace AvazehWpf.ViewModels
         }
         public void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Escape) (GetView() as Window).Close();
+            if (e.Key == Key.Escape)
+            {
+                if (EdittingItem == false) (GetView() as Window).Close();
+                else
+                {
+                    EdittingItem = false;
+                    WorkItem = new();
+                    SelectedProductItem = new();
+                }
+            }
         }
         private void GetProductComboboxItems()
         {

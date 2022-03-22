@@ -167,17 +167,17 @@ namespace AvazehApiClient.DataAccess
         {
             if (To == null) return;
             if (From == null) From = new();
-            From.Id = From.Id;
-            From.InvoiceId = To.InvoiceId;
-            From.BuyPrice = To.BuyPrice;
-            From.SellPrice = To.SellPrice;
-            From.CountString = To.CountString;
-            From.DateCreated = To.DateCreated;
-            From.TimeCreated = To.TimeCreated;
-            From.DateUpdated = To.DateUpdated;
-            From.TimeUpdated = To.TimeUpdated;
-            From.Delivered = To.Delivered;
-            From.Descriptions = To.Descriptions;
+            To.Id = From.Id;
+            To.InvoiceId = From.InvoiceId;
+            To.BuyPrice = From.BuyPrice;
+            To.SellPrice = From.SellPrice;
+            To.CountString = From.CountString;
+            To.DateCreated = From.DateCreated;
+            To.TimeCreated = From.TimeCreated;
+            To.DateUpdated = From.DateUpdated;
+            To.TimeUpdated = From.TimeUpdated;
+            To.Delivered = From.Delivered;
+            To.Descriptions = From.Descriptions;
             From.Product.Clone(To.Product);
         }
     }
