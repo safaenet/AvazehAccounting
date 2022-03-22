@@ -76,7 +76,7 @@ namespace AvazehWpf.ViewModels
             if(Invoice is null) return;
             CustomerPreviousTotalBalance = await InvoiceManager.GetCustomerTotalBalanceById(Invoice.Customer.Id, Invoice.Id);
         }
-
+        
         public void EditItem() //DataGrid doubleClick event
         {
             if (Invoice == null || SelectedItem == null) return;
