@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using AvazehApiClient.DataAccess;
 using AvazehApiClient.DataAccess.CollectionManagers;
 using SharedLibrary.Validators;
+using System.Windows.Input;
 
 namespace AvazehWpf.ViewModels
 {
@@ -77,7 +78,7 @@ namespace AvazehWpf.ViewModels
         {
             if (Invoice == null || SelectedItem == null) return;
             CanUpdateRowFromDB = false;
-            WorkItem = SelectedItem;
+            SelectedItem.Clone(WorkItem);
             SelectedProductItem = ProductItemsForComboBox.SingleOrDefault(x => x.Id == SelectedItem.Product.Id);
             CanUpdateRowFromDB = true;
         }
@@ -176,7 +177,15 @@ namespace AvazehWpf.ViewModels
             NotifyOfPropertyChange(() => Invoice);
             NotifyOfPropertyChange(() => Invoice.Items);
         }
-
+        public void DiscountTypeSelectionChange()
+        {
+            NotifyOfPropertyChange(() => Invoice);
+            NotifyOfPropertyChange(() => Invoice.TotalDiscountAmount);
+        }
+        public void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape) (GetView() as Window).Close();
+        }
         private void GetProductComboboxItems()
         {
             ProductItemsForComboBox = Singleton.ProductItemsForCombobox;
