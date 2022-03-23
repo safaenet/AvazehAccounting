@@ -105,7 +105,8 @@
                     <DataGridTextColumn Header="ID" Binding="{Binding Path=Id, Mode=OneWay}" Width="50"/>
                     <DataGridTextColumn Header="Customer Name" Binding="{Binding Path=CustomerFullName, Mode=OneWay}" Width="150"/>
                     <DataGridTextColumn Header="Date Created" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="110"/>
-                    <DataGridTextColumn Header="Date Updated" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="120"/>
+                    <DataGridTextColumn Header="Date Updated" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="120"/>
+                    <DataGridTextColumn Header="Time Updated" Binding="{Binding Path=TimeUpdated, Mode=OneWay}" Width="120"/>
                     <DataGridTextColumn Header="Sum Amount" Binding="{Binding Path=TotalInvoiceSum, Mode=OneWay}" Width="120"/>
                     <DataGridTextColumn Header="Sum Payments" Binding="{Binding Path=TotalPayments, Mode=OneWay}" Width="120"/>
                     <DataGridTextColumn Header="Life Status" Binding="{Binding Path=LifeStatus, Mode=OneWay}" Width="100"/>

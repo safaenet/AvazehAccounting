@@ -124,6 +124,8 @@ namespace AvazehWeb
             return new InvoiceModel()
             {
                 Customer = processor.LoadSingleItem(model.CustomerId),
+                DateCreated = model.DateCreated,
+                TimeCreated = model.TimeCreated,
                 DiscountType = model.DiscountType,
                 DiscountValue = model.DiscountValue,
                 Descriptions = model.Descriptions,

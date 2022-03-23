@@ -16,7 +16,9 @@ namespace SharedLibrary.DalModels
         public int CustomerId { get; set; }
         public string CustomerFullName { get; set; }
         public string DateCreated { get; set; }
+        public string TimeCreated { get; set; }
         public string DateUpdated { get; set; }
+        public string TimeUpdated { get; set; }
         public double TotalInvoiceSum { get; set; }
         public double TotalPayments { get; set; }
         public InvoiceLifeStatus LifeStatus { get; set; }

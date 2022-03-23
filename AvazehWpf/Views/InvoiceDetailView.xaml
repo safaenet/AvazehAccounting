@@ -36,6 +36,7 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,3,0">
 
@@ -90,12 +91,12 @@
                                         </ObjectDataProvider.MethodParameters>
                                     </ObjectDataProvider>
                                 </StackPanel.Resources>
+                                
                                 <ComboBox HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="70" Height="25"
                                                   ItemsSource="{Binding Source={StaticResource dataFromEnum}}"
-                                                  SelectedItem="{Binding Invoice.DiscountType, Mode=TwoWay}"
-                                                  cal:Message.Attach="[Event SelectionChange] = [Action DiscountTypeSelectionChange()]"/>
+                                                  SelectedItem="{Binding Invoice.DiscountType, Mode=TwoWay}"/>
                                 <TextBlock TextAlignment="Center" Text="نوع" VerticalAlignment="Center" Margin="3,0,3,3"/>
-                                <TextBox Text="{Binding Invoice.DiscountValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#}'}" MaxLength="50" Width="77" Height="25" VerticalContentAlignment="Center"/>
+                                <TextBox Text="{Binding Invoice.DiscountValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#}'}" MaxLength="70" Width="75" Height="25" VerticalContentAlignment="Center"/>
                                 <TextBlock TextAlignment="Center" Text="مقدار" VerticalAlignment="Center" Margin="3,0,3,3"/>
                             </StackPanel>
                         </StackPanel>
@@ -157,6 +158,7 @@
                             <TextBlock Text="سود جاری" Margin="0,0,22,2"/>
                         </StackPanel>
                     </StackPanel>
+                    <Button x:Name="SaveInvoiceChanges" Content="Save Changes" FontWeight="Bold" Height="30" Margin="2,2,2,0" Grid.Row="3"/>
                 </Grid>
             </ScrollViewer>
         </Grid>
@@ -232,7 +234,7 @@
                         <TextBlock TextAlignment="Center" Text="نام کالا" Margin="0,0,0,0"/>
                     </StackPanel>
                     <ComboBox IsTextSearchEnabled="True" IsEditable="True" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,3,0" Height="25"
-                              cal:Message.Attach="[Event PreviewTextInput]=[Action ProductNames_PreviewTextInput($source, $eventArgs)]; [Event SelectionChanged]=[Action ProductNames_SelectionChanged($source, $eventArgs)]"
+                              cal:Message.Attach="[Event SelectionChanged]=[Action ProductNames_SelectionChanged($source, $eventArgs)]"
                               ItemsSource="{Binding ProductItemsForComboBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Id" DisplayMemberPath="ProductName" SelectedItem="{Binding SelectedProductItem, Mode=TwoWay}"/>
                 </StackPanel>
             </Grid>

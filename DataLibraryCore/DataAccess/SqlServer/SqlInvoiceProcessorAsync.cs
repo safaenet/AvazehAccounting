@@ -38,9 +38,18 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public async Task<int> UpdateItemAsync(InvoiceModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
-            item.TimeUpdated = PersianCalendarModel.GetCurrentTime();
-            return await DataAccess.SaveDataAsync(UpdateInvoiceQuery, item);
+            var dp = new DynamicParameters();
+            dp.Add("@id", item.Id);
+            dp.Add("@customerId", item.Customer.Id);
+            dp.Add("@dateCreated", item.DateCreated);
+            dp.Add("@timeCreated", item.TimeCreated);
+            dp.Add("@dateUpdated", PersianCalendarModel.GetCurrentPersianDate());
+            dp.Add("@timeUpdated", PersianCalendarModel.GetCurrentTime());
+            dp.Add("@discountType", item.DiscountType);
+            dp.Add("@discountValue", item.DiscountValue);
+            dp.Add("@descriptions", item.Descriptions);
+            dp.Add("@lifeStatus", item.LifeStatus);
+            return await DataAccess.SaveDataAsync(UpdateInvoiceQuery, dp);
         }
 
         public async Task<InvoiceItemModel> GetInvoiceItemFromDatabaseAsync(int Id)
@@ -200,7 +209,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
                             --END
 
                             SET NOCOUNT ON
-                            SELECT i.Id, i.CustomerId, c.FirstName + ' ' + c.LastName CustomerFullName, i.DateCreated, i.DateUpdated,
+                            SELECT i.Id, i.CustomerId, c.FirstName + ' ' + c.LastName CustomerFullName, i.DateCreated, i.TimeCreated, i.DateUpdated, i.TimeUpdated,
 		                            dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) AS TotalInvoiceSum,
 		                            pays.TotalPayments, i.LifeStatus
                             FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id

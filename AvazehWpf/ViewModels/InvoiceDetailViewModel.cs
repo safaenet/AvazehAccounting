@@ -83,7 +83,6 @@ namespace AvazehWpf.ViewModels
             CanUpdateRowFromDB = false;
             EdittingItem = true;
             SelectedItem.Clone(WorkItem);
-            //WorkItem = SelectedItem;
             SelectedProductItem = ProductItemsForComboBox.SingleOrDefault(x => x.Id == SelectedItem.Product.Id);
             CanUpdateRowFromDB = true;
             NotifyOfPropertyChange(() => WorkItem);
@@ -163,6 +162,14 @@ namespace AvazehWpf.ViewModels
             Invoice = null;
             Invoice = temp;
         }
+
+        public async Task SaveInvoiceChanges()
+        {
+            var result = await InvoiceManager.UpdateItemAsync(Invoice);
+            Invoice.DateUpdated = result.DateUpdated;
+            Invoice.TimeUpdated = result.TimeUpdated;
+            RefreshDataGrid();
+        }
         public void CloseWindow()
         {
             (GetView() as Window).Close();
@@ -204,11 +211,7 @@ namespace AvazehWpf.ViewModels
             NotifyOfPropertyChange(() => Invoice);
             NotifyOfPropertyChange(() => Invoice.Items);
         }
-        public void DiscountTypeSelectionChange()
-        {
-            NotifyOfPropertyChange(() => Invoice);
-            NotifyOfPropertyChange(() => Invoice.TotalDiscountAmount);
-        }
+
         public void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
