@@ -103,7 +103,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
         {
             var InvoiceId = GetInvoiceIdFromInvoiceItemId(ItemId);
             if (InvoiceId == 0) return 0;
-            var AffectedCount = await DataAccess.SaveDataAsync(DeleteInvoiceItemQuery, ItemId);
+            var dp = new DynamicParameters();
+            dp.Add("@id", ItemId);
+            var AffectedCount = await DataAccess.SaveDataAsync(DeleteInvoiceItemQuery, dp);
             if (AffectedCount > 0) await UpdateItemUpdateDateAndUpdateTimeAsync(InvoiceId);
             return AffectedCount;
         }
