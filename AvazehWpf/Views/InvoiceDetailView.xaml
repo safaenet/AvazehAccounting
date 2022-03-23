@@ -158,7 +158,16 @@
                             <TextBlock Text="سود جاری" Margin="0,0,22,2"/>
                         </StackPanel>
                     </StackPanel>
-                    <Button x:Name="SaveInvoiceChanges" Content="Save Changes" FontWeight="Bold" Height="30" Margin="2,2,2,0" Grid.Row="3"/>
+                    <Button x:Name="SaveInvoiceChanges" FontWeight="Bold" Height="30" Margin="2,2,2,0" Grid.Row="3">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <materialDesign:PackIcon Kind="ContentSave" Width="20" Height="20" Grid.Column="0"/>
+                            <TextBlock Text="ذخیره تغییرات" VerticalAlignment="Center" Grid.Column="1"/>
+                        </Grid>
+                    </Button>
                 </Grid>
             </ScrollViewer>
         </Grid>
