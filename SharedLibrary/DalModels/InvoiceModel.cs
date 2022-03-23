@@ -20,7 +20,7 @@ namespace SharedLibrary.DalModels
         public InvoiceLifeStatus LifeStatus { get; set; }
         public double TotalItemsBuySum => Items == null || Items.Count == 0 ? 0 : Items.Sum(i => i.TotalBuyValue);
         public double TotalItemsSellSum => Items == null || Items.Count == 0 ? 0 : Items.Sum(i => i.TotalSellValue);
-        public double TotalDiscountAmount => DiscountType == DiscountTypes.Percent ? TotalItemsSellSum * DiscountValue : DiscountValue;
+        public double TotalDiscountAmount => DiscountType == DiscountTypes.Percent ? (TotalItemsSellSum * DiscountValue / 100) : DiscountValue;
         public double TotalInvoiceSum => TotalItemsSellSum - TotalDiscountAmount;
         public double TotalPayments => Payments == null || Payments.Count == 0 ? 0 : Payments.Sum(i => i.PayAmount);
         public double TotalBalance => TotalInvoiceSum - TotalPayments;
