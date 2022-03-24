@@ -186,6 +186,7 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Button x:Name="AddOrUpdateItem" IsDefault="True" Grid.Column="0" Width="40" Margin="0,0,5,0">
@@ -232,12 +233,27 @@
                 <StackPanel Grid.Column="6" Width="80" Orientation="Vertical" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
+                        <TextBlock TextAlignment="Center" Text="واحد" Margin="0,0,0,0"/>
+                    </StackPanel>
+                    <TextBox Text="{Binding WorkItem.Unit.UnitName}" VerticalContentAlignment="Center" Height="25"/>
+                    <!--<ComboBox ItemsSource="{Binding WorkItem.Unit.UnitName}" SelectedIndex="0" Height="25" VerticalContentAlignment="Center">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding PhoneNumber, Mode=OneWay}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>-->
+                </StackPanel>
+
+                <StackPanel Grid.Column="7" Width="80" Orientation="Vertical" Margin="0,0,3,0">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="تعداد" Margin="0,0,0,0"/>
                     </StackPanel>
                     <TextBox Text="{Binding WorkItem.CountString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding WorkItem.CountValue}" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="7" Orientation="Vertical" Margin="0,0,0,0">
+                <StackPanel Grid.Column="8" Orientation="Vertical" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="نام کالا" Margin="0,0,0,0"/>

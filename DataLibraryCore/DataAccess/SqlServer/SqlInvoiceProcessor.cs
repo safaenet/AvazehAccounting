@@ -41,12 +41,12 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private readonly string UpdateInvoiceQuery = @"UPDATE Invoices SET CustomerId = @customerId, DateCreated = @dateCreated, TimeCreated = @timeCreated,
             DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, DiscountType = @discountType,
             DiscountValue = @discountValue, Descriptions = @descriptions, LifeStatus = @lifeStatus WHERE Id = @id";
-        private readonly string InsertInvoiceItemQuery = @"INSERT INTO InvoiceItems (InvoiceId, ProductId, BuyPrice, SellPrice, CountString, CountValue, DateCreated,
+        private readonly string InsertInvoiceItemQuery = @"INSERT INTO InvoiceItems (InvoiceId, ProductId, BuyPrice, SellPrice, CountString, CountValue, ProductUnitId, DateCreated,
             TimeCreated, Delivered, Descriptions)
-            VALUES (@invoiceId, @productId, @buyPrice, @sellPrice, @countString, @countValue, @dateCreated, @timeCreated, @delivered, @descriptions);
+            VALUES (@invoiceId, @productId, @buyPrice, @sellPrice, @countString, @countValue, @productUnitId, @dateCreated, @timeCreated, @delivered, @descriptions);
             SELECT @id = @@IDENTITY;";
         private readonly string UpdateInvoiceItemQuery = @$"UPDATE InvoiceItems SET ProductId = @productId, BuyPrice = @buyPrice, SellPrice = @sellPrice,
-            CountString = @countString, CountValue = @countValue, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
+            CountString = @countString, CountValue = @countValue, ProductUnitId = @productUnitId, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
             Delivered = @delivered, Descriptions = @descriptions WHERE [Id] = @id";
         private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Invoices SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated WHERE Id = @id";
         private readonly string DeleteInvoiceItemQuery = @$"DELETE FROM InvoiceItems WHERE [Id] = @id";
@@ -86,15 +86,17 @@ namespace DataLibraryCore.DataAccess.SqlServer
             SELECT it.Id, it.InvoiceId, it.BuyPrice, it.SellPrice, it.CountString, it.DateCreated, it.TimeCreated,
                 it.DateUpdated, it.TimeUpdated, it.Delivered, it.Descriptions, p.Id pId, p.ProductName, p.BuyPrice pBuyPrice,
                 p.SellPrice pSellPrice, p.Barcode, p.CountString pCountString, p.DateCreated pDateCreated,
-                p.TimeCreated pTimeCreated, p.DateUpdated pDateUpdated, p.TimeUpdated pTimeUpdated, p.Descriptions pDescriptions
-                FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id WHERE it.InvoiceId IN (SELECT i.Id FROM @invoices i);
+                p.TimeCreated pTimeCreated, p.DateUpdated pDateUpdated, p.TimeUpdated pTimeUpdated, p.Descriptions pDescriptions,
+                u.Id AS puId, u.UnitName
+                FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id LEFT JOIN ProductUnits u ON it.ProductUnitId = u.Id WHERE it.InvoiceId IN (SELECT i.Id FROM @invoices i);
             SELECT * FROM InvoicePayments WHERE InvoiceId IN (SELECT i.Id FROM @invoices i);
             SELECT * FROM PhoneNumbers WHERE CustomerId IN (SELECT i.CustomerId FROM @invoices i);";
         private readonly string GetSingleInvoiceItemQuery = @"SELECT it.*, p.[Id] AS pId,
                 p.[ProductName], p.[BuyPrice] AS pBuyPrice, p.[SellPrice] AS pSellPrice, p.[Barcode],
                 p.[CountString] AS pCountString, p.[DateCreated] AS pDateCreated, p.[TimeCreated] AS pTimeCreated,
-                p.[DateUpdated] AS pDateUpdated, p.[TimeUpdated] AS pTimeUpdated, p.[Descriptions] AS pDescriptions
-                FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id WHERE it.Id = {0}";
+                p.[DateUpdated] AS pDateUpdated, p.[TimeUpdated] AS pTimeUpdated, p.[Descriptions] AS pDescriptions,
+				u.Id AS puId, u.UnitName
+                FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id LEFT JOIN ProductUnits u ON it.ProductUnitId = u.Id WHERE it.Id = {0}";
         private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] FROM Products {0}";
 
         public int CreateItem(InvoiceModel item)

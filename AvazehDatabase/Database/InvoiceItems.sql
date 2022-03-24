@@ -12,9 +12,11 @@
     [DateUpdated] CHAR(10) NULL, 
     [TimeUpdated] CHAR(8) NULL, 
     [Delivered] BIT NOT NULL , 
-    [Descriptions] NVARCHAR(50) NULL
+    [Descriptions] NVARCHAR(50) NULL,
+    [ProductUnitId] INT NULL
 
     CONSTRAINT [FK_Invoices_InvoiceItems] FOREIGN KEY([InvoiceId]) REFERENCES [Invoices] ([Id]) ON DELETE CASCADE
     CONSTRAINT [FK_Invoices_Products] FOREIGN KEY([ProductId]) REFERENCES [Products] ([Id]) ON DELETE CASCADE
+    CONSTRAINT [FK_Invoices_ProductUnits] FOREIGN KEY([ProductUnitId]) REFERENCES [ProductUnits] ([Id])
 )
 GO

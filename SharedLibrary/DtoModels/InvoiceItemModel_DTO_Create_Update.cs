@@ -1,4 +1,5 @@
 ﻿using DotNetStandardCalculator;
+using SharedLibrary.DalModels;
 using SharedLibrary.Validators;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,8 @@ namespace SharedLibrary.DtoModels //DTO Models
         [StringLength(50, ErrorMessage = "Maximum length is 50")]
         [CountStringIsValid]
         public string CountString { get; set; }
+
+        public ProductUnitModel Unit { get; set; }
 
         [Display(Name = "Delivered")]
         [Required(ErrorMessage = "Field is required")]

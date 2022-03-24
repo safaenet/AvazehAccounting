@@ -56,8 +56,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
         {
             var sql = string.Format(GetSingleInvoiceItemQuery, Id);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
-            var result = await conn.QueryAsync<InvoiceItemModel, ProductModel, InvoiceItemModel>
-                (sql, (it, p) => { it.Product = p; return it; }, splitOn: "pId");
+            var result = await conn.QueryAsync<InvoiceItemModel, ProductModel, ProductUnitModel, InvoiceItemModel>
+                (sql, (it, p, u) => { it.Product = p; it.Unit = u; return it; }, splitOn: "pId, puId");
             return result.SingleOrDefault();
         }
 
@@ -74,6 +74,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@sellPrice", item.SellPrice);
             dp.Add("@countString", item.CountString);
             dp.Add("@countValue", item.CountValue);
+            dp.Add("@productUnitId", item.Unit == null ? (int?)null : item.Unit.Id);
             dp.Add("@dateCreated", item.DateCreated);
             dp.Add("@timeCreated", item.TimeCreated);
             dp.Add("@delivered", item.Delivered);
@@ -99,6 +100,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@sellPrice", item.SellPrice);
             dp.Add("@countString", item.CountString);
             dp.Add("@countValue", item.CountValue);
+            dp.Add("@productUnitId", item.Unit == null ? (int?)null : item.Unit.Id);
             dp.Add("@dateUpdated", item.DateUpdated);
             dp.Add("@timeUpdated", item.TimeUpdated);
             dp.Add("@delivered", item.Delivered);
@@ -215,10 +217,10 @@ namespace DataLibraryCore.DataAccess.SqlServer
                             FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id
                             
                             LEFT JOIN (SELECT SUM(ii.[CountValue] * ii.SellPrice) AS TotalSellValue, ii.[InvoiceId]
-	                            FROM InvoiceItems ii GROUP BY ii.[InvoiceId]) sp ON i.Id=sp.InvoiceId
+	                            FROM InvoiceItems ii GROUP BY ii.[InvoiceId]) sp ON i.Id = sp.InvoiceId
                             
                             LEFT JOIN (SELECT SUM(ips.[PayAmount]) AS TotalPayments, ips.[InvoiceId]
-	                           FROM InvoicePayments ips GROUP BY ips.[InvoiceId]) pays ON i.Id=pays.InvoiceId
+	                           FROM InvoicePayments ips GROUP BY ips.[InvoiceId]) pays ON i.Id = pays.InvoiceId
 
                             { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
                             ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";

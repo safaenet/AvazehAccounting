@@ -16,8 +16,8 @@ namespace DataLibraryCore.DataAccess
                 (i, c) => { i.Customer = c; return i; }, splitOn: "CustId").SingleOrDefault();
             if (invoice is null) return null;
 
-            var ItemsDic = reader.Read<InvoiceItemModel, ProductModel, InvoiceItemModel>(
-                (it, p) => { it.Product = p; return it; }, splitOn: "pId")
+            var ItemsDic = reader.Read<InvoiceItemModel, ProductModel, ProductUnitModel, InvoiceItemModel>(
+                (it, p, u) => { it.Product = p; it.Unit = u; return it; }, splitOn: "pId, puId")
                 .GroupBy(s => s.InvoiceId)
                 .ToDictionary(g => g.Key, g => g.AsEnumerable());
             var PaymentsDic = reader

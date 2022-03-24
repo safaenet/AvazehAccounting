@@ -88,6 +88,7 @@ namespace AvazehApiClient.DataAccess
                 BuyPrice = model.BuyPrice,
                 SellPrice = model.SellPrice,
                 CountString = model.CountString,
+                Unit = model.Unit,
                 Delivered = model.Delivered,
                 Descriptions = model.Descriptions
             };
@@ -174,6 +175,12 @@ namespace AvazehApiClient.DataAccess
             To.BuyPrice = From.BuyPrice;
             To.SellPrice = From.SellPrice;
             To.CountString = From.CountString;
+            if (From.Unit != null)
+            {
+                if (To.Unit == null) To.Unit = new();
+                To.Unit.Id = From.Unit.Id;
+                To.Unit.UnitName = From.Unit.UnitName;
+            }
             To.DateCreated = From.DateCreated;
             To.TimeCreated = From.TimeCreated;
             To.DateUpdated = From.DateUpdated;
