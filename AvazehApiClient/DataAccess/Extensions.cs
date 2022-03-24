@@ -88,7 +88,7 @@ namespace AvazehApiClient.DataAccess
                 BuyPrice = model.BuyPrice,
                 SellPrice = model.SellPrice,
                 CountString = model.CountString,
-                Unit = model.Unit,
+                Unit = model.Unit == null || model.Unit.Id == 0 ? null : model.Unit,
                 Delivered = model.Delivered,
                 Descriptions = model.Descriptions
             };

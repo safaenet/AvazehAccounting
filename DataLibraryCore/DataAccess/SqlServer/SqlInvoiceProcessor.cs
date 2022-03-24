@@ -98,6 +98,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
 				u.Id AS puId, u.UnitName
                 FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id LEFT JOIN ProductUnits u ON it.ProductUnitId = u.Id WHERE it.Id = {0}";
         private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] FROM Products {0}";
+        private readonly string GetProductUnitsQuery = "SELECT [Id], [UnitName] FROM ProductUnits";
 
         public int CreateItem(InvoiceModel item)
         {

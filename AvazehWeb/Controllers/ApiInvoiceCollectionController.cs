@@ -46,6 +46,13 @@ namespace AvazehWebAPI.Controllers
             return items is null ? NotFound("Couldn't find any match") : items;
         }
 
+        [HttpGet("ProductUnits")]
+        public async Task<ActionResult<List<ProductUnitModel>>> GetProductUnitsAsync(string SearchText)
+        {
+            var items = await Manager.Processor.GetProductUnitsAsync();
+            return items is null ? NotFound("List is Empty") : items;
+        }
+
         [HttpGet("CustomerBalance")]
         public async Task<ActionResult<double>> GetCustomerBalanceAsync(int CustomerId, int InvoiceId = 0)
         {

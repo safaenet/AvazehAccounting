@@ -260,5 +260,12 @@ namespace DataLibraryCore.DataAccess.SqlServer
             var items = await conn.QueryAsync<ProductNamesForComboBox>(sql, null);
             return items?.ToList();
         }
+
+        public async Task<List<ProductUnitModel>> GetProductUnitsAsync()
+        {
+            using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
+            var items = await conn.QueryAsync<ProductUnitModel>(GetProductUnitsQuery, null);
+            return items?.ToList();
+        }
     }
 }

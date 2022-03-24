@@ -235,14 +235,8 @@
                         <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="واحد" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <TextBox Text="{Binding WorkItem.Unit.UnitName}" VerticalContentAlignment="Center" Height="25"/>
-                    <!--<ComboBox ItemsSource="{Binding WorkItem.Unit.UnitName}" SelectedIndex="0" Height="25" VerticalContentAlignment="Center">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding PhoneNumber, Mode=OneWay}"/>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>-->
+                    <ComboBox ItemsSource="{Binding ProductUnits, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="UnitName" SelectedItem="{Binding SelectedProductUnit, Mode=TwoWay}"
+                              cal:Message.Attach="[Event SelectionChanged]=[Action ProductUnits_SelectionChanged($source, $eventArgs)]" Height="25" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="7" Width="80" Orientation="Vertical" Margin="0,0,3,0">

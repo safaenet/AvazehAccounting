@@ -15,6 +15,7 @@ using AvazehApiClient.DataAccess.CollectionManagers;
 using SharedLibrary.Validators;
 using System.Windows.Input;
 using System.Windows.Data;
+using System.Collections.ObjectModel;
 
 namespace AvazehWpf.ViewModels
 {
@@ -31,7 +32,7 @@ namespace AvazehWpf.ViewModels
                 ReloadInvoice(InvoiceId).ConfigureAwait(true);
                 ReloadCustomerBalance().ConfigureAwait(true);
             }
-            GetProductComboboxItems();
+            GetComboboxItems();
         }
 
         private readonly IInvoiceCollectionManager InvoiceManager;
@@ -39,20 +40,27 @@ namespace AvazehWpf.ViewModels
         private InvoiceDetailSingleton Singleton;
         private InvoiceModel _Invoice;
         private readonly Func<Task> CallBackFunc;
-        private List<ProductNamesForComboBox> productItems;
+        private ObservableCollection<ProductNamesForComboBox> productItems;
+        private ObservableCollection<ProductUnitModel> productUnits;
         private InvoiceItemModel _workItem = new();
         private bool CanUpdateRowFromDB = true; //False when user is DoubleClicks on a row.
         private bool EdittingItem = false;
         public bool CanSaveInvoiceChanges { get; set; } = true;
-
         public InvoiceItemModel SelectedItem { get; set; }
         public InvoiceItemModel WorkItem { get => _workItem; set { _workItem = value; NotifyOfPropertyChange(() => WorkItem); } }
         public int WorkItemProductId { get; set; }
         public double CustomerPreviousTotalBalance { get; private set; }
         public double CustomerTotalBalanceMinusThis => CustomerPreviousTotalBalance - (Invoice == null ? 0 : Invoice.TotalBalance);
-        public List<ProductNamesForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
+        public ObservableCollection<ProductNamesForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
+        public ObservableCollection<ProductUnitModel> ProductUnits { get => productUnits; set { productUnits = value; NotifyOfPropertyChange(() => ProductUnits); } }
         private ProductNamesForComboBox _selectedProductItem;
+        private ProductUnitModel _selectedProductUnit;
 
+        public ProductUnitModel SelectedProductUnit
+        {
+            get { return _selectedProductUnit; }
+            set { _selectedProductUnit = value; NotifyOfPropertyChange(() => SelectedProductUnit); }
+        }
 
         public ProductNamesForComboBox SelectedProductItem
         {
@@ -85,6 +93,7 @@ namespace AvazehWpf.ViewModels
             EdittingItem = true;
             SelectedItem.Clone(WorkItem);
             SelectedProductItem = ProductItemsForComboBox.SingleOrDefault(x => x.Id == SelectedItem.Product.Id);
+            SelectedProductUnit = ProductUnits.SingleOrDefault(x => x.Id == SelectedItem.Unit.Id);
             CanUpdateRowFromDB = true;
             NotifyOfPropertyChange(() => WorkItem);
         }
@@ -213,6 +222,16 @@ namespace AvazehWpf.ViewModels
             NotifyOfPropertyChange(() => Invoice);
             NotifyOfPropertyChange(() => Invoice.Items);
         }
+        public void ProductUnits_SelectionChanged(object sender, EventArgs e)
+        {
+            if (CanUpdateRowFromDB is false) return;
+            //WorkItem.Unit.Id = SelectedProductUnit.Id;
+            //WorkItem.Unit.UnitName=SelectedProductUnit.UnitName;
+            NotifyOfPropertyChange(() => WorkItem);
+            NotifyOfPropertyChange(() => WorkItem.Unit);
+            NotifyOfPropertyChange(() => Invoice);
+            NotifyOfPropertyChange(() => Invoice.Items);
+        }
 
         public void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
@@ -227,9 +246,10 @@ namespace AvazehWpf.ViewModels
                 }
             }
         }
-        private void GetProductComboboxItems()
+        private void GetComboboxItems()
         {
             ProductItemsForComboBox = Singleton.ProductItemsForCombobox;
+            ProductUnits=Singleton.ProductUnits;
         }
 
         void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
