@@ -235,7 +235,7 @@
                         <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="واحد" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <ComboBox ItemsSource="{Binding ProductUnits, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="UnitName" SelectedItem="{Binding SelectedProductUnit, Mode=TwoWay}"
+                    <ComboBox ItemsSource="{Binding ProductUnits}" SelectedValuePath="Id" DisplayMemberPath="UnitName" SelectedItem="{Binding SelectedProductUnit, Mode=TwoWay}"
                               cal:Message.Attach="[Event SelectionChanged]=[Action ProductUnits_SelectionChanged($source, $eventArgs)]" Height="25" VerticalContentAlignment="Center"/>
                 </StackPanel>
 

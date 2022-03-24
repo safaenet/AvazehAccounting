@@ -177,10 +177,11 @@ namespace AvazehApiClient.DataAccess
             To.CountString = From.CountString;
             if (From.Unit != null)
             {
-                if (To.Unit == null) To.Unit = new();
+                To.Unit = new();
                 To.Unit.Id = From.Unit.Id;
                 To.Unit.UnitName = From.Unit.UnitName;
             }
+            else To.Unit = null;
             To.DateCreated = From.DateCreated;
             To.TimeCreated = From.TimeCreated;
             To.DateUpdated = From.DateUpdated;

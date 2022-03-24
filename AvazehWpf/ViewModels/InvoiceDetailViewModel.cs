@@ -43,7 +43,7 @@ namespace AvazehWpf.ViewModels
         private ObservableCollection<ProductNamesForComboBox> productItems;
         private ObservableCollection<ProductUnitModel> productUnits;
         private InvoiceItemModel _workItem = new();
-        private bool CanUpdateRowFromDB = true; //False when user is DoubleClicks on a row.
+        private bool CanUpdateRowFromDB = true; //False when user DoubleClicks on a row.
         private bool EdittingItem = false;
         public bool CanSaveInvoiceChanges { get; set; } = true;
         public InvoiceItemModel SelectedItem { get; set; }
@@ -54,12 +54,11 @@ namespace AvazehWpf.ViewModels
         public ObservableCollection<ProductNamesForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
         public ObservableCollection<ProductUnitModel> ProductUnits { get => productUnits; set { productUnits = value; NotifyOfPropertyChange(() => ProductUnits); } }
         private ProductNamesForComboBox _selectedProductItem;
-        private ProductUnitModel _selectedProductUnit;
 
         public ProductUnitModel SelectedProductUnit
         {
-            get { return _selectedProductUnit; }
-            set { _selectedProductUnit = value; NotifyOfPropertyChange(() => SelectedProductUnit); }
+            get { return WorkItem.Unit; }
+            set { WorkItem.Unit = value; NotifyOfPropertyChange(() => SelectedProductUnit); }
         }
 
         public ProductNamesForComboBox SelectedProductItem
@@ -93,9 +92,10 @@ namespace AvazehWpf.ViewModels
             EdittingItem = true;
             SelectedItem.Clone(WorkItem);
             SelectedProductItem = ProductItemsForComboBox.SingleOrDefault(x => x.Id == SelectedItem.Product.Id);
-            SelectedProductUnit = ProductUnits.SingleOrDefault(x => x.Id == SelectedItem.Unit.Id);
+            SelectedProductUnit = SelectedItem.Unit == null || SelectedItem.Unit.Id == 0 ? null : ProductUnits.SingleOrDefault(x => x.Id == SelectedItem.Unit.Id);
             CanUpdateRowFromDB = true;
             NotifyOfPropertyChange(() => WorkItem);
+            NotifyOfPropertyChange(() => SelectedProductUnit);
         }
         
         public async Task AddOrUpdateItem()
@@ -129,7 +129,9 @@ namespace AvazehWpf.ViewModels
                 EdittingItem = false;
                 RefreshDataGrid();
             }
+            ProductUnitModel temp = WorkItem.Unit;
             WorkItem = new();
+            WorkItem.Unit = temp;
             SelectedProductItem = new();
             NotifyOfPropertyChange(() => Invoice);
             NotifyOfPropertyChange(() => Invoice.Items);
@@ -224,13 +226,14 @@ namespace AvazehWpf.ViewModels
         }
         public void ProductUnits_SelectionChanged(object sender, EventArgs e)
         {
-            if (CanUpdateRowFromDB is false) return;
-            //WorkItem.Unit.Id = SelectedProductUnit.Id;
-            //WorkItem.Unit.UnitName=SelectedProductUnit.UnitName;
-            NotifyOfPropertyChange(() => WorkItem);
-            NotifyOfPropertyChange(() => WorkItem.Unit);
-            NotifyOfPropertyChange(() => Invoice);
-            NotifyOfPropertyChange(() => Invoice.Items);
+            //if (CanUpdateRowFromDB is false) return;
+            //WorkItem.Unit = new();
+            //WorkItem.Unit.Id = SelectedProductUnit == null ? 0 : SelectedProductUnit.Id;
+            //WorkItem.Unit.UnitName = SelectedProductUnit?.UnitName;
+            //NotifyOfPropertyChange(() => WorkItem);
+            //NotifyOfPropertyChange(() => WorkItem.Unit);
+            //NotifyOfPropertyChange(() => Invoice);
+            //NotifyOfPropertyChange(() => Invoice.Items);
         }
 
         public void Window_PreviewKeyDown(object sender, KeyEventArgs e)

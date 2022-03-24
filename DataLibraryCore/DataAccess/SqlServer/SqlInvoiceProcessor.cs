@@ -27,6 +27,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 {
                     FluentMapper.Initialize(config => config.AddMap(new CustomerModelMapper()));
                     FluentMapper.Initialize(config => config.AddMap(new ProductModelMapper()));
+                    FluentMapper.Initialize(config => config.AddMap(new ProductUnitModelMapper()));
                 }
                 catch { }
                 
@@ -424,6 +425,13 @@ namespace DataLibraryCore.DataAccess.SqlServer
             Map(x => x.DateUpdated).ToColumn("pDateUpdated");
             Map(x => x.TimeUpdated).ToColumn("pTimeUpdated");
             Map(x => x.Descriptions).ToColumn("pDescriptions");
+        }
+    }
+    internal class ProductUnitModelMapper : EntityMap<ProductUnitModel>
+    {
+        public ProductUnitModelMapper()
+        {
+            Map(x => x.Id).ToColumn("puId");
         }
     }
 }
