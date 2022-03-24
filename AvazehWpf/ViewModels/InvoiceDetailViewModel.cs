@@ -43,6 +43,7 @@ namespace AvazehWpf.ViewModels
         private InvoiceItemModel _workItem = new();
         private bool CanUpdateRowFromDB = true; //False when user is DoubleClicks on a row.
         private bool EdittingItem = false;
+        public bool CanSaveInvoiceChanges { get; set; } = true;
 
         public InvoiceItemModel SelectedItem { get; set; }
         public InvoiceItemModel WorkItem { get => _workItem; set { _workItem = value; NotifyOfPropertyChange(() => WorkItem); } }
@@ -169,6 +170,7 @@ namespace AvazehWpf.ViewModels
             Invoice.DateUpdated = result.DateUpdated;
             Invoice.TimeUpdated = result.TimeUpdated;
             RefreshDataGrid();
+            CanSaveInvoiceChanges = false;
         }
         public void CloseWindow()
         {

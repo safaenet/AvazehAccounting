@@ -69,6 +69,7 @@
     <Build Include="Database\Invoices.sql" />
     <Build Include="Database\InvoiceItems.sql" />
     <Build Include="Database\InvoicePayments.sql" />
+    <Build Include="Database\ProductUnits.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="AvazehDatabase.refactorlog" />
