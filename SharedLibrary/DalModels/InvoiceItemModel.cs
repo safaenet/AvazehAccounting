@@ -53,6 +53,16 @@ namespace SharedLibrary.DalModels
                 return true;
             }
         }
+        public string CountPlusUnit
+        {
+            get
+            {
+                string result = CountValue.ToString();
+                if (Unit != null && Unit.Id != 0) result += " " + Unit.UnitName;
+                else result += " واحد";
+                return result;
+            }
+        }
         public double TotalBuyValue => CountValue * BuyPrice;
         public double TotalSellValue => CountValue * SellPrice;
         public double NetProfit => TotalSellValue - TotalBuyValue;

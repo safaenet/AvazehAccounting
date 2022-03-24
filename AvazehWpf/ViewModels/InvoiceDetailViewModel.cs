@@ -197,19 +197,6 @@ namespace AvazehWpf.ViewModels
         {
             var combo = sender as ComboBox;
             combo.IsDropDownOpen = true;
-            ////combo.Items.Clear();
-            //ProductItemsForComboBox.Clear();
-
-            //if (Singleton.ProductItemsForCombobox != null)
-            //{
-            //    var result = Singleton.ProductItemsForCombobox.Where(x => x.ProductName.Contains(combo.Text));
-            //    ProductItemsForComboBox = result?.ToList();
-            //}
-            //NotifyOfPropertyChange(() => ProductItemsForComboBox);
-            //var a = combo.Template.FindName("PART_EditableTextBox", combo) as TextBox;
-            //combo.IsDropDownOpen = true;
-            //a.SelectionStart = a.Text.Length;
-            //a.CaretIndex = a.Text.Length;
         }
         public async Task ProductNames_SelectionChanged(object sender, EventArgs e)
         {
@@ -223,17 +210,6 @@ namespace AvazehWpf.ViewModels
             NotifyOfPropertyChange(() => WorkItem.Product);
             NotifyOfPropertyChange(() => Invoice);
             NotifyOfPropertyChange(() => Invoice.Items);
-        }
-        public void ProductUnits_SelectionChanged(object sender, EventArgs e)
-        {
-            //if (CanUpdateRowFromDB is false) return;
-            //WorkItem.Unit = new();
-            //WorkItem.Unit.Id = SelectedProductUnit == null ? 0 : SelectedProductUnit.Id;
-            //WorkItem.Unit.UnitName = SelectedProductUnit?.UnitName;
-            //NotifyOfPropertyChange(() => WorkItem);
-            //NotifyOfPropertyChange(() => WorkItem.Unit);
-            //NotifyOfPropertyChange(() => Invoice);
-            //NotifyOfPropertyChange(() => Invoice.Items);
         }
 
         public void Window_PreviewKeyDown(object sender, KeyEventArgs e)
