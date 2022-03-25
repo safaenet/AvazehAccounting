@@ -1,6 +1,7 @@
 ﻿using AvazehApiClient.DataAccess.Interfaces;
 using FluentValidation.Results;
 using SharedLibrary.DalModels;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace AvazehApiClient.DataAccess.Interfaces
@@ -11,6 +12,7 @@ namespace AvazehApiClient.DataAccess.Interfaces
         Task<InvoiceItemModel> CreateItemAsync(InvoiceItemModel item);
         Task<InvoiceItemModel> UpdateItemAsync(InvoiceItemModel item);
         Task<bool> DeleteItemAsync(int Id);
+        Task<ObservableCollection<RecentSellPriceModel>> GetRecentSellPrices(InvoiceItemModel item);
         ValidationResult ValidateItem(InvoiceItemModel item);
 
         Task<InvoicePaymentModel> GetPaymentById(int Id);

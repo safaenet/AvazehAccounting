@@ -4,6 +4,7 @@ using AvazehApiClient.DataAccess.Interfaces;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Validators;
+using System.Collections.ObjectModel;
 
 namespace AvazehApiClient.DataAccess.CollectionManagers
 {
@@ -51,6 +52,11 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
             InvoiceItemValidator validator = new();
             var result = validator.Validate(item);
             return result;
+        }
+
+        public async Task<ObservableCollection<RecentSellPriceModel>> GetRecentSellPrices(InvoiceItemModel item)
+        {
+            
         }
     }
 }

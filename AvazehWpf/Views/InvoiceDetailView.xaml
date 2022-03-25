@@ -219,7 +219,7 @@
                         <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="قیمت فروش" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <ComboBox ItemsSource="{Binding ProductUnits}" SelectedValuePath="Id" DisplayMemberPath="UnitName" SelectedItem="{Binding SelectedProductUnit, Mode=TwoWay}" IsEditable="True" Height="25" VerticalContentAlignment="Center"/>
+                    <ComboBox ItemsSource="{Binding RecentSellPrices}" SelectedValuePath="SellPrice" DisplayMemberPath="RecordName" Text="{Binding WorkItem.SellPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" IsEditable="True" Height="25" VerticalContentAlignment="Center"/>
                     <!--<TextBox Text="{Binding WorkItem.SellPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" ToolTip="{Binding WorkItem.TotalSellValue, StringFormat='{}{0:#,#.##}'}" VerticalContentAlignment="Center" Height="25"/>-->
                 </StackPanel>
 

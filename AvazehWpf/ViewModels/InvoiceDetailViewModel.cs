@@ -42,6 +42,7 @@ namespace AvazehWpf.ViewModels
         private readonly Func<Task> CallBackFunc;
         private ObservableCollection<ProductNamesForComboBox> productItems;
         private ObservableCollection<ProductUnitModel> productUnits;
+        private ObservableCollection<RecentSellPriceModel> recentSellPrices;
         private InvoiceItemModel _workItem = new();
         private bool CanUpdateRowFromDB = true; //False when user DoubleClicks on a row.
         private bool EdittingItem = false;
@@ -53,6 +54,7 @@ namespace AvazehWpf.ViewModels
         public double CustomerTotalBalanceMinusThis => CustomerPreviousTotalBalance - (Invoice == null ? 0 : Invoice.TotalBalance);
         public ObservableCollection<ProductNamesForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
         public ObservableCollection<ProductUnitModel> ProductUnits { get => productUnits; set { productUnits = value; NotifyOfPropertyChange(() => ProductUnits); } }
+        public ObservableCollection<RecentSellPriceModel> RecentSellPrices { get => recentSellPrices; set { recentSellPrices = value; NotifyOfPropertyChange(() => RecentSellPrices); } }
         private ProductNamesForComboBox _selectedProductItem;
 
         public ProductUnitModel SelectedProductUnit
@@ -200,7 +202,8 @@ namespace AvazehWpf.ViewModels
         }
         public async Task ProductNames_SelectionChanged(object sender, EventArgs e)
         {
-            //Update customerized prices here.
+            if (Invoice == null) return;
+            
             if (CanUpdateRowFromDB is false) return;
             ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(InvoiceManager.ApiProcessor);
             WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
