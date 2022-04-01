@@ -100,6 +100,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id LEFT JOIN ProductUnits u ON it.ProductUnitId = u.Id WHERE it.Id = {0}";
         private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] FROM Products {0}";
         private readonly string GetProductUnitsQuery = "SELECT [Id], [UnitName] FROM ProductUnits";
+        private readonly string GetRecentPricesOfProduct = @"SELECT TOP({0}) it.SellPrice AS SellPrice, it.DateCreated AS DateSold FROM InvoiceItems it LEFT JOIN Invoices i ON it.InvoiceId = i.Id
+                                                             LEFT JOIN Customers c ON i.CustomerId = c.Id LEFT JOIN Products p ON it.ProductId = p.Id
+                                                             WHERE c.Id = {1} AND p.Id = {2} ORDER BY it.DateCreated DESC";
 
         public int CreateItem(InvoiceModel item)
         {

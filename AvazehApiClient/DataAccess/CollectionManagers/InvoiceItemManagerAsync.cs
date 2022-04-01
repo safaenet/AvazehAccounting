@@ -56,7 +56,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
 
         public async Task<ObservableCollection<RecentSellPriceModel>> GetRecentSellPrices(InvoiceItemModel item)
         {
-            
+            throw new System.NotImplementedException();
         }
     }
 }

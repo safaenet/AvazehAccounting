@@ -48,5 +48,6 @@ namespace DataLibraryCore.DataAccess.Interfaces
         Task<int> InsertInvoicePaymentToDatabaseAsync(InvoicePaymentModel item);
         Task<int> UpdateInvoicePaymentInDatabaseAsync(InvoicePaymentModel item);
         Task<int> DeleteInvoicePaymentFromDatabaseAsync(int ItemId);
+        Task<ObservableCollection<RecentSellPriceModel>> GetRecentSellPricesAsync(int MaxRecord, int CustomerId, int ProductId);
     }
 }

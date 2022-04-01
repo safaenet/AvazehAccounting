@@ -3,6 +3,7 @@ using DataLibraryCore.DataAccess.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace AvazehWebAPI.Controllers
@@ -24,6 +25,14 @@ namespace AvazehWebAPI.Controllers
             var item = await Processor.GetInvoiceItemFromDatabaseAsync(Id);
             if (item is null) return NotFound("Couldn't find specific Item");
             return item;
+        }
+
+        [HttpGet("{CustomerId}/{ProductId}")]
+        public async Task<ActionResult<ObservableCollection<RecentSellPriceModel>>> GetItemAsync(int CustomerId, int ProductId) //Used for getting recent sell prices.
+        {
+            var items = await Processor.GetRecentSellPricesAsync(2, CustomerId, ProductId);
+            if (items is null || items.Count == 0) return NotFound("Couldn't find specific Item");
+            return items;
         }
 
         [HttpPost]

@@ -256,16 +256,20 @@ namespace DataLibraryCore.DataAccess.SqlServer
         {
             var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [ProductName] LIKE '%{ SearchText }%'";
             var sql = string.Format(GetProductItemsQuery, where);
-            using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
-            var items = await conn.QueryAsync<ProductNamesForComboBox>(sql, null);
+            var items = await DataAccess.LoadDataAsync<ProductNamesForComboBox, DynamicParameters>(sql, null);
             return items?.ToList();
         }
 
         public async Task<List<ProductUnitModel>> GetProductUnitsAsync()
         {
-            using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
-            var items = await conn.QueryAsync<ProductUnitModel>(GetProductUnitsQuery, null);
-            return items?.ToList();
+            var result = await DataAccess.LoadDataAsync<ProductUnitModel, DynamicParameters>(GetProductUnitsQuery, null);
+            return result?.ToList();
+        }
+
+        public async Task<ObservableCollection<RecentSellPriceModel>> GetRecentSellPricesAsync(int MaxRecord, int CustomerId, int ProductId)
+        {
+            var sql = string.Format(GetRecentPricesOfProduct, MaxRecord, CustomerId, ProductId);
+            return await DataAccess.LoadDataAsync<RecentSellPriceModel, DynamicParameters>(sql, null);
         }
     }
 }
