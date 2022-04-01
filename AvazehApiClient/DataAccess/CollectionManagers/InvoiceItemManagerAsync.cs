@@ -54,9 +54,9 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
             return result;
         }
 
-        public async Task<ObservableCollection<RecentSellPriceModel>> GetRecentSellPrices(InvoiceItemModel item)
+        public async Task<ObservableCollection<RecentSellPriceModel>> GetRecentSellPrices(int MaxRecord, int CustomerId, int ProductId)
         {
-            throw new System.NotImplementedException();
+            return await ApiProcessor.GetCollectionAsync<ObservableCollection<RecentSellPriceModel>>(KeyItem, MaxRecord, CustomerId, ProductId);
         }
     }
 }

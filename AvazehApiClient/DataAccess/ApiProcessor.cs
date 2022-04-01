@@ -29,6 +29,13 @@ namespace AvazehApiClient.DataAccess
             return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
         }
 
+        public async Task<T> GetCollectionAsync<T>(string Key, int Id1, int Id2, int Id3) where T : class //Mostly used for Load Product recent prices in invoice details page.
+        {
+            var Url = $"{Key}/{Id1}/{Id2}/{Id3}";
+            var response = await ApiClient.GetAsync(Url);
+            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+        }
+
         public async Task<T> GetInvoiceCollectionAsync<T>(string Key, string OrderBy, OrderType orderType, int Page = 1, string SearchText = "", InvoiceLifeStatus? LifeStatus = null, InvoiceFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false) where T : class
         {
             var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&Page={Page}&SearchText={SearchText}&LifeStatus={LifeStatus}&FinStatus={FinStatus}&PageSize={PageSize}&ForceLoad={ForceLoad}";

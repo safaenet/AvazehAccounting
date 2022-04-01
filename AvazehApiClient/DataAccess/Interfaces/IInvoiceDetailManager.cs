@@ -12,7 +12,7 @@ namespace AvazehApiClient.DataAccess.Interfaces
         Task<InvoiceItemModel> CreateItemAsync(InvoiceItemModel item);
         Task<InvoiceItemModel> UpdateItemAsync(InvoiceItemModel item);
         Task<bool> DeleteItemAsync(int Id);
-        Task<ObservableCollection<RecentSellPriceModel>> GetRecentSellPrices(InvoiceItemModel item);
+        Task<ObservableCollection<RecentSellPriceModel>> GetRecentSellPrices(int MaxRecord, int CustomerId, int ProductId);
         ValidationResult ValidateItem(InvoiceItemModel item);
 
         Task<InvoicePaymentModel> GetPaymentById(int Id);

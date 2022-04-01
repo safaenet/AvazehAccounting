@@ -27,10 +27,10 @@ namespace AvazehWebAPI.Controllers
             return item;
         }
 
-        [HttpGet("{CustomerId}/{ProductId}")]
-        public async Task<ActionResult<ObservableCollection<RecentSellPriceModel>>> GetItemAsync(int CustomerId, int ProductId) //Used for getting recent sell prices.
+        [HttpGet("{MaxRecord}/{CustomerId}/{ProductId}")]
+        public async Task<ActionResult<ObservableCollection<RecentSellPriceModel>>> GetItemAsync(int MaxRecord, int CustomerId, int ProductId) //Used for getting recent sell prices.
         {
-            var items = await Processor.GetRecentSellPricesAsync(2, CustomerId, ProductId);
+            var items = await Processor.GetRecentSellPricesAsync(MaxRecord, CustomerId, ProductId);
             if (items is null || items.Count == 0) return NotFound("Couldn't find specific Item");
             return items;
         }
