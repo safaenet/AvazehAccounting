@@ -221,17 +221,12 @@ namespace AvazehWpf.ViewModels
             WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
             WorkItem.BuyPrice = WorkItem.Product.BuyPrice;
             WorkItem.SellPrice = WorkItem.Product.SellPrice;
-            var recents = await Manager.GetRecentSellPrices(1, Invoice.Customer.Id, WorkItem.Product.Id);
             RecentSellPrices?.Clear();
-            if (recents != null && recents.Count > 0)
-            {
-                RecentSellPrices = recents;
-            }
+            var recents = await Manager.GetRecentSellPrices(1, Invoice.Customer.Id, WorkItem.Product.Id);
+            if (recents != null && recents.Count > 0) RecentSellPrices = recents;
             if (RecentSellPrices == null) RecentSellPrices = new();
             RecentSellPrices.Add(new RecentSellPriceModel { SellPrice = WorkItem.Product.SellPrice, DateSold = "اکنون" });
-            NotifyOfPropertyChange(() => WorkItem);
             NotifyOfPropertyChange(() => WorkItem.Product);
-            NotifyOfPropertyChange(() => Invoice);
             NotifyOfPropertyChange(() => Invoice.Items);
         }
 

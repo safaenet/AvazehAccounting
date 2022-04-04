@@ -219,7 +219,7 @@
                         <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="قیمت فروش" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <ComboBox ItemsSource="{Binding RecentSellPrices}" SelectedValuePath="SellPrice" DisplayMemberPath="SellPrice" SelectedValue="{Binding WorkItem.SellPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}"
+                    <ComboBox ItemsSource="{Binding RecentSellPrices}" SelectedValuePath="SellPrice" DisplayMemberPath="SellPrice" Text="{Binding WorkItem.SellPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}"
                               cal:Message.Attach="[Event GotFocus] = [Action SellPrice_GotFocus()]"
                               IsDropDownOpen="{Binding IsSellPriceDropDownOpen,Mode=TwoWay}" IsEditable="True" Height="25" VerticalContentAlignment="Center"/>
                 </StackPanel>
