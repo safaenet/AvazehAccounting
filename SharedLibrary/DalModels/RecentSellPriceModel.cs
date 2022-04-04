@@ -11,6 +11,6 @@ namespace SharedLibrary.DalModels
         //public int ProductId { get; set; }
         public long SellPrice { get; set; }
         public string DateSold { get; set; }
-        public string RecordName => SellPrice + " در تاریخ " + DateSold;
+        public string RecordName => SellPrice + " : " + DateSold;
     }
 }

@@ -49,13 +49,20 @@ namespace AvazehWpf.ViewModels
         public bool CanSaveInvoiceChanges { get; set; } = true;
         public InvoiceItemModel SelectedItem { get; set; }
         public InvoiceItemModel WorkItem { get => _workItem; set { _workItem = value; NotifyOfPropertyChange(() => WorkItem); } }
-        public int WorkItemProductId { get; set; }
         public double CustomerPreviousTotalBalance { get; private set; }
         public double CustomerTotalBalanceMinusThis => CustomerPreviousTotalBalance - (Invoice == null ? 0 : Invoice.TotalBalance);
         public ObservableCollection<ProductNamesForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
         public ObservableCollection<ProductUnitModel> ProductUnits { get => productUnits; set { productUnits = value; NotifyOfPropertyChange(() => ProductUnits); } }
         public ObservableCollection<RecentSellPriceModel> RecentSellPrices { get => recentSellPrices; set { recentSellPrices = value; NotifyOfPropertyChange(() => RecentSellPrices); } }
         private ProductNamesForComboBox _selectedProductItem;
+        private bool isSellPriceDropDownOpen;
+
+        public bool IsSellPriceDropDownOpen
+        {
+            get { return isSellPriceDropDownOpen; }
+            set { isSellPriceDropDownOpen = value; NotifyOfPropertyChange(() => IsSellPriceDropDownOpen); }
+        }
+
 
         public ProductUnitModel SelectedProductUnit
         {
@@ -195,6 +202,12 @@ namespace AvazehWpf.ViewModels
             await CallBackFunc?.Invoke();
         }
 
+        public void SellPrice_GotFocus()
+        {
+            if(RecentSellPrices != null && RecentSellPrices.Count > 1)
+                IsSellPriceDropDownOpen = true;
+        }
+
         public void ProductNames_PreviewTextInput(object sender, EventArgs e)
         {
             var combo = sender as ComboBox;
@@ -203,12 +216,19 @@ namespace AvazehWpf.ViewModels
         public async Task ProductNames_SelectionChanged(object sender, EventArgs e)
         {
             if (Invoice == null) return;
-            
             if (CanUpdateRowFromDB is false) return;
             ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(InvoiceManager.ApiProcessor);
             WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
             WorkItem.BuyPrice = WorkItem.Product.BuyPrice;
             WorkItem.SellPrice = WorkItem.Product.SellPrice;
+            var recents = await Manager.GetRecentSellPrices(1, Invoice.Customer.Id, WorkItem.Product.Id);
+            RecentSellPrices?.Clear();
+            if (recents != null && recents.Count > 0)
+            {
+                RecentSellPrices = recents;
+            }
+            if (RecentSellPrices == null) RecentSellPrices = new();
+            RecentSellPrices.Add(new RecentSellPriceModel { SellPrice = WorkItem.Product.SellPrice, DateSold = "اکنون" });
             NotifyOfPropertyChange(() => WorkItem);
             NotifyOfPropertyChange(() => WorkItem.Product);
             NotifyOfPropertyChange(() => Invoice);
