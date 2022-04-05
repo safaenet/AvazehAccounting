@@ -14,7 +14,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
 
         public async Task<InvoicePaymentModel> GetPaymentById(int Id)
         {
-            return await ApiProcessor.GetItemAsync<InvoicePaymentModel>(KeyPayment, Id);
+            return await ApiProcessor.GetItemAsync<InvoicePaymentModel>(KeyPayment, Id.ToString());
         }
 
         public async Task<InvoicePaymentModel> CreatePaymentAsync(InvoicePaymentModel item)

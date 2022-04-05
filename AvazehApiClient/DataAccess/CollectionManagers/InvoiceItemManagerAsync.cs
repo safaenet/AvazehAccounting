@@ -20,7 +20,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
 
         public async Task<InvoiceItemModel> GetItemById(int Id)
         {
-            return await ApiProcessor.GetItemAsync<InvoiceItemModel>(KeyItem, Id);
+            return await ApiProcessor.GetItemAsync<InvoiceItemModel>(KeyItem, Id.ToString());
         }
 
         public async Task<InvoiceItemModel> CreateItemAsync(InvoiceItemModel item)

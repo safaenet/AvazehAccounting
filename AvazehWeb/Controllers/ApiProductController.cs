@@ -39,6 +39,14 @@ namespace AvazehWebAPI.Controllers
             return item;
         }
 
+        [HttpGet("BarCode/{Id}")]
+        public async Task<ActionResult<ProductModel>> GetItemAsync(string Id)
+        {
+            var item = await Manager.Processor.LoadSingleItemAsync(Id);
+            if (item is null) return NotFound("Couldn't find specific Item");
+            return item;
+        }
+
         [HttpPost]
         public async Task<ActionResult<ProductModel>> CreateItemAsync(ProductModel_DTO_Create_Update model)
         {

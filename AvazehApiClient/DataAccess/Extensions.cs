@@ -1,5 +1,7 @@
-﻿using SharedLibrary.DalModels;
+﻿using AvazehApiClient.DataAccess.Interfaces;
+using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
+using System.Threading.Tasks;
 
 namespace AvazehApiClient.DataAccess
 {
@@ -189,6 +191,11 @@ namespace AvazehApiClient.DataAccess
             To.Delivered = From.Delivered;
             To.Descriptions = From.Descriptions;
             From.Product.Clone(To.Product);
+        }
+
+        public static async Task<ProductModel> GetItemByBarCodeAsync(this ICollectionManager<ProductModel> manager, string BarCode)
+        {
+            return await manager.ApiProcessor.GetItemAsync<ProductModel>("Product/BarCode", BarCode);
         }
     }
 }

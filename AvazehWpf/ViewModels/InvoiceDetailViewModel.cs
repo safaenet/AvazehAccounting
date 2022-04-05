@@ -56,23 +56,39 @@ namespace AvazehWpf.ViewModels
         public ObservableCollection<RecentSellPriceModel> RecentSellPrices { get => recentSellPrices; set { recentSellPrices = value; NotifyOfPropertyChange(() => RecentSellPrices); } }
         private ProductNamesForComboBox _selectedProductItem;
         private bool isSellPriceDropDownOpen;
+        private string barCodeInput;
+        private bool isBarCodeEnabled;
+
+        public bool IsBarCodeEnabled
+        {
+            get => isBarCodeEnabled;
+            set { isBarCodeEnabled = value; NotifyOfPropertyChange(() => IsBarCodeEnabled); }
+        }
+
+
+        public string BarCodeInput
+        {
+            get => barCodeInput;
+            set { barCodeInput = value; NotifyOfPropertyChange(() => BarCodeInput); }
+        }
+
 
         public bool IsSellPriceDropDownOpen
         {
-            get { return isSellPriceDropDownOpen; }
+            get => isSellPriceDropDownOpen;
             set { isSellPriceDropDownOpen = value; NotifyOfPropertyChange(() => IsSellPriceDropDownOpen); }
         }
 
 
         public ProductUnitModel SelectedProductUnit
         {
-            get { return WorkItem.Unit; }
+            get => WorkItem.Unit;
             set { WorkItem.Unit = value; NotifyOfPropertyChange(() => SelectedProductUnit); }
         }
 
         public ProductNamesForComboBox SelectedProductItem
         {
-            get { return _selectedProductItem; }
+            get => _selectedProductItem;
             set { _selectedProductItem = value; NotifyOfPropertyChange(() => SelectedProductItem); }
         }
 
@@ -84,13 +100,13 @@ namespace AvazehWpf.ViewModels
 
         private async Task ReloadInvoice(int? InvoiceId)
         {
-            if(InvoiceId is null) return;
+            if (InvoiceId is null) return;
             Invoice = await InvoiceManager.GetItemById((int)InvoiceId);
         }
 
         private async Task ReloadCustomerBalance()
         {
-            if(Invoice is null) return;
+            if (Invoice is null) return;
             CustomerPreviousTotalBalance = await InvoiceManager.GetCustomerTotalBalanceById(Invoice.Customer.Id, Invoice.Id);
         }
         
@@ -112,31 +128,38 @@ namespace AvazehWpf.ViewModels
             if (Invoice == null || WorkItem == null || SelectedProductItem == null || SelectedProductItem.Id == 0) return;
             WorkItem.InvoiceId = Invoice.Id;
             ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(InvoiceManager.ApiProcessor);
-            WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
-            var validate = Manager.ValidateItem(WorkItem);
-            if (!validate.IsValid)
+            if (IsBarCodeEnabled)
             {
-                var str = "";
-                foreach (var error in validate.Errors)
-                    str += error.ErrorMessage + "\n";
-                MessageBox.Show(str, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                
             }
+            else
+            {
+                WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
+                var validate = Manager.ValidateItem(WorkItem);
+                if (!validate.IsValid)
+                {
+                    var str = "";
+                    foreach (var error in validate.Errors)
+                        str += error.ErrorMessage + "\n";
+                    MessageBox.Show(str, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
-            if (EdittingItem == false) //New Item
-            {
-                if (Invoice.Items == null) Invoice.Items = new();
-                var addedItem = await Manager.CreateItemAsync(WorkItem);
-                if (addedItem is not null)
-                    Invoice.Items.Add(addedItem);
-            }
-            else //Edit Item
-            {
-                var editedItem = await Manager.UpdateItemAsync(WorkItem);
-                var item = Invoice.Items.FirstOrDefault(x => x.Id == WorkItem.Id);
-                if (editedItem != null) editedItem.Clone(item);
-                EdittingItem = false;
-                RefreshDataGrid();
+                if (EdittingItem == false) //New Item
+                {
+                    if (Invoice.Items == null) Invoice.Items = new();
+                    var addedItem = await Manager.CreateItemAsync(WorkItem);
+                    if (addedItem is not null)
+                        Invoice.Items.Add(addedItem);
+                }
+                else //Edit Item
+                {
+                    var editedItem = await Manager.UpdateItemAsync(WorkItem);
+                    var item = Invoice.Items.FirstOrDefault(x => x.Id == WorkItem.Id);
+                    if (editedItem != null) editedItem.Clone(item);
+                    EdittingItem = false;
+                    RefreshDataGrid();
+                }
             }
             ProductUnitModel temp = WorkItem.Unit;
             WorkItem = new();

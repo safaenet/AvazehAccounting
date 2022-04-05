@@ -68,5 +68,11 @@ namespace DataLibraryCore.DataAccess.SqlServer
             var outPut = await LoadManyItemsAsync(0, 1, $"[Id] = { Id }");
             return outPut.FirstOrDefault();
         }
+
+        public async Task<TModel> LoadSingleItemAsync(string Id)
+        {
+            var outPut = await LoadManyItemsAsync(0, 1, $"[BarCode] = { Id }");
+            return outPut.FirstOrDefault();
+        }
     }
 }

@@ -45,7 +45,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
 
         public async Task<TDalModel> GetItemById(int Id)
         {
-            return await ApiProcessor.GetItemAsync<TDalModel>(Key, Id);
+            return await ApiProcessor.GetItemAsync<TDalModel>(Key, Id.ToString());
         }
 
         public async Task<TDalModel> CreateItemAsync(TDalModel item)

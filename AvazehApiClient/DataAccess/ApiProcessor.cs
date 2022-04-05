@@ -43,7 +43,7 @@ namespace AvazehApiClient.DataAccess
             return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
         }
 
-        public async Task<T> GetItemAsync<T>(string Key, int Id) where T : class
+        public async Task<T> GetItemAsync<T>(string Key, string Id) where T : class
         {
             var Url = $"{Key}/{Id}";
             var response = await ApiClient.GetAsync(Url);
