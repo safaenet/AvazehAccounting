@@ -42,7 +42,7 @@ namespace AvazehWebAPI.Controllers
         [HttpGet("BarCode/{Id}")]
         public async Task<ActionResult<ProductModel>> GetItemAsync(string Id)
         {
-            var item = await Manager.Processor.LoadSingleItemAsync(Id);
+            var item = await Manager.Processor.LoadSingleItemByBarcodeAsync(Id);
             if (item is null) return NotFound("Couldn't find specific Item");
             return item;
         }

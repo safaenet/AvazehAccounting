@@ -130,7 +130,7 @@ namespace AvazehWpf.ViewModels
             ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(InvoiceManager.ApiProcessor);
             if (IsBarCodeEnabled)
             {
-                
+                var product = await productManager.GetItemByBarCodeAsync(BarCodeInput);
             }
             else
             {

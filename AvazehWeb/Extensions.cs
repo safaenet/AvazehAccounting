@@ -2,7 +2,10 @@
 using DataLibraryCore.DataAccess.SqlServer;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
+using SharedLibrary.Enums;
 using SharedLibrary.Validators;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AvazehWeb
 {
@@ -193,6 +196,12 @@ namespace AvazehWeb
                 PayAmount = model.PayAmount,
                 Descriptions = model.Descriptions
             };
+        }
+
+        public static async Task<ProductModel> LoadSingleItemByBarcodeAsync(this IProcessor<ProductModel> processor, string Id)
+        {
+            var outPut = await processor.LoadManyItemsAsync(0, 1, $"[BarCode] LIKE '{ Id }'", "ProductName", OrderType.ASC);
+            return outPut.FirstOrDefault();
         }
     }
 }
