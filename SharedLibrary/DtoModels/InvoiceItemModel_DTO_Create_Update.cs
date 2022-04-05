@@ -32,6 +32,10 @@ namespace SharedLibrary.DtoModels //DTO Models
         [Range(0, long.MaxValue, ErrorMessage = "Field must be >= Zero")]
         public long SellPrice { get; set; }
 
+        [Display(Name = "Barcode", Prompt = "Barcode. Max length is 15 characters")]
+        [StringLength(15, ErrorMessage = "Maximum length is 15")]
+        public string BarCode { get; set; }
+
         [Display(Name = "Count")]
         [Required(ErrorMessage = "Field is required")]
         [StringLength(50, ErrorMessage = "Maximum length is 50")]

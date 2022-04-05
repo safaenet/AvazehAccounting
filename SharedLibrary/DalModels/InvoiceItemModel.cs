@@ -14,6 +14,7 @@ namespace SharedLibrary.DalModels
         public ProductModel Product { get; set; }
         public long BuyPrice { get; set; }
         public long SellPrice { get; set; }
+        public string BarCode { get; set; }
         public string CountString { get; set; } = "0";
         public ProductUnitModel Unit { get; set; }
         public string DateCreated { get; set; }
