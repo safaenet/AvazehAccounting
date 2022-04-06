@@ -57,7 +57,15 @@ namespace AvazehWpf.ViewModels
         private ProductNamesForComboBox _selectedProductItem;
         private bool isSellPriceDropDownOpen;
         private string barCodeInput;
-        private bool isBarCodeEnabled;
+        private bool isBarCodeEnabled = false;
+        private string productInput;
+
+        public string ProductInput
+        {
+            get => productInput;
+            set { productInput = value; NotifyOfPropertyChange(() => ProductInput); }
+        }
+
 
         public bool IsBarCodeEnabled
         {
@@ -125,15 +133,43 @@ namespace AvazehWpf.ViewModels
         
         public async Task AddOrUpdateItem()
         {
-            if (Invoice == null || WorkItem == null || SelectedProductItem == null || SelectedProductItem.Id == 0) return;
-            WorkItem.InvoiceId = Invoice.Id;
+            MessageBox.Show(ProductInput);
+            if (Invoice == null) return;
             ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(InvoiceManager.ApiProcessor);
-            if (IsBarCodeEnabled)
+            if (IsBarCodeEnabled && EdittingItem == false && BarCodeInput != null && BarCodeInput.Trim().Length > 0)
             {
                 var product = await productManager.GetItemByBarCodeAsync(BarCodeInput);
+                if (product == null)
+                {
+                    //Show some red color as "not found" error.
+                    return;
+                }
+                if (Invoice.Items == null) Invoice.Items = new();
+                var item = Invoice.Items.FirstOrDefault(x => x.Product.Id == product.Id);
+                if (item == null) //If doesnt exsist in list, add new
+                {
+                    WorkItem = new();
+                    WorkItem.InvoiceId = Invoice.Id;
+                    WorkItem.Product = product;
+                    WorkItem.SellPrice = product.SellPrice;
+                    WorkItem.BuyPrice = product.BuyPrice;
+                    WorkItem.CountString = (1).ToString();
+                    var addedItem = await Manager.CreateItemAsync(WorkItem);
+                    if (addedItem is not null)
+                        Invoice.Items.Add(addedItem);
+                }
+                else //if exists in list, update it to one more
+                {
+                    WorkItem = item;
+                    WorkItem.CountString = (WorkItem.CountValue + 1).ToString();
+                    await UpdateItemInDatabase(WorkItem);
+                }
+                BarCodeInput = "";
             }
             else
             {
+                if (WorkItem == null || SelectedProductItem == null || SelectedProductItem.Id == 0) return;
+                WorkItem.InvoiceId = Invoice.Id;
                 WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
                 var validate = Manager.ValidateItem(WorkItem);
                 if (!validate.IsValid)
@@ -144,7 +180,6 @@ namespace AvazehWpf.ViewModels
                     MessageBox.Show(str, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-
                 if (EdittingItem == false) //New Item
                 {
                     if (Invoice.Items == null) Invoice.Items = new();
@@ -154,20 +189,24 @@ namespace AvazehWpf.ViewModels
                 }
                 else //Edit Item
                 {
-                    var editedItem = await Manager.UpdateItemAsync(WorkItem);
-                    var item = Invoice.Items.FirstOrDefault(x => x.Id == WorkItem.Id);
-                    if (editedItem != null) editedItem.Clone(item);
+                    await UpdateItemInDatabase(WorkItem);
                     EdittingItem = false;
-                    RefreshDataGrid();
                 }
             }
             ProductUnitModel temp = WorkItem.Unit;
             WorkItem = new();
             WorkItem.Unit = temp;
             SelectedProductItem = new();
-            NotifyOfPropertyChange(() => Invoice);
+            ProductInput = "";
             NotifyOfPropertyChange(() => Invoice.Items);
-            NotifyOfPropertyChange(() => SelectedProductItem);
+        }
+
+        private async Task UpdateItemInDatabase(InvoiceItemModel item)
+        {
+            var ResultItem = await Manager.UpdateItemAsync(WorkItem);
+            var EdittedItem = Invoice.Items.FirstOrDefault(x => x.Id == WorkItem.Id);
+            if (ResultItem != null) ResultItem.Clone(EdittedItem);
+            RefreshDataGrid();
         }
 
         public async Task DeleteItem()
@@ -251,6 +290,7 @@ namespace AvazehWpf.ViewModels
             RecentSellPrices.Add(new RecentSellPriceModel { SellPrice = WorkItem.Product.SellPrice, DateSold = "اکنون" });
             NotifyOfPropertyChange(() => WorkItem.Product);
             NotifyOfPropertyChange(() => Invoice.Items);
+            NotifyOfPropertyChange(() => WorkItem);
         }
 
         public void Window_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -275,6 +315,16 @@ namespace AvazehWpf.ViewModels
         void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
+
+        public void EnableBarCodeMode()
+        {
+            IsBarCodeEnabled = true;
+        }
+
+        public void DisableBarCodeMode()
+        {
+            IsBarCodeEnabled = false;
         }
     }
 

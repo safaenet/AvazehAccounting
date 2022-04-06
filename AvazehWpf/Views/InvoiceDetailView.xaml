@@ -187,7 +187,7 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Button x:Name="AddOrUpdateItem" IsDefault="True" Grid.Column="0" TabIndex="7" Width="40" Margin="0,0,5,0">
@@ -207,7 +207,7 @@
                     <TextBox Text="{Binding WorkItem.TotalSellValue, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" ToolTip="{Binding WorkItem.NetProfit, StringFormat='{}{0:#,#.##}'}" IsTabStop="False" IsReadOnly="True" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="3" Width="200" Orientation="Vertical" Margin="0,0,3,0">
+                <StackPanel Grid.Column="3" Width="150" Orientation="Vertical" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="توضیحات" Margin="0,0,0,0"/>
@@ -215,17 +215,17 @@
                     <TextBox Text="{Binding WorkItem.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TabIndex="5" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="4" Width="80" Orientation="Vertical" Margin="0,0,3,0">
+                <StackPanel Grid.Column="4" Width="90" Orientation="Vertical" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="قیمت فروش" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <ComboBox ItemsSource="{Binding RecentSellPrices}" SelectedValuePath="SellPrice" DisplayMemberPath="SellPrice" Text="{Binding WorkItem.SellPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}"
+                    <ComboBox ItemsSource="{Binding RecentSellPrices}" SelectedValuePath="SellPrice" DisplayMemberPath="SellPrice    " Text="{Binding WorkItem.SellPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}"
                               cal:Message.Attach="[Event GotFocus] = [Action SellPrice_GotFocus()]"
                               IsDropDownOpen="{Binding IsSellPriceDropDownOpen,Mode=TwoWay}" IsEditable="True" Height="25" VerticalContentAlignment="Center" TabIndex="4"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="5" Visibility="{Binding IsChecked, ElementName=ShowNetProfit, Converter={StaticResource b2v}}" Width="80" Orientation="Vertical" Margin="0,0,3,0">
+                <StackPanel Grid.Column="5" Visibility="{Binding IsChecked, ElementName=ShowNetProfit, Converter={StaticResource b2v}}" Width="90" Orientation="Vertical" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="قیمت خرید" Margin="0,0,0,0"/>
@@ -249,12 +249,14 @@
                     <TextBox Text="{Binding WorkItem.CountString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding WorkItem.CountValue}" TabIndex="1" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="8" Orientation="Vertical" Margin="0,0,3,0">
+                <StackPanel Grid.Column="8" Orientation="Vertical" Width="110" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="بارکد" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <TextBox Text="{Binding BarCodeInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TabIndex="1" VerticalContentAlignment="Center" Height="25"/>
+                    <TextBox Text="{Binding BarCodeInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             cal:Message.Attach="[Event GotFocus]=[Action EnableBarCodeMode()];[Event LostFocus]=[Action DisableBarCodeMode()]"
+                             TabIndex="1" IsTabStop="False" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="9" Orientation="Vertical" Margin="0,0,0,0">
@@ -262,10 +264,11 @@
                         <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="نام کالا" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <ComboBox IsTextSearchEnabled="True" IsEditable="True" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,3,0" Height="25"
+                    <ComboBox IsTextSearchEnabled="True" IsEditable="True" VerticalContentAlignment="Center" Height="25"
                               cal:Message.Attach="[Event SelectionChanged]=[Action ProductNames_SelectionChanged($source, $eventArgs)]"
                               ItemsSource="{Binding ProductItemsForComboBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ProductName" SelectedItem="{Binding SelectedProductItem, Mode=TwoWay}"/>
+                              SelectedItem="{Binding SelectedProductItem, Mode=TwoWay}" TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ProductName"
+                              />
                 </StackPanel>
             </Grid>
             <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditItem()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
