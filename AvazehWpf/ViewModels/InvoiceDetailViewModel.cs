@@ -56,8 +56,6 @@ namespace AvazehWpf.ViewModels
         public ObservableCollection<RecentSellPriceModel> RecentSellPrices { get => recentSellPrices; set { recentSellPrices = value; NotifyOfPropertyChange(() => RecentSellPrices); } }
         private ProductNamesForComboBox _selectedProductItem;
         private bool isSellPriceDropDownOpen;
-        private string barCodeInput;
-        private bool isBarCodeEnabled = false;
         private string productInput;
 
         public string ProductInput
@@ -65,21 +63,6 @@ namespace AvazehWpf.ViewModels
             get => productInput;
             set { productInput = value; NotifyOfPropertyChange(() => ProductInput); }
         }
-
-
-        public bool IsBarCodeEnabled
-        {
-            get => isBarCodeEnabled;
-            set { isBarCodeEnabled = value; NotifyOfPropertyChange(() => IsBarCodeEnabled); }
-        }
-
-
-        public string BarCodeInput
-        {
-            get => barCodeInput;
-            set { barCodeInput = value; NotifyOfPropertyChange(() => BarCodeInput); }
-        }
-
 
         public bool IsSellPriceDropDownOpen
         {
@@ -135,9 +118,10 @@ namespace AvazehWpf.ViewModels
         {
             if (Invoice == null) return;
             ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(InvoiceManager.ApiProcessor);
-            if (IsBarCodeEnabled && EdittingItem == false && BarCodeInput != null && BarCodeInput.Trim().Length > 0)
+            if (SelectedProductItem == null && ProductInput != null && ProductInput.Length > 0 && EdittingItem == false) //Search barcode
             {
-                var product = await productManager.GetItemByBarCodeAsync(BarCodeInput);
+                var product = await productManager.GetItemByBarCodeAsync(ProductInput);
+                ProductInput = "";
                 if (product == null)
                 {
                     //Show some red color as "not found" error.
@@ -155,7 +139,10 @@ namespace AvazehWpf.ViewModels
                     WorkItem.CountString = (1).ToString();
                     var addedItem = await Manager.CreateItemAsync(WorkItem);
                     if (addedItem is not null)
+                    {
+                        //Validate here
                         Invoice.Items.Add(addedItem);
+                    }
                 }
                 else //if exists in list, update it to one more
                 {
@@ -163,7 +150,6 @@ namespace AvazehWpf.ViewModels
                     WorkItem.CountString = (WorkItem.CountValue + 1).ToString();
                     await UpdateItemInDatabase(WorkItem);
                 }
-                BarCodeInput = "";
             }
             else
             {
@@ -195,7 +181,7 @@ namespace AvazehWpf.ViewModels
             ProductUnitModel temp = WorkItem.Unit;
             WorkItem = new();
             WorkItem.Unit = temp;
-            SelectedProductItem = new();
+            SelectedProductItem = null;
             ProductInput = "";
             NotifyOfPropertyChange(() => Invoice.Items);
         }
@@ -316,16 +302,6 @@ namespace AvazehWpf.ViewModels
         void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();
-        }
-
-        public void EnableBarCodeMode()
-        {
-            IsBarCodeEnabled = true;
-        }
-
-        public void DisableBarCodeMode()
-        {
-            IsBarCodeEnabled = false;
         }
     }
 

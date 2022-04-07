@@ -57,7 +57,6 @@ namespace AvazehWpf.ViewModels
             CloseWindow();
         }
 
-
         public async Task SaveAndClose()
         {
             if (await SaveToDatabase() == false) return;

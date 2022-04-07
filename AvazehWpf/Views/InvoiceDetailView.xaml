@@ -187,7 +187,6 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Button x:Name="AddOrUpdateItem" IsDefault="True" Grid.Column="0" TabIndex="7" Width="40" Margin="0,0,5,0">
@@ -249,16 +248,6 @@
                     <TextBox Text="{Binding WorkItem.CountString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding WorkItem.CountValue}" TabIndex="1" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="8" Orientation="Vertical" Width="110" Margin="0,0,3,0">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
-                        <TextBlock TextAlignment="Center" Text="بارکد" Margin="0,0,0,0"/>
-                    </StackPanel>
-                    <TextBox Text="{Binding BarCodeInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             cal:Message.Attach="[Event GotFocus]=[Action EnableBarCodeMode()];[Event LostFocus]=[Action DisableBarCodeMode()]"
-                             TabIndex="1" IsTabStop="False" VerticalContentAlignment="Center" Height="25"/>
-                </StackPanel>
-
                 <StackPanel Grid.Column="9" Orientation="Vertical" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
@@ -268,7 +257,13 @@
                               cal:Message.Attach="[Event SelectionChanged]=[Action ProductNames_SelectionChanged($source, $eventArgs)]"
                               ItemsSource="{Binding ProductItemsForComboBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               SelectedItem="{Binding SelectedProductItem, Mode=TwoWay}" TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ProductName"
-                              Text="{Binding ProductInput, Mode=OneWayToSource}"/>
+                              Text="{Binding ProductInput,Mode=TwoWay}">
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="ComboBoxItem">
+                                <Setter Property="ToolTip" Value="{Binding Path=Id, StringFormat='Product ID: {0}'}"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                    </ComboBox>
                 </StackPanel>
             </Grid>
             <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditItem()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
