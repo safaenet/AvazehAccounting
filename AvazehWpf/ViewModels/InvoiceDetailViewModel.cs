@@ -133,7 +133,6 @@ namespace AvazehWpf.ViewModels
         
         public async Task AddOrUpdateItem()
         {
-            MessageBox.Show(ProductInput);
             if (Invoice == null) return;
             ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(InvoiceManager.ApiProcessor);
             if (IsBarCodeEnabled && EdittingItem == false && BarCodeInput != null && BarCodeInput.Trim().Length > 0)
@@ -275,9 +274,10 @@ namespace AvazehWpf.ViewModels
             var combo = sender as ComboBox;
             combo.IsDropDownOpen = true;
         }
+
         public async Task ProductNames_SelectionChanged(object sender, EventArgs e)
         {
-            if (Invoice == null) return;
+            if (Invoice == null || SelectedProductItem == null) return;
             if (CanUpdateRowFromDB is false) return;
             ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(InvoiceManager.ApiProcessor);
             WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
@@ -306,6 +306,7 @@ namespace AvazehWpf.ViewModels
                 }
             }
         }
+
         private void GetComboboxItems()
         {
             ProductItemsForComboBox = Singleton.ProductItemsForCombobox;
