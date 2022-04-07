@@ -87,7 +87,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="PreviousPage" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
+                <Button x:Name="PreviousPage" Grid.Column="0" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ArrowLeftCircle" Margin="3"/>
                         <TextBlock Text="Previous" VerticalAlignment="Center" Margin="30,0,30,0"/>

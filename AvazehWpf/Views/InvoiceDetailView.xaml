@@ -176,6 +176,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
@@ -189,7 +190,7 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="AddOrUpdateItem" IsDefault="True" Grid.Column="0" TabIndex="7" Width="40" Margin="0,0,5,0">
+                <Button x:Name="AddOrUpdateItem" IsDefault="True" Grid.Column="0" TabIndex="7" Width="40" Margin="3,0,5,0">
                     <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Width="30" Height="30"/>
                 </Button>
 
@@ -219,7 +220,7 @@
                         <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="قیمت فروش" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <ComboBox ItemsSource="{Binding RecentSellPrices}" SelectedValuePath="SellPrice" DisplayMemberPath="SellPrice    " Text="{Binding WorkItem.SellPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}"
+                    <ComboBox ItemsSource="{Binding RecentSellPrices}" SelectedValuePath="SellPrice" DisplayMemberPath="SellPrice" Text="{Binding WorkItem.SellPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}"
                               cal:Message.Attach="[Event GotFocus] = [Action SellPrice_GotFocus()]"
                               IsDropDownOpen="{Binding IsSellPriceDropDownOpen,Mode=TwoWay}" IsEditable="True" Height="25" VerticalContentAlignment="Center" TabIndex="4"/>
                 </StackPanel>
@@ -261,7 +262,7 @@
                         <ComboBox.ItemContainerStyle>
                             <Style TargetType="ComboBoxItem">
                                 <Setter Property="ToolTip" Value="{Binding Path=Id, StringFormat='Product ID: {0}'}"/>
-                            </Style>
+                            </Style> 
                         </ComboBox.ItemContainerStyle>
                     </ComboBox>
                 </StackPanel>
@@ -306,6 +307,33 @@
                     <DataGridTextColumn Header="توضیحات" Binding="{Binding Descriptions, Mode=OneWay}" Width="auto" MinWidth="80"/>
                 </DataGrid.Columns>
             </DataGrid>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="DeleteInvoiceAndClose" Grid.Column="0" HorizontalAlignment="Left" Width="100" Margin="3,3,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Delete" Width="20" Height="20" Margin="3"/>
+                        <TextBlock Text="حذف" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="PrintInvoice" Grid.Column="1" HorizontalAlignment="Left" Width="100" Margin="3,3,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Printer" Width="20" Height="20" Margin="3"/>
+                        <TextBlock Text="چاپ" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="ViewPayments" Grid.Column="2" HorizontalAlignment="Left" Width="100" Margin="3,3,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Payment" Width="20" Height="20" Margin="3"/>
+                        <TextBlock Text="پرداخت ها" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

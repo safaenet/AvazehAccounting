@@ -63,7 +63,6 @@
     <Build Include="Database\Customers.sql" />
     <Build Include="Database\PhoneNumbers.sql" />
     <Build Include="Database\Products.sql" />
-    <Build Include="Database\CustomerizedPrices.sql" />
     <Build Include="Database\Cheques.sql" />
     <Build Include="Database\ChequeEvents.sql" />
     <Build Include="Database\Invoices.sql" />
