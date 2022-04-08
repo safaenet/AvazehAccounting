@@ -237,7 +237,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         public async Task<double> GetTotalOrRestTotalBalanceOfCustomerAsync(int CustomerId, int InvoiceId = 0)
         {
-            var InvoiceClause = InvoiceId == 0 ? "" : $"AND [Id] <> { InvoiceId }";
+            var InvoiceClause = InvoiceId == 0 ? "" : $"AND i.[Id] <> { InvoiceId }";
             var sqlQuery = @$"SET NOCOUNT ON
                               SELECT SUM(ISNULL(dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue), 0) - ISNULL(pays.TotalPayments, 0))
                               FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id

@@ -53,7 +53,7 @@ namespace AvazehWebAPI.Controllers
             return items is null ? NotFound("List is Empty") : items;
         }
 
-        [HttpGet("CustomerBalance")]
+        [HttpGet("CustomerBalance/{CustomerId}/{InvoiceId}")]
         public async Task<ActionResult<double>> GetCustomerBalanceAsync(int CustomerId, int InvoiceId = 0)
         {
             var result = await Manager.Processor.GetTotalOrRestTotalBalanceOfCustomerAsync(CustomerId, InvoiceId);

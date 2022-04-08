@@ -73,9 +73,16 @@ namespace AvazehApiClient.DataAccess
 
         public async Task<T?> GetValueOrNullAsync<T>(string Key, int Id1, int Id2) where T : struct
         {
-            var Url = $"{Key}/{Id1}";
+            var Url = $"{Key}/{Id1}/{Id2}";
             var response = await ApiClient.GetAsync(Url);
             return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+        }
+
+        public async Task<double> GetValueOrZeroAsync<T>(string Key, int Id1, int Id2)
+        {
+            var Url = $"{Key}/{Id1}/{Id2}";
+            var response = await ApiClient.GetAsync(Url);
+            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<double>() : 0;
         }
     }
 }

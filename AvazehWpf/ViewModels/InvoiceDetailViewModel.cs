@@ -16,6 +16,7 @@ using SharedLibrary.Validators;
 using System.Windows.Input;
 using System.Windows.Data;
 using System.Collections.ObjectModel;
+using System.Windows.Threading;
 
 namespace AvazehWpf.ViewModels
 {
@@ -24,19 +25,18 @@ namespace AvazehWpf.ViewModels
         public InvoiceDetailViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, InvoiceDetailSingleton singleton, int? InvoiceId, Func<Task> callBack)
         {
             InvoiceCollectionManager = iManager;
-            Manager = dManager;
+            InvoiceDetailManager = dManager;
             CallBackFunc = callBack;
             Singleton = singleton;
             if (InvoiceId is not null)
             {
                 ReloadInvoice(InvoiceId).ConfigureAwait(true);
-                ReloadCustomerBalance().ConfigureAwait(true);
             }
             GetComboboxItems();
         }
 
         private readonly IInvoiceCollectionManager InvoiceCollectionManager;
-        private readonly IInvoiceDetailManager Manager;
+        private readonly IInvoiceDetailManager InvoiceDetailManager;
         private InvoiceDetailSingleton Singleton;
         private InvoiceModel _Invoice;
         private readonly Func<Task> CallBackFunc;
@@ -49,14 +49,16 @@ namespace AvazehWpf.ViewModels
         public bool CanSaveInvoiceChanges { get; set; } = true;
         public InvoiceItemModel SelectedItem { get; set; }
         public InvoiceItemModel WorkItem { get => _workItem; set { _workItem = value; NotifyOfPropertyChange(() => WorkItem); } }
-        public double CustomerPreviousTotalBalance { get; private set; }
-        public double CustomerTotalBalanceMinusThis => CustomerPreviousTotalBalance - (Invoice == null ? 0 : Invoice.TotalBalance);
+        public double CustomerPreviousTotalBalance { get => customerPreviousTotalBalance; private set { customerPreviousTotalBalance = value; NotifyOfPropertyChange(() => CustomerPreviousTotalBalance); } }
+        public double CustomerTotalBalancePlusThis { get => customerTotalBalancePlusThis; set { customerTotalBalancePlusThis = value; NotifyOfPropertyChange(() => CustomerTotalBalancePlusThis); } }
         public ObservableCollection<ProductNamesForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
         public ObservableCollection<ProductUnitModel> ProductUnits { get => productUnits; set { productUnits = value; NotifyOfPropertyChange(() => ProductUnits); } }
         public ObservableCollection<RecentSellPriceModel> RecentSellPrices { get => recentSellPrices; set { recentSellPrices = value; NotifyOfPropertyChange(() => RecentSellPrices); } }
         private ProductNamesForComboBox _selectedProductItem;
         private bool isSellPriceDropDownOpen;
         private string productInput;
+        private double customerPreviousTotalBalance;
+        private double customerTotalBalancePlusThis;
 
         public string ProductInput
         {
@@ -93,14 +95,22 @@ namespace AvazehWpf.ViewModels
         {
             if (InvoiceId is null) return;
             Invoice = await InvoiceCollectionManager.GetItemById((int)InvoiceId);
+            await ReloadCustomerPreviousBalance();
         }
 
-        private async Task ReloadCustomerBalance()
+        private async Task ReloadCustomerPreviousBalance()
         {
             if (Invoice is null) return;
             CustomerPreviousTotalBalance = await InvoiceCollectionManager.GetCustomerTotalBalanceById(Invoice.Customer.Id, Invoice.Id);
+            ReloadCustomerTotalBalance();
         }
-        
+
+        private void ReloadCustomerTotalBalance()
+        {
+            if (Invoice is null) return;
+            CustomerTotalBalancePlusThis = CustomerPreviousTotalBalance + (Invoice == null ? 0 : Invoice.TotalBalance);
+        }
+
         public void EditItem() //DataGrid doubleClick event
         {
             if (Invoice == null || SelectedItem == null) return;
@@ -113,7 +123,7 @@ namespace AvazehWpf.ViewModels
             NotifyOfPropertyChange(() => WorkItem);
             NotifyOfPropertyChange(() => SelectedProductUnit);
         }
-        
+
         public async Task AddOrUpdateItem()
         {
             if (Invoice == null) return;
@@ -137,7 +147,7 @@ namespace AvazehWpf.ViewModels
                     WorkItem.SellPrice = product.SellPrice;
                     WorkItem.BuyPrice = product.BuyPrice;
                     WorkItem.CountString = (1).ToString();
-                    var addedItem = await Manager.CreateItemAsync(WorkItem);
+                    var addedItem = await InvoiceDetailManager.CreateItemAsync(WorkItem);
                     if (addedItem is not null)
                     {
                         //Validate here
@@ -156,7 +166,7 @@ namespace AvazehWpf.ViewModels
                 if (WorkItem == null || SelectedProductItem == null || SelectedProductItem.Id == 0) return;
                 WorkItem.InvoiceId = Invoice.Id;
                 WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
-                var validate = Manager.ValidateItem(WorkItem);
+                var validate = InvoiceDetailManager.ValidateItem(WorkItem);
                 if (!validate.IsValid)
                 {
                     var str = "";
@@ -168,7 +178,7 @@ namespace AvazehWpf.ViewModels
                 if (EdittingItem == false) //New Item
                 {
                     if (Invoice.Items == null) Invoice.Items = new();
-                    var addedItem = await Manager.CreateItemAsync(WorkItem);
+                    var addedItem = await InvoiceDetailManager.CreateItemAsync(WorkItem);
                     if (addedItem is not null)
                         Invoice.Items.Add(addedItem);
                 }
@@ -188,7 +198,7 @@ namespace AvazehWpf.ViewModels
 
         private async Task UpdateItemInDatabase(InvoiceItemModel item)
         {
-            var ResultItem = await Manager.UpdateItemAsync(WorkItem);
+            var ResultItem = await InvoiceDetailManager.UpdateItemAsync(WorkItem);
             var EdittedItem = Invoice.Items.FirstOrDefault(x => x.Id == WorkItem.Id);
             if (ResultItem != null) ResultItem.Clone(EdittedItem);
             RefreshDataGrid();
@@ -197,9 +207,9 @@ namespace AvazehWpf.ViewModels
         public async Task DeleteItem()
         {
             if (Invoice == null || Invoice.Items == null || !Invoice.Items.Any() || SelectedItem == null) return;
-            var result = MessageBox.Show("Are you sure you want to delete this row ?", "Delete", MessageBoxButton.YesNo,MessageBoxImage.Question, MessageBoxResult.No);
-            if(result == MessageBoxResult.No) return;
-            if (await Manager.DeleteItemAsync(SelectedItem.Id))
+            var result = MessageBox.Show("Are you sure you want to delete this row ?", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+            if (result == MessageBoxResult.No) return;
+            if (await InvoiceDetailManager.DeleteItemAsync(SelectedItem.Id))
                 Invoice.Items.Remove(SelectedItem);
             RefreshDataGrid();
             NotifyOfPropertyChange(() => Invoice);
@@ -234,7 +244,7 @@ namespace AvazehWpf.ViewModels
         public async Task ViewPayments()
         {
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(InvoiceCollectionManager, Manager, Invoice, RefreshDataGrid));
+            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(InvoiceCollectionManager, InvoiceDetailManager, Invoice, RefreshDataGrid));
         }
 
         public async Task SaveInvoiceChanges()
@@ -258,7 +268,7 @@ namespace AvazehWpf.ViewModels
 
         public void SellPrice_GotFocus()
         {
-            if(RecentSellPrices != null && RecentSellPrices.Count > 1)
+            if (RecentSellPrices != null && RecentSellPrices.Count > 1)
                 IsSellPriceDropDownOpen = true;
         }
 
@@ -277,7 +287,7 @@ namespace AvazehWpf.ViewModels
             WorkItem.BuyPrice = WorkItem.Product.BuyPrice;
             WorkItem.SellPrice = WorkItem.Product.SellPrice;
             RecentSellPrices?.Clear();
-            var recents = await Manager.GetRecentSellPrices(1, Invoice.Customer.Id, WorkItem.Product.Id);
+            var recents = await InvoiceDetailManager.GetRecentSellPrices(1, Invoice.Customer.Id, WorkItem.Product.Id);
             if (recents != null && recents.Count > 0) RecentSellPrices = recents;
             if (RecentSellPrices == null) RecentSellPrices = new();
             RecentSellPrices.Add(new RecentSellPriceModel { SellPrice = WorkItem.Product.SellPrice, DateSold = "اکنون" });
@@ -303,7 +313,7 @@ namespace AvazehWpf.ViewModels
         private void GetComboboxItems()
         {
             ProductItemsForComboBox = Singleton.ProductItemsForCombobox;
-            ProductUnits=Singleton.ProductUnits;
+            ProductUnits = Singleton.ProductUnits;
         }
 
         void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)

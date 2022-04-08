@@ -13,16 +13,19 @@ namespace AvazehWpf.ViewModels
 {
     public class InvoicePaymentsViewModel : ViewAware
     {
-        public InvoicePaymentsViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, InvoiceModel invoice, System.Action callBack)
+        public InvoicePaymentsViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, InvoiceModel invoice, System.Action callBack, bool ReloadInvoiceNeeded = false)
         {
             Invoice = invoice;
             InvoiceCollectionManager = iManager;
-            Manager = dManager;
+            InvoiceDetailManager = dManager;
             CallBackAction = callBack;
+            if (ReloadInvoiceNeeded && Invoice != null)
+                ReloadInvoice(Invoice.Id).ConfigureAwait(true);
         }
         private InvoiceModel _invoice;
+        public double CustomerTotalBalance { get; private set; }
         private readonly IInvoiceCollectionManager InvoiceCollectionManager;
-        private readonly IInvoiceDetailManager Manager;
+        private readonly IInvoiceDetailManager InvoiceDetailManager;
         private readonly System.Action CallBackAction;
         private bool EdittingItem = false;
         private InvoicePaymentModel _workItem = new();
@@ -45,6 +48,17 @@ namespace AvazehWpf.ViewModels
         public void CloseWindow()
         {
             (GetView() as Window).Close();
+        }
+
+        private async Task ReloadInvoice(int InvoiceId)
+        {
+            Invoice = await InvoiceCollectionManager.GetItemById(InvoiceId);
+        }
+
+        private async Task ReloadCustomerBalance()
+        {
+            if (Invoice is null) return;
+            CustomerTotalBalance = await InvoiceCollectionManager.GetCustomerTotalBalanceById(Invoice.Customer.Id);
         }
 
         public void ClosingWindow()
