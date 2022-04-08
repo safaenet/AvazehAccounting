@@ -11,8 +11,129 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:InvoicePaymentsViewModel}"
         Title="Invoices" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
-        Width="600" Height="650">
+        Width="700" Height="650"
+        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="187*"/>
+            <ColumnDefinition Width="413*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="3"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1" Grid.ColumnSpan="2">
+            <!--Status buttons and texboxes-->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="1" Height="50" Orientation="Vertical" Margin="0,0,3,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
+                    <TextBlock TextAlignment="Center" Text="مانده این فاکتور" Margin="0,0,0,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Width="30">
+                        <materialDesign:PackIcon Kind="ArrowDownBoldCircleOutline" Width="20" Height="20"/>
+                    </Button>
+                    <TextBox TextAlignment="Center" Text="Test" IsReadOnly="True" Width="150" Height="25" VerticalContentAlignment="Center" Margin="3,0,0,0"/>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Height="50" Orientation="Vertical" Margin="0,0,3,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
+                    <TextBlock TextAlignment="Center" Text="مانده کل این مشتری" Margin="0,0,0,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Width="30">
+                        <materialDesign:PackIcon Kind="ArrowDownBoldCircleOutline" Width="20" Height="20"/>
+                    </Button>
+                    <TextBox TextAlignment="Center" Text="Test" IsReadOnly="True" Width="150" Height="25" VerticalContentAlignment="Center" Margin="3,0,0,0"/>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Column="3" Height="50" Orientation="Vertical" Margin="0,0,3,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
+                    <TextBlock TextAlignment="Center" Text="شماره فاکتور" Margin="0,0,0,0"/>
+                </StackPanel>
+                <TextBox TextAlignment="Center" Text="{Binding Invoice.Id, Mode=OneTime}" IsReadOnly="True" Width="90" Height="25" VerticalContentAlignment="Center" Margin="0,0,0,0"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="4" Height="50" Orientation="Vertical" Margin="0,0,3,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
+                    <TextBlock TextAlignment="Center" Text="نام مشتری" Margin="0,0,0,0"/>
+                </StackPanel>
+                <TextBox TextAlignment="Center" Text="{Binding Invoice.Customer.FullName, Mode=OneTime}" IsReadOnly="True" Height="25" VerticalContentAlignment="Center" Margin="0,0,0,0"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="2" Grid.ColumnSpan="2">
+            <!--Payment input texboxes-->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="3"/>
+            </Grid.ColumnDefinitions>
+            <Button IsDefault="True" Grid.Column="1" TabIndex="7" Width="40" Margin="3,0,5,0">
+                <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Width="30" Height="30"/>
+            </Button>
+
+            <StackPanel Grid.Column="2" Width="150" Orientation="Vertical" Margin="0,0,3,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
+                    <TextBlock TextAlignment="Center" Text="ثبت در" Margin="0,0,0,0"/>
+                </StackPanel>
+                <ComboBox
+                              Height="25" VerticalContentAlignment="Center" TabIndex="4"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="3" Orientation="Vertical" Margin="0,0,3,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
+                    <TextBlock TextAlignment="Center" Text="توضیحات" Margin="0,0,0,0"/>
+                </StackPanel>
+                <TextBox Text="{Binding WorkItem.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="25"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="4" Width="150" Orientation="Vertical" Margin="0,0,3,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
+                    <TextBlock TextAlignment="Center" Text="مبلغ" Margin="0,0,0,0"/>
+                </StackPanel>
+                <TextBox Text="{Binding WorkItem.PayAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="25"/>
+            </StackPanel>
+
+        </Grid>
+        <DataGrid ItemsSource="{Binding Invoice.Payments}" Grid.Row="3" Margin="0,3,0,0"
+                  FlowDirection="RightToLeft" AutoGenerateColumns="False" IsTabStop="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35" Grid.ColumnSpan="2">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="مبلغ" Binding="{Binding PayAmount, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="{Binding Id}"/>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="توضیحات" Binding="{Binding Descriptions, Mode=OneWay}" Width="*"/>
+                <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding DateCreated, Mode=OneWay}" Width="87"/>
+                <DataGridTextColumn Header="ساعت ایجاد" Binding="{Binding TimeCreated, Mode=OneWay}" Width="87"/>
+                <DataGridTextColumn Header="تاریخ ویرایش" Binding="{Binding DateUpdated, Mode=OneWay}" Width="87"/>
+                <DataGridTextColumn Header="ساعت ویرایش" Binding="{Binding TimeUpdated, Mode=OneWay}" Width="87"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>
