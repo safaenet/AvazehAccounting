@@ -231,6 +231,12 @@ namespace AvazehWpf.ViewModels
             Invoice = temp;
         }
 
+        public async Task ViewPayments()
+        {
+            WindowManager wm = new();
+            await wm.ShowWindowAsync(new InvoicePaymentsViewModel());
+        }
+
         public async Task SaveInvoiceChanges()
         {
             var result = await InvoiceManager.UpdateItemAsync(Invoice);
