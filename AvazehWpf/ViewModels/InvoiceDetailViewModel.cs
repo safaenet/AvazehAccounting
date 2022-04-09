@@ -98,7 +98,7 @@ namespace AvazehWpf.ViewModels
             await ReloadCustomerPreviousBalance();
         }
 
-        private async Task ReloadCustomerPreviousBalance()
+        public async Task ReloadCustomerPreviousBalance()
         {
             if (Invoice is null) return;
             CustomerPreviousTotalBalance = await InvoiceCollectionManager.GetCustomerTotalBalanceById(Invoice.Customer.Id, Invoice.Id);
@@ -193,6 +193,7 @@ namespace AvazehWpf.ViewModels
             WorkItem.Unit = temp;
             SelectedProductItem = null;
             ProductInput = "";
+            ReloadCustomerTotalBalance();
             NotifyOfPropertyChange(() => Invoice.Items);
         }
 
@@ -212,6 +213,7 @@ namespace AvazehWpf.ViewModels
             if (await InvoiceDetailManager.DeleteItemAsync(SelectedItem.Id))
                 Invoice.Items.Remove(SelectedItem);
             RefreshDataGrid();
+            ReloadCustomerTotalBalance();
             NotifyOfPropertyChange(() => Invoice);
         }
 
@@ -244,7 +246,7 @@ namespace AvazehWpf.ViewModels
         public async Task ViewPayments()
         {
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(InvoiceCollectionManager, InvoiceDetailManager, Invoice, RefreshDataGrid));
+            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(InvoiceCollectionManager, InvoiceDetailManager, Invoice, RefreshDataGrid, true));
         }
 
         public async Task SaveInvoiceChanges()
@@ -253,6 +255,7 @@ namespace AvazehWpf.ViewModels
             Invoice.DateUpdated = result.DateUpdated;
             Invoice.TimeUpdated = result.TimeUpdated;
             RefreshDataGrid();
+            ReloadCustomerTotalBalance();
             CanSaveInvoiceChanges = false;
         }
 

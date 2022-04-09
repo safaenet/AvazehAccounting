@@ -21,15 +21,17 @@ namespace AvazehWpf.ViewModels
             CallBackAction = callBack;
             if (ReloadInvoiceNeeded && Invoice != null)
                 ReloadInvoice(Invoice.Id).ConfigureAwait(true);
+            ReloadCustomerBalance().ConfigureAwait(true);
         }
         private InvoiceModel _invoice;
-        public double CustomerTotalBalance { get; private set; }
+        public double CustomerTotalBalance { get => customerTotalBalance; private set { customerTotalBalance = value; NotifyOfPropertyChange(() => CustomerTotalBalance); } }
         private readonly IInvoiceCollectionManager InvoiceCollectionManager;
         private readonly IInvoiceDetailManager InvoiceDetailManager;
         private readonly System.Action CallBackAction;
         private bool EdittingItem = false;
         private InvoicePaymentModel _workItem = new();
         private InvoicePaymentModel selectedPaymentItem;
+        private double customerTotalBalance;
 
         public InvoicePaymentModel SelectedPaymentItem
         {

@@ -137,7 +137,10 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,3,3" HorizontalAlignment="Left">
-                            <TextBlock Text="{Binding CustomerPreviousTotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="135" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding CustomerPreviousTotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,3,0" TextAlignment="Left" Width="113" VerticalAlignment="Center"/>
+                            <Button x:Name="ReloadCustomerPreviousBalance" HorizontalAlignment="Left">
+                                <materialDesign:PackIcon Kind="Refresh" Width="15" Height="15"/>
+                            </Button>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="مانده قبلی" Margin="3,0,0,2" VerticalAlignment="Center"/>
                         </StackPanel>
 
