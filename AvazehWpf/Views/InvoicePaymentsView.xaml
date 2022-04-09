@@ -42,10 +42,14 @@
                     <TextBlock TextAlignment="Center" Text="مانده این فاکتور" Margin="0,0,0,0"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button Width="30">
+                    <Button x:Name="ReloadInvoiceBalance" Width="30">
+                        <materialDesign:PackIcon Kind="Refresh" Width="20" Height="20"/>
+                    </Button>
+                    <Button x:Name="PutInvoiceTotalBalanceInPayment" Width="30" Margin="3,0,0,0">
                         <materialDesign:PackIcon Kind="ArrowDownBoldCircleOutline" Width="20" Height="20"/>
                     </Button>
-                    <TextBox TextAlignment="Center" Text="Test" IsReadOnly="True" Width="150" Height="25" VerticalContentAlignment="Center" Margin="3,0,0,0"/>
+                    <TextBox TextAlignment="Center" Text="{Binding Invoice.TotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" IsReadOnly="True" Width="130" Height="25" VerticalContentAlignment="Center" Margin="3,0,3,0"/>
+                    <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 </StackPanel>
             </StackPanel>
 
@@ -55,10 +59,14 @@
                     <TextBlock TextAlignment="Center" Text="مانده کل این مشتری" Margin="0,0,0,0"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button Width="30">
+                    <Button x:Name="ReloadCustomerBalance" Width="30">
+                        <materialDesign:PackIcon Kind="Refresh" Width="20" Height="20"/>
+                    </Button>
+                    <Button x:Name="PutCustomerTotalBalanceInPayment" Width="30" Margin="3,0,0,0">
                         <materialDesign:PackIcon Kind="ArrowDownBoldCircleOutline" Width="20" Height="20"/>
                     </Button>
-                    <TextBox TextAlignment="Center" Text="Test" IsReadOnly="True" Width="150" Height="25" VerticalContentAlignment="Center" Margin="3,0,0,0"/>
+                    <TextBox TextAlignment="Center" Text="{Binding CustomerTotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" IsReadOnly="True" Width="130" Height="25" VerticalContentAlignment="Center" Margin="3,0,3,0"/>
+                    <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                 </StackPanel>
             </StackPanel>
 
@@ -67,10 +75,10 @@
                     <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                     <TextBlock TextAlignment="Center" Text="شماره فاکتور" Margin="0,0,0,0"/>
                 </StackPanel>
-                <TextBox TextAlignment="Center" Text="{Binding Invoice.Id, Mode=OneTime}" IsReadOnly="True" Width="90" Height="25" VerticalContentAlignment="Center" Margin="0,0,0,0"/>
+                <TextBox TextAlignment="Center" Text="{Binding Invoice.Id, Mode=OneWay, StringFormat='{}{0:#,#}'}" IsReadOnly="True" Width="90" Height="25" VerticalContentAlignment="Center" Margin="0,0,0,0"/>
             </StackPanel>
 
-            <StackPanel Grid.Column="4" Height="50" Orientation="Vertical" Margin="0,0,3,0">
+            <StackPanel Grid.Column="4" Height="50" Orientation="Vertical" Margin="0,0,0,0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                     <TextBlock TextAlignment="Center" Text="نام مشتری" Margin="0,0,0,0"/>
@@ -92,7 +100,7 @@
                 <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Width="30" Height="30"/>
             </Button>
 
-            <StackPanel Grid.Column="2" Width="150" Orientation="Vertical" Margin="0,0,3,0">
+            <StackPanel Grid.Column="2" Width="200" Orientation="Vertical" Margin="0,0,3,0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                     <TextBlock TextAlignment="Center" Text="ثبت در" Margin="0,0,0,0"/>
@@ -109,7 +117,7 @@
                 <TextBox Text="{Binding WorkItem.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="25"/>
             </StackPanel>
 
-            <StackPanel Grid.Column="4" Width="150" Orientation="Vertical" Margin="0,0,3,0">
+            <StackPanel Grid.Column="4" Width="130" Orientation="Vertical" Margin="0,0,0,0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                     <TextBlock TextAlignment="Center" Text="مبلغ" Margin="0,0,0,0"/>

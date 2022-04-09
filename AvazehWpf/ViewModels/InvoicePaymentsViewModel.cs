@@ -57,15 +57,37 @@ namespace AvazehWpf.ViewModels
             Invoice = await InvoiceCollectionManager.GetItemById(InvoiceId);
         }
 
-        private async Task ReloadCustomerBalance()
+        public async Task ReloadCustomerBalance()
         {
             if (Invoice is null) return;
             CustomerTotalBalance = await InvoiceCollectionManager.GetCustomerTotalBalanceById(Invoice.Customer.Id);
         }
 
+        public void ReloadInvoiceBalance()
+        {
+            if (Invoice is null) return;
+            ReloadInvoice(Invoice.Id).ConfigureAwait(true);
+        }
+
         public void ClosingWindow()
         {
             CallBackAction?.Invoke();
+        }
+
+        public void PutCustomerTotalBalanceInPayment()
+        {
+            if (WorkItem is null) WorkItem = new();
+            WorkItem.PayAmount = CustomerTotalBalance;
+            WorkItem.Descriptions = "تسویه کل بدهی";
+            NotifyOfPropertyChange(() => WorkItem);
+        }
+
+        public void PutInvoiceTotalBalanceInPayment()
+        {
+            if (WorkItem is null) WorkItem = new();
+            WorkItem.PayAmount = Invoice == null ? 0 : Invoice.TotalBalance;
+            WorkItem.Descriptions = "تسویه فاکتور";
+            NotifyOfPropertyChange(() => WorkItem);
         }
 
         public void Window_PreviewKeyDown(object sender, KeyEventArgs e)
