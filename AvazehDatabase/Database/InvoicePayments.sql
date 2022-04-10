@@ -7,7 +7,7 @@
     [DateUpdated] CHAR(10) NULL,
     [TimeUpdated] CHAR(8) NULL,
     [PayAmount] BIGINT NOT NULL,
-    [Description] NTEXT NULL
+    [Descriptions] NTEXT NULL
 
     CONSTRAINT [PK_InvoicePayments] PRIMARY KEY ([Id]),
     CONSTRAINT [FK_InvoicePayments_Invoices] FOREIGN KEY ([InvoiceId]) REFERENCES [Invoices] ([Id]) ON DELETE CASCADE

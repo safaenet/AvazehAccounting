@@ -1,6 +1,10 @@
-﻿using AvazehApiClient.DataAccess.Interfaces;
+﻿using AvazehApiClient.DataAccess;
+using AvazehApiClient.DataAccess.CollectionManagers;
+using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
+using SharedLibrary.DtoModels;
+using SharedLibrary.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +49,84 @@ namespace AvazehWpf.ViewModels
         {
             get { return _invoice; }
             set { _invoice = value; NotifyOfPropertyChange(() => Invoice); }
+        }
+
+        public void EditItem() //DataGrid doubleClick event
+        {
+            if (Invoice == null || SelectedPaymentItem == null) return;
+            EdittingItem = true;
+            SelectedPaymentItem.Clone(WorkItem);
+            NotifyOfPropertyChange(() => WorkItem);
+        }
+
+        public async Task AddOrUpdateItem()
+        {
+            if (Invoice == null) return;
+            ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(InvoiceCollectionManager.ApiProcessor);
+            if (WorkItem == null) return;
+            WorkItem.InvoiceId = Invoice.Id;
+            var validate = InvoiceDetailManager.ValidateItem(WorkItem);
+            if (!validate.IsValid)
+            {
+                var str = "";
+                foreach (var error in validate.Errors)
+                    str += error.ErrorMessage + "\n";
+                MessageBox.Show(str, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            if (EdittingItem == false) //New Item
+            {
+                if (Invoice.Payments == null) Invoice.Payments = new();
+                var addedItem = await InvoiceDetailManager.CreatePaymentAsync(WorkItem);
+                if (addedItem is not null)
+                    Invoice.Payments.Add(addedItem);
+            }
+            else //Edit Item
+            {
+                await UpdateItemInDatabase(WorkItem);
+                EdittingItem = false;
+            }
+            WorkItem = new();
+            SelectedPaymentItem = null;
+            NotifyOfPropertyChange(() => Invoice.Payments);
+            NotifyOfPropertyChange(() => Invoice);
+        }
+
+        private async Task UpdateItemInDatabase(InvoicePaymentModel item)
+        {
+            var ResultItem = await InvoiceDetailManager.UpdatePaymentAsync(item);
+            var EdittedItem = Invoice.Payments.FirstOrDefault(x => x.Id == item.Id);
+            if (ResultItem != null) ResultItem.Clone(EdittedItem);
+            RefreshDataGrid();
+        }
+
+        public async Task DeleteItem()
+        {
+            if (Invoice == null || Invoice.Payments == null || !Invoice.Payments.Any() || SelectedPaymentItem == null) return;
+            var result = MessageBox.Show("Are you sure you want to delete this row ?", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+            if (result == MessageBoxResult.No) return;
+            if (await InvoiceDetailManager.DeletePaymentAsync(SelectedPaymentItem.Id))
+                Invoice.Payments.Remove(SelectedPaymentItem);
+            RefreshDataGrid();
+            //ReloadCustomerTotalBalance();
+            NotifyOfPropertyChange(() => Invoice);
+        }
+
+        public void dg_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (Key.Delete == e.Key)
+            {
+                DeleteItem().ConfigureAwait(true);
+                e.Handled = true;
+            }
+        }
+
+        private void RefreshDataGrid()
+        {
+            InvoiceModel temp;
+            temp = Invoice;
+            Invoice = null;
+            Invoice = temp;
         }
 
         public void CloseWindow()

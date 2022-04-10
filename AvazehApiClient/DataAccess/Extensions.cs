@@ -108,8 +108,8 @@ namespace AvazehApiClient.DataAccess
 
         public static void Clone(this ProductModel From, ProductModel To)
         {
-            if (To == null) return;
-            if (From == null) From = new();
+            if (From == null) return;
+            if (To == null) To = new();
             To.Id = From.Id;
             To.ProductName = From.ProductName;
             To.BuyPrice = From.BuyPrice;
@@ -125,8 +125,8 @@ namespace AvazehApiClient.DataAccess
 
         public static void Clone(this CustomerModel From, CustomerModel To)
         {
-            if (To == null) return;
-            if (From == null) From = new();
+            if (From == null) return;
+            if (To == null) To = new();
             To.Id = From.Id;
             To.FirstName = From.FirstName;
             To.LastName = From.LastName;
@@ -145,8 +145,8 @@ namespace AvazehApiClient.DataAccess
 
         public static void Clone(this ChequeModel From, ChequeModel To)
         {
-            if (To == null) return;
-            if (From == null) From = new();
+            if (From == null) return;
+            if (To == null) To = new();
             To.Id = From.Id;
             To.Drawer = From.Drawer;
             To.Orderer = From.Orderer;
@@ -170,8 +170,8 @@ namespace AvazehApiClient.DataAccess
 
         public static void Clone(this InvoiceItemModel From, InvoiceItemModel To)
         {
-            if (To == null) return;
-            if (From == null) From = new();
+            if (From == null) return;
+            if (To == null) To = new();
             To.Id = From.Id;
             To.InvoiceId = From.InvoiceId;
             To.BuyPrice = From.BuyPrice;
@@ -191,6 +191,20 @@ namespace AvazehApiClient.DataAccess
             To.Delivered = From.Delivered;
             To.Descriptions = From.Descriptions;
             From.Product.Clone(To.Product);
+        }
+
+        public static void Clone(this InvoicePaymentModel From, InvoicePaymentModel To)
+        {
+            if (From == null) return;
+            if (To == null) To = new();
+            To.Id = From.Id;
+            To.InvoiceId = From.InvoiceId;
+            To.DateCreated = From.DateCreated;
+            To.TimeCreated = From.TimeCreated;
+            To.DateUpdated = From.DateUpdated;
+            To.TimeUpdated = From.TimeUpdated;
+            To.PayAmount = From.PayAmount;
+            To.Descriptions = From.Descriptions;
         }
 
         public static async Task<ProductModel> GetItemByBarCodeAsync(this ICollectionManager<ProductModel> manager, string BarCode)

@@ -199,8 +199,8 @@ namespace AvazehWpf.ViewModels
 
         private async Task UpdateItemInDatabase(InvoiceItemModel item)
         {
-            var ResultItem = await InvoiceDetailManager.UpdateItemAsync(WorkItem);
-            var EdittedItem = Invoice.Items.FirstOrDefault(x => x.Id == WorkItem.Id);
+            var ResultItem = await InvoiceDetailManager.UpdateItemAsync(item);
+            var EdittedItem = Invoice.Items.FirstOrDefault(x => x.Id == item.Id);
             if (ResultItem != null) ResultItem.Clone(EdittedItem);
             RefreshDataGrid();
         }

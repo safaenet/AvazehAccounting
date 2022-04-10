@@ -28,7 +28,10 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
         {
             if (item == null || !ValidateItem(item).IsValid) return null;
             var newItem = item.AsDto();
-            return await ApiProcessor.UpdateItemAsync<InvoicePaymentModel_DTO_Create_Update, InvoicePaymentModel>(KeyPayment, item.Id, newItem);
+            var result = await ApiProcessor.UpdateItemAsync<InvoicePaymentModel_DTO_Create_Update, InvoicePaymentModel>(KeyPayment, item.Id, newItem);
+            result.DateCreated = item.DateCreated;
+            result.TimeCreated = item.TimeCreated;
+            return result;
         }
 
         public async Task<bool> DeletePaymentAsync(int Id)
