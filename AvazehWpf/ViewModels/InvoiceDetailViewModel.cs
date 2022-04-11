@@ -195,6 +195,7 @@ namespace AvazehWpf.ViewModels
             ProductInput = "";
             ReloadCustomerTotalBalance();
             NotifyOfPropertyChange(() => Invoice.Items);
+            NotifyOfPropertyChange(() => Invoice);
         }
 
         private async Task UpdateItemInDatabase(InvoiceItemModel item)
