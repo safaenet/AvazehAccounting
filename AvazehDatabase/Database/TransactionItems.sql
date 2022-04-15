@@ -3,7 +3,7 @@
 	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1), 
 	[TransactionId] INT NOT NULL, 
     [Title] NVARCHAR(100) NOT NULL, 
-    [Amount] NCHAR(10) NOT NULL,
+    [Amount] BIGINT NOT NULL,
 	[CountString] NVARCHAR(50) NOT NULL,
     [CountValue] FLOAT NOT NULL,
     [DateCreated] CHAR(10) NOT NULL, 

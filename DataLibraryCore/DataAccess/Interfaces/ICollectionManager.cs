@@ -27,13 +27,8 @@ namespace DataLibraryCore.DataAccess.Interfaces
         string WhereClause { get; set; }
 
         bool DeleteItemFromCollectionById(int Id);
-        bool DeleteItemFromDbById(int Id);
         int GenerateWhereClause(string val, string OrderBy, OrderType orderType, bool run = false, SqlSearchMode mode = SqlSearchMode.OR);
         TModel GetItemFromCollectionById(int Id);
-        int GotoPage(int PageNumber);
-        int LoadFirstPage();
-        int LoadNextPage();
-        int LoadPreviousPage();
         Task<bool> DeleteItemFromDbByIdAsync(int Id);
         Task<int> GotoPageAsync(int PageNumber);
         Task<int> LoadFirstPageAsync();
