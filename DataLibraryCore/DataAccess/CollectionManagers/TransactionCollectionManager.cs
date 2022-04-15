@@ -14,7 +14,7 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
 {
     public class TransactionCollectionManager : ICollectionManager<TransactionModel, IProcessor<TransactionModel>>
     {
-        public TransactionCollectionManager(IProcessor<TransactionModel> processor)
+        public TransactionCollectionManager(ITransactionProcessor processor)
         {
             Processor = processor;
         }
@@ -25,29 +25,21 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         public event EventHandler PreviousPageLoading;
         public event EventHandler PreviousPageLoaded;
         public bool Initialized { get; set; }
-        public IProcessor<TransactionModel> Processor { get; init; }
+        public ITransactionProcessor Processor { get; init; }
 
         public ObservableCollection<TransactionModel> Items { get; set; }
         public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
-        public TransactionModel GetItemFromCollectionById(int Id)
+        private TransactionModel GetItemFromCollectionById(int Id)
         {
             return Items.SingleOrDefault(i => i.Id == Id);
         }
-        public bool DeleteItemFromCollectionById(int Id)
+
+        private bool DeleteItemFromCollectionById(int Id)
         {
             return Items.Remove(GetItemFromCollectionById(Id));
         }
 
-        public bool DeleteItemFromDbById(int Id)
-        {
-            if (Processor.DeleteItemById(Id) > 0)
-            {
-                DeleteItemFromCollectionById(Id);
-                return true;
-            }
-            return false;
-        }
         private protected string _WhereClause;
         public string WhereClause
         {
@@ -91,53 +83,6 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         private protected int TotalQueryCount { get; set; }
         public int CurrentPage { get; private set; }
 
-        public int GotoPage(int PageNumber)
-        {
-            if (!Initialized)
-            {
-                TotalQueryCount = Processor.GetTotalQueryCount(WhereClause);
-                if (TotalQueryCount == 0)
-                {
-                    Items = null;
-                    return 0;
-                }
-                Initialized = true;
-            }
-            if (PagesCount == 0) PageNumber = 1;
-            else if (PageNumber > PagesCount) PageNumber = PagesCount;
-            else if (PageNumber < 1) PageNumber = 1;
-            Items = Processor.LoadManyItems((PageNumber - 1) * PageSize, PageSize, WhereClause, QueryOrderBy, QueryOrderType);
-            CurrentPage = Items == null || Items.Count == 0 ? 0 : PageNumber;
-            return Items == null ? 0 : Items.Count;
-        }
-
-        public int LoadFirstPage()
-        {
-            var result = GotoPage(1);
-            FirstPageLoaded?.Invoke(this, null);
-            return result;
-        }
-
-        public int LoadPreviousPage()
-        {
-            PageLoadEventArgs eventArgs = new();
-            PreviousPageLoading?.Invoke(this, eventArgs);
-            if (eventArgs.Cancel) return 0;
-            var result = GotoPage(CurrentPage - 1);
-            PreviousPageLoaded?.Invoke(this, null);
-            return result;
-        }
-
-        public int LoadNextPage()
-        {
-            PageLoadEventArgs eventArgs = new();
-            NextPageLoading?.Invoke(this, eventArgs);
-            if (eventArgs.Cancel) return 0;
-            var result = GotoPage(CurrentPage + 1);
-            NextPageLoaded?.Invoke(this, null);
-            return result;
-        }
-
         public int GenerateWhereClause(string val, string OrderBy, OrderType orderType, bool run = false, SqlSearchMode mode = SqlSearchMode.OR)
         {
             if (val == SearchValue && OrderBy == QueryOrderBy && orderType == QueryOrderType) return 0;
@@ -145,7 +90,7 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             QueryOrderBy = OrderBy;
             QueryOrderType = orderType;
             WhereClause = Processor.GenerateWhereClause(val, mode);
-            if (run) LoadFirstPage();
+            if (run) LoadFirstPageAsync().ConfigureAwait(true);
             return Items == null ? 0 : Items.Count;
         }
 

@@ -8,10 +8,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public partial class InvoiceCollectionManager : IInvoiceCollectionManager
+    public class InvoiceCollectionManager : IInvoiceCollectionManager
     {
         public InvoiceCollectionManager(IInvoiceProcessor processor)
         {
@@ -74,70 +75,14 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         private protected int TotalQueryCount { get; set; }
         public int CurrentPage { get; private set; }
 
-        public int GotoPage(int PageNumber)
-        {
-            if (!Initialized)
-            {
-                TotalQueryCount = Processor.GetTotalQueryCount(WhereClause);
-                if (TotalQueryCount == 0)
-                {
-                    Items = null;
-                    return 0;
-                }
-                Initialized = true;
-            }
-            if (PagesCount == 0) PageNumber = 1;
-            else if (PageNumber > PagesCount) PageNumber = PagesCount;
-            else if (PageNumber < 1) PageNumber = 1;
-            Items = Processor.LoadManyItems((PageNumber - 1) * PageSize, PageSize, WhereClause, QueryOrderBy, QueryOrderType);
-            CurrentPage = Items == null || Items.Count == 0 ? 0 : PageNumber;
-            return Items == null ? 0 : Items.Count;
-        }
-
-        public InvoiceListModel GetItemFromCollectionById(int Id)
+        private InvoiceListModel GetItemFromCollectionById(int Id)
         {
             return Items.SingleOrDefault(i => i.Id == Id);
         }
-        public bool DeleteItemFromCollectionById(int Id)
+
+        private bool DeleteItemFromCollectionById(int Id)
         {
             return Items.Remove(GetItemFromCollectionById(Id));
-        }
-
-        public int LoadFirstPage()
-        {
-            var result = GotoPage(1);
-            FirstPageLoaded?.Invoke(this, null);
-            return result;
-        }
-
-        public int LoadPreviousPage()
-        {
-            PageLoadEventArgs eventArgs = new();
-            PreviousPageLoading?.Invoke(this, eventArgs);
-            if (eventArgs.Cancel) return 0;
-            var result = GotoPage(CurrentPage - 1);
-            PreviousPageLoaded?.Invoke(this, null);
-            return result;
-        }
-
-        public int LoadNextPage()
-        {
-            PageLoadEventArgs eventArgs = new();
-            NextPageLoading?.Invoke(this, eventArgs);
-            if (eventArgs.Cancel) return 0;
-            var result = GotoPage(CurrentPage + 1);
-            NextPageLoaded?.Invoke(this, null);
-            return result;
-        }
-
-        public bool DeleteItemFromDbById(int Id)
-        {
-            if (Processor.DeleteItemById(Id) > 0)
-            {
-                DeleteItemFromCollectionById(Id);
-                return true;
-            }
-            return false;
         }
 
         public int GenerateWhereClause(string val, string OrderBy, OrderType orderType, InvoiceLifeStatus? lifeStatus, InvoiceFinancialStatus? finStatus, bool run = false, SqlSearchMode mode = SqlSearchMode.OR)
@@ -149,8 +94,65 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             LifeStatus = lifeStatus;
             FinStatus = finStatus;
             WhereClause = Processor.GenerateWhereClause(val, lifeStatus, finStatus, mode);
-            if (run) LoadFirstPage();
+            if (run) LoadFirstPageAsync().ConfigureAwait(true);
             return Items == null ? 0 : Items.Count;
+        }
+
+        public async Task<bool> DeleteItemFromDbByIdAsync(int Id)
+        {
+            if (await Processor.DeleteItemByIdAsync(Id) > 0)
+            {
+                DeleteItemFromCollectionById(Id);
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<int> GotoPageAsync(int PageNumber)
+        {
+            if (!Initialized)
+            {
+                TotalQueryCount = await Processor.GetTotalQueryCountAsync(WhereClause);
+                if (TotalQueryCount == 0)
+                {
+                    Items = null;
+                    return 0;
+                }
+                Initialized = true;
+            }
+            if (PagesCount == 0) PageNumber = 1;
+            else if (PageNumber > PagesCount) PageNumber = PagesCount;
+            else if (PageNumber < 1) PageNumber = 1;
+            Items = await Processor.LoadManyItemsAsync((PageNumber - 1) * PageSize, PageSize, WhereClause, QueryOrderBy, QueryOrderType);
+            CurrentPage = Items == null || Items.Count == 0 ? 0 : PageNumber;
+            return Items == null ? 0 : Items.Count;
+        }
+
+        public async Task<int> LoadFirstPageAsync()
+        {
+            var result = await GotoPageAsync(1);
+            FirstPageLoaded?.Invoke(this, null);
+            return result;
+        }
+
+        public async Task<int> LoadPreviousPageAsync()
+        {
+            PageLoadEventArgs eventArgs = new();
+            PreviousPageLoading?.Invoke(this, eventArgs);
+            if (eventArgs.Cancel) return 0;
+            var result = await GotoPageAsync(CurrentPage - 1);
+            PreviousPageLoaded?.Invoke(this, null);
+            return result;
+        }
+
+        public async Task<int> LoadNextPageAsync()
+        {
+            PageLoadEventArgs eventArgs = new();
+            NextPageLoading?.Invoke(this, eventArgs);
+            if (eventArgs.Cancel) return 0;
+            var result = await GotoPageAsync(CurrentPage + 1);
+            NextPageLoaded?.Invoke(this, null);
+            return result;
         }
     }
 }

@@ -126,7 +126,7 @@ namespace AvazehWeb
             var processor = new SqlCustomerProcessor<CustomerModel, PhoneNumberModel, CustomerValidator>(new SqlDataAccess()); //Should be edited to get instance from DI container
             return new InvoiceModel()
             {
-                Customer = processor.LoadSingleItem(model.CustomerId),
+                Customer = processor.LoadSingleItemAsync(model.CustomerId).Result,
                 DateCreated = model.DateCreated,
                 TimeCreated = model.TimeCreated,
                 DiscountType = model.DiscountType,
@@ -154,7 +154,7 @@ namespace AvazehWeb
             return new InvoiceItemModel()
             {
                 InvoiceId = model.InvoiceId,
-                Product = processor.LoadSingleItem(model.ProductId),
+                Product = processor.LoadSingleItemAsync(model.ProductId).Result,
                 BuyPrice = model.BuyPrice,
                 SellPrice = model.SellPrice,
                 CountString = model.CountString,
@@ -195,6 +195,26 @@ namespace AvazehWeb
                 InvoiceId = model.InvoiceId,
                 PayAmount = model.PayAmount,
                 Descriptions = model.Descriptions
+            };
+        }
+
+        internal static TransactionModel AsDaL(this TransactionModel_DTO_Create_Update model)
+        {
+            return new TransactionModel()
+            {
+                FileName = model.FileName,
+                DateCreated = model.DateCreated,
+                TimeCreated = model.TimeCreated,
+                Descriptions = model.Descriptions
+            };
+        }
+
+        internal static TransactionModel_DTO_Create_Update AsDto(this TransactionModel model)
+        {
+            return new TransactionModel_DTO_Create_Update()
+            {
+                FileName=model.FileName,
+                Descriptions = model.Descriptions                
             };
         }
 

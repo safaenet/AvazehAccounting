@@ -10,22 +10,6 @@ namespace DataLibraryCore.DataAccess.Interfaces
 {
     public interface IInvoiceProcessor
     {
-        int CreateItem(InvoiceModel invoice);
-        int DeleteItemById(int Id);
-        int DeleteInvoiceItemFromDatabase(int ItemId);
-        List<ProductNamesForComboBox> GetProductItems(string SearchText);
-        double GetTotalOrRestTotalBalanceOfCustomer(int CustomerId, int InvoiceId = 0);
-        int GetTotalQueryCount(string WhereClause);
-        InvoiceItemModel GetInvoiceItemFromDatabase(int Id);
-        int InsertInvoiceItemToDatabase(InvoiceItemModel item);
-        ObservableCollection<InvoiceListModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, string OrderBy, OrderType Order);
-        InvoiceModel LoadSingleItem(int Id);
-        int UpdateItem(InvoiceModel invoice);
-        int UpdateInvoiceItemInDatabase(InvoiceItemModel item);
-        InvoicePaymentModel GetInvoicePaymentFromDatabase(int Id);
-        int InsertInvoicePaymentToDatabase(InvoicePaymentModel item);
-        int UpdateInvoicePaymentInDatabase(InvoicePaymentModel item);
-        int DeleteInvoicePaymentFromDatabase(int PaymentId);
         string GenerateWhereClause(string val, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, SqlSearchMode mode = SqlSearchMode.OR);
         ValidationResult ValidateItem(InvoiceModel item);
         ValidationResult ValidateItem(InvoiceItemModel item);

@@ -26,10 +26,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
         OrderType QueryOrderType { get; }
         string WhereClause { get; set; }
 
-        bool DeleteItemFromCollectionById(int Id);
         int GenerateWhereClause(string val, string OrderBy, OrderType orderType, bool run = false, SqlSearchMode mode = SqlSearchMode.OR);
-        TModel GetItemFromCollectionById(int Id);
-        Task<bool> DeleteItemFromDbByIdAsync(int Id);
         Task<int> GotoPageAsync(int PageNumber);
         Task<int> LoadFirstPageAsync();
         Task<int> LoadNextPageAsync();
