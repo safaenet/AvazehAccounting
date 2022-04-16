@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.Interfaces
 {
-    public interface ITransactionProcessor : ITransactionProcessor2<TransactionModel>
+    public interface ITransactionProcessor : ITransactionProcessorBase<TransactionModel>
     {
     }
 }

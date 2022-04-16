@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public class SqlCustomerProcessor<TModel, TSub, TValidator> : IProcessor<TModel>
+    public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<TModel>
         where TModel : CustomerModel where TSub : PhoneNumberModel where TValidator : CustomerValidator, new()
     {
         public SqlCustomerProcessor(IDataAccess dataAcess)

@@ -37,7 +37,7 @@ namespace AvazehWeb
             };
         }
 
-        internal static ItemsCollection_DTO<TDal> AsDto<TDal>(this IGeneralCollectionManager<TDal, IProcessor<TDal>> manager)
+        internal static ItemsCollection_DTO<TDal> AsDto<TDal>(this IGeneralCollectionManager<TDal, IGeneralProcessor<TDal>> manager)
         {
             return new ItemsCollection_DTO<TDal>()
             {
@@ -218,7 +218,7 @@ namespace AvazehWeb
             };
         }
 
-        public static async Task<ProductModel> LoadSingleItemByBarcodeAsync(this IProcessor<ProductModel> processor, string Id)
+        public static async Task<ProductModel> LoadSingleItemByBarcodeAsync(this IGeneralProcessor<ProductModel> processor, string Id)
         {
             var outPut = await processor.LoadManyItemsAsync(0, 1, $"[BarCode] LIKE '{ Id }'", "ProductName", OrderType.ASC);
             return outPut.FirstOrDefault();

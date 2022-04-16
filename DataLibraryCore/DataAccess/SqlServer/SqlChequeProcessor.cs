@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public class SqlChequeProcessor<TModel, TSub, TValidator> : IProcessor<TModel>
+    public class SqlChequeProcessor<TModel, TSub, TValidator> : IGeneralProcessor<TModel>
         where TModel : ChequeModel where TSub : ChequeEventModel where TValidator : ChequeValidator, new()
     {
         public SqlChequeProcessor(IDataAccess dataAcess)

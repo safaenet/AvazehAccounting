@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public class ChequeCollectionManager : IGeneralCollectionManager<ChequeModel, IProcessor<ChequeModel>>
+    public class ChequeCollectionManager : IGeneralCollectionManager<ChequeModel, IGeneralProcessor<ChequeModel>>
     {
-        public ChequeCollectionManager(IProcessor<ChequeModel> processor)
+        public ChequeCollectionManager(IGeneralProcessor<ChequeModel> processor)
         {
             Processor = processor;
         }
@@ -21,7 +21,7 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         public event EventHandler PreviousPageLoading;
         public event EventHandler PreviousPageLoaded;
         public bool Initialized { get; set; }
-        public IProcessor<ChequeModel> Processor { get; init; }
+        public IGeneralProcessor<ChequeModel> Processor { get; init; }
         public ObservableCollection<ChequeModel> Items { get; set; }
         public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);

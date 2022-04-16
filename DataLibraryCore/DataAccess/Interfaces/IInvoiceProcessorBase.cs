@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.Interfaces
 {
-    public interface IInvoiceProcessor2<TModel> : IProcessorBase<TModel>
+    public interface IInvoiceProcessorBase<TModel> : IProcessorBase<TModel>
     {
         string GenerateWhereClause(string val, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, SqlSearchMode mode = SqlSearchMode.OR);
         ValidationResult ValidateItem(InvoiceItemModel item);

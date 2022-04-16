@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.Interfaces
 {
-    public interface IInvoiceProcessor : IInvoiceProcessor2<InvoiceModel>
+    public interface IInvoiceProcessor : IInvoiceProcessorBase<InvoiceModel>
     {
     }
 }

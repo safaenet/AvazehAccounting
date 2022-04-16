@@ -10,11 +10,11 @@ namespace AvazehWeb.Controllers
 {
     public class ProductController : Controller
     {
-        public ProductController(IGeneralCollectionManager<ProductModel, IProcessor<ProductModel>> manager)
+        public ProductController(IGeneralCollectionManager<ProductModel, IGeneralProcessor<ProductModel>> manager)
         {
             Manager = manager;
         }
-        private readonly IGeneralCollectionManager<ProductModel, IProcessor<ProductModel>> Manager;
+        private readonly IGeneralCollectionManager<ProductModel, IGeneralProcessor<ProductModel>> Manager;
 
         // GET: ProductController
         [HttpGet]

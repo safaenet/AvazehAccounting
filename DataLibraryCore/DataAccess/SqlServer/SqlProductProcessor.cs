@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public class SqlProductProcessor<TModel, TValidator> : IProcessor<TModel>
+    public class SqlProductProcessor<TModel, TValidator> : IGeneralProcessor<TModel>
         where TModel : ProductModel where TValidator : ProductValidator, new()
     {
         public SqlProductProcessor(IDataAccess dataAcess)

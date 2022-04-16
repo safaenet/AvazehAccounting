@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public class CustomerCollectionManager : IGeneralCollectionManager<CustomerModel, IProcessor<CustomerModel>>
+    public class CustomerCollectionManager : IGeneralCollectionManager<CustomerModel, IGeneralProcessor<CustomerModel>>
     {
-        public CustomerCollectionManager(IProcessor<CustomerModel> processor)
+        public CustomerCollectionManager(IGeneralProcessor<CustomerModel> processor)
         {
             Processor = processor;
         }
@@ -21,7 +21,7 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         public event EventHandler PreviousPageLoading;
         public event EventHandler PreviousPageLoaded;
         public bool Initialized { get; set; }
-        public IProcessor<CustomerModel> Processor { get; init; }
+        public IGeneralProcessor<CustomerModel> Processor { get; init; }
         public ObservableCollection<CustomerModel> Items { get; set; }
         public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);

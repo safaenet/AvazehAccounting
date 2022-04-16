@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public class ProductCollectionManager : IGeneralCollectionManager<ProductModel, IProcessor<ProductModel>>
+    public class ProductCollectionManager : IGeneralCollectionManager<ProductModel, IGeneralProcessor<ProductModel>>
     {
-        public ProductCollectionManager(IProcessor<ProductModel> processor)
+        public ProductCollectionManager(IGeneralProcessor<ProductModel> processor)
         {
             Processor = processor;
         }
@@ -26,7 +26,7 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         public event EventHandler PreviousPageLoading;
         public event EventHandler PreviousPageLoaded;
         public bool Initialized { get; set; }
-        public IProcessor<ProductModel> Processor { get; init; }
+        public IGeneralProcessor<ProductModel> Processor { get; init; }
 
         public ObservableCollection<ProductModel> Items { get; set; }
         public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);

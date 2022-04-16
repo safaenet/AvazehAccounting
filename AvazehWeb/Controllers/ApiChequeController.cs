@@ -12,12 +12,12 @@ namespace AvazehWebAPI.Controllers
     [Route("api/v1/[controller]")]
     public class ChequeController : ControllerBase
     {
-        public ChequeController(IGeneralCollectionManager<ChequeModel, IProcessor<ChequeModel>> manager)
+        public ChequeController(IGeneralCollectionManager<ChequeModel, IGeneralProcessor<ChequeModel>> manager)
         {
             Manager = manager;
         }
 
-        private readonly IGeneralCollectionManager<ChequeModel, IProcessor<ChequeModel>> Manager;
+        private readonly IGeneralCollectionManager<ChequeModel, IGeneralProcessor<ChequeModel>> Manager;
 
         //GET /Cheque?Id=1&SearchText=sometext
         [HttpGet]

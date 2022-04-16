@@ -12,12 +12,12 @@ namespace AvazehWebAPI.Controllers
     [Route("api/v1/[controller]")]
     public class ProductController : ControllerBase
     {
-        public ProductController(IGeneralCollectionManager<ProductModel, IProcessor<ProductModel>> manager)
+        public ProductController(IGeneralCollectionManager<ProductModel, IGeneralProcessor<ProductModel>> manager)
         {
             Manager = manager;
         }
 
-        private readonly IGeneralCollectionManager<ProductModel, IProcessor<ProductModel>> Manager;
+        private readonly IGeneralCollectionManager<ProductModel, IGeneralProcessor<ProductModel>> Manager;
 
         //GET /Product?Id=1&SearchText=sometext
         [HttpGet]
