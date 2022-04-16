@@ -50,5 +50,6 @@ namespace SharedLibrary.DalModels
                 return true;
             }
         }
+        public double TotalValue => Amount * CountValue;
     }
 }

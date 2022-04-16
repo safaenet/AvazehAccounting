@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public class TransactionCollectionManager : ICollectionManager<TransactionModel, IProcessor<TransactionModel>>
+    public class TransactionCollectionManager : ITransactionCollectionManager
     {
         public TransactionCollectionManager(ITransactionProcessor processor)
         {
@@ -27,18 +27,9 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         public bool Initialized { get; set; }
         public ITransactionProcessor Processor { get; init; }
 
-        public ObservableCollection<TransactionModel> Items { get; set; }
+        public ObservableCollection<TransactionListModel> Items { get; set; }
         public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
-        private TransactionModel GetItemFromCollectionById(int Id)
-        {
-            return Items.SingleOrDefault(i => i.Id == Id);
-        }
-
-        private bool DeleteItemFromCollectionById(int Id)
-        {
-            return Items.Remove(GetItemFromCollectionById(Id));
-        }
 
         private protected string _WhereClause;
         public string WhereClause
@@ -78,30 +69,23 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             }
         }
 
+
+        public TransactionFinancialStatus? FinStatus { get; private set; }
+
         public int PageSize { get; set; } = 50;
         public int PagesCount => TotalQueryCount == 0 ? 0 : (int)Math.Ceiling((double)TotalQueryCount / PageSize);
         private protected int TotalQueryCount { get; set; }
         public int CurrentPage { get; private set; }
 
-        public int GenerateWhereClause(string val, string OrderBy, OrderType orderType, bool run = false, SqlSearchMode mode = SqlSearchMode.OR)
+        public int GenerateWhereClause(string val, string OrderBy, OrderType orderType, TransactionFinancialStatus? finStatus, bool run = false, SqlSearchMode mode = SqlSearchMode.OR)
         {
             if (val == SearchValue && OrderBy == QueryOrderBy && orderType == QueryOrderType) return 0;
             SearchValue = val;
             QueryOrderBy = OrderBy;
             QueryOrderType = orderType;
-            WhereClause = Processor.GenerateWhereClause(val, mode);
+            WhereClause = Processor.GenerateWhereClause(val, finStatus, mode);
             if (run) LoadFirstPageAsync().ConfigureAwait(true);
             return Items == null ? 0 : Items.Count;
-        }
-
-        public async Task<bool> DeleteItemFromDbByIdAsync(int Id)
-        {
-            if (await Processor.DeleteItemByIdAsync(Id) > 0)
-            {
-                DeleteItemFromCollectionById(Id);
-                return true;
-            }
-            return false;
         }
 
         public async Task<int> GotoPageAsync(int PageNumber)

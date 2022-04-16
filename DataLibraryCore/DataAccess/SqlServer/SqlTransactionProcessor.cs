@@ -43,8 +43,23 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(query, null);
         }
 
-        public string GenerateWhereClause(string val, SqlSearchMode mode)
+        public string GenerateWhereClause(string val, TransactionFinancialStatus? FinStatus, SqlSearchMode mode)
         {
+            string finStatusOperand = "";
+            switch (FinStatus)
+            {
+                case TransactionFinancialStatus.Balanced:
+                    finStatusOperand = "=";
+                    break;
+                case TransactionFinancialStatus.Negative:
+                    finStatusOperand = "<";
+                    break;
+                case TransactionFinancialStatus.Positive:
+                    finStatusOperand = ">";
+                    break;
+                default:
+                    break;
+            }
             var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
             return @$"(CAST([Id] AS varchar) LIKE {criteria}
                       {mode} [FileName] LIKE {criteria}
@@ -179,13 +194,13 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
         }
 
-        public async Task<ObservableCollection<TransactionModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+        public async Task<ObservableCollection<TransactionListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
         {
             string sql = $@"SET NOCOUNT ON
                             SELECT * FROM Transactions
                             { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
                             ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
-            return await DataAccess.LoadDataAsync<TransactionModel, DynamicParameters>(sql, null);
+            return await DataAccess.LoadDataAsync<TransactionListModel, DynamicParameters>(sql, null);
         }
 
         public async Task<TransactionModel> LoadSingleItemAsync(int Id)

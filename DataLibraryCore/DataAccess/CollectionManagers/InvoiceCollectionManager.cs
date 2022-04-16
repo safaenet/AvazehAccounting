@@ -75,16 +75,6 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         private protected int TotalQueryCount { get; set; }
         public int CurrentPage { get; private set; }
 
-        private InvoiceListModel GetItemFromCollectionById(int Id)
-        {
-            return Items.SingleOrDefault(i => i.Id == Id);
-        }
-
-        private bool DeleteItemFromCollectionById(int Id)
-        {
-            return Items.Remove(GetItemFromCollectionById(Id));
-        }
-
         public int GenerateWhereClause(string val, string OrderBy, OrderType orderType, InvoiceLifeStatus? lifeStatus, InvoiceFinancialStatus? finStatus, bool run = false, SqlSearchMode mode = SqlSearchMode.OR)
         {
             if (val == SearchValue && OrderBy == QueryOrderBy && orderType == QueryOrderType && LifeStatus == lifeStatus && FinStatus == finStatus) return 0;
@@ -96,16 +86,6 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             WhereClause = Processor.GenerateWhereClause(val, lifeStatus, finStatus, mode);
             if (run) LoadFirstPageAsync().ConfigureAwait(true);
             return Items == null ? 0 : Items.Count;
-        }
-
-        public async Task<bool> DeleteItemFromDbByIdAsync(int Id)
-        {
-            if (await Processor.DeleteItemByIdAsync(Id) > 0)
-            {
-                DeleteItemFromCollectionById(Id);
-                return true;
-            }
-            return false;
         }
 
         public async Task<int> GotoPageAsync(int PageNumber)

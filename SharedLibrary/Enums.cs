@@ -29,6 +29,13 @@
         Archive = 2,
         Deleted = 3
     }
+
+    public enum TransactionFinancialStatus
+    {
+        Balanced = 0,
+        Positive = 1,
+        Negative = 2
+    }
     public enum OrderType
     {
         ASC,
