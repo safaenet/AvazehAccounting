@@ -197,7 +197,11 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public async Task<ObservableCollection<TransactionListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
         {
             string sql = $@"SET NOCOUNT ON
-                            SELECT * FROM Transactions
+                            SELECT t.Id, t.[FileName], t.DateCreated, t.TimeCreated, t.DateUpdated, t.TimeUpdated, t.Descriptions, tv.TotalValue
+FROM Transactions t LEFT JOIN (
+SELECT SUM(ti.Amount * ti.CountValue) AS TotalValue, ti.TransactionId FROM TransactionItems ti WHERE SUM(ti.Amount * ti.CountValue) > 0 GROUP BY ti.TransactionId
+) AS tv ON t.Id = tv.TransactionId
+
                             { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
                             ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
             return await DataAccess.LoadDataAsync<TransactionListModel, DynamicParameters>(sql, null);
