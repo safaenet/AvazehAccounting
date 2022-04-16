@@ -47,9 +47,19 @@ namespace AvazehWeb
             };
         }
 
-        internal static ItemsCollection_DTO<InvoiceListModel> AsDto<TDalList>(this IInvoiceCollectionManager manager)
+        internal static ItemsCollection_DTO<InvoiceListModel> AsDto(this IInvoiceCollectionManager manager)
         {
             return new ItemsCollection_DTO<InvoiceListModel>()
+            {
+                Items = manager.Items,
+                PagesCount = manager.PagesCount,
+                CurrentPage = manager.CurrentPage
+            };
+        }
+
+        internal static ItemsCollection_DTO<TransactionListModel> AsDto(this ITransactionCollectionManager manager)
+        {
+            return new ItemsCollection_DTO<TransactionListModel>()
             {
                 Items = manager.Items,
                 PagesCount = manager.PagesCount,

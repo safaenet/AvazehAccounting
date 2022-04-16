@@ -11,6 +11,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
     public interface ITransactionProcessorBase<TModel> : IProcessorBase<TModel>
     {
         string GenerateWhereClause(string val, TransactionFinancialStatus? FinStatus, SqlSearchMode mode = SqlSearchMode.OR);
+        Task<List<ProductNamesForComboBox>> GetProductItemsAsync(string SearchText = null);
         ValidationResult ValidateItem(TransactionItemModel item);
         Task<int> DeleteTransactionItemFromDatabaseAsync(int ItemId);
         Task<TransactionItemModel> GetTransactionItemFromDatabaseAsync(int Id);

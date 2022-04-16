@@ -71,23 +71,6 @@ namespace DataLibraryCore.DataAccess
             return invoices;
         }
 
-        internal static ObservableCollection<CustomerModel> MapObservableCollectionOfCustomers
-        (
-            this SqlMapper.GridReader reader
-        )
-        {
-            var first = new ObservableCollection<CustomerModel>(reader.Read<CustomerModel>());
-            var childMap = reader
-                .Read<PhoneNumberModel>()
-                .GroupBy(s => s.CustomerId)
-                .ToDictionary(g => g.Key, g => g.AsEnumerable());
-
-            foreach (var item in first)
-                if (childMap.TryGetValue(item.Id, out IEnumerable<PhoneNumberModel> children))
-                    item.PhoneNumbers = new(children);
-            return first;
-        }
-
         internal async static Task<ObservableCollection<CustomerModel>> MapObservableCollectionOfCustomersAsync
         (
             this SqlMapper.GridReader reader
@@ -102,30 +85,6 @@ namespace DataLibraryCore.DataAccess
             foreach (var item in first)
                 if (childMap.TryGetValue(item.Id, out IEnumerable<PhoneNumberModel> children))
                     item.PhoneNumbers = new(children);
-            return first;
-        }
-
-        internal static ObservableCollection<TFirst> MapObservableCollectionOfCheques<TFirst, TSecond, TKey>
-        (
-            this SqlMapper.GridReader reader,
-            Func<TFirst, TKey> firstKey,
-            Func<TSecond, TKey> secondKey,
-            Action<TFirst, IEnumerable<TSecond>> addChildren
-        )
-        {
-            var first = new ObservableCollection<TFirst>(reader.Read<TFirst>());
-            var childMap = reader
-                .Read<TSecond>()
-                .GroupBy(s => secondKey(s))
-                .ToDictionary(g => g.Key, g => g.AsEnumerable());
-
-            foreach (var item in first)
-            {
-                if (childMap.TryGetValue(firstKey(item), out IEnumerable<TSecond> children))
-                {
-                    addChildren(item, children);
-                }
-            }
             return first;
         }
 
@@ -152,14 +111,23 @@ namespace DataLibraryCore.DataAccess
             return first;
         }
 
-        internal static ObservableCollection<T> AsObservable<T>(this IEnumerable<T> collection)
-        {
-            return new ObservableCollection<T>(collection);
-        }
-
         internal static async Task<ObservableCollection<T>> AsObservableAsync<T>(this Task<IEnumerable<T>> collection)
         {
             return await Task.FromResult(new ObservableCollection<T>(collection.Result));
+        }
+
+        public static TransactionModel MapToSingleTransaction(this SqlMapper.GridReader reader)
+        {
+            TransactionModel transaction = reader.Read<TransactionModel>().SingleOrDefault();
+            if (transaction is null) return null;
+
+            var ItemsDic = reader.Read<TransactionItemModel>()
+                .GroupBy(s => s.TransactionId)
+                .ToDictionary(g => g.Key, g => g.AsEnumerable());
+
+            if (ItemsDic.TryGetValue(transaction.Id, out IEnumerable<TransactionItemModel> items))
+                transaction.Items = new(items);
+            return transaction;
         }
     }
 }

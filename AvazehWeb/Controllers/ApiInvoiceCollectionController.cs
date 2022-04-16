@@ -29,7 +29,7 @@ namespace AvazehWebAPI.Controllers
             if (ForceLoad) Manager.Initialized = false;
             await Manager.GotoPageAsync(Page);
             if (Manager.Items == null || Manager.Items.Count == 0) return NotFound("List is empty");
-            return Manager.AsDto<InvoiceListModel>();
+            return Manager.AsDto();
         }
 
         [HttpGet("{Id}")]
