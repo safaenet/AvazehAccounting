@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public class CustomerCollectionManager : ICollectionManager<CustomerModel, IProcessor<CustomerModel>>
+    public class CustomerCollectionManager : IGeneralCollectionManager<CustomerModel, IProcessor<CustomerModel>>
     {
         public CustomerCollectionManager(IProcessor<CustomerModel> processor)
         {

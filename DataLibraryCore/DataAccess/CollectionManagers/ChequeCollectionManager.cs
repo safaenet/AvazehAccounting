@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public class ChequeCollectionManager : ICollectionManager<ChequeModel, IProcessor<ChequeModel>>
+    public class ChequeCollectionManager : IGeneralCollectionManager<ChequeModel, IProcessor<ChequeModel>>
     {
         public ChequeCollectionManager(IProcessor<ChequeModel> processor)
         {

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public class ProductCollectionManager : ICollectionManager<ProductModel, IProcessor<ProductModel>>
+    public class ProductCollectionManager : IGeneralCollectionManager<ProductModel, IProcessor<ProductModel>>
     {
         public ProductCollectionManager(IProcessor<ProductModel> processor)
         {

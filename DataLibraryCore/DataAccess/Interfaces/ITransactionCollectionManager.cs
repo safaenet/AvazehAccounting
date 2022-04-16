@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.Interfaces
 {
-    public interface ITransactionCollectionManager : ICollectionManagerBase<TransactionListModel>
+    public interface ITransactionCollectionManager : ITransactionCollectionManagerBase<TransactionListModel>
     {
     }
 }

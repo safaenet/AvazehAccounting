@@ -12,12 +12,12 @@ namespace AvazehWebAPI.Controllers
     [Route("api/v1/[controller]")]
     public class CustomerController : ControllerBase
     {
-        public CustomerController(ICollectionManager<CustomerModel, IProcessor<CustomerModel>> manager)
+        public CustomerController(IGeneralCollectionManager<CustomerModel, IProcessor<CustomerModel>> manager)
         {
             Manager = manager;
         }
 
-        private readonly ICollectionManager<CustomerModel, IProcessor<CustomerModel>> Manager;
+        private readonly IGeneralCollectionManager<CustomerModel, IProcessor<CustomerModel>> Manager;
 
         //GET /Customer?Id=1&SearchText=sometext
         [HttpGet]

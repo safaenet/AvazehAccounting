@@ -31,9 +31,9 @@ namespace AvazehWeb
                 .AddScoped<IInvoiceProcessor, SqlInvoiceProcessor>()
                 .AddSingleton<IDataAccess, SqlDataAccess>()
 
-                .AddScoped(typeof(ICollectionManager<ProductModel, IProcessor<ProductModel>>), typeof(ProductCollectionManager))
-                .AddScoped(typeof(ICollectionManager<CustomerModel, IProcessor<CustomerModel>>), typeof(CustomerCollectionManager))
-                .AddScoped(typeof(ICollectionManager<ChequeModel, IProcessor<ChequeModel>>), typeof(ChequeCollectionManager))
+                .AddScoped(typeof(IGeneralCollectionManager<ProductModel, IProcessor<ProductModel>>), typeof(ProductCollectionManager))
+                .AddScoped(typeof(IGeneralCollectionManager<CustomerModel, IProcessor<CustomerModel>>), typeof(CustomerCollectionManager))
+                .AddScoped(typeof(IGeneralCollectionManager<ChequeModel, IProcessor<ChequeModel>>), typeof(ChequeCollectionManager))
                 
                 .AddScoped<IInvoiceCollectionManager, InvoiceCollectionManager>();
 

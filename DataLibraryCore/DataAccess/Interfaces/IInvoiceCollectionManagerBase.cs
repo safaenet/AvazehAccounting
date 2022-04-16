@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.Interfaces
 {
-    public interface IInvoiceCollectionManager2<TModel> : ICollectionManagerBase<TModel>
+    public interface IInvoiceCollectionManagerBase<TModel> : ICollectionManagerBase<TModel>
     {
         IInvoiceProcessor Processor { get; init; }
         InvoiceLifeStatus? LifeStatus { get; }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.Interfaces
 {
-    public interface ITransactionCollectionManager2<TModel> : ICollectionManagerBase<TModel>
+    public interface ITransactionCollectionManagerBase<TModel> : ICollectionManagerBase<TModel>
     {
         ITransactionProcessor Processor { get; init; }
         TransactionFinancialStatus? FinStatus { get; }

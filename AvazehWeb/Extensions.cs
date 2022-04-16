@@ -37,7 +37,7 @@ namespace AvazehWeb
             };
         }
 
-        internal static ItemsCollection_DTO<TDal> AsDto<TDal>(this ICollectionManager<TDal, IProcessor<TDal>> manager)
+        internal static ItemsCollection_DTO<TDal> AsDto<TDal>(this IGeneralCollectionManager<TDal, IProcessor<TDal>> manager)
         {
             return new ItemsCollection_DTO<TDal>()
             {

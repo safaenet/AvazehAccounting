@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.Interfaces
 {
-    public interface ICollectionManager2<TModel, TProcessor> : ICollectionManagerBase<TModel>
+    public interface IGeneralCollectionManager<TModel, TProcessor> : ICollectionManagerBase<TModel>
     {
         TProcessor Processor { get; init; }
         string QueryOrderBy { get; }
