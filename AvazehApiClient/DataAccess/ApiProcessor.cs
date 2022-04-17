@@ -43,6 +43,13 @@ namespace AvazehApiClient.DataAccess
             return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
         }
 
+        public async Task<T> GetTransactionCollectionAsync<T>(string Key, string OrderBy, OrderType orderType, int Page = 1, string SearchText = "", InvoiceFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false) where T : class
+        {
+            var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&Page={Page}&SearchText={SearchText}&FinStatus={FinStatus}&PageSize={PageSize}&ForceLoad={ForceLoad}";
+            var response = await ApiClient.GetAsync(Url);
+            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+        }
+
         public async Task<T> GetItemAsync<T>(string Key, string Id) where T : class
         {
             var Url = $"{Key}/{Id}";

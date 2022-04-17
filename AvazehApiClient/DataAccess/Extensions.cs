@@ -106,6 +106,43 @@ namespace AvazehApiClient.DataAccess
             };
         }
 
+        internal static TransactionItemModel AsDaL(this TransactionItemModel_DTO_Create_Update model)
+        {
+            return new TransactionItemModel()
+            {
+                TransactionId = model.TransactionId,
+                Title = model.Title,
+                Amount = model.Amount,
+                CountString = model.CountString,
+                DateCreated = model.DateCreated,
+                TimeCreated = model.TimeCreated,
+                Descriptions = model.Descriptions
+            };
+        }
+
+        internal static TransactionItemModel_DTO_Create_Update AsDto(this TransactionItemModel model)
+        {
+            return new TransactionItemModel_DTO_Create_Update()
+            {
+                TransactionId = model.TransactionId,
+                Title = model.Title,
+                Amount = model.Amount,
+                CountString = model.CountString,
+                DateCreated = model.DateCreated,
+                TimeCreated = model.TimeCreated,
+                Descriptions = model.Descriptions
+            };
+        }
+
+        internal static TransactionModel_DTO_Create_Update AsDto(this TransactionModel model)
+        {
+            return new TransactionModel_DTO_Create_Update()
+            {
+                FileName = model.FileName,
+                Descriptions = model.Descriptions
+            };
+        }
+
         public static void Clone(this ProductModel From, ProductModel To)
         {
             if (From == null) return;
