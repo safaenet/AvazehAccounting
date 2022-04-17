@@ -35,7 +35,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
         public string SearchValue { get; set; }
         public string QueryOrderBy { get; set; } = "Id";
         public OrderType QueryOrderType { get; set; } = OrderType.DESC;
-        public InvoiceFinancialStatus? FinStatus { get; set; }
+        public TransactionFinancialStatus? FinStatus { get; set; }
 
         public int PageSize { get; set; } = 50;
         public int PagesCount { get; private set; }

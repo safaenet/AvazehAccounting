@@ -40,7 +40,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] FROM Products {0}";
         private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Transactions SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated WHERE [Id] = @id";
         private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON
-            SELECT * FROM Transactions t WHERE t.Id = {0} ORDER BY [Id] ASC;
+            SELECT * FROM Transactions t WHERE t.[Id] = {0} ORDER BY t.[Id] ASC;
             SELECT ti.Id, ti.TransactionId, ti.Title, ti.Amount, ti.CountString, ti.DateCreated, ti.TimeCreated, ti.DateUpdated, ti.TimeUpdated, ti.Descriptions
             FROM TransactionItems ti WHERE ti.TransactionId IN (SELECT t.Id FROM Transactions t);";
 
@@ -68,13 +68,17 @@ namespace DataLibraryCore.DataAccess.SqlServer
                     break;
             }
             var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
-            return @$"(CAST([Id] AS varchar) LIKE {criteria}
-                      {mode} [FileName] LIKE {criteria}
-                      {mode} [DateCreated] LIKE {criteria}
-                      {mode} [TimeCreated] LIKE {criteria}
-                      {mode} [DateUpdated] LIKE {criteria}
-                      {mode} [TimeUpdated] LIKE {criteria}
-                      {mode} [Descriptions] LIKE {criteria} )";
+            return @$"(CAST(t.[Id] AS VARCHAR) LIKE {criteria}
+                      {mode} t.[FileName] LIKE {criteria}
+                      {mode} t.[DateCreated] LIKE {criteria}
+                      {mode} t.[TimeCreated] LIKE {criteria}
+                      {mode} t.[DateUpdated] LIKE {criteria}
+                      {mode} t.[TimeUpdated] LIKE {criteria}
+                      {mode} t.[Descriptions] LIKE {criteria}
+                      {mode} CAST(pos.TotalVal AS VARCHAR) LIKE {criteria}
+					  {mode} CAST(neg.TotalVal AS VARCHAR) LIKE {criteria} )
+                      { (FinStatus == null ? "" : $" AND ISNULL(pos.TotalVal, 0) + ISNULL(neg.TotalVal, 0) { finStatusOperand } 0 ")}
+            ";
         }
 
         public ValidationResult ValidateItem(TransactionModel product)
@@ -203,7 +207,10 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         public async Task<int> GetTotalQueryCountAsync(string WhereClause)
         {
-            var sqlTemp = $@"SELECT COUNT([Id]) FROM Transactions t LEFT JOIN TransactionItems ti ON t.Id = ti.TransactionId
+            var sqlTemp = $@"SELECT COUNT(t.Id) FROM Transactions t LEFT JOIN (
+                            SELECT ti.TransactionId, SUM(ti.Amount * ti.CountValue) AS TotalVal FROM TransactionItems ti WHERE (ti.Amount * ti.CountValue) > 0 GROUP BY ti.TransactionId) AS pos ON t.Id = pos.TransactionId
+                            LEFT JOIN (SELECT ti.TransactionId, SUM(ti.Amount * ti.CountValue) AS TotalVal FROM TransactionItems ti WHERE (ti.Amount * ti.CountValue) < 0 GROUP BY ti.TransactionId 
+                            ) AS neg ON t.Id = neg.TransactionId
                                 { (string.IsNullOrEmpty(WhereClause) ? "" : " WHERE ") } { WhereClause }";
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
         }

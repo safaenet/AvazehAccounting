@@ -40,6 +40,7 @@ namespace AvazehWpf
                 .PerRequest<ICollectionManager<CustomerModel>, CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>>()
                 .PerRequest<ICollectionManager<ChequeModel>, ChequeCollectionManagerAsync<ChequeModel, ChequeModel_DTO_Create_Update, ChequeValidator>>()
                 .PerRequest<IInvoiceCollectionManager, InvoiceCollectionManagerAsync>()
+                .PerRequest<ITransactionCollectionManager, TransactionCollectionManagerAsync>()
                 .Singleton<InvoiceDetailSingleton>();
         }
 
@@ -59,7 +60,7 @@ namespace AvazehWpf
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
-            DisplayRootViewFor<InvoiceListViewModel>();
+            DisplayRootViewFor<TransactionListViewModel>();
         }
     }
 }

@@ -119,9 +119,10 @@ namespace AvazehWpf.ViewModels
             else MessageBox.Show($"Invoice with ID: {SelectedInvoice.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
-    public static class FinStatusAndLifeStatusItems //For ComboBoxes
+
+    public static class InvoiceFinStatusAndLifeStatusItems //For ComboBoxes
     {
-        public static Dictionary<int, string> GetFinStatusItems()
+        public static Dictionary<int, string> GetInvoiceFinStatusItems()
         {
             Dictionary<int, string> choices = new();
             for (int i = 0; i < Enum.GetNames(typeof(InvoiceFinancialStatus)).Length; i++)
@@ -131,7 +132,8 @@ namespace AvazehWpf.ViewModels
             choices.Add(Enum.GetNames(typeof(InvoiceFinancialStatus)).Length, "All");
             return choices;
         }
-        public static Dictionary<int, string> GetLifeStatusItems()
+
+        public static Dictionary<int, string> GetInvoiceLifeStatusItems()
         {
             Dictionary<int, string> choices = new();
             for (int i = 0; i < Enum.GetNames(typeof(InvoiceLifeStatus)).Length; i++)
