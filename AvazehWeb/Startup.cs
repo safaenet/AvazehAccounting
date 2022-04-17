@@ -29,13 +29,15 @@ namespace AvazehWeb
                 .AddScoped<IGeneralProcessor<CustomerModel>, SqlCustomerProcessor<CustomerModel, PhoneNumberModel, CustomerValidator>>()
                 .AddScoped<IGeneralProcessor<ChequeModel>, SqlChequeProcessor<ChequeModel, ChequeEventModel, ChequeValidator>>()
                 .AddScoped<IInvoiceProcessor, SqlInvoiceProcessor>()
+                .AddScoped<ITransactionProcessor, SqlTransactionProcessor>()
                 .AddSingleton<IDataAccess, SqlDataAccess>()
 
                 .AddScoped(typeof(IGeneralCollectionManager<ProductModel, IGeneralProcessor<ProductModel>>), typeof(ProductCollectionManager))
                 .AddScoped(typeof(IGeneralCollectionManager<CustomerModel, IGeneralProcessor<CustomerModel>>), typeof(CustomerCollectionManager))
                 .AddScoped(typeof(IGeneralCollectionManager<ChequeModel, IGeneralProcessor<ChequeModel>>), typeof(ChequeCollectionManager))
                 
-                .AddScoped<IInvoiceCollectionManager, InvoiceCollectionManager>();
+                .AddScoped<IInvoiceCollectionManager, InvoiceCollectionManager>()
+                .AddScoped<ITransactionCollectionManager, TransactionCollectionManager>();
 
             services.AddControllersWithViews();
             services.AddDistributedMemoryCache();

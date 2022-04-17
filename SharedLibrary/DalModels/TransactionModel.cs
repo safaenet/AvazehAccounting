@@ -19,11 +19,8 @@ namespace SharedLibrary.DalModels
         public ObservableCollection<TransactionItemModel> Items { get; set; }
         public string Descriptions { get; set; }
 
-        public ObservableCollection<TransactionItemModel> PositiveItems => Items.Where(i => i.TotalValue > 0) as ObservableCollection<TransactionItemModel>;
-        public ObservableCollection<TransactionItemModel> NegativeItems => Items.Where(i => i.TotalValue < 0) as ObservableCollection<TransactionItemModel>;
-
-        public double TotalPositiveItemsSum => PositiveItems == null || PositiveItems.Count == 0 ? 0 : PositiveItems.Sum(i => i.TotalValue);
-        public double TotalNegativeItemsSum => NegativeItems == null || NegativeItems.Count == 0 ? 0 : NegativeItems.Sum(i => i.TotalValue);
+        public double TotalPositiveItemsSum => Items == null ? 0 : Items.Where(i => i.TotalValue > 0).Sum(i => i.TotalValue);
+        public double TotalNegativeItemsSum => Items == null ? 0 : Items.Where(i => i.TotalValue < 0).Sum(i => i.TotalValue);
         public double TotalBalance => TotalPositiveItemsSum + TotalNegativeItemsSum;
         public TransactionFinancialStatus TransactionFinancialStatus => TotalBalance == 0 ? TransactionFinancialStatus.Balanced : TotalBalance > 0 ? TransactionFinancialStatus.Positive : TransactionFinancialStatus.Negative;
     }

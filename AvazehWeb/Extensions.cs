@@ -228,6 +228,34 @@ namespace AvazehWeb
             };
         }
 
+        internal static TransactionItemModel AsDaL(this TransactionItemModel_DTO_Create_Update model)
+        {
+            return new TransactionItemModel()
+            {
+                TransactionId = model.TransactionId,
+                Title = model.Title,
+                Amount = model.Amount,
+                CountString = model.CountString,
+                DateCreated=model.DateCreated,
+                TimeCreated=model.TimeCreated,
+                Descriptions = model.Descriptions
+            };
+        }
+
+        internal static TransactionItemModel_DTO_Create_Update AsDto(this TransactionItemModel model)
+        {
+            return new TransactionItemModel_DTO_Create_Update()
+            {
+                TransactionId = model.TransactionId,
+                Title = model.Title,
+                Amount = model.Amount,
+                CountString = model.CountString,
+                DateCreated = model.DateCreated,
+                TimeCreated = model.TimeCreated,
+                Descriptions = model.Descriptions                
+            };
+        }
+
         public static async Task<ProductModel> LoadSingleItemByBarcodeAsync(this IGeneralProcessor<ProductModel> processor, string Id)
         {
             var outPut = await processor.LoadManyItemsAsync(0, 1, $"[BarCode] LIKE '{ Id }'", "ProductName", OrderType.ASC);
