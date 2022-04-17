@@ -9,9 +9,9 @@
         xmlns:local="clr-namespace:AvazehWpf" mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
-        d:DataContext="{d:DesignInstance Type=viewmodels:InvoiceDetailViewModel}"
+        d:DataContext="{d:DesignInstance Type=viewmodels:TransactionDetailViewModel}"
         xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary"
-        Title="Invoice" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
+        Title="Transaction" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1200" Height="650"
         cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]">
     <Grid>
@@ -21,7 +21,6 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3"/>
             <ColumnDefinition Width="200" MaxWidth="200"/>
-            <ColumnDefinition Width="120*"/>
             <ColumnDefinition Width="877*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -47,7 +46,7 @@
                                 <materialDesign:PackIcon Kind="AccountOutline" Margin="0,2,5,2"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="شناسه فایل" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Invoice.Customer.FullName, Mode=OneWay}" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding Transaction.Id, Mode=OneWay}" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,3">
@@ -55,7 +54,7 @@
                                 <materialDesign:PackIcon Kind="FileOutline" Margin="0,2,5,2"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام فایل" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Invoice.Id, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding Transaction.FileName, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
@@ -70,7 +69,7 @@
                                         <materialDesign:PackIcon Kind="ClockOutline" Margin="0,2,5,2"/>
                                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="ساعت ایجاد" Margin="0,2,0,2"/>
                                     </StackPanel>
-                                    <TextBox Text="{Binding Invoice.DateCreated, Mode=OneTime}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding Transaction.TimeCreated, Mode=OneTime}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                                 </StackPanel>
                                 
                                 <StackPanel Grid.Column="1" Orientation="Vertical" Margin="0,0,0,3">
@@ -78,7 +77,7 @@
                                         <materialDesign:PackIcon Kind="CalendarRangeOutline" Margin="0,2,5,2"/>
                                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد" Margin="0,2,0,2"/>
                                     </StackPanel>
-                                    <TextBox Text="{Binding Invoice.DateCreated, Mode=OneTime}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding Transaction.DateCreated, Mode=OneTime}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                                 </StackPanel>
                             </Grid>
                         </StackPanel>
@@ -95,7 +94,7 @@
                                         <materialDesign:PackIcon Kind="ClockOutline" Margin="0,2,5,2"/>
                                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="ساعت ویرایش" Margin="0,2,0,2"/>
                                     </StackPanel>
-                                    <TextBox Text="{Binding Invoice.DateCreated, Mode=OneTime}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding Transaction.TimeUpdated, Mode=OneTime}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" Orientation="Vertical" Margin="0,0,0,3">
@@ -103,7 +102,7 @@
                                         <materialDesign:PackIcon Kind="CalendarRangeOutline" Margin="0,2,5,2"/>
                                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ویرایش" Margin="0,2,0,2"/>
                                     </StackPanel>
-                                    <TextBox Text="{Binding Invoice.DateCreated, Mode=OneTime}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding Transaction.DateUpdated, Mode=OneTime}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                                 </StackPanel>
                             </Grid>
                         </StackPanel>
@@ -115,7 +114,7 @@
                             <materialDesign:PackIcon Kind="CommentOutline" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="توضیحات" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Invoice.Descriptions, Mode=TwoWay}" TextWrapping="Wrap" MinHeight="50" Height="auto" VerticalContentAlignment="Top"/>
+                        <TextBox Text="{Binding Transaction.Descriptions, Mode=TwoWay}" TextWrapping="Wrap" MinHeight="50" Height="auto" VerticalContentAlignment="Top"/>
                     </DockPanel>
 
                     <StackPanel Grid.Row="2" Orientation="Vertical">
@@ -135,35 +134,35 @@
                         </StackPanel>
                         
                         <StackPanel Orientation="Horizontal" Margin="0,0,3,3" HorizontalAlignment="Left">
-                            <TextBlock Text="{Binding Invoice.TotalItemsSellSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="120" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Transaction.TotalPositiveItemsSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="120" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="جمع مثبت کل" Margin="3,0,0,2" VerticalAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,3,3" HorizontalAlignment="Left">
-                            <TextBlock Text="{Binding Invoice.TotalDiscountAmount, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="117" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Transaction.TotalNegativeItemsSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="117" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="جمع منفی کل" Margin="3,0,0,2" VerticalAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,3,3" HorizontalAlignment="Left">
-                            <TextBlock Text="{Binding Invoice.TotalInvoiceSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="150" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Transaction.TotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="150" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="تراز کل" FontWeight="Bold" Margin="3,0,0,2" VerticalAlignment="Center"/>
                         </StackPanel>
                     </StackPanel>
-                    
-                    <Button x:Name="SaveInvoiceChanges" Height="30" Margin="0,2,3,0" Grid.Row="3">
+
+                    <Button x:Name="SaveTransactionChanges" Height="30" Margin="0,2,3,0" Grid.Row="3">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="ContentSaveOutline" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="ذخیره توضیحات" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
-                    <Button x:Name="DeleteInvoiceAndClose" Height="30" Margin="0,3,3,0" Grid.Row="4">
+                    <Button x:Name="DeleteTransactionAndClose" Height="30" Margin="0,3,3,0" Grid.Row="4">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="DeleteOutline" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="حذف فایل" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="PrintInvoice" Grid.Row="5" Height="30" Margin="0,3,3,0">
+                    <Button x:Name="PrintTransaction" Grid.Row="5" Height="30" Margin="0,3,3,0">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="PrinterOutline" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="چاپ" VerticalAlignment="Center"/>
@@ -225,7 +224,7 @@
 
                 <StackPanel Grid.Column="1" Orientation="Vertical" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="PlusBoxMultipleOutline" Margin="0,0,0,0"/>
+                        <materialDesign:PackIcon Kind="PlusBoxMultipleOutline" Margin="0,0,5,0"/>
                         <TextBlock TextAlignment="Center" Text="درج در" Margin="0,0,0,0"/>
                     </StackPanel>
                     <ComboBox VerticalContentAlignment="Center" Width="120" Height="25"
@@ -241,15 +240,15 @@
 
                 <StackPanel Grid.Column="2" Width="120" Orientation="Vertical" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="AccountOutline" Margin="0,0,0,0"/>
+                        <materialDesign:PackIcon Kind="AccountOutline" Margin="0,0,5,0"/>
                         <TextBlock TextAlignment="Center" Text="جمع کل" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <TextBox Text="{Binding WorkItem.TotalSellValue, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" ToolTip="{Binding WorkItem.NetProfit, StringFormat='{}{0:#,#.##}'}" IsTabStop="False" IsReadOnly="True" VerticalContentAlignment="Center" Height="25"/>
+                    <TextBox Text="{Binding WorkItem.TotalValue, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" IsTabStop="False" IsReadOnly="True" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="3" Width="180" Orientation="Vertical" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="CommentOutline" Margin="0,0,0,0"/>
+                        <materialDesign:PackIcon Kind="CommentOutline" Margin="0,0,5,0"/>
                         <TextBlock TextAlignment="Center" Text="توضیحات" Margin="0,0,0,0"/>
                     </StackPanel>
                     <TextBox Text="{Binding WorkItem.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TabIndex="5" VerticalContentAlignment="Center" Height="25"/>
@@ -257,15 +256,15 @@
 
                 <StackPanel Grid.Column="4" Width="120" Orientation="Vertical" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="Money" Margin="0,0,0,0"/>
+                        <materialDesign:PackIcon Kind="Money" Margin="0,0,5,0"/>
                         <TextBlock TextAlignment="Center" Text="مبلغ" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <TextBox Text="{Binding WorkItem.BuyPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" ToolTip="{Binding WorkItem.TotalBuyValue}" TabIndex="3" VerticalContentAlignment="Center" Height="25"/>
+                    <TextBox Text="{Binding WorkItem.Amount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" TabIndex="3" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="5" Width="100" Orientation="Vertical" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="Numbers" Margin="0,0,0,0"/>
+                        <materialDesign:PackIcon Kind="Numbers" Margin="0,0,5,0"/>
                         <TextBlock TextAlignment="Center" Text="تعداد" Margin="0,0,0,0"/>
                     </StackPanel>
                     <TextBox Text="{Binding WorkItem.CountString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding WorkItem.CountValue}" TabIndex="1" VerticalContentAlignment="Center" Height="25"/>
@@ -273,65 +272,34 @@
 
                 <StackPanel Grid.Column="6" Orientation="Vertical" Margin="0,0,1,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="IdentificationCardOutline" Margin="0,0,0,0"/>
-                        <TextBlock TextAlignment="Center" Text="عنوان" Margin="5,0,0,0"/>
+                        <materialDesign:PackIcon Kind="IdentificationCardOutline" Margin="0,0,5,0"/>
+                        <TextBlock TextAlignment="Center" Text="عنوان" Margin="0,0,0,0"/>
                     </StackPanel>
                     <ComboBox IsTextSearchEnabled="True" IsEditable="True" VerticalContentAlignment="Center" Height="25"
                               ItemsSource="{Binding ProductItemsForComboBox}"
                               TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ProductName"
-                              Text="{Binding ProductInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <ComboBox.ItemContainerStyle>
-                            <Style TargetType="ComboBoxItem">
-                                <Setter Property="ToolTip" Value="{Binding Path=Id, StringFormat='Product ID: {0}'}"/>
-                            </Style>
-                        </ComboBox.ItemContainerStyle>
+                              Text="{Binding WorkItem.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     </ComboBox>
                 </StackPanel>
             </Grid>
             <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditItem()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
-                      Grid.Row="3" ItemsSource="{Binding Invoice.Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" FlowDirection="RightToLeft" AutoGenerateColumns="False"
+                      Grid.Row="3" ItemsSource="{Binding Transaction.Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" FlowDirection="RightToLeft" AutoGenerateColumns="False"
                       IsTabStop="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="نام کالا" Binding="{Binding Product.ProductName, Mode=OneWay}" Width="200">
+                    <DataGridTextColumn Header="عنوان" Binding="{Binding Title, Mode=OneWay}" Width="230">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="{Binding Product.Id}"/>
+                                <Setter Property="ToolTip" Value="{Binding }"/>
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="فی خرید" Binding="{Binding BuyPrice, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Visibility="{Binding Source={x:Reference ShowNetProfit}, Path=IsChecked, Converter={StaticResource b2v}}" Width="90">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="{Binding TotalBuyValue}"/>
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="قیمت" Binding="{Binding SellPrice, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="70">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="{Binding TotalSellValue}" />
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="تعداد" Binding="{Binding CountString, Mode=OneWay}" Width="60">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="{Binding CountPlusUnit}" />
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="جمع کل" Binding="{Binding TotalSellValue, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="100">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="{Binding NetProfit}" />
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding DateCreated, Mode=OneWay}" Width="87"/>
-                    <DataGridTextColumn Header="تاریخ ویرایش" Binding="{Binding DateUpdated, Mode=OneWay}" Width="87"/>
-                    <DataGridTextColumn Header="ساعت ویرایش" Binding="{Binding TimeUpdated, Mode=OneWay}" Width="115"/>
-                    <DataGridTextColumn Header="تحویل" Binding="{Binding Delivered, Mode=OneWay}" Width="70"/>
-                    <DataGridTextColumn Header="توضیحات" Binding="{Binding Descriptions, Mode=OneWay}" Width="auto" MinWidth="80"/>
+                    <DataGridTextColumn Header="تعداد" Binding="{Binding BuyPrice, Mode=OneWay}" Width="90"/>
+                    <DataGridTextColumn Header="مبلغ" Binding="{Binding DateCreated, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120"/>
+                    <DataGridTextColumn Header="جمع کل" Binding="{Binding DateCreated, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120"/>
+                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding BuyPrice, Mode=OneWay}" Width="70"/>
+                    <DataGridTextColumn Header="تاریخ ویرایش" Binding="{Binding DateUpdated, Mode=OneWay}" Width="73"/>
+                    <DataGridTextColumn Header="ساعت ویرایش" Binding="{Binding TimeUpdated, Mode=OneWay}" Width="83"/>
+                    <DataGridTextColumn Header="توضیحات" Binding="{Binding Descriptions, Mode=OneWay}" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

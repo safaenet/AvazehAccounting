@@ -244,6 +244,22 @@ namespace AvazehApiClient.DataAccess
             To.Descriptions = From.Descriptions;
         }
 
+        public static void Clone(this TransactionItemModel From, TransactionItemModel To)
+        {
+            if (From == null) return;
+            if (To == null) To = new();
+            To.Id = From.Id;
+            To.TransactionId = From.TransactionId;
+            To.Title = From.Title;
+            To.Amount = From.Amount;
+            To.CountString = From.CountString;
+            To.DateCreated = From.DateCreated;
+            To.TimeCreated = From.TimeCreated;
+            To.DateUpdated = From.DateUpdated;
+            To.TimeUpdated = From.TimeUpdated;
+            To.Descriptions = From.Descriptions;
+        }
+
         public static async Task<ProductModel> GetItemByBarCodeAsync(this ICollectionManager<ProductModel> manager, string BarCode)
         {
             return await manager.ApiProcessor.GetItemAsync<ProductModel>("Product/BarCode", BarCode);
