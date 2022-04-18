@@ -236,8 +236,6 @@ namespace AvazehWeb
                 Title = model.Title,
                 Amount = model.Amount,
                 CountString = model.CountString,
-                DateCreated=model.DateCreated,
-                TimeCreated=model.TimeCreated,
                 Descriptions = model.Descriptions
             };
         }
@@ -250,8 +248,6 @@ namespace AvazehWeb
                 Title = model.Title,
                 Amount = model.Amount,
                 CountString = model.CountString,
-                DateCreated = model.DateCreated,
-                TimeCreated = model.TimeCreated,
                 Descriptions = model.Descriptions                
             };
         }

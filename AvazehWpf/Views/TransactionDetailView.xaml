@@ -46,7 +46,7 @@
                                 <materialDesign:PackIcon Kind="AccountOutline" Margin="0,2,5,2"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="شناسه فایل" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Transaction.Id, Mode=OneWay}" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding Transaction.Id, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,3">
@@ -54,7 +54,7 @@
                                 <materialDesign:PackIcon Kind="FileOutline" Margin="0,2,5,2"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام فایل" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Transaction.FileName, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding Transaction.FileName, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="100" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
@@ -69,7 +69,7 @@
                                         <materialDesign:PackIcon Kind="ClockOutline" Margin="0,2,5,2"/>
                                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="ساعت ایجاد" Margin="0,2,0,2"/>
                                     </StackPanel>
-                                    <TextBox Text="{Binding Transaction.TimeCreated, Mode=OneTime}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding Transaction.TimeCreated, Mode=OneTime}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="8" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                                 </StackPanel>
                                 
                                 <StackPanel Grid.Column="1" Orientation="Vertical" Margin="0,0,0,3">
@@ -77,7 +77,7 @@
                                         <materialDesign:PackIcon Kind="CalendarRangeOutline" Margin="0,2,5,2"/>
                                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد" Margin="0,2,0,2"/>
                                     </StackPanel>
-                                    <TextBox Text="{Binding Transaction.DateCreated, Mode=OneTime}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding Transaction.DateCreated, Mode=OneTime}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                                 </StackPanel>
                             </Grid>
                         </StackPanel>
@@ -94,7 +94,7 @@
                                         <materialDesign:PackIcon Kind="ClockOutline" Margin="0,2,5,2"/>
                                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="ساعت ویرایش" Margin="0,2,0,2"/>
                                     </StackPanel>
-                                    <TextBox Text="{Binding Transaction.TimeUpdated, Mode=OneTime}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding Transaction.TimeUpdated, Mode=OneTime}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="8" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" Orientation="Vertical" Margin="0,0,0,3">
@@ -102,7 +102,7 @@
                                         <materialDesign:PackIcon Kind="CalendarRangeOutline" Margin="0,2,5,2"/>
                                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ویرایش" Margin="0,2,0,2"/>
                                     </StackPanel>
-                                    <TextBox Text="{Binding Transaction.DateUpdated, Mode=OneTime}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding Transaction.DateUpdated, Mode=OneTime}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                                 </StackPanel>
                             </Grid>
                         </StackPanel>
@@ -114,22 +114,22 @@
                             <materialDesign:PackIcon Kind="CommentOutline" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="توضیحات" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Transaction.Descriptions, Mode=TwoWay}" TextWrapping="Wrap" MinHeight="50" Height="auto" VerticalContentAlignment="Top"/>
+                        <TextBox Text="{Binding Transaction.Descriptions, Mode=TwoWay}" TextWrapping="Wrap" HorizontalContentAlignment="Right" MinHeight="50" Height="auto" VerticalContentAlignment="Top"/>
                     </DockPanel>
 
                     <StackPanel Grid.Row="2" Orientation="Vertical">
                         <StackPanel Orientation="Horizontal" Margin="0,0,3,3" HorizontalAlignment="Left">
-                            <TextBlock Text="{Binding Invoice.TotalItemsSellSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="103" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Transaction.TotalPositiveItemsSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="103" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="جمع مثبت صفحه" Margin="3,0,0,2" VerticalAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,3,3" HorizontalAlignment="Left">
-                            <TextBlock Text="{Binding Invoice.TotalDiscountAmount, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="102" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Transaction.TotalNegativeItemsSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="102" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="جمع منفی صفحه" Margin="3,0,0,2" VerticalAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,3,3" HorizontalAlignment="Left">
-                            <TextBlock Text="{Binding Invoice.TotalInvoiceSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="131" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Transaction.TotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="131" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="تراز صفحه" FontWeight="Bold" Margin="3,0,0,2" VerticalAlignment="Center"/>
                         </StackPanel>
                         
@@ -251,7 +251,7 @@
                         <materialDesign:PackIcon Kind="CommentOutline" Margin="0,0,5,0"/>
                         <TextBlock TextAlignment="Center" Text="توضیحات" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <TextBox Text="{Binding WorkItem.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TabIndex="5" VerticalContentAlignment="Center" Height="25"/>
+                    <TextBox Text="{Binding WorkItem.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="50" TabIndex="5" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="4" Width="120" Orientation="Vertical" Margin="0,0,3,0">
@@ -267,7 +267,7 @@
                         <materialDesign:PackIcon Kind="Numbers" Margin="0,0,5,0"/>
                         <TextBlock TextAlignment="Center" Text="تعداد" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <TextBox Text="{Binding WorkItem.CountString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding WorkItem.CountValue}" TabIndex="1" VerticalContentAlignment="Center" Height="25"/>
+                    <TextBox Text="{Binding WorkItem.CountString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding WorkItem.CountValue}" MaxLength="50" TabIndex="1" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="6" Orientation="Vertical" Margin="0,0,1,0">
@@ -293,10 +293,10 @@
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="تعداد" Binding="{Binding BuyPrice, Mode=OneWay}" Width="90"/>
-                    <DataGridTextColumn Header="مبلغ" Binding="{Binding DateCreated, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120"/>
-                    <DataGridTextColumn Header="جمع کل" Binding="{Binding DateCreated, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120"/>
-                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding BuyPrice, Mode=OneWay}" Width="70"/>
+                    <DataGridTextColumn Header="تعداد" Binding="{Binding CountString, Mode=OneWay}" Width="90"/>
+                    <DataGridTextColumn Header="مبلغ" Binding="{Binding Amount, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120"/>
+                    <DataGridTextColumn Header="جمع کل" Binding="{Binding TotalValue, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120"/>
+                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding DateCreated, Mode=OneWay}" Width="70"/>
                     <DataGridTextColumn Header="تاریخ ویرایش" Binding="{Binding DateUpdated, Mode=OneWay}" Width="73"/>
                     <DataGridTextColumn Header="ساعت ویرایش" Binding="{Binding TimeUpdated, Mode=OneWay}" Width="83"/>
                     <DataGridTextColumn Header="توضیحات" Binding="{Binding Descriptions, Mode=OneWay}" Width="*"/>

@@ -3,7 +3,6 @@ using DataLibraryCore.DataAccess.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace AvazehWebAPI.Controllers

@@ -25,12 +25,6 @@ namespace SharedLibrary.DtoModels
         [CountStringIsValid]
         public string CountString { get; set; } = "0";
 
-        [Required]
-        public string DateCreated { get; set; }
-
-        [Required]
-        public string TimeCreated { get; set; }
-
         [StringLength(50, ErrorMessage = "Maximum length is 50")]
         public string Descriptions { get; set; }
     }

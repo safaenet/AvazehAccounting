@@ -61,7 +61,7 @@ namespace AvazehWpf.ViewModels
         public async Task AddNewTransaction()
         {
             WindowManager wm = new();
-            //await wm.ShowWindowAsync(new TransactionDetailViewModel(TCM, new TransactionDetailManager(TCM.ApiProcessor), Singleton, null, RefreshPage));
+            await wm.ShowWindowAsync(new TransactionDetailViewModel(TCM, new TransactionDetailManager(TCM.ApiProcessor), Singleton, null, RefreshPage));
         }
 
         public async Task PreviousPage()
@@ -103,7 +103,7 @@ namespace AvazehWpf.ViewModels
         {
             if (Transactions == null || Transactions.Count == 0 || SelectedTransaction == null) return;
             WindowManager wm = new();
-            //await wm.ShowWindowAsync(new TransactionDetailViewModel(TCM, new TransactionDetailManager(TCM.ApiProcessor), Singleton, SelectedTransaction.Id, RefreshPage));
+            await wm.ShowWindowAsync(new TransactionDetailViewModel(TCM, new TransactionDetailManager(TCM.ApiProcessor), Singleton, SelectedTransaction.Id, RefreshPage));
         }
 
         public async Task DeleteTransaction()

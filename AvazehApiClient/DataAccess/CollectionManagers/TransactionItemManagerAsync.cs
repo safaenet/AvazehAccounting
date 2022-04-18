@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 
 namespace AvazehApiClient.DataAccess.CollectionManagers
 {
-    public partial class TransactionDetailManager : ITransactionDetailManager
+    public class TransactionDetailManager : ITransactionDetailManager
     {
         public TransactionDetailManager(IApiProcessor apiProcessor)
         {
