@@ -39,12 +39,12 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private readonly string DeleteTransactionItemQuery = @$"DELETE FROM TransactionItems WHERE [Id] = @id";
         private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] FROM Products {0}";
         private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Transactions SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated WHERE [Id] = @id";
-        private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON
-            SELECT * FROM Transactions t WHERE t.[Id] = {0} ORDER BY t.[Id] ASC;
-            SELECT ti.Id, ti.TransactionId, ti.Title, ti.Amount, ti.CountString, ti.DateCreated, ti.TimeCreated, ti.DateUpdated, ti.TimeUpdated, ti.Descriptions
-            FROM TransactionItems ti WHERE ti.TransactionId IN (SELECT t.Id FROM Transactions t);";
         //private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON
-        //    SELECT * FROM Transactions t WHERE t.[Id] = {0}";
+        //    SELECT * FROM Transactions t WHERE t.[Id] = {0} ORDER BY t.[Id] ASC;
+        //    SELECT ti.Id, ti.TransactionId, ti.Title, ti.Amount, ti.CountString, ti.DateCreated, ti.TimeCreated, ti.DateUpdated, ti.TimeUpdated, ti.Descriptions
+        //    FROM TransactionItems ti WHERE ti.TransactionId IN (SELECT t.Id FROM Transactions t);";
+        private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON
+            SELECT * FROM Transactions t WHERE t.[Id] = {0}";
 
         private async Task<int> GetTransactionIdFromTransactionItemId(int Id)
         {
@@ -280,9 +280,11 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public async Task<TransactionModel> LoadSingleItemAsync(int Id)
         {
             var query = string.Format(LoadSingleItemQuery, Id);
-            using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
-            var outPut = await conn.QueryMultipleAsync(query);
-            return outPut.MapToSingleTransaction();
+            //using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
+            //var outPut = await conn.QueryMultipleAsync(query);
+            //return outPut.MapToSingleTransaction();
+            var output = await DataAccess.LoadDataAsync<TransactionModel, DynamicParameters>(query, null);
+            return output.SingleOrDefault();
         }
     }
 }

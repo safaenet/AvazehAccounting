@@ -119,17 +119,17 @@
 
                     <StackPanel Grid.Row="2" Orientation="Vertical">
                         <StackPanel Orientation="Horizontal" Margin="0,0,3,3" HorizontalAlignment="Left">
-                            <TextBlock Text="{Binding Transaction.TotalPositiveItemsSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="103" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Transaction.PositiveItemsSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="103" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="جمع مثبت صفحه" Margin="3,0,0,2" VerticalAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,3,3" HorizontalAlignment="Left">
-                            <TextBlock Text="{Binding Transaction.TotalNegativeItemsSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="102" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Transaction.NegativeItemsSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="102" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="جمع منفی صفحه" Margin="3,0,0,2" VerticalAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,3,3" HorizontalAlignment="Left">
-                            <TextBlock Text="{Binding Transaction.TotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="131" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Transaction.Balance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="131" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="تراز صفحه" FontWeight="Bold" Margin="3,0,0,2" VerticalAlignment="Center"/>
                         </StackPanel>
                         

@@ -30,6 +30,7 @@ namespace AvazehWpf.ViewModels
             Singleton = singleton;
             if (TransactionId is not null)
             {
+                TransactionDetailManager.TransactionId = (int)TransactionId;
                 ReloadTransaction(TransactionId).ConfigureAwait(true);
             }
             GetComboboxItems();
@@ -61,6 +62,7 @@ namespace AvazehWpf.ViewModels
         {
             if (TransactionId is null) return;
             Transaction = await TransactionCollectionManager.GetItemById((int)TransactionId);
+            await TransactionDetailManager.LoadFirstPageAsync();
         }
 
         public void EditItem() //DataGrid doubleClick event
