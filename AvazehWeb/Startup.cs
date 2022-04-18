@@ -24,6 +24,7 @@ namespace AvazehWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddControllers(options => options.EnableEndpointRouting = false);
             services
                 .AddScoped<IGeneralProcessor<ProductModel>, SqlProductProcessor<ProductModel, ProductValidator>>()
                 .AddScoped<IGeneralProcessor<CustomerModel>, SqlCustomerProcessor<CustomerModel, PhoneNumberModel, CustomerValidator>>()
@@ -35,19 +36,20 @@ namespace AvazehWeb
                 .AddScoped(typeof(IGeneralCollectionManager<ProductModel, IGeneralProcessor<ProductModel>>), typeof(ProductCollectionManager))
                 .AddScoped(typeof(IGeneralCollectionManager<CustomerModel, IGeneralProcessor<CustomerModel>>), typeof(CustomerCollectionManager))
                 .AddScoped(typeof(IGeneralCollectionManager<ChequeModel, IGeneralProcessor<ChequeModel>>), typeof(ChequeCollectionManager))
-                
+
                 .AddScoped<IInvoiceCollectionManager, InvoiceCollectionManager>()
-                .AddScoped<ITransactionCollectionManager, TransactionCollectionManager>();
+                .AddScoped<ITransactionCollectionManager, TransactionCollectionManager>()
+                .AddScoped<ITransactionItemCollectionManager, TransactionItemCollectionManager>();
 
-            services.AddControllersWithViews();
-            services.AddDistributedMemoryCache();
+            services.AddControllersWithViews(options => options.EnableEndpointRouting = false);
+            //services.AddDistributedMemoryCache();
 
-            services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromMinutes(60);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
+            //services.AddSession(options =>
+            //{
+            //    options.IdleTimeout = TimeSpan.FromMinutes(60);
+            //    options.Cookie.HttpOnly = true;
+            //    options.Cookie.IsEssential = true;
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,19 +66,21 @@ namespace AvazehWeb
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            //app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseAuthorization();
 
-            app.UseSession();
+            //app.UseSession();
+            app.UseMvcWithDefaultRoute();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Product}/{action=Index}/{id?}");
+                endpoints.MapControllers();
+                //endpoints.MapControllerRoute(
+                //    name: "default",
+                //    pattern: "{controller=Product}/{action=Index}/{id?}");
             });
         }
     }

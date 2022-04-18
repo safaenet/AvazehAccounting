@@ -8,7 +8,6 @@ namespace DataLibraryCore.DataAccess.Interfaces
 {
     public interface ICollectionManagerBase<TModel>
     {
-        //TProcessor Processor { get; init; }
         event EventHandler FirstPageLoaded;
         event EventHandler WhereClauseChanged;
         event EventHandler NextPageLoading;

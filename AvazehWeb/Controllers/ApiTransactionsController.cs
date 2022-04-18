@@ -32,13 +32,6 @@ namespace AvazehWebAPI.Controllers
             return Manager.AsDto();
         }
 
-        [HttpGet("{Id}")]
-        public async Task<ActionResult<TransactionModel>> GetItemAsync(int Id)
-        {
-            TransactionModel model = await Manager.Processor.LoadSingleItemAsync(Id);
-            return model is null ? NotFound("Couldn't find specific Item") : model;
-        }
-
         [HttpGet("ProductItems")]
         public async Task<ActionResult<List<ProductNamesForComboBox>>> GetProductItemsAsync(string SearchText)
         {

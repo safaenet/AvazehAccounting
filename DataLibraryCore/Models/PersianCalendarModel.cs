@@ -18,9 +18,6 @@ namespace DataLibraryCore.Models
         /// <summary>
         /// Gets the current time in format of "HH:mm:ss"
         /// </summary>
-        public static string GetCurrentTime()
-        {
-            return DateTime.Now.ToString("HH:mm:ss");
-        }
+        public static string GetCurrentTime() => DateTime.Now.ToString("HH:mm:ss");
     }
 }

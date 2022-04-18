@@ -67,6 +67,16 @@ namespace AvazehWeb
             };
         }
 
+        internal static ItemsCollection_DTO<TransactionItemModel> AsDto(this ITransactionItemCollectionManager manager)
+        {
+            return new ItemsCollection_DTO<TransactionItemModel>()
+            {
+                Items = manager.Items,
+                PagesCount = manager.PagesCount,
+                CurrentPage = manager.CurrentPage
+            };
+        }
+
         internal static CustomerModel AsDaL(this CustomerModel_DTO_Create_Update model)
         {
             return new CustomerModel()

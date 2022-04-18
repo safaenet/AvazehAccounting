@@ -43,6 +43,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
             SELECT * FROM Transactions t WHERE t.[Id] = {0} ORDER BY t.[Id] ASC;
             SELECT ti.Id, ti.TransactionId, ti.Title, ti.Amount, ti.CountString, ti.DateCreated, ti.TimeCreated, ti.DateUpdated, ti.TimeUpdated, ti.Descriptions
             FROM TransactionItems ti WHERE ti.TransactionId IN (SELECT t.Id FROM Transactions t);";
+        //private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON
+        //    SELECT * FROM Transactions t WHERE t.[Id] = {0}";
 
         private async Task<int> GetTransactionIdFromTransactionItemId(int Id)
         {
@@ -50,7 +52,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(query, null);
         }
 
-        public string GenerateWhereClause(string val, TransactionFinancialStatus? FinStatus, SqlSearchMode mode)
+        public string GenerateWhereClause(string val, TransactionFinancialStatus? FinStatus, SqlSearchMode mode) //Used for TransactionList
         {
             string finStatusOperand = "";
             switch (FinStatus)
@@ -81,12 +83,43 @@ namespace DataLibraryCore.DataAccess.SqlServer
             ";
         }
 
+        public string GenerateTransactionItemWhereClause(string val, TransactionFinancialStatus? FinStatus, SqlSearchMode mode) //Used for TransactionItemList
+        {
+            string finStatusOperand = "";
+            switch (FinStatus)
+            {
+                case TransactionFinancialStatus.Balanced:
+                    finStatusOperand = "=";
+                    break;
+                case TransactionFinancialStatus.Negative:
+                    finStatusOperand = "<";
+                    break;
+                case TransactionFinancialStatus.Positive:
+                    finStatusOperand = ">";
+                    break;
+                default:
+                    break;
+            }
+            var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
+            return @$"([Title] LIKE {criteria}
+                      {mode} CAST([Amount] AS VARCHAR) LIKE {criteria}
+                      {mode} [CountString] LIKE {criteria}
+                      {mode} CAST([CountValue] AS VARCHAR) LIKE {criteria}
+                      {mode} [TimeCreated] LIKE {criteria}
+                      {mode} [DateUpdated] LIKE {criteria}
+                      {mode} [TimeUpdated] LIKE {criteria}
+                      {mode} [Descriptions] LIKE {criteria} ) 
+                      { (FinStatus == null ? "" : $" AND ISNULL(([Amount] * [CountValue]), 0) { finStatusOperand } 0 ")}
+            ";
+        }
+
         public ValidationResult ValidateItem(TransactionModel product)
         {
             TransactionValidator validator = new();
             var result = validator.Validate(product);
             return result;
         }
+
         public async Task<List<ProductNamesForComboBox>> GetProductItemsAsync(string SearchText = null)
         {
             var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [ProductName] LIKE '%{ SearchText }%'";
@@ -215,6 +248,13 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
         }
 
+        public async Task<int> GetTotalTransactionItemQueryCountAsync(string WhereClause, int Id)
+        {
+            var sqlTemp = $@"SELECT COUNT([Id]) FROM TransactionItems WHERE [Id] = { Id }
+                                { (string.IsNullOrEmpty(WhereClause) ? "" : " AND ") } { WhereClause }";
+            return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
+        }
+
         public async Task<ObservableCollection<TransactionListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
         {
             string sql = $@"SET NOCOUNT ON
@@ -227,6 +267,14 @@ namespace DataLibraryCore.DataAccess.SqlServer
                             { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
                             ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
             return await DataAccess.LoadDataAsync<TransactionListModel, DynamicParameters>(sql, null);
+        }
+
+        public async Task<ObservableCollection<TransactionItemModel>> LoadManyTransactionItemsAsync(int OffSet, int FetcheSize, string WhereClause, int Id, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+        {
+            string sql = $@"SELECT * FROM TransactionItems WHERE [Id] = { Id }
+                            { (string.IsNullOrEmpty(WhereClause) ? "" : $" AND { WhereClause }") }
+                            ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
+            return await DataAccess.LoadDataAsync<TransactionItemModel, DynamicParameters>(sql, null);
         }
 
         public async Task<TransactionModel> LoadSingleItemAsync(int Id)
