@@ -47,6 +47,9 @@ namespace AvazehWpf.ViewModels
         public TransactionItemModel SelectedItem { get; set; }
         public TransactionItemModel WorkItem { get => _workItem; set { _workItem = value; NotifyOfPropertyChange(() => WorkItem); } }
         public ObservableCollection<ProductNamesForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
+        private bool isTitleInputDropDownOpen;
+
+        public bool IsTitleInputDropDownOpen { get => isTitleInputDropDownOpen; set { isTitleInputDropDownOpen = value; NotifyOfPropertyChange(() => IsTitleInputDropDownOpen); } }
 
         public TransactionModel Transaction
         {
@@ -103,6 +106,8 @@ namespace AvazehWpf.ViewModels
             var ResultItem = await TransactionDetailManager.UpdateItemAsync(item);
             var EdittedItem = Transaction.Items.FirstOrDefault(x => x.Id == item.Id);
             if (ResultItem != null) ResultItem.Clone(EdittedItem);
+            Transaction.DateUpdated = EdittedItem.DateUpdated;
+            Transaction.TimeUpdated = EdittedItem.TimeUpdated;
             RefreshDataGrid();
         }
 
@@ -160,6 +165,11 @@ namespace AvazehWpf.ViewModels
         public async Task ClosingWindow()
         {
             await CallBackFunc?.Invoke();
+        }
+
+        public void ProductNames_PreviewTextInput()
+        {
+            IsTitleInputDropDownOpen = true;
         }
 
         public void ProductNames_PreviewTextInput(object sender, EventArgs e)

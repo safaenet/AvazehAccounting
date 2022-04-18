@@ -135,6 +135,8 @@ namespace AvazehApiClient.DataAccess
             return new TransactionModel_DTO_Create_Update()
             {
                 FileName = model.FileName,
+                DateCreated = model.DateCreated,
+                TimeCreated = model.TimeCreated,
                 Descriptions = model.Descriptions
             };
         }

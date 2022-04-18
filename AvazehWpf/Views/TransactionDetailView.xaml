@@ -69,7 +69,7 @@
                                         <materialDesign:PackIcon Kind="ClockOutline" Margin="0,2,5,2"/>
                                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="ساعت ایجاد" Margin="0,2,0,2"/>
                                     </StackPanel>
-                                    <TextBox Text="{Binding Transaction.TimeCreated, Mode=OneTime}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="8" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding Transaction.TimeCreated, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="8" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                                 </StackPanel>
                                 
                                 <StackPanel Grid.Column="1" Orientation="Vertical" Margin="0,0,0,3">
@@ -77,7 +77,7 @@
                                         <materialDesign:PackIcon Kind="CalendarRangeOutline" Margin="0,2,5,2"/>
                                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد" Margin="0,2,0,2"/>
                                     </StackPanel>
-                                    <TextBox Text="{Binding Transaction.DateCreated, Mode=OneTime}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding Transaction.DateCreated, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                                 </StackPanel>
                             </Grid>
                         </StackPanel>
@@ -94,7 +94,7 @@
                                         <materialDesign:PackIcon Kind="ClockOutline" Margin="0,2,5,2"/>
                                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="ساعت ویرایش" Margin="0,2,0,2"/>
                                     </StackPanel>
-                                    <TextBox Text="{Binding Transaction.TimeUpdated, Mode=OneTime}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="8" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding Transaction.TimeUpdated, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="8" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" Orientation="Vertical" Margin="0,0,0,3">
@@ -102,7 +102,7 @@
                                         <materialDesign:PackIcon Kind="CalendarRangeOutline" Margin="0,2,5,2"/>
                                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ویرایش" Margin="0,2,0,2"/>
                                     </StackPanel>
-                                    <TextBox Text="{Binding Transaction.DateUpdated, Mode=OneTime}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding Transaction.DateUpdated, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                                 </StackPanel>
                             </Grid>
                         </StackPanel>
@@ -276,7 +276,8 @@
                         <TextBlock TextAlignment="Center" Text="عنوان" Margin="0,0,0,0"/>
                     </StackPanel>
                     <ComboBox IsTextSearchEnabled="True" IsEditable="True" VerticalContentAlignment="Center" Height="25"
-                              ItemsSource="{Binding ProductItemsForComboBox}"
+                              ItemsSource="{Binding ProductItemsForComboBox}" IsDropDownOpen="{Binding IsTitleInputDropDownOpen, Mode=TwoWay}"
+                              cal:Message.Attach="[Event PreviewTextInput]=[Action ProductNames_PreviewTextInput()]"
                               TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ProductName"
                               Text="{Binding WorkItem.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     </ComboBox>

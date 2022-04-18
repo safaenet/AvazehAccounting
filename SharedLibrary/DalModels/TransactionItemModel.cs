@@ -13,7 +13,7 @@ namespace SharedLibrary.DalModels
         public int TransactionId { get; set; }
         public string Title { get; set; }
         public long Amount { get; set; }
-        public string CountString { get; set; } = "0";
+        public string CountString { get; set; } = "1";
         public string DateCreated { get; set; }
         public string TimeCreated { get; set; }
         public string DateUpdated { get; set; }

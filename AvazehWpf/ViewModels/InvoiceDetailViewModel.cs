@@ -59,6 +59,9 @@ namespace AvazehWpf.ViewModels
         private string productInput;
         private double customerPreviousTotalBalance;
         private double customerTotalBalancePlusThis;
+        private bool isProductInputDropDownOpen;
+
+        public bool IsProductInputDropDownOpen { get => isProductInputDropDownOpen; set { isProductInputDropDownOpen = value; NotifyOfPropertyChange(() => IsProductInputDropDownOpen); } }
 
         public string ProductInput
         {
@@ -280,6 +283,11 @@ namespace AvazehWpf.ViewModels
         {
             var combo = sender as ComboBox;
             combo.IsDropDownOpen = true;
+        }
+
+        public void ProductNames_PreviewTextInput()
+        {
+            IsProductInputDropDownOpen = true;
         }
 
         public async Task ProductNames_SelectionChanged(object sender, EventArgs e)
