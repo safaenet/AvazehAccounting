@@ -287,11 +287,26 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public async Task<TransactionModel> LoadSingleItemAsync(int Id)
         {
             var query = string.Format(LoadSingleItemQuery, Id);
-            //using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
-            //var outPut = await conn.QueryMultipleAsync(query);
-            //return outPut.MapToSingleTransaction();
-            var output = await DataAccess.LoadDataAsync<TransactionModel, DynamicParameters>(query, null);
-            return output.SingleOrDefault();
+            var result = await DataAccess.LoadDataAsync<TransactionModel, DynamicParameters>(query, null);
+            var output = result.SingleOrDefault();
+            if (output != null)
+            {
+                output.TotalPositiveItemsSum = await LoadTotalPositive(Id);
+                output.TotalNegativeItemsSum = await LoadTotalNegative(Id);
+            }
+            return output;
+        }
+
+        public async Task<double> LoadTotalPositive(int Id)
+        {
+            var sql = $"SELECT ISNULL(SUM([Amount]*[CountValue]), 0) FROM TransactionItems WHERE ([Amount]*[CountValue]) > 0 AND TransactionId = { Id }";
+            return await DataAccess.ExecuteScalarAsync<double, DynamicParameters>(sql, null);
+        }
+
+        public async Task<double> LoadTotalNegative(int Id)
+        {
+            var sql = $"SELECT ISNULL(SUM([Amount]*[CountValue]), 0) FROM TransactionItems WHERE ([Amount]*[CountValue]) < 0 AND TransactionId = { Id }";
+            return await DataAccess.ExecuteScalarAsync<double, DynamicParameters>(sql, null);
         }
     }
 }

@@ -48,6 +48,7 @@ namespace AvazehWpf.ViewModels
         private bool EdittingItem = false;
         public bool CanSaveTransactionChanges { get; set; } = true;
         public TransactionItemModel SelectedItem { get; set; }
+        private TransactionItemModel selectedItem_Backup { get; set; } = new();
         public TransactionItemModel WorkItem { get => _workItem; set { _workItem = value; NotifyOfPropertyChange(() => WorkItem); } }
         public ObservableCollection<ItemsForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
         public ObservableCollection<ItemsForComboBox> TransactionsForComboBox { get => transactionsForComboBox; set { transactionsForComboBox = value; NotifyOfPropertyChange(() => TransactionsForComboBox); } }
@@ -75,6 +76,7 @@ namespace AvazehWpf.ViewModels
             if (Transaction == null || SelectedItem == null) return;
             EdittingItem = true;
             SelectedItem.Clone(WorkItem);
+            SelectedItem.Clone(selectedItem_Backup);
             NotifyOfPropertyChange(() => WorkItem);
         }
 
@@ -96,7 +98,11 @@ namespace AvazehWpf.ViewModels
                 if (Transaction.Items == null) Transaction.Items = new();
                 var addedItem = await TransactionDetailManager.CreateItemAsync(WorkItem);
                 if (addedItem is not null)
+                {
                     Transaction.Items.Add(addedItem);
+                    if (addedItem.TotalValue > 0) Transaction.TotalPositiveItemsSum += addedItem.TotalValue;
+                    else if (addedItem.TotalValue < 0) Transaction.TotalNegativeItemsSum += addedItem.TotalValue;
+                }
             }
             else //Edit Item
             {
@@ -104,6 +110,7 @@ namespace AvazehWpf.ViewModels
                 EdittingItem = false;
             }
             WorkItem = new();
+            selectedItem_Backup = new();
             NotifyOfPropertyChange(() => Transaction.Items);
             NotifyOfPropertyChange(() => Transaction);
         }
@@ -115,6 +122,16 @@ namespace AvazehWpf.ViewModels
             if (ResultItem != null) ResultItem.Clone(EdittedItem);
             Transaction.DateUpdated = EdittedItem.DateUpdated;
             Transaction.TimeUpdated = EdittedItem.TimeUpdated;
+            if (selectedItem_Backup.TotalValue > 0)
+            {
+                Transaction.TotalPositiveItemsSum -= selectedItem_Backup.TotalValue;
+                Transaction.TotalPositiveItemsSum += item.TotalValue;
+            }
+            else if (selectedItem_Backup.TotalValue < 0)
+            {
+                Transaction.TotalNegativeItemsSum -= selectedItem_Backup.TotalValue;
+                Transaction.TotalNegativeItemsSum += item.TotalValue;
+            }
             RefreshDataGrid();
         }
 
@@ -124,7 +141,11 @@ namespace AvazehWpf.ViewModels
             var result = MessageBox.Show("Are you sure you want to delete this row ?", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
             if (await TransactionDetailManager.DeleteItemAsync(SelectedItem.Id))
+            {
+                if (SelectedItem.TotalValue > 0) Transaction.TotalPositiveItemsSum -= SelectedItem.TotalValue;
+                else if (SelectedItem.TotalValue < 0) Transaction.TotalNegativeItemsSum -= SelectedItem.TotalValue;
                 Transaction.Items.Remove(SelectedItem);
+            }
             RefreshDataGrid();
             NotifyOfPropertyChange(() => Transaction);
         }

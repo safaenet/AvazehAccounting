@@ -293,7 +293,7 @@
                 </StackPanel>
             </Grid>
             <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditItem()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
-                      Grid.Row="3" ItemsSource="{Binding Transaction.Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" FlowDirection="RightToLeft" AutoGenerateColumns="False"
+                      Grid.Row="3" ItemsSource="{Binding Transaction.Items}" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}" FlowDirection="RightToLeft" AutoGenerateColumns="False"
                       IsTabStop="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="عنوان" Binding="{Binding Title, Mode=OneWay}" Width="230">

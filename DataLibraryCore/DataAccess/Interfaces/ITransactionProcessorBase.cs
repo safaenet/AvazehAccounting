@@ -22,5 +22,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
         Task<ObservableCollection<TransactionListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy, OrderType Order);
         Task<ObservableCollection<TransactionItemModel>> LoadManyTransactionItemsAsync(int OffSet, int FetcheSize, string WhereClause, int Id, string OrderBy, OrderType Order);
         Task<int> UpdateTransactionItemInDatabaseAsync(TransactionItemModel item);
+        Task<double> LoadTotalPositive(int Id);
+        Task<double> LoadTotalNegative(int Id);
     }
 }
