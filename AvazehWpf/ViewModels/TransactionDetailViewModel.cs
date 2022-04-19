@@ -17,6 +17,7 @@ using System.Windows.Input;
 using System.Windows.Data;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
+using SharedLibrary.Enums;
 
 namespace AvazehWpf.ViewModels
 {
@@ -33,7 +34,7 @@ namespace AvazehWpf.ViewModels
                 TransactionDetailManager.TransactionId = (int)TransactionId;
                 ReloadTransaction(TransactionId).ConfigureAwait(true);
             }
-            GetComboboxItems();
+            GetComboboxItems().ConfigureAwait(true);
         }
 
         private readonly ITransactionCollectionManager TransactionCollectionManager;
@@ -41,14 +42,18 @@ namespace AvazehWpf.ViewModels
         private InvoiceDetailSingleton Singleton;
         private TransactionModel _Transaction;
         private readonly Func<Task> CallBackFunc;
-        private ObservableCollection<ProductNamesForComboBox> productItems;
+        private ObservableCollection<ItemsForComboBox> productItems;
+        private ObservableCollection<ItemsForComboBox> transactionsForComboBox;
         private TransactionItemModel _workItem = new();
         private bool EdittingItem = false;
         public bool CanSaveTransactionChanges { get; set; } = true;
         public TransactionItemModel SelectedItem { get; set; }
         public TransactionItemModel WorkItem { get => _workItem; set { _workItem = value; NotifyOfPropertyChange(() => WorkItem); } }
-        public ObservableCollection<ProductNamesForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
+        public ObservableCollection<ItemsForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
+        public ObservableCollection<ItemsForComboBox> TransactionsForComboBox { get => transactionsForComboBox; set { transactionsForComboBox = value; NotifyOfPropertyChange(() => TransactionsForComboBox); } }
         private bool isTitleInputDropDownOpen;
+        public string SearchText { get; set; }
+        public int SelectedFinStatus { get; set; } = 3;
 
         public bool IsTitleInputDropDownOpen { get => isTitleInputDropDownOpen; set { isTitleInputDropDownOpen = value; NotifyOfPropertyChange(() => IsTitleInputDropDownOpen); } }
 
@@ -62,7 +67,7 @@ namespace AvazehWpf.ViewModels
         {
             if (TransactionId is null) return;
             Transaction = await TransactionCollectionManager.GetItemById((int)TransactionId);
-            await TransactionDetailManager.LoadFirstPageAsync();
+            await Search();
         }
 
         public void EditItem() //DataGrid doubleClick event
@@ -159,6 +164,16 @@ namespace AvazehWpf.ViewModels
             CanSaveTransactionChanges = false;
         }
 
+        public async Task Search()
+        {
+            TransactionFinancialStatus? FinStatus = SelectedFinStatus >= Enum.GetNames(typeof(TransactionFinancialStatus)).Length ? null : (TransactionFinancialStatus)SelectedFinStatus;
+            TransactionDetailManager.SearchValue = SearchText;
+            TransactionDetailManager.FinStatus = FinStatus;
+            await TransactionDetailManager.LoadFirstPageAsync();
+            Transaction.Items = TransactionDetailManager.Items;
+            NotifyOfPropertyChange(() => Transaction);
+        }
+
         public void CloseWindow()
         {
             (GetView() as Window).Close();
@@ -172,6 +187,14 @@ namespace AvazehWpf.ViewModels
         public void ProductNames_PreviewTextInput()
         {
             IsTitleInputDropDownOpen = true;
+        }
+
+        public async Task SearchBoxKeyDownHandler(ActionExecutionContext context)
+        {
+            if (context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
+            {
+                await Search();
+            }
         }
 
         public void ProductNames_PreviewTextInput(object sender, EventArgs e)
@@ -193,9 +216,10 @@ namespace AvazehWpf.ViewModels
             }
         }
 
-        private void GetComboboxItems()
+        private async Task GetComboboxItems()
         {
-            ProductItemsForComboBox = Singleton.ProductItemsForCombobox;
+            ProductItemsForComboBox = await Singleton.ReloadProductNames();
+            TransactionsForComboBox = await Singleton.ReloadTransactionNames(Transaction == null ? 0 : Transaction.Id);
         }
 
         void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)

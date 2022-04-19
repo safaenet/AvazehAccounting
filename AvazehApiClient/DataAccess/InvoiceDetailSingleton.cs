@@ -15,22 +15,14 @@ namespace AvazehApiClient.DataAccess
         public InvoiceDetailSingleton(IApiProcessor processor)
         {
             Processor = processor;
-            ReloadProductItems().ConfigureAwait(true);
-            ReloadProductUnits().ConfigureAwait(true);
         }
 
         private readonly IApiProcessor Processor;
-        public ObservableCollection<ProductNamesForComboBox> ProductItemsForCombobox { get; set; }
-        public ObservableCollection<ProductUnitModel> ProductUnits { get; set; }
 
-        public async Task ReloadProductItems()
-        {
-            ProductItemsForCombobox = await Processor.GetCollectionAsync<ObservableCollection<ProductNamesForComboBox>>("Invoices/ProductItems", null);
-        }
+        public async Task<ObservableCollection<ItemsForComboBox>> ReloadProductNames() => await Processor.GetCollectionAsync<ObservableCollection<ItemsForComboBox>>("Invoices/ProductItems", null);
 
-        public async Task ReloadProductUnits()
-        {
-            ProductUnits = await Processor.GetCollectionAsync<ObservableCollection<ProductUnitModel>>("Invoices/ProductUnits", null);
-        }
+        public async Task<ObservableCollection<ProductUnitModel>> ReloadProductUnits() => await Processor.GetCollectionAsync<ObservableCollection<ProductUnitModel>>("Invoices/ProductUnits", null);
+
+        public async Task<ObservableCollection<ItemsForComboBox>> ReloadTransactionNames(int Id = 0) => await Processor.GetCollectionAsync<ObservableCollection<ItemsForComboBox>>("Transactions/TransactionNames", Id == 0 ? null : Id.ToString());
     }
 }

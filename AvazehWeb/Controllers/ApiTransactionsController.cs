@@ -32,10 +32,24 @@ namespace AvazehWebAPI.Controllers
             return Manager.AsDto();
         }
 
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<TransactionModel>> GetItemAsync(int Id)
+        {
+            TransactionModel model = await Manager.Processor.LoadSingleItemAsync(Id);
+            return model is null ? NotFound("Couldn't find specific Item") : model;
+        }
+
         [HttpGet("ProductItems")]
-        public async Task<ActionResult<List<ProductNamesForComboBox>>> GetProductItemsAsync(string SearchText)
+        public async Task<ActionResult<List<ItemsForComboBox>>> GetProductItemsAsync(string SearchText)
         {
             var items = await Manager.Processor.GetProductItemsAsync(SearchText);
+            return items is null ? NotFound("Couldn't find any match") : items;
+        }
+
+        [HttpGet("TransactionNames")]
+        public async Task<ActionResult<List<ItemsForComboBox>>> GetTransactionNamesAsync(string SearchText)
+        {
+            var items = await Manager.Processor.GetTransactionNamesAsync(SearchText);
             return items is null ? NotFound("Couldn't find any match") : items;
         }
 

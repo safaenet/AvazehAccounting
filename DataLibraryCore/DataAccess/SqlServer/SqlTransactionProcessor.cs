@@ -37,12 +37,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private readonly string UpdateTransactionItemQuery = @"UPDATE TransactionItems SET Title = @title, Amount = @amount,
             CountString = @countString, CountValue = @countValue, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, Descriptions = @descriptions WHERE [Id] = @id";
         private readonly string DeleteTransactionItemQuery = @$"DELETE FROM TransactionItems WHERE [Id] = @id";
-        private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] FROM Products {0}";
+        private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] AS ItemName FROM Products {0}";
+        private readonly string GetTransactionNamesQuery = "SELECT [Id], [FileName] AS ItemName FROM Transactions {0}";
         private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Transactions SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated WHERE [Id] = @id";
-        //private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON
-        //    SELECT * FROM Transactions t WHERE t.[Id] = {0} ORDER BY t.[Id] ASC;
-        //    SELECT ti.Id, ti.TransactionId, ti.Title, ti.Amount, ti.CountString, ti.DateCreated, ti.TimeCreated, ti.DateUpdated, ti.TimeUpdated, ti.Descriptions
-        //    FROM TransactionItems ti WHERE ti.TransactionId IN (SELECT t.Id FROM Transactions t);";
         private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON
             SELECT * FROM Transactions t WHERE t.[Id] = {0}";
 
@@ -105,6 +102,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
                       {mode} CAST([Amount] AS VARCHAR) LIKE {criteria}
                       {mode} [CountString] LIKE {criteria}
                       {mode} CAST([CountValue] AS VARCHAR) LIKE {criteria}
+                      {mode} CAST(ISNULL(([Amount] * [CountValue]), 0) AS VARCHAR) LIKE {criteria}
+                      {mode} [DateCreated] LIKE {criteria}
                       {mode} [TimeCreated] LIKE {criteria}
                       {mode} [DateUpdated] LIKE {criteria}
                       {mode} [TimeUpdated] LIKE {criteria}
@@ -120,11 +119,19 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return result;
         }
 
-        public async Task<List<ProductNamesForComboBox>> GetProductItemsAsync(string SearchText = null)
+        public async Task<List<ItemsForComboBox>> GetProductItemsAsync(string SearchText = null)
         {
             var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [ProductName] LIKE '%{ SearchText }%'";
             var sql = string.Format(GetProductItemsQuery, where);
-            var items = await DataAccess.LoadDataAsync<ProductNamesForComboBox, DynamicParameters>(sql, null);
+            var items = await DataAccess.LoadDataAsync<ItemsForComboBox, DynamicParameters>(sql, null);
+            return items?.ToList();
+        }
+
+        public async Task<List<ItemsForComboBox>> GetTransactionNamesAsync(string SearchText = null)
+        {
+            var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [Id] <> { SearchText }";
+            var sql = string.Format(GetTransactionNamesQuery, where);
+            var items = await DataAccess.LoadDataAsync<ItemsForComboBox, DynamicParameters>(sql, null);
             return items?.ToList();
         }
 
@@ -250,7 +257,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         public async Task<int> GetTotalTransactionItemQueryCountAsync(string WhereClause, int Id)
         {
-            var sqlTemp = $@"SELECT COUNT([Id]) FROM TransactionItems WHERE [Id] = { Id }
+            var sqlTemp = $@"SELECT COUNT([Id]) FROM TransactionItems WHERE [TransactionId] = { Id }
                                 { (string.IsNullOrEmpty(WhereClause) ? "" : " AND ") } { WhereClause }";
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
         }
@@ -271,7 +278,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         public async Task<ObservableCollection<TransactionItemModel>> LoadManyTransactionItemsAsync(int OffSet, int FetcheSize, string WhereClause, int Id, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
         {
-            string sql = $@"SELECT * FROM TransactionItems WHERE [Id] = { Id }
+            string sql = $@"SELECT * FROM TransactionItems WHERE [TransactionId] = { Id }
                             { (string.IsNullOrEmpty(WhereClause) ? "" : $" AND { WhereClause }") }
                             ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
             return await DataAccess.LoadDataAsync<TransactionItemModel, DynamicParameters>(sql, null);

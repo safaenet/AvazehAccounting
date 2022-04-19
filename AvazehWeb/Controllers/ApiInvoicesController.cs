@@ -40,7 +40,7 @@ namespace AvazehWebAPI.Controllers
         }
 
         [HttpGet("ProductItems")]
-        public async Task<ActionResult<List<ProductNamesForComboBox>>> GetProductItemsAsync(string SearchText)
+        public async Task<ActionResult<List<ItemsForComboBox>>> GetProductItemsAsync(string SearchText)
         {
             var items = await Manager.Processor.GetProductItemsAsync(SearchText);
             return items is null ? NotFound("Couldn't find any match") : items;

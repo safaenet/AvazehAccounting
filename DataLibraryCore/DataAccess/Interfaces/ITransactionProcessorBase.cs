@@ -12,7 +12,8 @@ namespace DataLibraryCore.DataAccess.Interfaces
     {
         string GenerateWhereClause(string val, TransactionFinancialStatus? FinStatus, SqlSearchMode mode = SqlSearchMode.OR);
         string GenerateTransactionItemWhereClause(string val, TransactionFinancialStatus? FinStatus, SqlSearchMode mode);
-        Task<List<ProductNamesForComboBox>> GetProductItemsAsync(string SearchText = null);
+        Task<List<ItemsForComboBox>> GetProductItemsAsync(string SearchText = null);
+        Task<List<ItemsForComboBox>> GetTransactionNamesAsync(string SearchText = null);
         ValidationResult ValidateItem(TransactionItemModel item);
         Task<int> DeleteTransactionItemFromDatabaseAsync(int ItemId);
         Task<TransactionItemModel> GetTransactionItemFromDatabaseAsync(int Id);

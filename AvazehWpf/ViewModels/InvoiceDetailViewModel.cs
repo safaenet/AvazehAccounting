@@ -40,7 +40,7 @@ namespace AvazehWpf.ViewModels
         private InvoiceDetailSingleton Singleton;
         private InvoiceModel _Invoice;
         private readonly Func<Task> CallBackFunc;
-        private ObservableCollection<ProductNamesForComboBox> productItems;
+        private ObservableCollection<ItemsForComboBox> productItems;
         private ObservableCollection<ProductUnitModel> productUnits;
         private ObservableCollection<RecentSellPriceModel> recentSellPrices;
         private InvoiceItemModel _workItem = new();
@@ -51,10 +51,10 @@ namespace AvazehWpf.ViewModels
         public InvoiceItemModel WorkItem { get => _workItem; set { _workItem = value; NotifyOfPropertyChange(() => WorkItem); } }
         public double CustomerPreviousTotalBalance { get => customerPreviousTotalBalance; private set { customerPreviousTotalBalance = value; NotifyOfPropertyChange(() => CustomerPreviousTotalBalance); } }
         public double CustomerTotalBalancePlusThis { get => customerTotalBalancePlusThis; set { customerTotalBalancePlusThis = value; NotifyOfPropertyChange(() => CustomerTotalBalancePlusThis); } }
-        public ObservableCollection<ProductNamesForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
+        public ObservableCollection<ItemsForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
         public ObservableCollection<ProductUnitModel> ProductUnits { get => productUnits; set { productUnits = value; NotifyOfPropertyChange(() => ProductUnits); } }
         public ObservableCollection<RecentSellPriceModel> RecentSellPrices { get => recentSellPrices; set { recentSellPrices = value; NotifyOfPropertyChange(() => RecentSellPrices); } }
-        private ProductNamesForComboBox _selectedProductItem;
+        private ItemsForComboBox _selectedProductItem;
         private bool isSellPriceDropDownOpen;
         private string productInput;
         private double customerPreviousTotalBalance;
@@ -82,7 +82,7 @@ namespace AvazehWpf.ViewModels
             set { WorkItem.Unit = value; NotifyOfPropertyChange(() => SelectedProductUnit); }
         }
 
-        public ProductNamesForComboBox SelectedProductItem
+        public ItemsForComboBox SelectedProductItem
         {
             get => _selectedProductItem;
             set { _selectedProductItem = value; NotifyOfPropertyChange(() => SelectedProductItem); }
@@ -322,10 +322,10 @@ namespace AvazehWpf.ViewModels
             }
         }
 
-        private void GetComboboxItems()
+        private async Task GetComboboxItems()
         {
-            ProductItemsForComboBox = Singleton.ProductItemsForCombobox;
-            ProductUnits = Singleton.ProductUnits;
+            ProductItemsForComboBox = await Singleton.ReloadProductNames();
+            ProductUnits = await Singleton.ReloadProductUnits();
         }
 
         void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)

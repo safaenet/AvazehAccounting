@@ -131,9 +131,9 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
             return result;
         }
 
-        public async Task<List<ProductNamesForComboBox>> LoadProductItems(string SearchText = null)
+        public async Task<List<ItemsForComboBox>> LoadProductItems(string SearchText = null)
         {
-            var collection = await ApiProcessor.GetCollectionAsync<List<ProductNamesForComboBox>>(Key + "/ProductItems", SearchText);
+            var collection = await ApiProcessor.GetCollectionAsync<List<ItemsForComboBox>>(Key + "/ProductItems", SearchText);
             return collection is null ? null : collection;
         }
 

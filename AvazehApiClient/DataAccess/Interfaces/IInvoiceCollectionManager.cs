@@ -15,7 +15,7 @@ namespace AvazehApiClient.DataAccess.Interfaces
         InvoiceLifeStatus? LifeStatus { get; set; }
         InvoiceFinancialStatus? FinStatus { get; set; }
         InvoiceListModel GetItemFromCollectionById(int Id);
-        Task<List<ProductNamesForComboBox>> LoadProductItems(string SearchText = null);
+        Task<List<ItemsForComboBox>> LoadProductItems(string SearchText = null);
         Task<double> GetCustomerTotalBalanceById(int CustomerId, int InvoiceId = 0);
     }
 }

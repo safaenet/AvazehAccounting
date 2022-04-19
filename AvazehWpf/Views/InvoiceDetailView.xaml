@@ -260,7 +260,7 @@
                     <ComboBox IsTextSearchEnabled="True" IsEditable="True" VerticalContentAlignment="Center" Height="25"
                               cal:Message.Attach="[Event SelectionChanged]=[Action ProductNames_SelectionChanged($source, $eventArgs)]; [Event PreviewTextInput]=[Action ProductNames_PreviewTextInput()]"
                               ItemsSource="{Binding ProductItemsForComboBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsDropDownOpen="{Binding IsProductInputDropDownOpen, Mode=TwoWay}"
-                              SelectedItem="{Binding SelectedProductItem, Mode=TwoWay}" TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ProductName"
+                              SelectedItem="{Binding SelectedProductItem, Mode=TwoWay}" TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ItemName"
                               Text="{Binding ProductInput,Mode=TwoWay}">
                         <ComboBox.ItemContainerStyle>
                             <Style TargetType="ComboBoxItem">

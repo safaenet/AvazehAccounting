@@ -14,7 +14,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
         ValidationResult ValidateItem(InvoiceItemModel item);
         ValidationResult ValidateItem(InvoicePaymentModel item);
         Task<int> DeleteInvoiceItemFromDatabaseAsync(int ItemId);
-        Task<List<ProductNamesForComboBox>> GetProductItemsAsync(string SearchText);
+        Task<List<ItemsForComboBox>> GetProductItemsAsync(string SearchText);
         Task<double> GetTotalOrRestTotalBalanceOfCustomerAsync(int CustomerId, int InvoiceId = 0);
         Task<InvoiceItemModel> GetInvoiceItemFromDatabaseAsync(int Id);
         Task<int> InsertInvoiceItemToDatabaseAsync(InvoiceItemModel item);

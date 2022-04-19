@@ -184,8 +184,13 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
+                <Grid.Resources>
+                    <ObjectDataProvider x:Key="FinStatusItems" MethodName="GetTransactionFinStatusItems" ObjectType="{x:Type viewmodels:TransactionFinStatusItems}"/>
+                </Grid.Resources>
                 <Button x:Name="PreviousPage" Width="100" Height="25" HorizontalAlignment="Left" Margin="0,0,3,0" Grid.Column="0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="arrow_back_ios_new" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
@@ -198,14 +203,18 @@
                         <TextBlock Text="arrow_forward_ios" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="Search" Grid.Column="2" Width="100" Height="25" Margin="0,0,3,0" >
+                <Separator Grid.Column="2" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+                <ComboBox Margin="3,0,3,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Grid.Column="3" BorderThickness="2" BorderBrush="DarkGray" Height="25" VerticalContentAlignment="Center"
+                          ItemsSource="{Binding Source={StaticResource FinStatusItems}}" SelectedValuePath="Key" DisplayMemberPath="Value"
+                          SelectedValue="{Binding SelectedFinStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action Search]"/>
+                <Button x:Name="Search" Grid.Column="4" Width="100" Height="25" Margin="0,0,3,0" >
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="search" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                         <TextBlock Text="Search" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <TextBlock Text="search" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <TextBox x:Name="SearchText" Grid.Column="3" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]" VerticalContentAlignment="Center" Margin="0,0,3,0"/>
+                <TextBox x:Name="SearchText" Grid.Column="5" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]" VerticalContentAlignment="Center" Margin="0,0,3,0"/>
             </Grid>
             <Separator Grid.Row="1" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
             <Grid Grid.Row="2">
@@ -228,8 +237,8 @@
                         <TextBlock TextAlignment="Center" Text="درج در" Margin="0,0,0,0"/>
                     </StackPanel>
                     <ComboBox VerticalContentAlignment="Center" Width="120" Height="25"
-                              ItemsSource="{Binding ProductItemsForComboBox}"
-                              TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ProductName">
+                              ItemsSource="{Binding TransactionsForComboBox}"
+                              TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ItemName">
                         <ComboBox.ItemContainerStyle>
                             <Style TargetType="ComboBoxItem">
                                 <Setter Property="ToolTip" Value="{Binding Path=Id, StringFormat='Product ID: {0}'}"/>
@@ -278,7 +287,7 @@
                     <ComboBox IsTextSearchEnabled="True" IsEditable="True" VerticalContentAlignment="Center" Height="25"
                               ItemsSource="{Binding ProductItemsForComboBox}" IsDropDownOpen="{Binding IsTitleInputDropDownOpen, Mode=TwoWay}"
                               cal:Message.Attach="[Event PreviewTextInput]=[Action ProductNames_PreviewTextInput()]"
-                              TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ProductName"
+                              TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ItemName"
                               Text="{Binding WorkItem.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     </ComboBox>
                 </StackPanel>

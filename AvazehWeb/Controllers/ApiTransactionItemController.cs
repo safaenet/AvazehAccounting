@@ -19,17 +19,10 @@ namespace AvazehWebAPI.Controllers
 
         private readonly ITransactionItemCollectionManager Manager;
 
-        [HttpGet("{Id}")]
-        public async Task<ActionResult<TransactionModel>> GetTransactionAsync(int Id)
+        [HttpGet("{TransactionId}")]
+        public async Task<ActionResult<ItemsCollection_DTO<TransactionItemModel>>> GetItemsAsync(int TransactionId, int Page = 1, string SearchText = "", string OrderBy = "Id", OrderType orderType = OrderType.DESC, TransactionFinancialStatus? FinStatus = null, int PageSize = 100, bool ForceLoad = false)
         {
-            TransactionModel model = await Manager.Processor.LoadSingleItemAsync(Id);
-            return model is null ? NotFound("Couldn't find specific Item") : model;
-        }
-
-        [HttpGet("{Id}")]
-        public async Task<ActionResult<ItemsCollection_DTO<TransactionItemModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "Id", OrderType orderType = OrderType.DESC, TransactionFinancialStatus? FinStatus = null, int PageSize = 100, bool ForceLoad = false)
-        {
-            //Manager.TransactionId = TransactionId;
+            Manager.TransactionId = TransactionId;
             Manager.GenerateWhereClause(SearchText, OrderBy, orderType, FinStatus);
             Manager.PageSize = PageSize;
             if (ForceLoad) Manager.Initialized = false;
@@ -38,14 +31,14 @@ namespace AvazehWebAPI.Controllers
             return Manager.AsDto();
         }
 
-        [HttpGet("{ItemId}")]
-        public async Task<ActionResult<TransactionItemModel>> GetItemAsync(int ItemId)
-        {
-            //Manager.TransactionId = TransactionId;
-            var item = await Manager.Processor.GetTransactionItemFromDatabaseAsync(ItemId);
-            if (item is null) return NotFound("Couldn't find specific Item");
-            return item;
-        }
+        //[HttpGet("{ItemId}")]
+        //public async Task<ActionResult<TransactionItemModel>> GetItemAsync(int ItemId)
+        //{
+        //    //Manager.TransactionId = TransactionId;
+        //    var item = await Manager.Processor.GetTransactionItemFromDatabaseAsync(ItemId);
+        //    if (item is null) return NotFound("Couldn't find specific Item");
+        //    return item;
+        //}
 
         [HttpPost]
         public async Task<ActionResult<TransactionItemModel>> CreateItemAsync(TransactionItemModel_DTO_Create_Update model)

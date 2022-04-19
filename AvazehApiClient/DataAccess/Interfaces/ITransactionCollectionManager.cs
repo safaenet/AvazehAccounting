@@ -14,6 +14,6 @@ namespace AvazehApiClient.DataAccess.Interfaces
         ObservableCollection<TransactionListModel> Items { get; set; }
         TransactionFinancialStatus? FinStatus { get; set; }
         TransactionListModel GetItemFromCollectionById(int Id);
-        Task<List<ProductNamesForComboBox>> LoadProductItems(string SearchText = null);
+        Task<List<ItemsForComboBox>> LoadProductItems(string SearchText = null);
     }
 }

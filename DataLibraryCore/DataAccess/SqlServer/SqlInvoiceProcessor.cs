@@ -99,7 +99,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 p.[DateUpdated] AS pDateUpdated, p.[TimeUpdated] AS pTimeUpdated, p.[Descriptions] AS pDescriptions,
 				u.Id AS puId, u.UnitName
                 FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id LEFT JOIN ProductUnits u ON it.ProductUnitId = u.Id WHERE it.Id = {0}";
-        private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] FROM Products {0}";
+        private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] AS ItemName FROM Products {0}";
         private readonly string GetProductUnitsQuery = "SELECT [Id], [UnitName] FROM ProductUnits";
         private readonly string GetRecentPricesOfProduct = @"SELECT TOP({0}) it.SellPrice AS SellPrice, it.DateCreated AS DateSold FROM InvoiceItems it LEFT JOIN Invoices i ON it.InvoiceId = i.Id
                                                              LEFT JOIN Customers c ON i.CustomerId = c.Id LEFT JOIN Products p ON it.ProductId = p.Id
@@ -400,11 +400,11 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return await DataAccess.ExecuteScalarAsync<double, DynamicParameters>(sqlQuery, null);
         }
 
-        public async Task<List<ProductNamesForComboBox>> GetProductItemsAsync(string SearchText = null)
+        public async Task<List<ItemsForComboBox>> GetProductItemsAsync(string SearchText = null)
         {
             var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [ProductName] LIKE '%{ SearchText }%'";
             var sql = string.Format(GetProductItemsQuery, where);
-            var items = await DataAccess.LoadDataAsync<ProductNamesForComboBox, DynamicParameters>(sql, null);
+            var items = await DataAccess.LoadDataAsync<ItemsForComboBox, DynamicParameters>(sql, null);
             return items?.ToList();
         }
 
