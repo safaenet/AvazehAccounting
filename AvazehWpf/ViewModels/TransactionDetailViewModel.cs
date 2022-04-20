@@ -36,7 +36,6 @@ namespace AvazehWpf.ViewModels
             }
             GetComboboxItems().ConfigureAwait(true);
         }
-
         private readonly ITransactionCollectionManager TransactionCollectionManager;
         private readonly ITransactionDetailManager TransactionDetailManager;
         private InvoiceDetailSingleton Singleton;
@@ -45,14 +44,22 @@ namespace AvazehWpf.ViewModels
         private ObservableCollection<ItemsForComboBox> productItems;
         private ObservableCollection<ItemsForComboBox> transactionsForComboBox;
         private TransactionItemModel _workItem = new();
-        private bool EdittingItem = false;
-        public bool CanSaveTransactionChanges { get; set; } = true;
+        private bool _EdittingItem;
+        public bool EdittingItem
+        {
+            get => _EdittingItem;
+            set { _EdittingItem = value; NotifyOfPropertyChange(() => EdittingItem); }
+        }
+
+        public bool CanSaveTransactionChanges { get => canSaveTransactionChanges; set { canSaveTransactionChanges = value; NotifyOfPropertyChange(() => CanSaveTransactionChanges); } }
         public TransactionItemModel SelectedItem { get; set; }
         private TransactionItemModel selectedItem_Backup { get; set; } = new();
         public TransactionItemModel WorkItem { get => _workItem; set { _workItem = value; NotifyOfPropertyChange(() => WorkItem); } }
         public ObservableCollection<ItemsForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
         public ObservableCollection<ItemsForComboBox> TransactionsForComboBox { get => transactionsForComboBox; set { transactionsForComboBox = value; NotifyOfPropertyChange(() => TransactionsForComboBox); } }
         private bool isTitleInputDropDownOpen;
+        private bool canSaveTransactionChanges;
+
         public string SearchText { get; set; }
         public int SelectedFinStatus { get; set; } = 3;
 
@@ -102,6 +109,16 @@ namespace AvazehWpf.ViewModels
                     Transaction.Items.Add(addedItem);
                     if (addedItem.TotalValue > 0) Transaction.TotalPositiveItemsSum += addedItem.TotalValue;
                     else if (addedItem.TotalValue < 0) Transaction.TotalNegativeItemsSum += addedItem.TotalValue;
+                    foreach (var item in TransactionsForComboBox)
+                    {
+                        if(item.IsChecked)
+                        {
+                            WorkItem.TransactionId=item.Id;
+                            await TransactionDetailManager.CreateItemAsync(WorkItem);
+                            item.IsChecked = false;
+                        }
+                    }
+                    WorkItem.TransactionId = Transaction.Id;
                 }
             }
             else //Edit Item
@@ -243,6 +260,16 @@ namespace AvazehWpf.ViewModels
             }
         }
 
+        public void FileDescriptions_TextChanged()
+        {
+            CanSaveTransactionChanges = true;
+        }
+
+        public void CountAndAmount_TextChanged()
+        {
+            NotifyOfPropertyChange(() => WorkItem);
+        }
+
         private async Task GetComboboxItems()
         {
             ProductItemsForComboBox = await Singleton.ReloadProductNames();
@@ -253,5 +280,14 @@ namespace AvazehWpf.ViewModels
         {
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();
         }
+    }
+
+    public class BooleanToReverseConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+         => !(bool?)value ?? true;
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+         => !(value as bool?);
     }
 }

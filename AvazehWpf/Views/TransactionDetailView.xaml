@@ -11,9 +11,13 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:TransactionDetailViewModel}"
         xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary"
+        xmlns:dlc2="clr-namespace:SharedLibrary.DtoModels;assembly=SharedLibrary"
         Title="Transaction" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1200" Height="650"
         cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]">
+    <Window.Resources>
+        <viewmodels:BooleanToReverseConverter x:Key="b2r"/>
+    </Window.Resources>
     <Grid>
         <Grid.Resources>
             <BooleanToVisibilityConverter x:Key="b2v"/>
@@ -114,7 +118,8 @@
                             <materialDesign:PackIcon Kind="CommentOutline" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="توضیحات" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Transaction.Descriptions, Mode=TwoWay}" TextWrapping="Wrap" HorizontalContentAlignment="Right" MinHeight="50" Height="auto" VerticalContentAlignment="Top"/>
+                        <TextBox Text="{Binding Transaction.Descriptions, Mode=TwoWay}"
+                                 cal:Message.Attach="[Event TextChanged]=[Action FileDescriptions_TextChanged]" TextWrapping="Wrap" HorizontalContentAlignment="Right" MinHeight="50" Height="auto" VerticalContentAlignment="Top"/>
                     </DockPanel>
 
                     <StackPanel Grid.Row="2" Orientation="Vertical">
@@ -236,12 +241,19 @@
                         <materialDesign:PackIcon Kind="PlusBoxMultipleOutline" Margin="0,0,5,0"/>
                         <TextBlock TextAlignment="Center" Text="درج در" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <ComboBox VerticalContentAlignment="Center" Width="120" Height="25"
-                              ItemsSource="{Binding TransactionsForComboBox}"
-                              TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ItemName">
+                    <ComboBox VerticalContentAlignment="Center" Width="120" Height="25" IsEnabled="{Binding Path=EdittingItem, Converter={StaticResource b2r}}"
+                              ItemsSource="{Binding TransactionsForComboBox}" IsReadOnly="True" IsEditable="True" HorizontalAlignment="Stretch"
+                              TabIndex="0" SelectedValuePath="Id" Text="&lt;&lt;انتخاب کنید>>">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate
+                                DataType="{x:Type dlc2:ItemsForComboBox}">
+                                <CheckBox Content="{Binding ItemName}" IsChecked="{Binding IsChecked}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                         <ComboBox.ItemContainerStyle>
                             <Style TargetType="ComboBoxItem">
-                                <Setter Property="ToolTip" Value="{Binding Path=Id, StringFormat='Product ID: {0}'}"/>
+                                <Setter Property="ToolTip" Value="{Binding Path=Id, StringFormat='File ID: {0}'}"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                             </Style>
                         </ComboBox.ItemContainerStyle>
                     </ComboBox>
@@ -268,7 +280,8 @@
                         <materialDesign:PackIcon Kind="Money" Margin="0,0,5,0"/>
                         <TextBlock TextAlignment="Center" Text="مبلغ" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <TextBox Text="{Binding WorkItem.Amount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" TabIndex="3" VerticalContentAlignment="Center" Height="25"/>
+                    <TextBox Text="{Binding WorkItem.Amount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}"
+                             cal:Message.Attach="[Event TextChanged]=[Action CountAndAmount_TextChanged()]" TabIndex="3" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="5" Width="100" Orientation="Vertical" Margin="0,0,3,0">
@@ -276,7 +289,8 @@
                         <materialDesign:PackIcon Kind="Numbers" Margin="0,0,5,0"/>
                         <TextBlock TextAlignment="Center" Text="تعداد" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <TextBox Text="{Binding WorkItem.CountString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding WorkItem.CountValue}" MaxLength="50" TabIndex="1" VerticalContentAlignment="Center" Height="25"/>
+                    <TextBox Text="{Binding WorkItem.CountString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding WorkItem.CountValue}"
+                             cal:Message.Attach="[Event TextChanged]=[Action CountAndAmount_TextChanged()]" MaxLength="50" TabIndex="1" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="6" Orientation="Vertical" Margin="0,0,1,0">
