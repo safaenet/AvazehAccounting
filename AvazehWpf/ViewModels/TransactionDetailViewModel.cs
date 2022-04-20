@@ -240,7 +240,7 @@ namespace AvazehWpf.ViewModels
         private async Task GetComboboxItems()
         {
             ProductItemsForComboBox = await Singleton.ReloadProductNames();
-            TransactionsForComboBox = await Singleton.ReloadTransactionNames(Transaction == null ? 0 : Transaction.Id);
+            TransactionsForComboBox = await Singleton.ReloadTransactionNames(TransactionDetailManager == null ? 0 : TransactionDetailManager.TransactionId);
         }
 
         void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)

@@ -22,6 +22,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvazehWpf", "AvazehWpf\Avaz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedLibrary", "SharedLibrary\SharedLibrary.csproj", "{51251B2F-5E69-4657-95D6-74424852F3C2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetStandardCalculator", "DotNetStandardCalculator\DotNetStandardCalculator.csproj", "{9935D89D-0483-44E0-A84F-1F4B9843D21D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +123,18 @@ Global
 		{51251B2F-5E69-4657-95D6-74424852F3C2}.Release|iPhone.Build.0 = Release|Any CPU
 		{51251B2F-5E69-4657-95D6-74424852F3C2}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{51251B2F-5E69-4657-95D6-74424852F3C2}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{9935D89D-0483-44E0-A84F-1F4B9843D21D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9935D89D-0483-44E0-A84F-1F4B9843D21D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9935D89D-0483-44E0-A84F-1F4B9843D21D}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{9935D89D-0483-44E0-A84F-1F4B9843D21D}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{9935D89D-0483-44E0-A84F-1F4B9843D21D}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{9935D89D-0483-44E0-A84F-1F4B9843D21D}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{9935D89D-0483-44E0-A84F-1F4B9843D21D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9935D89D-0483-44E0-A84F-1F4B9843D21D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9935D89D-0483-44E0-A84F-1F4B9843D21D}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{9935D89D-0483-44E0-A84F-1F4B9843D21D}.Release|iPhone.Build.0 = Release|Any CPU
+		{9935D89D-0483-44E0-A84F-1F4B9843D21D}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{9935D89D-0483-44E0-A84F-1F4B9843D21D}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
