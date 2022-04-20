@@ -23,37 +23,8 @@ namespace SharedLibrary.DalModels
         public string TimeUpdated { get; set; }
         public bool Delivered { get; set; }
         public string Descriptions { get; set; }
-        public double CountValue
-        {
-            get
-            {
-                double result;
-                try
-                {
-                    result = StandardCalculator.CalculateFromString(CountString);
-                }
-                catch
-                {
-                    result = 0;
-                }
-                return result;
-            }
-        }
-        public bool IsCountStringValid
-        {
-            get
-            {
-                try
-                {
-                    _ = StandardCalculator.CalculateFromString(CountString);
-                }
-                catch
-                {
-                    return false;
-                }
-                return true;
-            }
-        }
+        public double CountValue => StandardCalculator.CalculateFromString(CountString);
+        public bool IsCountStringValid => StandardCalculator.IsCalculatable(CountString);
         public string CountPlusUnit
         {
             get

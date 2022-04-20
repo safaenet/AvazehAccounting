@@ -125,12 +125,16 @@ namespace AvazehWpf.ViewModels
             if (selectedItem_Backup.TotalValue > 0)
             {
                 Transaction.TotalPositiveItemsSum -= selectedItem_Backup.TotalValue;
-                Transaction.TotalPositiveItemsSum += item.TotalValue;
+                if (EdittedItem.TotalValue > 0) Transaction.TotalPositiveItemsSum += item.TotalValue;
+                else if (EdittedItem.TotalValue < 0) Transaction.TotalNegativeItemsSum += item.TotalValue;
+                //Transaction.TotalPositiveItemsSum += item.TotalValue;
             }
             else if (selectedItem_Backup.TotalValue < 0)
             {
                 Transaction.TotalNegativeItemsSum -= selectedItem_Backup.TotalValue;
-                Transaction.TotalNegativeItemsSum += item.TotalValue;
+                if (EdittedItem.TotalValue > 0) Transaction.TotalPositiveItemsSum += item.TotalValue;
+                else if (EdittedItem.TotalValue < 0) Transaction.TotalNegativeItemsSum += item.TotalValue;
+                //Transaction.TotalNegativeItemsSum += item.TotalValue;
             }
             RefreshDataGrid();
         }
@@ -189,6 +193,8 @@ namespace AvazehWpf.ViewModels
         {
             TransactionFinancialStatus? FinStatus = SelectedFinStatus >= Enum.GetNames(typeof(TransactionFinancialStatus)).Length ? null : (TransactionFinancialStatus)SelectedFinStatus;
             TransactionDetailManager.SearchValue = SearchText;
+            EdittingItem = false;
+            WorkItem = new();
             TransactionDetailManager.FinStatus = FinStatus;
             await TransactionDetailManager.LoadFirstPageAsync();
             Transaction.Items = TransactionDetailManager.Items;

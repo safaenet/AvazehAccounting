@@ -8,19 +8,23 @@ namespace DotNetStandardCalculator
     {
         public static double CalculateFromString(string calculateFrom)
         {
-            var beginSign = "";
-            if (calculateFrom.StartsWith(OPERATOR_ADD)) calculateFrom = calculateFrom.Remove(0, 1);
-            else if (calculateFrom.StartsWith(OPERATOR_SUBTRACT))
+            try
             {
-                beginSign = OPERATOR_SUBTRACT;
-                calculateFrom = calculateFrom.Remove(0, 1);
+                var beginSign = "";
+                if (calculateFrom.StartsWith(OPERATOR_ADD)) calculateFrom = calculateFrom.Remove(0, 1);
+                else if (calculateFrom.StartsWith(OPERATOR_SUBTRACT))
+                {
+                    beginSign = OPERATOR_SUBTRACT;
+                    calculateFrom = calculateFrom.Remove(0, 1);
+                }
+
+                var rpn = PrepareString(calculateFrom);
+
+                var result = Calculate(rpn);
+                if (beginSign == OPERATOR_SUBTRACT) result *= -1;
+                return result;
             }
-
-            var rpn = PrepareString(calculateFrom);
-
-            var result = Calculate(rpn);
-            if (beginSign == OPERATOR_SUBTRACT) result *= -1;
-            return result;
+            catch { return 0; }
         }
 
         private static string[] PrepareString(string calculateFrom)
