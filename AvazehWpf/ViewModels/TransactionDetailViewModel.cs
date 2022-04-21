@@ -111,7 +111,7 @@ namespace AvazehWpf.ViewModels
                     else if (addedItem.TotalValue < 0) Transaction.TotalNegativeItemsSum += addedItem.TotalValue;
                     if (TransactionsForComboBox.Where(x => x.IsChecked).Any())
                     {
-                        if (MessageBox.Show("آیا در فایل یا فایل های دیگر نیز ثبت شود؟ ", "ثبت در فایل های دیگر", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
+                        if (MessageBox.Show("آیا در فایل یا فایل های دیگری که انتخاب کرده اید نیز ثبت شود؟ ", "ثبت در فایل های دیگر", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
                         {
                             foreach (var item in TransactionsForComboBox)
                             {

@@ -242,7 +242,7 @@
                         <TextBlock TextAlignment="Center" Text="درج در" Margin="0,0,0,0"/>
                     </StackPanel>
                     <ComboBox VerticalContentAlignment="Center" Width="120" Height="25" IsEnabled="{Binding Path=EdittingItem, Converter={StaticResource b2r}}"
-                              ItemsSource="{Binding TransactionsForComboBox, Mode=TwoWay}" IsReadOnly="True" IsEditable="True" HorizontalAlignment="Stretch"
+                              ItemsSource="{Binding TransactionsForComboBox, Mode=TwoWay}" IsReadOnly="True" IsEditable="True" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch"
                               TabIndex="0" SelectedValuePath="Id" Text="&lt;&lt;انتخاب کنید>>">
                         <ComboBox.ItemTemplate>
                             <DataTemplate
@@ -310,13 +310,7 @@
                       Grid.Row="3" ItemsSource="{Binding Transaction.Items}" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}" FlowDirection="RightToLeft" AutoGenerateColumns="False"
                       IsTabStop="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="عنوان" Binding="{Binding Title, Mode=OneWay}" Width="230">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="{Binding }"/>
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="عنوان" Binding="{Binding Title, Mode=OneWay}" Width="230"/>
                     <DataGridTextColumn Header="تعداد" Binding="{Binding CountString, Mode=OneWay}" Width="90"/>
                     <DataGridTextColumn Header="مبلغ" Binding="{Binding Amount, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120"/>
                     <DataGridTextColumn Header="جمع کل" Binding="{Binding TotalValue, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120"/>
