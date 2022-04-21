@@ -126,7 +126,6 @@ namespace AvazehWpf.ViewModels
                             var temp = TransactionsForComboBox;
                             TransactionsForComboBox = null;
                             TransactionsForComboBox = temp;
-                            NotifyOfPropertyChange(() => TransactionsForComboBox);
                             WorkItem.TransactionId = Transaction.Id;
                         }
                     }
