@@ -11,8 +11,9 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:InvoiceDetailViewModel}"
         xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary"
+        xmlns:xctk="clr-namespace:Xceed.Wpf.Toolkit.Obselete;assembly=Xceed.Wpf.Toolkit" xmlns:xctk1="http://schemas.xceed.com/wpf/xaml/toolkit"
         Title="Invoice" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
-        Width="1200" Height="650"
+        Width="1200" Height="675"
         cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]">
     <Grid>
         <Grid.Resources>
@@ -174,18 +175,23 @@
                             <TextBlock Text="ذخیره تغییرات" VerticalAlignment="Center" Grid.Column="1"/>
                         </Grid>
                     </Button>
-                    <Button x:Name="DeleteInvoiceAndClose" Grid.Row="4" Margin="3,3,0,0">
+                    <Button x:Name="DeleteInvoiceAndClose" Grid.Row="4" Margin="3,3,2,0">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Delete" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="حذف" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <RibbonSplitButton x:Name="PrintInvoice" Label="Safa" Height="30" VerticalAlignment="Center" Grid.Row="5" Margin="3,3,0,0">
+                    <xctk1:SplitButton Grid.Row="5" Content="چاپ" Height="30" Margin="3,3,2,0">
+                        <xctk1:SplitButton.DropDownContent>
+                            <xctk1:ColorCanvas />
+                        </xctk1:SplitButton.DropDownContent>
+                    </xctk1:SplitButton>
+                    <!--<RibbonSplitButton x:Name="PrintInvoice" Label="Safa" Height="30" VerticalAlignment="Center" Grid.Row="5" Margin="3,3,0,0">
                         
-                        <!--<StackPanel Orientation="Horizontal">
+                        --><!--<StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Printer" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="چاپ" VerticalAlignment="Center"/>
-                        </StackPanel>-->
+                        </StackPanel>--><!--
                         <RibbonGallery>
                             <RibbonGalleryCategory>
                                 <RibbonGalleryItem Content="Green" Foreground="Green" />
@@ -193,8 +199,8 @@
                                 <RibbonGalleryItem Content="Orange" Foreground="Orange" />
                             </RibbonGalleryCategory>
                         </RibbonGallery>
-                    </RibbonSplitButton>
-                    <Button x:Name="ViewPayments" Grid.Row="6" Margin="3,3,0,0">
+                    </RibbonSplitButton>-->
+                    <Button x:Name="ViewPayments" Grid.Row="6" Margin="3,3,2,0">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Payment" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="پرداخت ها" VerticalAlignment="Center"/>

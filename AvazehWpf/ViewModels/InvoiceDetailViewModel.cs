@@ -32,7 +32,7 @@ namespace AvazehWpf.ViewModels
             {
                 ReloadInvoice(InvoiceId).ConfigureAwait(true);
             }
-            GetComboboxItems();
+            GetComboboxItems().ConfigureAwait(true);
         }
 
         private readonly IInvoiceCollectionManager InvoiceCollectionManager;
