@@ -31,15 +31,6 @@ namespace AvazehWebAPI.Controllers
             return Manager.AsDto();
         }
 
-        //[HttpGet("{ItemId}")]
-        //public async Task<ActionResult<TransactionItemModel>> GetItemAsync(int ItemId)
-        //{
-        //    //Manager.TransactionId = TransactionId;
-        //    var item = await Manager.Processor.GetTransactionItemFromDatabaseAsync(ItemId);
-        //    if (item is null) return NotFound("Couldn't find specific Item");
-        //    return item;
-        //}
-
         [HttpPost]
         public async Task<ActionResult<TransactionItemModel>> CreateItemAsync(TransactionItemModel_DTO_Create_Update model)
         {

@@ -242,7 +242,7 @@
                         <TextBlock TextAlignment="Center" Text="درج در" Margin="0,0,0,0"/>
                     </StackPanel>
                     <ComboBox VerticalContentAlignment="Center" Width="120" Height="25" IsEnabled="{Binding Path=EdittingItem, Converter={StaticResource b2r}}"
-                              ItemsSource="{Binding TransactionsForComboBox}" IsReadOnly="True" IsEditable="True" HorizontalAlignment="Stretch"
+                              ItemsSource="{Binding TransactionsForComboBox, Mode=TwoWay}" IsReadOnly="True" IsEditable="True" HorizontalAlignment="Stretch"
                               TabIndex="0" SelectedValuePath="Id" Text="&lt;&lt;انتخاب کنید>>">
                         <ComboBox.ItemTemplate>
                             <DataTemplate

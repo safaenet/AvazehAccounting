@@ -109,16 +109,27 @@ namespace AvazehWpf.ViewModels
                     Transaction.Items.Add(addedItem);
                     if (addedItem.TotalValue > 0) Transaction.TotalPositiveItemsSum += addedItem.TotalValue;
                     else if (addedItem.TotalValue < 0) Transaction.TotalNegativeItemsSum += addedItem.TotalValue;
-                    foreach (var item in TransactionsForComboBox)
+                    if (TransactionsForComboBox.Where(x => x.IsChecked).Any())
                     {
-                        if(item.IsChecked)
+                        if (MessageBox.Show("آیا در فایل یا فایل های دیگر نیز ثبت شود؟ ", "ثبت در فایل های دیگر", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
                         {
-                            WorkItem.TransactionId=item.Id;
-                            await TransactionDetailManager.CreateItemAsync(WorkItem);
-                            item.IsChecked = false;
+                            foreach (var item in TransactionsForComboBox)
+                            {
+                                if (item.IsChecked)
+                                {
+                                    WorkItem.TransactionId = item.Id;
+                                    WorkItem.Descriptions += $" -ثبت شده از فایل {Transaction.FileName}- ";
+                                    await TransactionDetailManager.CreateItemAsync(WorkItem);
+                                    item.IsChecked = false;
+                                }
+                            }
+                            var temp = TransactionsForComboBox;
+                            TransactionsForComboBox = null;
+                            TransactionsForComboBox = temp;
+                            NotifyOfPropertyChange(() => TransactionsForComboBox);
+                            WorkItem.TransactionId = Transaction.Id;
                         }
                     }
-                    WorkItem.TransactionId = Transaction.Id;
                 }
             }
             else //Edit Item
@@ -215,6 +226,20 @@ namespace AvazehWpf.ViewModels
             TransactionDetailManager.FinStatus = FinStatus;
             await TransactionDetailManager.LoadFirstPageAsync();
             Transaction.Items = TransactionDetailManager.Items;
+            NotifyOfPropertyChange(() => Transaction);
+        }
+
+        public async Task PreviousPage()
+        {
+            await TransactionDetailManager.LoadPreviousPageAsync();
+            Transaction.Items= TransactionDetailManager.Items;
+            NotifyOfPropertyChange(() => Transaction);
+        }
+
+        public async Task NextPage()
+        {
+            await TransactionDetailManager.LoadNextPageAsync();
+            Transaction.Items= TransactionDetailManager.Items;
             NotifyOfPropertyChange(() => Transaction);
         }
 
