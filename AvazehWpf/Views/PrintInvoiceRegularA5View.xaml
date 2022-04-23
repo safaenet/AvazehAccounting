@@ -9,13 +9,13 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:PrintInvoiceRegularA5ViewModel}"
-        Title="Print Invoice" MinHeight="797" Height="auto" Width="557">
+        Title="Print Invoice" MinHeight="805" Height="auto" Width="557">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="5"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition MinHeight="600" Height="auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="95"/>
+            <RowDefinition MinHeight="600" Height="*"/>
+            <RowDefinition Height="80"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="3"/>
         </Grid.RowDefinitions>
@@ -29,11 +29,11 @@
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
             </Style>
         </Grid.Resources>
-        <Rectangle Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Height="98" Width="547" VerticalAlignment="Top" Stroke="Black"/>
+        <Rectangle Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="Black"/>
         
         <DataGrid Grid.Row="2" Grid.Column="1" viewmodels:DataGridBehavior.DisplayRowNumber="True" IsReadOnly="True" Background="Transparent"
-                      ItemsSource="{Binding Invoice.Items}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Margin="0,2,0,0"
-                      CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35">
+                      ItemsSource="{Binding Invoice.Items}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Margin="0,2,0,2" CanUserSortColumns="False"
+                      CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35" VerticalScrollBarVisibility="Disabled">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Delivered, Mode=OneWay}" Width="10"/>
                 <DataGridTextColumn Header="نام کالا" Binding="{Binding Product.ProductName, Mode=OneWay}" HeaderStyle="{StaticResource CenterGridHeaderStyle}" Width="*">
@@ -66,5 +66,6 @@
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
+        <Rectangle Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="Black"/>
     </Grid>
 </Window>

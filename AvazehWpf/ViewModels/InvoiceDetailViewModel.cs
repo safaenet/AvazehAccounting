@@ -263,6 +263,12 @@ namespace AvazehWpf.ViewModels
             CanSaveInvoiceChanges = false;
         }
 
+        public async Task PrintInvoice()
+        {
+            WindowManager wm = new();
+            await wm.ShowWindowAsync(new PrintInvoiceRegularA5ViewModel(Invoice));
+        }
+
         public void CloseWindow()
         {
             (GetView() as Window).Close();
