@@ -56,15 +56,18 @@ namespace AvazehWpf.ViewModels
             //    dlg.PrintDocument(paginator, "Program");
             //}
             var printDialog = new PrintDialog();
-            if (printDialog.ShowDialog() == true)
-            {
-                //MessageBox.Show("W: " + printDialog.PrintableAreaWidth.ToString() + ", H: " + printDialog.PrintableAreaHeight.ToString());
-                var paginator = new RandomTabularPaginator(100,
-                  new Size(printDialog.PrintableAreaWidth,
-                    printDialog.PrintableAreaHeight));
+            //if (printDialog.ShowDialog() == true)
+            //{
+            //    //MessageBox.Show("W: " + printDialog.PrintableAreaWidth.ToString() + ", H: " + printDialog.PrintableAreaHeight.ToString());
+            //    var paginator = new RandomTabularPaginator(100,
+            //      new Size(printDialog.PrintableAreaWidth,
+            //        printDialog.PrintableAreaHeight));
 
-                printDialog.PrintDocument(paginator, "My Random Data Table");
-            }
+            //    printDialog.PrintDocument(paginator, "My Random Data Table");
+            //}
+            if (printDialog.ShowDialog() != true) return;
+            var fd = PrintHelper.GetFixedDocument(_view, printDialog);
+            PrintHelper.ShowPrintPreview(fd);
         }
 
         public void AttachView(object view, object context = null)
