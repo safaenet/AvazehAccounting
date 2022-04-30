@@ -48,12 +48,22 @@ namespace AvazehWpf.ViewModels
             //    IDocumentPaginatorSource idp = _view.FlowDocX;
             //    pd.PrintDocument(idp.DocumentPaginator, "Avazeh");
             //}
-            var paginator = new ProgramPaginator(_view);
-            var dlg = new PrintDialog();
-            if ((bool)dlg.ShowDialog())
+            //var paginator = new ProgramPaginator(_view);
+            //var dlg = new PrintDialog();
+            //if ((bool)dlg.ShowDialog())
+            //{
+            //    paginator.PageSize = new Size(dlg.PrintableAreaWidth, dlg.PrintableAreaHeight);
+            //    dlg.PrintDocument(paginator, "Program");
+            //}
+            var printDialog = new PrintDialog();
+            if (printDialog.ShowDialog() == true)
             {
-                paginator.PageSize = new Size(dlg.PrintableAreaWidth, dlg.PrintableAreaHeight);
-                dlg.PrintDocument(paginator, "Program");
+                //MessageBox.Show("W: " + printDialog.PrintableAreaWidth.ToString() + ", H: " + printDialog.PrintableAreaHeight.ToString());
+                var paginator = new RandomTabularPaginator(100,
+                  new Size(printDialog.PrintableAreaWidth,
+                    printDialog.PrintableAreaHeight));
+
+                printDialog.PrintDocument(paginator, "My Random Data Table");
             }
         }
 
