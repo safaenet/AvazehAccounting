@@ -1,6 +1,7 @@
 ﻿<Window x:Class="AvazehWpf.Views.PrintInvoiceRegularA5View"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:cal="http://www.caliburnproject.org"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -9,63 +10,74 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:PrintInvoiceRegularA5ViewModel}"
-        Title="Print Invoice" MinHeight="805" Height="auto" Width="557">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="5"/>
-            <RowDefinition Height="95"/>
-            <RowDefinition MinHeight="600" Height="*"/>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="3"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="5"/>
-        </Grid.ColumnDefinitions>
-        <Grid.Resources>
-            <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
-                <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            </Style>
-        </Grid.Resources>
-        <Rectangle Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="Black"/>
-        
-        <DataGrid Grid.Row="2" Grid.Column="1" viewmodels:DataGridBehavior.DisplayRowNumber="True" IsReadOnly="True" Background="Transparent"
+        Title="Print Invoice" Height="auto" Width="557">
+    <FlowDocumentScrollViewer VerticalScrollBarVisibility="Auto">
+        <FlowDocument x:Name="FlowDocX">
+            <BlockUIContainer>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="95"/>
+                        <RowDefinition MinHeight="600" Height="*"/>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="3"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="5"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.Resources>
+                        <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        </Style>
+                    </Grid.Resources>
+                    <Rectangle Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="Black"/>
+
+                    <DataGrid Grid.Row="2" Grid.Column="1" viewmodels:DataGridBehavior.DisplayRowNumber="True" IsReadOnly="True" Background="Transparent"
                       ItemsSource="{Binding Invoice.Items}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Margin="0,2,0,2" CanUserSortColumns="False"
                       CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35" VerticalScrollBarVisibility="Disabled">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Delivered, Mode=OneWay}" Width="10"/>
-                <DataGridTextColumn Header="نام کالا" Binding="{Binding Product.ProductName, Mode=OneWay}" HeaderStyle="{StaticResource CenterGridHeaderStyle}" Width="*">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="ToolTip" Value="{Binding Product.Id}"/>
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="تعداد" Binding="{Binding CountString, Mode=OneWay}" HeaderStyle="{StaticResource CenterGridHeaderStyle}" Width="70">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="ToolTip" Value="{Binding CountPlusUnit}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="قیمت" Binding="{Binding SellPrice, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" HeaderStyle="{StaticResource CenterGridHeaderStyle}" Width="100">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="ToolTip" Value="{Binding TotalSellValue}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="جمع کل" Binding="{Binding TotalSellValue, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" HeaderStyle="{StaticResource CenterGridHeaderStyle}" Width="120">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="ToolTip" Value="{Binding NetProfit}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-        <Rectangle Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="Black"/>
-    </Grid>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Delivered, Mode=OneWay}" Width="10"/>
+                            <DataGridTextColumn Header="نام کالا" Binding="{Binding Product.ProductName, Mode=OneWay}" HeaderStyle="{StaticResource CenterGridHeaderStyle}" Width="*">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="{Binding Product.Id}"/>
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="تعداد" Binding="{Binding CountString, Mode=OneWay}" HeaderStyle="{StaticResource CenterGridHeaderStyle}" Width="70">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="{Binding CountPlusUnit}" />
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="قیمت" Binding="{Binding SellPrice, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" HeaderStyle="{StaticResource CenterGridHeaderStyle}" Width="100">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="{Binding TotalSellValue}" />
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="جمع کل" Binding="{Binding TotalSellValue, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" HeaderStyle="{StaticResource CenterGridHeaderStyle}" Width="120">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="{Binding NetProfit}" />
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Rectangle Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="Black"/>
+                    <Button cal:Message.Attach="[Event Click] = [Action PrintDoc()]" Grid.Row="4" Grid.Column="1">Save/Print</Button>
+
+                </Grid>
+
+            </BlockUIContainer>
+        </FlowDocument>
+    </FlowDocumentScrollViewer>
+
+
 </Window>
