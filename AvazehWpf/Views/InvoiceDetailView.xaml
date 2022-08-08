@@ -341,7 +341,7 @@
                     <DataGridTextColumn Header="تاریخ ویرایش" Binding="{Binding DateUpdated, Mode=OneWay}" Width="87"/>
                     <DataGridTextColumn Header="ساعت ویرایش" Binding="{Binding TimeUpdated, Mode=OneWay}" Width="115"/>
                     <DataGridTextColumn Header="تحویل" Binding="{Binding Delivered, Mode=OneWay}" Width="70"/>
-                    <DataGridTextColumn Header="توضیحات" Binding="{Binding Descriptions, Mode=OneWay}" Width="auto" MinWidth="80"/>
+                    <DataGridTextColumn Header="توضیحات" Binding="{Binding Descriptions, Mode=OneWay}" Width="*" MinWidth="80"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
