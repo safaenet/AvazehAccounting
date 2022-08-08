@@ -1,6 +1,7 @@
 ﻿using AvazehApiClient.DataAccess.Interfaces;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace AvazehApiClient.DataAccess
@@ -261,6 +262,12 @@ namespace AvazehApiClient.DataAccess
         public static async Task<ProductModel> GetItemByBarCodeAsync(this ICollectionManager<ProductModel> manager, string BarCode)
         {
             return await manager.ApiProcessor.GetItemAsync<ProductModel>("Product/BarCode", BarCode);
+        }
+
+        public static string GetPersianDate(this PersianCalendar pCal)
+        {
+            var now = System.DateTime.Now;
+            return string.Format("{0:0000}/{1:00}/{2:00}", pCal.GetYear(now), pCal.GetMonth(now), pCal.GetDayOfMonth(now));
         }
     }
 }

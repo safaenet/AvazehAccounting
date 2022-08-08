@@ -7,9 +7,15 @@ using SharedLibrary.Enums;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace AvazehWpf.ViewModels
 {
@@ -142,6 +148,73 @@ namespace AvazehWpf.ViewModels
             }
             choices.Add(Enum.GetNames(typeof(InvoiceLifeStatus)).Length, "All");
             return choices;
+        }
+    }
+    
+    public class NameToBrushConverterForBackground : IValueConverter
+    {
+        private readonly string CurrentPersianDate =new PersianCalendar().GetPersianDate();
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            string input = value.ToString();
+            if(input == CurrentPersianDate) return Brushes.LightYellow;
+            return DependencyProperty.UnsetValue;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+    public class NameToBrushConverterForForeground : IValueConverter
+    {
+        private readonly string CurrentPersianDate = new PersianCalendar().GetPersianDate();
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            string input = value.ToString();
+            if (input == CurrentPersianDate) return Brushes.Black;
+            return DependencyProperty.UnsetValue;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+
+    public class AmountToBrushConverterForBackground : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value == null) return DependencyProperty.UnsetValue;
+            double input = (double)value;
+            return input switch
+            {
+                < 0 => Brushes.LightBlue,
+                0 => Brushes.LightGreen,
+                > 0 => Brushes.LightPink,
+                _ => throw new NotImplementedException(),
+            };
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+    public class AmountToBrushConverterForForeground : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value == null) return DependencyProperty.UnsetValue;
+            double input = (double)value;
+           return Brushes.Black;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotSupportedException();
         }
     }
 }
