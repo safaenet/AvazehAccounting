@@ -166,6 +166,7 @@ namespace AvazehWpf.ViewModels
             throw new NotSupportedException();
         }
     }
+
     public class NameToBrushConverterForForeground : IValueConverter
     {
         private readonly string CurrentPersianDate = new PersianCalendar().GetPersianDate();
@@ -181,7 +182,6 @@ namespace AvazehWpf.ViewModels
             throw new NotSupportedException();
         }
     }
-
 
     public class AmountToBrushConverterForBackground : IValueConverter
     {
@@ -203,6 +203,7 @@ namespace AvazehWpf.ViewModels
             throw new NotSupportedException();
         }
     }
+
     public class AmountToBrushConverterForForeground : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
