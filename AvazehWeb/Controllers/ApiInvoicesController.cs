@@ -53,6 +53,13 @@ namespace AvazehWebAPI.Controllers
             return items is null ? NotFound("List is Empty") : items;
         }
 
+        [HttpGet("CustomerNames")]
+        public async Task<ActionResult<List<ItemsForComboBox>>> GetCustomerNamesAsync(string SearchText)
+        {
+            var items = await Manager.Processor.GetCustomerNamesAsync(SearchText);
+            return items is null ? NotFound("Couldn't find any match") : items;
+        }
+
         [HttpGet("CustomerBalance/{CustomerId}/{InvoiceId}")]
         public async Task<ActionResult<double>> GetCustomerBalanceAsync(int CustomerId, int InvoiceId = 0)
         {

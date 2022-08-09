@@ -24,5 +24,7 @@ namespace AvazehApiClient.DataAccess
         public async Task<ObservableCollection<ProductUnitModel>> ReloadProductUnits() => await Processor.GetCollectionAsync<ObservableCollection<ProductUnitModel>>("Invoices/ProductUnits", null);
 
         public async Task<ObservableCollection<ItemsForComboBox>> ReloadTransactionNames(int Id = 0) => await Processor.GetCollectionAsync<ObservableCollection<ItemsForComboBox>>("Transactions/TransactionNames", Id == 0 ? null : Id.ToString());
+
+        public async Task<ObservableCollection<ItemsForComboBox>> ReloadCustomerNames() => await Processor.GetCollectionAsync<ObservableCollection<ItemsForComboBox>>("Invoices/CustomerNames", null);
     }
 }

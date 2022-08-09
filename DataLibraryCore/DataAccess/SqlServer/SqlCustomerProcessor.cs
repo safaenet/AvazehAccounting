@@ -10,6 +10,8 @@ using SharedLibrary.Validators;
 using SharedLibrary.Enums;
 using DataLibraryCore.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using SharedLibrary.DtoModels;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {

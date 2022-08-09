@@ -68,7 +68,7 @@ namespace AvazehWpf.ViewModels
         public async Task AddNewInvoice()
         {
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, new InvoiceDetailManager(ICM.ApiProcessor), Singleton, null, RefreshPage));
+            await wm.ShowWindowAsync(new NewInvoiceViewModel(Singleton));
         }
 
         public async Task PreviousPage()

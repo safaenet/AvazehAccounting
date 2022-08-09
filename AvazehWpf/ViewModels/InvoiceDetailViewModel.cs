@@ -37,7 +37,7 @@ namespace AvazehWpf.ViewModels
 
         private readonly IInvoiceCollectionManager InvoiceCollectionManager;
         private readonly IInvoiceDetailManager InvoiceDetailManager;
-        private InvoiceDetailSingleton Singleton;
+        private readonly InvoiceDetailSingleton Singleton;
         private InvoiceModel _Invoice;
         private readonly Func<Task> CallBackFunc;
         private ObservableCollection<ItemsForComboBox> productItems;

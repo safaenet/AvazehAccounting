@@ -19,6 +19,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
         Task<InvoiceItemModel> GetInvoiceItemFromDatabaseAsync(int Id);
         Task<int> InsertInvoiceItemToDatabaseAsync(InvoiceItemModel item);
         Task<List<ProductUnitModel>> GetProductUnitsAsync();
+        Task<List<ItemsForComboBox>> GetCustomerNamesAsync(string SearchText);
         Task<ObservableCollection<InvoiceListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy, OrderType Order);
         Task<int> UpdateInvoiceItemInDatabaseAsync(InvoiceItemModel item);
         Task<InvoicePaymentModel> GetInvoicePaymentFromDatabaseAsync(int Id);
