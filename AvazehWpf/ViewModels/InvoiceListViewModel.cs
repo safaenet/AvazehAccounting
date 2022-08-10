@@ -71,7 +71,7 @@ namespace AvazehWpf.ViewModels
         {
             WindowManager wm = new();
             ICollectionManager<CustomerModel> cManager = new CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>(ICM.ApiProcessor);
-            await wm.ShowWindowAsync(new NewInvoiceViewModel(Singleton, null, ICM, cManager));
+            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, null, ICM, cManager));
         }
 
         public async Task PreviousPage()
@@ -159,6 +159,7 @@ namespace AvazehWpf.ViewModels
         private readonly string CurrentPersianDate =new PersianCalendar().GetPersianDate();
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            if(value == null) return DependencyProperty.UnsetValue;
             string input = value.ToString();
             if(input == CurrentPersianDate) return Brushes.LightYellow;
             return DependencyProperty.UnsetValue;
@@ -175,6 +176,7 @@ namespace AvazehWpf.ViewModels
         private readonly string CurrentPersianDate = new PersianCalendar().GetPersianDate();
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            if (value == null) return DependencyProperty.UnsetValue;
             string input = value.ToString();
             if (input == CurrentPersianDate) return Brushes.Black;
             return DependencyProperty.UnsetValue;

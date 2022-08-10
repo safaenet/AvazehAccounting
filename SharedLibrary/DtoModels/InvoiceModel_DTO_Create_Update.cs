@@ -8,10 +8,8 @@ namespace SharedLibrary.DtoModels
     {
         public int CustomerId { get; set; }
 
-        [Required]
         public string DateCreated { get; set; }
 
-        [Required]
         public string TimeCreated { get; set; }
 
         [Display(Name = "Discount Type")]

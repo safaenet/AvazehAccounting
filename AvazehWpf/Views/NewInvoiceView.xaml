@@ -11,7 +11,7 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:NewInvoiceViewModel}"
         Title="New Invoice" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
-        Height="70" Width="430">
+        Height="70" Width="430" ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120"/>

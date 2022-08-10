@@ -22,19 +22,24 @@ namespace AvazehWpf.ViewModels
 {
     public class NewInvoiceViewModel : ViewAware
     {
-        public NewInvoiceViewModel(InvoiceDetailSingleton singleton, int? Id, IInvoiceCollectionManager icManager, ICollectionManager<CustomerModel> ccManager)
+        public NewInvoiceViewModel(InvoiceDetailSingleton singleton, int? InvoiceId, IInvoiceCollectionManager icManager, ICollectionManager<CustomerModel> ccManager)
         {
             ICM = icManager;
             CCM = ccManager;
             Singleton = singleton;
-            ID = Id;
-            if (ID == null) ButtonTitle = "Add"; else ButtonTitle = "Update";
+            InvoiceID = InvoiceId;
             GetComboboxItems().ConfigureAwait(true);
+            if (InvoiceID == null) ButtonTitle = "Add";
+            else
+            {
+                ButtonTitle = "Update";
+                LoadSelectedItem().ConfigureAwait(true);
+            }
         }
         public IInvoiceCollectionManager ICM { get; set; }
         public ICollectionManager<CustomerModel> CCM { get; set; }
         private InvoiceDetailSingleton Singleton;
-        private int? ID;
+        private readonly int? InvoiceID;
         private ObservableCollection<ItemsForComboBox> customerNames;
         public ObservableCollection<ItemsForComboBox> CustomerNamesForComboBox { get => customerNames; set { customerNames = value; NotifyOfPropertyChange(() => CustomerNamesForComboBox); } }
         private bool isCustomerInputDropDownOpen;
@@ -72,36 +77,62 @@ namespace AvazehWpf.ViewModels
             IsCustomerInputDropDownOpen = true;
         }
 
+        public void CloseWindow()
+        {
+            (GetView() as Window).Close();
+        }
+
         public async Task AddOrUpdateInvoice()
         {
-            if (SelectedCustomer == null)
+            var c = await CheckCustomer();
+            if (c == null)
             {
-                var res = MessageBox.Show("مشتری مورد نظر وجود ندارد. آیا ایجاد شود؟", "ایجاد مشتری جدید", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes);
-                if (res == MessageBoxResult.Yes)
-                {
-
-                }
+                MessageBox.Show("خطا هنگام ایجاد مشتری جدید", CustomerInput, MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
-            if (ID is null) //Add new
-            {
 
-            }
-            else //Update
+            if (InvoiceID is null) //Add new
             {
-                int id = (int)ID;
+                InvoiceModel i = new();
+                i.Customer = c;
+                var newInvoice = await ICM.CreateItemAsync(i);
+                CloseWindow();
+            }
+            else //Update Owner
+            {
+                if (c.Id == SelectedCustomer.Id) CloseWindow();
+                int id = (int)InvoiceID;
                 var invoice = await ICM.GetItemById(id);
-                if (invoice != null)
+                if (invoice == null)
                 {
-                    var c = await CCM.GetItemById(id);
-                    if (c == null)
-                    {
-
-                    }
-                    invoice.Customer.Id = id;
-                    await ICM.UpdateItemAsync(invoice);
+                    MessageBox.Show("Cannot find such invoice.");
+                    return;
                 }
-                else MessageBox.Show("Cannot find such invoice.");
+                invoice.Customer = c;
+                await ICM.UpdateItemAsync(invoice);
+                CloseWindow();
             }
+        }
+
+        private async Task<CustomerModel> CheckCustomer()
+        {
+            if (SelectedCustomer != null) return await CCM.GetItemById(SelectedCustomer.Id);
+            var res = MessageBox.Show("مشتری وارد شده وجود ندارد. آیا ایجاد شود؟", "ایجاد مشتری جدید", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes);
+            if (res == MessageBoxResult.Yes)
+            {
+                CustomerModel TempCustomer = new();
+                TempCustomer.FirstName = customerInput;
+                var newCustomer = await CCM.CreateItemAsync(TempCustomer);
+                return newCustomer;
+            }
+            return null;
+        }
+
+        private async Task LoadSelectedItem()
+        {
+            SelectedCustomer = new();
+            var invoice = await ICM.GetItemById((int)InvoiceID);
+            CustomerInput = invoice.Customer.FullName;
         }
     }
 }

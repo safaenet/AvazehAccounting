@@ -247,10 +247,15 @@ namespace AvazehWpf.ViewModels
             Invoice = temp;
         }
 
+        private void RefreshAndReloadCustomerTotalBalance()
+        {
+            ReloadInvoice(Invoice.Id).ConfigureAwait(true);
+        }
+
         public async Task ViewPayments()
         {
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(InvoiceCollectionManager, InvoiceDetailManager, Invoice, RefreshDataGrid, true));
+            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(InvoiceCollectionManager, InvoiceDetailManager, Invoice, RefreshAndReloadCustomerTotalBalance, true));
         }
 
         public async Task SaveInvoiceChanges()
@@ -267,6 +272,14 @@ namespace AvazehWpf.ViewModels
         {
             WindowManager wm = new();
             await wm.ShowWindowAsync(new PrintInvoiceRegularA5ViewModel(Invoice));
+        }
+
+        public async Task EditOwner()
+        {
+            if (Invoice is null) return;
+            WindowManager wm = new();
+            ICollectionManager<CustomerModel> cManager = new CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>(InvoiceCollectionManager.ApiProcessor);
+            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, Invoice.Id, InvoiceCollectionManager, cManager));
         }
 
         public void CloseWindow()
