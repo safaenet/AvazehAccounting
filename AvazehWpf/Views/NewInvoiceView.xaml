@@ -17,10 +17,10 @@
             <ColumnDefinition Width="120"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="AddNewInvoice" Grid.Column="0" Height="25" Margin="5,0,0,0">
+        <Button x:Name="AddOrUpdateInvoice" Grid.Column="0" Height="25" Margin="5,0,0,0">
             <StackPanel Orientation="Horizontal">
                 <materialDesign:PackIcon Kind="NotePlus" Margin="3"/>
-                <TextBlock Text="New Invoice" VerticalAlignment="Center" Margin="5,0,30,0"/>
+                <TextBlock Text="{Binding ButtonTitle}" VerticalAlignment="Center" Margin="5,0,30,0"/>
             </StackPanel>
         </Button>
         <ComboBox Grid.Column="1" IsTextSearchEnabled="True" IsEditable="True" VerticalContentAlignment="Center" Height="25" Margin="5,0,5,0"

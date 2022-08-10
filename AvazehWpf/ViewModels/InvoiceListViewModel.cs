@@ -3,7 +3,9 @@ using AvazehApiClient.DataAccess.CollectionManagers;
 using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
+using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
+using SharedLibrary.Validators;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -68,7 +70,8 @@ namespace AvazehWpf.ViewModels
         public async Task AddNewInvoice()
         {
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new NewInvoiceViewModel(Singleton));
+            ICollectionManager<CustomerModel> cManager = new CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>(ICM.ApiProcessor);
+            await wm.ShowWindowAsync(new NewInvoiceViewModel(Singleton, null, ICM, cManager));
         }
 
         public async Task PreviousPage()
