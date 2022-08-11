@@ -101,7 +101,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id LEFT JOIN ProductUnits u ON it.ProductUnitId = u.Id WHERE it.Id = {0}";
         private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] AS ItemName FROM Products {0}";
         private readonly string GetProductUnitsQuery = "SELECT [Id], [UnitName] FROM ProductUnits";
-        private readonly string GetCustomerNamesQuery = "SELECT [Id], [FirstName] + ' ' + [LastName] AS ItemName FROM Customers {0} ORDER BY [FirstName], [LastName]";
+        private readonly string GetCustomerNamesQuery = "SELECT [Id], ISNULL(FirstName, '') + ' ' + ISNULL(LastName, '') AS ItemName FROM Customers {0} ORDER BY [FirstName], [LastName]";
         private readonly string GetRecentPricesOfProduct = @"SELECT TOP({0}) it.SellPrice AS SellPrice, it.DateCreated AS DateSold FROM InvoiceItems it LEFT JOIN Invoices i ON it.InvoiceId = i.Id
                                                              LEFT JOIN Customers c ON i.CustomerId = c.Id LEFT JOIN Products p ON it.ProductId = p.Id
                                                              WHERE c.Id = {1} AND p.Id = {2} ORDER BY it.DateCreated DESC";
@@ -146,7 +146,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
                       {mode} i.[Descriptions] LIKE { criteria }
 
                       {mode} CAST(c.[Id] AS VARCHAR) LIKE { criteria }
-                      {mode} c.[FirstName] + ' ' + c.[LastName] LIKE { criteria }
+                      {mode} ISNULL(c.FirstName, '') + ' ' + ISNULL(c.LastName, '') LIKE { criteria }
                       {mode} c.[CompanyName] LIKE { criteria }
                       {mode} c.[EmailAddress] LIKE { criteria }
                       {mode} c.[PostAddress] LIKE { criteria }
@@ -360,7 +360,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
                             --END
 
                             SET NOCOUNT ON
-                            SELECT i.Id, i.CustomerId, c.FirstName + ' ' + c.LastName CustomerFullName, i.DateCreated, i.TimeCreated, i.DateUpdated, i.TimeUpdated,
+                            SELECT i.Id, i.CustomerId, ISNULL(c.FirstName, '') + ' ' + ISNULL(c.LastName, '') CustomerFullName, i.DateCreated, i.TimeCreated, i.DateUpdated, i.TimeUpdated,
 		                            dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) AS TotalInvoiceSum,
 		                            pays.TotalPayments, i.LifeStatus
                             FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id

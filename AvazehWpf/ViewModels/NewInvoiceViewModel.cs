@@ -22,13 +22,14 @@ namespace AvazehWpf.ViewModels
 {
     public class NewInvoiceViewModel : ViewAware
     {
-        public NewInvoiceViewModel(InvoiceDetailSingleton singleton, int? InvoiceId, IInvoiceCollectionManager icManager, ICollectionManager<CustomerModel> ccManager)
+        public NewInvoiceViewModel(InvoiceDetailSingleton singleton, int? InvoiceId, IInvoiceCollectionManager icManager, ICollectionManager<CustomerModel> ccManager, Func<Task> callBack)
         {
             ICM = icManager;
             CCM = ccManager;
             Singleton = singleton;
             InvoiceID = InvoiceId;
             GetComboboxItems().ConfigureAwait(true);
+            CallBack = callBack;
             if (InvoiceID == null) ButtonTitle = "Add";
             else
             {
@@ -46,6 +47,7 @@ namespace AvazehWpf.ViewModels
         private ItemsForComboBox _selectedCustomer;
         private string customerInput;
         private string buttonTitle;
+        private Func<Task> CallBack;
 
         public string ButtonTitle
         {
@@ -108,6 +110,7 @@ namespace AvazehWpf.ViewModels
                     MessageBox.Show("Cannot find such invoice.");
                     return;
                 }
+                if (MessageBox.Show("آیا مالک فاکتور تغییر کند؟", "تغییر مالک", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.No) return;
                 invoice.Customer = c;
                 await ICM.UpdateItemAsync(invoice);
                 CloseWindow();
@@ -133,6 +136,17 @@ namespace AvazehWpf.ViewModels
             SelectedCustomer = new();
             var invoice = await ICM.GetItemById((int)InvoiceID);
             CustomerInput = invoice.Customer.FullName;
+        }
+
+        public void ClosingWindow()
+        {
+            CallBack?.Invoke();
+        }
+
+        public void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+                (GetView() as Window).Close();
         }
     }
 }

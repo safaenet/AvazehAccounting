@@ -215,7 +215,17 @@ namespace AvazehWpf.ViewModels
             var result = MessageBox.Show("Are you sure you want to delete this row ?", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
             if (await InvoiceDetailManager.DeleteItemAsync(SelectedItem.Id))
+            {
+                if (SelectedItem.Id == WorkItem.Id)
+                {
+                    ProductUnitModel temp = WorkItem.Unit;
+                    WorkItem = new();
+                    WorkItem.Unit = temp;
+                    SelectedProductItem = null;
+                    ProductInput = "";
+                }
                 Invoice.Items.Remove(SelectedItem);
+            }
             RefreshDataGrid();
             ReloadCustomerTotalBalance();
             NotifyOfPropertyChange(() => Invoice);
@@ -252,6 +262,11 @@ namespace AvazehWpf.ViewModels
             ReloadInvoice(Invoice.Id).ConfigureAwait(true);
         }
 
+        private async Task RefreshAndReloadCustomerTotalBalanceAsync()
+        {
+            await ReloadInvoice(Invoice.Id);
+        }
+
         public async Task ViewPayments()
         {
             WindowManager wm = new();
@@ -279,7 +294,7 @@ namespace AvazehWpf.ViewModels
             if (Invoice is null) return;
             WindowManager wm = new();
             ICollectionManager<CustomerModel> cManager = new CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>(InvoiceCollectionManager.ApiProcessor);
-            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, Invoice.Id, InvoiceCollectionManager, cManager));
+            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, Invoice.Id, InvoiceCollectionManager, cManager, RefreshAndReloadCustomerTotalBalanceAsync));
         }
 
         public void CloseWindow()

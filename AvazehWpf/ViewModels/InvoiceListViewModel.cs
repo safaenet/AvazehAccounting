@@ -71,7 +71,7 @@ namespace AvazehWpf.ViewModels
         {
             WindowManager wm = new();
             ICollectionManager<CustomerModel> cManager = new CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>(ICM.ApiProcessor);
-            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, null, ICM, cManager));
+            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, null, ICM, cManager, Search));
         }
 
         public async Task PreviousPage()
@@ -103,6 +103,11 @@ namespace AvazehWpf.ViewModels
             NotifyOfPropertyChange(() => Invoices);
         }
 
+        public void SearchSync()
+        {
+            Task.Run(Search);
+        }
+
         public async Task SearchBoxKeyDownHandler(ActionExecutionContext context)
         {
             if (context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
@@ -126,6 +131,36 @@ namespace AvazehWpf.ViewModels
             var output = await ICM.DeleteItemAsync(SelectedInvoice.Id);
             if (output) Invoices.Remove(SelectedInvoice);
             else MessageBox.Show($"Invoice with ID: {SelectedInvoice.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public async Task ViewPayments()
+        {
+            if (SelectedInvoice is null) return;
+            WindowManager wm = new();
+            var invoice = await ICM.GetItemById(SelectedInvoice.Id);
+            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(ICM, new InvoiceDetailManager(ICM.ApiProcessor), invoice, SearchSync, true));
+        }
+
+        public async Task ShowCustomerInvoices()
+        {
+            if (SelectedInvoice is null) return;
+            SearchText = SelectedInvoice.CustomerFullName;
+            await Search();
+        }
+
+        public async Task ShowAllInvoices()
+        {
+            SearchText = "";
+            await Search();
+        }
+
+        public void dg_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (Key.Delete == e.Key)
+            {
+                DeleteInvoice().ConfigureAwait(true);
+                e.Handled = true;
+            }
         }
     }
 

@@ -60,15 +60,15 @@
                     <ObjectDataProvider x:Key="FinStatusItems" MethodName="GetInvoiceFinStatusItems" ObjectType="{x:Type viewmodels:InvoiceFinStatusAndLifeStatusItems}"/>
                     <ObjectDataProvider x:Key="LifeStatusItems" MethodName="GetInvoiceLifeStatusItems" ObjectType="{x:Type viewmodels:InvoiceFinStatusAndLifeStatusItems}"/>
                 </Grid.Resources>
-                <Button x:Name="PrintList" Grid.Column="0" Height="25" Margin="0,0,5,0">
+                <Button x:Name="PrintList" Grid.Column="0" Height="25" Margin="0,0,5,0" IsEnabled="False">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Printer" Margin="3"/>
+                        <materialDesign:PackIcon Kind="PrinterOutline" Margin="3"/>
                         <TextBlock Text="Print List" VerticalAlignment="Center" Margin="5,0,30,0"/>
                     </StackPanel>
                 </Button>
                 <Button x:Name="AddNewInvoice" Grid.Column="1" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="NotePlus" Margin="3"/>
+                        <materialDesign:PackIcon Kind="NotePlusOutline" Margin="3"/>
                         <TextBlock Text="New Invoice" VerticalAlignment="Center" Margin="5,0,30,0"/>
                     </StackPanel>
                 </Button>
@@ -80,7 +80,7 @@
                           SelectedValue="{Binding SelectedLifeStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action Search]"/>
                 <Button x:Name="Search" Grid.Column="4" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="DatabaseSearch" Margin="3"/>
+                        <materialDesign:PackIcon Kind="DatabaseSearchOutline" Margin="3"/>
                         <TextBlock Text="Search" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="3" HorizontalAlignment="Right"/>
                     </StackPanel>
@@ -95,21 +95,54 @@
                 </Grid.ColumnDefinitions>
                 <Button x:Name="PreviousPage" Grid.Column="0" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="ArrowLeftCircle" Margin="3"/>
+                        <materialDesign:PackIcon Kind="ArrowLeftCircleOutline" Margin="3"/>
                         <TextBlock Text="Previous" VerticalAlignment="Center" Margin="30,0,30,0"/>
                     </StackPanel>
                 </Button>
                 <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Next" VerticalAlignment="Center" Margin="30,0,30,0"/>
-                        <materialDesign:PackIcon Kind="ArrowRightCircle" Margin="3" HorizontalAlignment="Right"/>
+                        <materialDesign:PackIcon Kind="ArrowRightCircleOutline" Margin="3" HorizontalAlignment="Right"/>
                     </StackPanel>
                 </Button>
             </Grid>
-            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditInvoice]" Grid.Row="2" ItemsSource="{Binding Invoices}" SelectedItem="{Binding SelectedInvoice}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False">
-
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditInvoice]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" ItemsSource="{Binding Invoices}" SelectedItem="{Binding SelectedInvoice}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditInvoice]">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="OpenInApp"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="چاپ" cal:Message.Attach="[Event Click] = [Action EditInvoice]">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="PrinterOutline"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="نمایش پرداختها" cal:Message.Attach="[Event Click] = [Action ViewPayments]">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="Payment"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="نمایش همه فاکتورها با این نام" cal:Message.Attach="[Event Click] = [Action ShowCustomerInvoices]">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="SearchPlusOutline"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="نمایش همه" cal:Message.Attach="[Event Click] = [Action ShowAllInvoices]">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="ShowOutline"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteInvoice]">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="DeleteOutline"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding Path=Id, Mode=OneWay}" Width="50" >
+                    <DataGridTextColumn Header="شماره" Binding="{Binding Path=Id, Mode=OneWay}" Width="50" >
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Background" Value="{Binding Path=DateCreated, Converter={StaticResource NameToBrushConverterForBackground}}"/>
@@ -117,9 +150,9 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Customer Name" Binding="{Binding Path=CustomerFullName, Mode=OneWay}" Width="150"/>
-                    <DataGridTextColumn Header="Date Created" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="110"/>
-                    <DataGridTextColumn Header="Date Updated" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="120">
+                    <DataGridTextColumn Header="نام مشتری" Binding="{Binding Path=CustomerFullName, Mode=OneWay}" Width="170"/>
+                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="70"/>
+                    <DataGridTextColumn Header="تاریخ بروزرسانی" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="89">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Background" Value="{Binding Path=DateUpdated, Converter={StaticResource NameToBrushConverterForBackground}}"/>
@@ -127,11 +160,11 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Time Updated" Binding="{Binding Path=TimeUpdated, Mode=OneWay}" Width="120"/>
-                    <DataGridTextColumn Header="Sum Amount" Binding="{Binding Path=TotalInvoiceSum, Mode=OneWay}" Width="120"/>
-                    <DataGridTextColumn Header="Sum Payments" Binding="{Binding Path=TotalPayments, Mode=OneWay}" Width="120"/>
-                    <DataGridTextColumn Header="Life Status" Binding="{Binding Path=LifeStatus, Mode=OneWay}" Width="100"/>
-                    <DataGridTextColumn Header="Total Balance" Binding="{Binding Path=TotalBalance, Mode=OneWay}" Width="120">
+                    <DataGridTextColumn Header="ساعت بروزرسانی" Binding="{Binding Path=TimeUpdated, Mode=OneWay}" Width="100"/>
+                    <DataGridTextColumn Header="جمع فاکتور" Binding="{Binding Path=TotalInvoiceSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120"/>
+                    <DataGridTextColumn Header="جمع پرداخت ها" Binding="{Binding Path=TotalPayments, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120"/>
+                    <DataGridTextColumn Header="نوع فاکتور" Binding="{Binding Path=LifeStatus, Mode=OneWay}" Width="57"/>
+                    <DataGridTextColumn Header="تراز کل" Binding="{Binding Path=TotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Background" Value="{Binding Path=TotalBalance, Converter={StaticResource AmountToBrushConverterForBackground}}"/>
@@ -139,7 +172,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Financial Status" Binding="{Binding Path=InvoiceFinancialStatus, Mode=OneWay}" Width="125"/>
+                    <DataGridTextColumn Header="وضعیت مالی" Binding="{Binding Path=InvoiceFinancialStatus, Mode=OneWay}" Width="80"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
