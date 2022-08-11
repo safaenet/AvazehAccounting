@@ -283,10 +283,13 @@ namespace AvazehWpf.ViewModels
             CanSaveInvoiceChanges = false;
         }
 
-        public async Task PrintInvoice()
+        public void PrintInvoice(object sender, object window)
         {
-            WindowManager wm = new();
-            await wm.ShowWindowAsync(new PrintInvoiceRegularA5ViewModel(Invoice));
+            ContextMenu cm = (window as Window).FindResource("PrintInvoiceCM") as ContextMenu;
+            cm.PlacementTarget = sender as Button;
+            cm.IsOpen = true;
+            //WindowManager wm = new();
+            //await wm.ShowWindowAsync(new PrintInvoiceRegularA5ViewModel(Invoice));
         }
 
         public async Task EditOwner()

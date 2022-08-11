@@ -16,7 +16,7 @@
         cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="b2v"/>
-        <ContextMenu x:Key="PrintInvoice">
+        <ContextMenu x:Key="PrintInvoiceCM">
                 <MenuItem Header="فاکتور فروش بدون سربرگ" cal:Message.Attach="[Event Click] = [Action EditInvoice]">
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="ReceiptOutline"/>
@@ -211,7 +211,7 @@
                             <TextBlock Text="حذف فاکتور" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="PrintInvoice" Grid.Row="5" Margin="0,3,2,0">
+                    <Button cal:Message.Attach="[Event Click] = [Action PrintInvoice($source, $view)]" Grid.Row="5" Margin="0,3,2,0">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="PrinterOutline" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="چاپ فاکتور" VerticalAlignment="Center"/>

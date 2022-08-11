@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <ReferencePath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win64_x64\dotnet\</ReferencePath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,6 +37,11 @@
   <ItemGroup>
     <PackageReference Include="Caliburn.Micro" Version="4.0.173" />
     <PackageReference Include="Caliburn.Micro.Core" Version="4.0.173" />
+    <PackageReference Include="CrystalDecisions.CrystalReports.Engine" Version="1.0.0" />
+    <PackageReference Include="CrystalDecisions.ReportSource" Version="1.0.0" />
+    <PackageReference Include="CrystalDecisions.Shared" Version="1.0.0" />
+    <PackageReference Include="CrystalReports.WPF.Viewer" Version="13.0.4001" />
+    <PackageReference Include="CrystalReports.WPF.ViewerShared" Version="13.0.4001" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.3.0" />
     <PackageReference Include="FluentWPF" Version="0.10.2" />
     <PackageReference Include="MaterialDesignThemes" Version="4.4.0" />
@@ -55,12 +61,28 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Printing\PrintInvoice.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>PrintInvoice.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
     <Page Update="Views\ProductListView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{c0c07587-41a7-46c8-8fbd-3f9c8ebe2ddc}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Printing\PrintInvoice.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PrintInvoice.rpt</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>
