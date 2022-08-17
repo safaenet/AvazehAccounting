@@ -115,6 +115,20 @@ namespace AvazehWpf.ViewModels
             if (output) Transactions.Remove(SelectedTransaction);
             else MessageBox.Show($"Transaction with ID: {SelectedTransaction.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+        public async Task RenameTransaction()
+        {
+
+        }
+
+        public void dg_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (Key.Delete == e.Key)
+            {
+                DeleteTransaction().ConfigureAwait(true);
+                e.Handled = true;
+            }
+        }
     }
 
     public static class TransactionFinStatusItems //For ComboBoxes

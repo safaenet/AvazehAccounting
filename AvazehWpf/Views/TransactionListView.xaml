@@ -55,13 +55,13 @@
                 <Button x:Name="PrintList" Grid.Column="0" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Printer" Margin="3"/>
-                        <TextBlock Text="Print List" VerticalAlignment="Center" Margin="5,0,30,0"/>
+                        <TextBlock Text="چاپ لیست" VerticalAlignment="Center" Margin="5,0,30,0"/>
                     </StackPanel>
                 </Button>
                 <Button Grid.Column="1" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="NotePlus" Margin="3"/>
-                        <TextBlock Text="New File" VerticalAlignment="Center" Margin="5,0,30,0"/>
+                        <TextBlock Text="فایل جدید" VerticalAlignment="Center" Margin="5,0,30,0"/>
                     </StackPanel>
                 </Button>
                 <ComboBox Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Grid.Column="2" BorderThickness="2" BorderBrush="DarkGray" Height="25" VerticalContentAlignment="Center"
@@ -70,7 +70,7 @@
                 <Button x:Name="Search" Grid.Column="3" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="DatabaseSearch" Margin="3"/>
-                        <TextBlock Text="Search" VerticalAlignment="Center" Margin="30,0,30,0"/>
+                        <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="3" HorizontalAlignment="Right"/>
                     </StackPanel>
                 </Button>
@@ -85,27 +85,46 @@
                 <Button x:Name="PreviousPage" Grid.Column="0" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ArrowLeftCircle" Margin="3"/>
-                        <TextBlock Text="Previous" VerticalAlignment="Center" Margin="30,0,30,0"/>
+                        <TextBlock Text="صفحه قبل" VerticalAlignment="Center" Margin="30,0,30,0"/>
                     </StackPanel>
                 </Button>
                 <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Next" VerticalAlignment="Center" Margin="30,0,30,0"/>
+                        <TextBlock Text="صفحه بعد" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="ArrowRightCircle" Margin="3" HorizontalAlignment="Right"/>
                     </StackPanel>
                 </Button>
             </Grid>
-            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditTransaction]" Grid.Row="2" ItemsSource="{Binding Transactions}" SelectedItem="{Binding SelectedTransaction}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False">
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditTransaction]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" ItemsSource="{Binding Transactions}" SelectedItem="{Binding SelectedTransaction}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditTransaction]">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="OpenInApp"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="تغییر نام" cal:Message.Attach="[Event Click] = [Action RenameTransaction]">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="Rename"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteTransaction]">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="DeleteOutline"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding Path=Id, Mode=OneWay}" Width="50"/>
-                    <DataGridTextColumn Header="File Name" Binding="{Binding Path=FileName, Mode=OneWay}" Width="200"/>
-                    <DataGridTextColumn Header="Date Created" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="80"/>
-                    <DataGridTextColumn Header="Date Updated" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="83"/>
-                    <DataGridTextColumn Header="Time Updated" Binding="{Binding Path=TimeUpdated, Mode=OneWay}" Width="85"/>
-                    <DataGridTextColumn Header="Positive Amount" Binding="{Binding Path=TotalPositiveItemsSum, Mode=OneWay}" Width="120"/>
-                    <DataGridTextColumn Header="Negative Amount" Binding="{Binding Path=TotalNegativeItemsSum, Mode=OneWay}" Width="120"/>
-                    <DataGridTextColumn Header="Total Balance" Binding="{Binding Path=TotalBalance, Mode=OneWay}" Width="120"/>
-                    <DataGridTextColumn Header="Financial Status" Binding="{Binding Path=TransactionFinancialStatus, Mode=OneWay}" Width="95"/>
+                    <DataGridTextColumn Header="شماره" Binding="{Binding Path=Id, Mode=OneWay}" Width="50"/>
+                    <DataGridTextColumn Header="نام فایل" Binding="{Binding Path=FileName, Mode=OneWay}" Width="*"/>
+                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="70"/>
+                    <DataGridTextColumn Header="تاریخ بروزرسانی" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="89"/>
+                    <DataGridTextColumn Header="ساعت بروزرسانی" Binding="{Binding Path=TimeUpdated, Mode=OneWay}" Width="100"/>
+                    <DataGridTextColumn Header="مبلغ مثبت" Binding="{Binding Path=TotalPositiveItemsSum, Mode=OneWay}" Width="130"/>
+                    <DataGridTextColumn Header="مبلغ منفی" Binding="{Binding Path=TotalNegativeItemsSum, Mode=OneWay}" Width="130"/>
+                    <DataGridTextColumn Header="تراز کل" Binding="{Binding Path=TotalBalance, Mode=OneWay}" Width="150"/>
+                    <DataGridTextColumn Header="وضعیت مالی" Binding="{Binding Path=TransactionFinancialStatus, Mode=OneWay}" Width="75"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
