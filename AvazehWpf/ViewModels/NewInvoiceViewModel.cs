@@ -30,7 +30,11 @@ namespace AvazehWpf.ViewModels
             InvoiceID = InvoiceId;
             GetComboboxItems().ConfigureAwait(true);
             CallBack = callBack;
-            if (InvoiceID == null) ButtonTitle = "Add";
+            if (InvoiceID == null)
+            {
+                ButtonTitle = "Add";
+                WindowTitle = "فاکتور جدید";
+            }
             else
             {
                 ButtonTitle = "Update";
@@ -48,11 +52,18 @@ namespace AvazehWpf.ViewModels
         private string customerInput;
         private string buttonTitle;
         private Func<Task> CallBack;
+        private string windowTitle;
+
+        public string WindowTitle
+        {
+            get { return windowTitle; }
+            set { windowTitle = value; NotifyOfPropertyChange(() => WindowTitle); }
+        }
 
         public string ButtonTitle
         {
             get { return buttonTitle; }
-            set { buttonTitle = value; NotifyOfPropertyChange(() => IsCustomerInputDropDownOpen); }
+            set { buttonTitle = value; NotifyOfPropertyChange(() => ButtonTitle); }
         }
 
         public bool IsCustomerInputDropDownOpen { get => isCustomerInputDropDownOpen; set { isCustomerInputDropDownOpen = value; NotifyOfPropertyChange(() => IsCustomerInputDropDownOpen); } }
@@ -98,7 +109,8 @@ namespace AvazehWpf.ViewModels
                 InvoiceModel i = new();
                 i.Customer = c;
                 var newInvoice = await ICM.CreateItemAsync(i);
-                CloseWindow();
+                if (newInvoice != null) CloseWindow();
+                else MessageBox.Show("خطا هنگام ایجاد فاکتور جدید", CustomerInput, MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else //Update Owner
             {
@@ -136,6 +148,7 @@ namespace AvazehWpf.ViewModels
             SelectedCustomer = new();
             var invoice = await ICM.GetItemById((int)InvoiceID);
             CustomerInput = invoice.Customer.FullName;
+            WindowTitle = invoice.Customer.FullName + " - تغییر نام";
         }
 
         public void ClosingWindow()
@@ -147,6 +160,14 @@ namespace AvazehWpf.ViewModels
         {
             if (e.Key == Key.Escape)
                 (GetView() as Window).Close();
+        }
+
+        public async Task InvoiceInputBoxKeyDownHandler(ActionExecutionContext context)
+        {
+            if (!IsCustomerInputDropDownOpen && context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
+            {
+                await AddOrUpdateInvoice();
+            }
         }
     }
 }

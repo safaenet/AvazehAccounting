@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:AvazehWpf" mc:Ignorable="d"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:ProductListViewModel}"
-        Title="Products" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
+        Title="اجناس" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1350" Height="650">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -163,7 +163,7 @@
                     </StackPanel>
                 </Button>
             </Grid>
-            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditProduct()]" Grid.Row="2" ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False">
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditProduct()]" Grid.Row="2" ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}" AutoGenerateColumns="False" Background="Transparent" FlowDirection="RightToLeft" CanUserAddRows="False" CanUserDeleteRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Path=Id, Mode=OneWay}" Width="80"/>
                     <DataGridTextColumn Header="Product Name" Binding="{Binding Path=ProductName, Mode=OneWay}" Width="150"/>

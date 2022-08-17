@@ -12,7 +12,7 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:TransactionDetailViewModel}"
         xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary"
         xmlns:dlc2="clr-namespace:SharedLibrary.DtoModels;assembly=SharedLibrary"
-        Title="Transaction" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
+        Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1200" Height="650"
         cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]">
     <Window.Resources>

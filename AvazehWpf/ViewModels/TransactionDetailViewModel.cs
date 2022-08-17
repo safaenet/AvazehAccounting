@@ -50,6 +50,13 @@ namespace AvazehWpf.ViewModels
             get => _EdittingItem;
             set { _EdittingItem = value; NotifyOfPropertyChange(() => EdittingItem); }
         }
+        private string windowTitle;
+
+        public string WindowTitle
+        {
+            get { return windowTitle; }
+            set { windowTitle = value; NotifyOfPropertyChange(() => WindowTitle); }
+        }
 
         public bool CanSaveTransactionChanges { get => canSaveTransactionChanges; set { canSaveTransactionChanges = value; NotifyOfPropertyChange(() => CanSaveTransactionChanges); } }
         public TransactionItemModel SelectedItem { get; set; }
@@ -75,6 +82,7 @@ namespace AvazehWpf.ViewModels
         {
             if (TransactionId is null) return;
             Transaction = await TransactionCollectionManager.GetItemById((int)TransactionId);
+            WindowTitle = Transaction.FileName + " - فایل";
             await Search();
         }
 

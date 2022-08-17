@@ -7,8 +7,10 @@ using SharedLibrary.Enums;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace AvazehWpf.ViewModels
@@ -61,7 +63,7 @@ namespace AvazehWpf.ViewModels
         public async Task AddNewTransaction()
         {
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new TransactionDetailViewModel(TCM, new TransactionDetailManager(TCM.ApiProcessor), Singleton, null, RefreshPage));
+            await wm.ShowDialogAsync(new NewTransactionViewModel(null, TCM, RefreshPage));
         }
 
         public async Task PreviousPage()
@@ -118,7 +120,9 @@ namespace AvazehWpf.ViewModels
 
         public async Task RenameTransaction()
         {
-
+            if (SelectedTransaction == null) return;
+            WindowManager wm = new();
+            await wm.ShowDialogAsync(new NewTransactionViewModel(SelectedTransaction.Id, TCM, RefreshPage));
         }
 
         public void dg_PreviewKeyDown(object sender, KeyEventArgs e)

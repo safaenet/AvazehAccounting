@@ -12,6 +12,13 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:TransactionListViewModel}"
         Title="Transactions" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1030" Height="650">
+    <Window.Resources>
+        <viewmodels:NameToBrushConverterForBackground x:Key="NameToBrushConverterForBackground"/>
+        <viewmodels:NameToBrushConverterForForeground x:Key="NameToBrushConverterForForeground"/>
+        <viewmodels:AmountToBrushConverterForBackground x:Key="AmountToBrushConverterForBackground"/>
+        <viewmodels:AmountToBrushConverterForBackgroundInverted x:Key="AmountToBrushConverterForBackgroundInverted"/>
+        <viewmodels:AmountToBrushConverterForForeground x:Key="AmountToBrushConverterForForeground"/>
+    </Window.Resources>
     <Grid>
         <Grid.Resources>
             <Style TargetType="TextBox">
@@ -52,13 +59,13 @@
                 <Grid.Resources>
                     <ObjectDataProvider x:Key="FinStatusItems" MethodName="GetTransactionFinStatusItems" ObjectType="{x:Type viewmodels:TransactionFinStatusItems}"/>
                 </Grid.Resources>
-                <Button x:Name="PrintList" Grid.Column="0" Height="25" Margin="0,0,5,0">
+                <Button IsEnabled="False" x:Name="PrintList" Grid.Column="0" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Printer" Margin="3"/>
                         <TextBlock Text="چاپ لیست" VerticalAlignment="Center" Margin="5,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <Button Grid.Column="1" Height="25" Margin="0,0,5,0">
+                <Button x:Name="AddNewTransaction" Grid.Column="1" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="NotePlus" Margin="3"/>
                         <TextBlock Text="فایل جدید" VerticalAlignment="Center" Margin="5,0,30,0"/>
@@ -116,15 +123,36 @@
                     </ContextMenu>
                 </DataGrid.ContextMenu>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="شماره" Binding="{Binding Path=Id, Mode=OneWay}" Width="50"/>
+                    <DataGridTextColumn Header="شماره" Binding="{Binding Path=Id, Mode=OneWay}" Width="50">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background" Value="{Binding Path=DateCreated, Converter={StaticResource NameToBrushConverterForBackground}}"/>
+                                <Setter Property="Foreground" Value="{Binding Path=DateCreated, Converter={StaticResource NameToBrushConverterForForeground}}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="نام فایل" Binding="{Binding Path=FileName, Mode=OneWay}" Width="*"/>
                     <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="70"/>
-                    <DataGridTextColumn Header="تاریخ بروزرسانی" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="89"/>
+                    <DataGridTextColumn Header="تاریخ بروزرسانی" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="89">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background" Value="{Binding Path=DateUpdated, Converter={StaticResource NameToBrushConverterForBackground}}"/>
+                                <Setter Property="Foreground" Value="{Binding Path=DateUpdated, Converter={StaticResource NameToBrushConverterForForeground}}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="ساعت بروزرسانی" Binding="{Binding Path=TimeUpdated, Mode=OneWay}" Width="100"/>
-                    <DataGridTextColumn Header="مبلغ مثبت" Binding="{Binding Path=TotalPositiveItemsSum, Mode=OneWay}" Width="130"/>
-                    <DataGridTextColumn Header="مبلغ منفی" Binding="{Binding Path=TotalNegativeItemsSum, Mode=OneWay}" Width="130"/>
-                    <DataGridTextColumn Header="تراز کل" Binding="{Binding Path=TotalBalance, Mode=OneWay}" Width="150"/>
-                    <DataGridTextColumn Header="وضعیت مالی" Binding="{Binding Path=TransactionFinancialStatus, Mode=OneWay}" Width="75"/>
+                    <DataGridTextColumn Header="مبلغ مثبت" Binding="{Binding Path=TotalPositiveItemsSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="130"/>
+                    <DataGridTextColumn Header="مبلغ منفی" Binding="{Binding Path=TotalNegativeItemsSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="130"/>
+                    <DataGridTextColumn Header="تراز کل" Binding="{Binding Path=TotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="150">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background" Value="{Binding Path=TotalBalance, Converter={StaticResource AmountToBrushConverterForBackgroundInverted}}"/>
+                                <Setter Property="Foreground" Value="{Binding Path=TotalBalance, Converter={StaticResource AmountToBrushConverterForForeground}}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="وضعیت مالی" Visibility="Hidden" Binding="{Binding Path=TransactionFinancialStatus, Mode=OneWay}" Width="75"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

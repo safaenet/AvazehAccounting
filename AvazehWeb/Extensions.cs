@@ -86,6 +86,7 @@ namespace AvazehWeb
                 CompanyName = model.CompanyName,
                 EmailAddress = model.EmailAddress,
                 PostAddress = model.PostAddress,
+                DateJoined = model.DateJoined,
                 PhoneNumbers = model.PhoneNumbers,
                 Descriptions = model.Descriptions
             };
@@ -100,6 +101,7 @@ namespace AvazehWeb
                 CompanyName = model.CompanyName,
                 EmailAddress = model.EmailAddress,
                 PostAddress = model.PostAddress,
+                DateJoined = model.DateJoined,
                 PhoneNumbers = model.PhoneNumbers,
                 Descriptions = model.Descriptions
             };

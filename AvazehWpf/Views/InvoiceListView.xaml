@@ -10,7 +10,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:InvoiceListViewModel}"
-        Title="Invoices" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
+        Title="فاکتور ها" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1030" Height="650">
     <Window.Resources>
         <viewmodels:NameToBrushConverterForBackground x:Key="NameToBrushConverterForBackground"/>
@@ -176,6 +176,5 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-
     </Grid>
 </Window>

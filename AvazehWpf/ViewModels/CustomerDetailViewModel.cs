@@ -11,17 +11,32 @@ namespace AvazehWpf.ViewModels
 {
     public class CustomerDetailViewModel : ViewAware
     {
-        public CustomerDetailViewModel(ICollectionManager<CustomerModel> manager, CustomerModel Customer, Func<Task> callBack)
+        public CustomerDetailViewModel(ICollectionManager<CustomerModel> manager, CustomerModel customer, Func<Task> callBack)
         {
             Manager = manager;
             CallBackFunc = callBack;
-            if (Customer is not null)
-                this.Customer = Customer;
+            if (customer is not null)
+            {
+                Customer = customer;
+                WindowTitle = customer.FullName + " - مشتری"; ;
+            }
+            else
+            {
+                Customer = new();
+                WindowTitle = "مشتری جدید";
+            }
         }
 
         private readonly ICollectionManager<CustomerModel> Manager;
         private CustomerModel _Customer;
         private Func<Task> CallBackFunc;
+        private string windowTitle;
+
+        public string WindowTitle
+        {
+            get { return windowTitle; }
+            set { windowTitle = value; NotifyOfPropertyChange(() => WindowTitle); }
+        }
 
         public CustomerModel Customer
         {
@@ -31,6 +46,7 @@ namespace AvazehWpf.ViewModels
 
         public void AddNewPhoneNumber()
         {
+            if (Customer == null) Customer = new();
             PhoneNumberModel newPhone = new();
             if (Customer.PhoneNumbers == null)
             {
@@ -83,7 +99,6 @@ namespace AvazehWpf.ViewModels
 
         private async Task<bool> SaveToDatabase()
         {
-            if (Customer == null) return false;
             var validate = Manager.ValidateItem(Customer);
             if (validate.IsValid)
             {

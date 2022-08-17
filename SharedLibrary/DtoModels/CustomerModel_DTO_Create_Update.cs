@@ -26,6 +26,7 @@ namespace SharedLibrary.DtoModels //DTO Models
 
         [Display(Name = "Post Address", Prompt = "Post Address. Max length is 100 characters")]
         public string PostAddress { get; set; }
+        public string DateJoined { get; set; }
 
         public ObservableCollection<PhoneNumberModel> PhoneNumbers { get; set; }
 

@@ -13,10 +13,8 @@ namespace SharedLibrary.DtoModels
         [StringLength(100, ErrorMessage = "Maximum length is 100")]
         public string FileName { get; set; }
 
-        [Required]
         public string DateCreated { get; set; }
 
-        [Required]
         public string TimeCreated { get; set; }
 
         [Display(Name = "Description")]

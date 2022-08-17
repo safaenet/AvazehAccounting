@@ -92,7 +92,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditCustomer()
         {
-            if (Customers == null || Customers.Count == 0) return;
+            if (Customers == null || Customers.Count == 0 || SelectedCustomer == null) return;
             WindowManager wm = new();
             await wm.ShowWindowAsync(new CustomerDetailViewModel(CCM, SelectedCustomer, RefreshPage));
         }

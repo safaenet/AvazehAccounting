@@ -11,7 +11,7 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:InvoiceDetailViewModel}"
         xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary"
-        Title="Invoice" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
+        Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1200" Height="675"
         cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]">
     <Window.Resources>

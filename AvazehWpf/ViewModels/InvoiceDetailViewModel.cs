@@ -60,6 +60,13 @@ namespace AvazehWpf.ViewModels
         private double customerPreviousTotalBalance;
         private double customerTotalBalancePlusThis;
         private bool isProductInputDropDownOpen;
+        private string windowTitle;
+
+        public string WindowTitle
+        {
+            get { return windowTitle; }
+            set { windowTitle = value; NotifyOfPropertyChange(() => WindowTitle); }
+        }
 
         public bool IsProductInputDropDownOpen { get => isProductInputDropDownOpen; set { isProductInputDropDownOpen = value; NotifyOfPropertyChange(() => IsProductInputDropDownOpen); } }
 
@@ -98,6 +105,7 @@ namespace AvazehWpf.ViewModels
         {
             if (InvoiceId is null) return;
             Invoice = await InvoiceCollectionManager.GetItemById((int)InvoiceId);
+            WindowTitle = Invoice.Customer.FullName + " - فاکتور";
             await ReloadCustomerPreviousBalance();
         }
 

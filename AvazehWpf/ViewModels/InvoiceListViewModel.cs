@@ -244,6 +244,27 @@ namespace AvazehWpf.ViewModels
         }
     }
 
+    public class AmountToBrushConverterForBackgroundInverted : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value == null) return DependencyProperty.UnsetValue;
+            double input = (double)value;
+            return input switch
+            {
+                < 0 => Brushes.LightPink,
+                0 => Brushes.LightGreen,
+                > 0 => Brushes.LightBlue,
+                _ => throw new NotImplementedException(),
+            };
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
     public class AmountToBrushConverterForForeground : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
