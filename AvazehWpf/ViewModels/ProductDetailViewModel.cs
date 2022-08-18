@@ -10,18 +10,33 @@ namespace AvazehWpf.ViewModels
 {
     public class ProductDetailViewModel : ViewAware
     {
-        public ProductDetailViewModel(ICollectionManager<ProductModel> manager, ProductModel Product, Func<Task> callBack)
+        public ProductDetailViewModel(ICollectionManager<ProductModel> manager, ProductModel product, Func<Task> callBack)
         {
             Manager = manager;
             CallBackFunc = callBack;
-            if (Product is not null)
-                this.Product = Product;
+            if (product is not null)
+            {
+                Product = product;
+                WindowTitle = product.ProductName + " - کالا"; ;
+            }
+            else
+            {
+                Product = new();
+                WindowTitle = "کالای جدید";
+            }
         }
 
         private readonly ICollectionManager<ProductModel> Manager;
         private ProductModel _Product;
         //private ProductModel _BackupProduct;
         private Func<Task> CallBackFunc;
+        private string windowTitle;
+
+        public string WindowTitle
+        {
+            get { return windowTitle; }
+            set { windowTitle = value; NotifyOfPropertyChange(() => WindowTitle); }
+        }
 
         public ProductModel Product
         {

@@ -9,7 +9,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:ProductDetailViewModel}"
-        Title="Product" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
+        Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="460" Height="363" ResizeMode="NoResize"
         cal:Message.Attach="[Event Closing] = [Action ClosingWindow]">
     <Grid>
@@ -51,43 +51,43 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,0,0" VerticalAlignment="Top">
-                    <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="tag" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="ID" Margin="20,2,0,2"/>
+                    <StackPanel Width="55" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="HashtagBoxOutline"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره" Margin="5,0,0,2"/>
                     </StackPanel>
                     <TextBox Text="{Binding Product.Id}" IsReadOnly="True" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1"  Orientation="Vertical" Margin="0,0,0,0">
-                    <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="inventory_2" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="Product Name" Margin="0,2,0,2"/>
+                    <StackPanel Width="60" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="BoxOutline" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام کالا" Margin="0,0,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.ProductName}" MaxLength="100" MaxWidth="200" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding Product.ProductName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="100" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,0,0,0">
-                    <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="local_offer" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="Buy Price" Margin="0,2,0,2"/>
+                    <StackPanel Width="75" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Money" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="قیمت خرید" Margin="0,0,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.BuyPrice}" MaxWidth="200" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding Product.BuyPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="3" Orientation="Vertical" Margin="0,0,0,0">
-                    <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="local_offer" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="Sell Price" Margin="0,2,0,2"/>
+                    <StackPanel Width="80" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="TagOutline" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="قیمت فروش" Margin="0,0,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.SellPrice}" MaxWidth="200" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding Product.SellPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="4" Orientation="Vertical" Margin="0,0,0,0">
-                    <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="qr_code" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="Barcode" Margin="15,2,0,2"/>
+                    <StackPanel Width="50" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Barcode" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="بارکد" Margin="3,0,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.Barcode}" MaxLength="15" MaxWidth="200" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding Product.Barcode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="15" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
             </Grid>
             <Grid Grid.Column="1">
@@ -100,46 +100,46 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,10,10">
-                    <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="score" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="Count" Margin="0,2,0,2"/>
+                    <StackPanel Width="50" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Counter" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="تعداد" Margin="0,0,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.CountString}" ToolTip="{Binding Product.CountValue}" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding Product.CountString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding Product.CountValue}" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <DockPanel Grid.Row="1" LastChildFill="True" DockPanel.Dock="Bottom" Margin="0,0,10,10">
                     <StackPanel DockPanel.Dock = "Top" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="description" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
-                        <TextBlock TextAlignment="Center" Text="Description" Margin="0,2,0,2"/>
+                        <materialDesign:PackIcon Kind="Text" Margin="0,0,3,0"/>
+                        <TextBlock TextAlignment="Center" Text="توضیحات" Margin="0,0,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.Descriptions}" TextWrapping="Wrap" MinHeight="50" Height="auto" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top"/>
+                    <TextBox Text="{Binding Product.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" MinHeight="50" Height="auto" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top"/>
                 </DockPanel>
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
-                    <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="event_available" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="Date Created: " Margin="5,2,0,2"/>
+                    <StackPanel Width="120" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="CalendarAdd" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد: " Margin="5,0,0,2"/>
                     </StackPanel>
                     <TextBlock Text="{Binding Product.DateCreated}" TextAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,0,0,10">
-                    <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="watch_later" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="Time Created: " Margin="5,2,0,2"/>
+                    <StackPanel Width="120" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="FileDocumentBoxTickOutline" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="ساعت ایجاد: " Margin="5,2,0,2"/>
                     </StackPanel>
                     <TextBlock Text="{Binding Product.TimeCreated}" TextAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,0,0,10">
-                    <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="edit_calendar" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="Date Updated: " Margin="5,2,0,2"/>
+                    <StackPanel Width="120" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="CalendarCheckOutline" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ بروزرسانی: " Margin="5,0,0,2"/>
                     </StackPanel>
                     <TextBlock Text="{Binding Product.DateUpdated}" TextAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,0,0,10">
-                    <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="watch_later" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="Time Updated: " Margin="5,2,0,2"/>
+                    <StackPanel Width="120" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="BoxTimeOutline" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="ساعت بروزرسانی: " Margin="5,2,0,2"/>
                     </StackPanel>
                     <TextBlock Text="{Binding Product.TimeUpdated}" TextAlignment="Center"/>
                 </StackPanel>
@@ -155,27 +155,27 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="CancelAndClose" Grid.Column="0" Margin="0,5,5,0">
-                <StackPanel Width="80" Orientation="Horizontal">
-                    <TextBlock Text="cancel" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
-                    <TextBlock Text="Cancel" VerticalAlignment="Center"/>
+                <StackPanel Width="70" Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="CancelOutline" Margin="5,0,5,0"/>
+                    <TextBlock Text="انصراف" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
             <Button x:Name="DeleteAndClose" Grid.Column="1" Margin="0,5,5,0">
-                <StackPanel Width="120" Orientation="Horizontal">
-                    <TextBlock Text="highlight_off" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
-                    <TextBlock Text="Delete and Close" VerticalAlignment="Center"/>
+                <StackPanel Width="110" Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="DeleteOutline" Margin="5,0,5,0"/>
+                    <TextBlock Text="حذف و بستن" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
             <Button x:Name="SaveAndNew" Grid.Column="2" Margin="0,5,5,0">
                 <StackPanel Width="110" Orientation="Horizontal">
-                    <TextBlock Text="save" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
-                    <TextBlock Text="Save and New" VerticalAlignment="Center"/>
+                    <materialDesign:PackIcon Kind="ContentDuplicate" Margin="5,0,5,0"/>
+                    <TextBlock Text="ذخیره و جدید" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
             <Button x:Name="SaveAndClose" Grid.Column="3" Margin="0,5,5,0">
                 <StackPanel Width="110" Orientation="Horizontal">
-                    <TextBlock Text="save" Margin="0,0,2,0" Width="15" FontSize="15" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
-                    <TextBlock Text="Save and Close" VerticalAlignment="Center"/>
+                    <materialDesign:PackIcon Kind="ContentSaveOutline" Margin="5,0,5,0"/>
+                    <TextBlock Text="ذخیره و بستن" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
         </Grid>

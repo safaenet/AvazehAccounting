@@ -93,7 +93,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditProduct()
         {
-            if (Products == null || Products.Count == 0) return;
+            if (Products == null || Products.Count == 0 || SelectedProduct == null) return;
             WindowManager wm = new();
             await wm.ShowWindowAsync(new ProductDetailViewModel(PCM, SelectedProduct, RefreshPage));
         }

@@ -54,40 +54,40 @@
 
                     <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical" Margin="0,0,0,0" VerticalAlignment="Top">
                         <StackPanel Width="50" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="PeopleOutline"/>
-                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام" Margin="0,2,0,2"/>
+                            <materialDesign:PackIcon Kind="PeopleOutline" Margin="0,0,3,0"/>
+                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام" Margin="0,0,0,2"/>
                         </StackPanel>
                         <TextBox Text="{Binding Customer.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Vertical" Margin="0,0,0,0" VerticalAlignment="Top">
-                        <StackPanel Width="80" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="PeopleOutline"/>
-                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام خانوادگی" Margin="0,2,0,2"/>
+                        <StackPanel Width="85" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <materialDesign:PackIcon Kind="PeopleOutline" Margin="0,0,3,0"/>
+                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام خانوادگی" Margin="0,0,0,2"/>
                         </StackPanel>
                         <TextBox Text="{Binding Customer.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Vertical" Margin="0,0,0,0">
                         <StackPanel Width="70" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="Company"/>
-                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام شرکت" Margin="0,2,0,2"/>
+                            <materialDesign:PackIcon Kind="Company" Margin="0,0,3,0"/>
+                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام شرکت" Margin="0,0,0,2"/>
                         </StackPanel>
                         <TextBox Text="{Binding Customer.CompanyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Vertical" Margin="0,0,0,0">
                         <StackPanel Width="45" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="EmailOutline"/>
-                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="ایمیل" Margin="0,2,0,2"/>
+                            <materialDesign:PackIcon Kind="EmailOutline" Margin="0,0,3,0"/>
+                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="ایمیل" Margin="0,0,0,2"/>
                         </StackPanel>
                         <TextBox Text="{Binding Customer.EmailAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
                     </StackPanel>
 
                     <DockPanel Grid.Column="0" Grid.Row="4" LastChildFill="True" DockPanel.Dock="Bottom">
                         <StackPanel DockPanel.Dock = "Top" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="LocationOutline"/>
-                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="آدرس" Margin="0,2,0,2"/>
+                            <materialDesign:PackIcon Kind="LocationOutline" Margin="0,0,3,0"/>
+                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="آدرس" Margin="0,0,0,2"/>
                         </StackPanel>
                         <TextBox Text="{Binding Customer.PostAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="30" Height="auto" VerticalContentAlignment="Top" MaxWidth="200"/>
                     </DockPanel>
@@ -103,25 +103,25 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,0,10">
-                    <StackPanel Width="80" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="HashtagBoxOutline"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره" Margin="5,2,0,2"/>
+                    <StackPanel Width="60" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="HashtagBoxOutline" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره" Margin="0,0,0,2"/>
                     </StackPanel>
                     <TextBox Text="{Binding Customer.Id}" IsReadOnly="True" MaxLength="10" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Orientation="Vertical" Margin="0,0,0,9">
                     <StackPanel Width="70" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="CalendarOutline"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد" Margin="5,2,0,2"/>
+                        <materialDesign:PackIcon Kind="CalendarOutline" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد" Margin="0,0,0,2"/>
                     </StackPanel>
                     <TextBox Text="{Binding Customer.DateJoined}" IsReadOnly="True" MaxLength="10" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,0,0,10">
                     <StackPanel Width="165" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="PhoneOutline"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره تلفن ها" Margin="0,2,0,2"/>
+                        <materialDesign:PackIcon Kind="PhoneOutline" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره تلفن ها" Margin="0,0,0,2"/>
                         <Button x:Name="AddNewPhoneNumber" Margin="5,0,0,0">
                             <materialDesign:PackIcon Kind="Plus"/>
                         </Button>
@@ -142,8 +142,8 @@
 
                 <DockPanel LastChildFill="True"  Grid.Row="3" DockPanel.Dock="Bottom">
                     <StackPanel DockPanel.Dock = "Top" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="Text"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="توضیحات" Margin="0,2,0,2"/>
+                        <materialDesign:PackIcon Kind="Text" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="توضیحات" Margin="0,0,0,2"/>
                     </StackPanel>
                     <TextBox Text="{Binding Customer.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="50" Height="auto" VerticalContentAlignment="Top" MaxWidth="200"/>
                 </DockPanel>
@@ -158,25 +158,25 @@
             </Grid.ColumnDefinitions>
             <Button x:Name="CancelAndClose" Grid.Column="0" Margin="0,5,5,0">
                 <StackPanel Width="70" Orientation="Horizontal" Margin="10,0,0,0">
-                    <materialDesign:PackIcon Kind="CancelOutline"/>
+                    <materialDesign:PackIcon Kind="CancelOutline" Margin="5,0,5,0"/>
                     <TextBlock Text="انصراف" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
             <Button x:Name="DeleteAndClose" Grid.Column="1" Margin="0,5,5,0">
                 <StackPanel Width="110" Orientation="Horizontal" Margin="10,0,0,0">
-                    <materialDesign:PackIcon Kind="DeleteOutline"/>
+                    <materialDesign:PackIcon Kind="DeleteOutline" Margin="5,0,5,0"/>
                     <TextBlock Text="حذف و بستن" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
             <Button x:Name="SaveAndNew" Grid.Column="2" Margin="0,5,5,0">
                 <StackPanel Width="100" Orientation="Horizontal" Margin="10,0,0,0">
-                    <materialDesign:PackIcon Kind="ContentDuplicate"/>
+                    <materialDesign:PackIcon Kind="ContentDuplicate" Margin="5,0,5,0"/>
                     <TextBlock Text="ذخیره و جدید" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="SaveAndClose" Grid.Column="3" Margin="0,5,5,0">
+            <Button x:Name="SaveAndClose" Grid.Column="3" Margin="0,5,0,0">
                 <StackPanel Width="100" Orientation="Horizontal" Margin="10,0,0,0">
-                    <materialDesign:PackIcon Kind="ContentSaveOutline"/>
+                    <materialDesign:PackIcon Kind="ContentSaveOutline" Margin="5,0,5,0"/>
                     <TextBlock Text="ذخیره و بستن" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>

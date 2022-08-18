@@ -106,7 +106,7 @@
                     </StackPanel>
                 </Button>
             </Grid>
-            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditInvoice]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" ItemsSource="{Binding Invoices}" SelectedItem="{Binding SelectedInvoice}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False">
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditInvoice]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" HorizontalGridLinesBrush="LightGray" ItemsSource="{Binding Invoices}" SelectedItem="{Binding SelectedInvoice}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditInvoice]">
