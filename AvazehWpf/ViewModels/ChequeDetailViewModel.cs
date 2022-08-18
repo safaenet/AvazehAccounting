@@ -11,17 +11,32 @@ namespace AvazehWpf.ViewModels
 {
     public class ChequeDetailViewModel : ViewAware
     {
-        public ChequeDetailViewModel(ICollectionManager<ChequeModel> manager, ChequeModel Cheque, Func<Task> callBack)
+        public ChequeDetailViewModel(ICollectionManager<ChequeModel> manager, ChequeModel cheque, Func<Task> callBack)
         {
             Manager = manager;
             CallBackFunc = callBack;
-            if (Cheque is not null)
-                this.Cheque = Cheque;
+            if (cheque is not null)
+            {
+                Cheque = cheque;
+                WindowTitle = "چک " + cheque.Orderer + " به " + cheque.Drawer;
+            }
+            else
+            {
+                Cheque = new();
+                WindowTitle = "چک جدید";
+            }
         }
 
         private readonly ICollectionManager<ChequeModel> Manager;
         private ChequeModel _Cheque;
         private Func<Task> CallBackFunc;
+        private string windowTitle;
+
+        public string WindowTitle
+        {
+            get { return windowTitle; }
+            set { windowTitle = value; NotifyOfPropertyChange(() => WindowTitle); }
+        }
 
         public ChequeModel Cheque
         {

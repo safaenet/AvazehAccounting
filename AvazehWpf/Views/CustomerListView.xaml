@@ -41,32 +41,32 @@
 
                         <StackPanel Orientation="Vertical" Margin="0,0,3,10">
                             <StackPanel Width="50" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="PeopleOutline" Margin="3"/>
-                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام" Margin="0,2,0,2"/>
+                                <materialDesign:PackIcon Kind="PeopleOutline" Margin="0,0,5,0"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام" Margin="0,0,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Path=SelectedCustomer.FirstName, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding Path=SelectedCustomer.FirstName, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,3,10">
                             <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="PeopleOutline" Margin="3"/>
-                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام خانوادگی" Margin="0,2,0,2"/>
+                                <materialDesign:PackIcon Kind="PeopleOutline" Margin="0,0,5,0"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام خانوادگی" Margin="0,0,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Path=SelectedCustomer.LastName, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding Path=SelectedCustomer.LastName, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,3,10">
                             <StackPanel Width="90" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="Company" Margin="3"/>
-                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام شرکت" Margin="0,2,0,2"/>
+                                <materialDesign:PackIcon Kind="Company" Margin="0,0,5,0"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام شرکت" Margin="0,0,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Path=SelectedCustomer.CompanyName, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding Path=SelectedCustomer.CompanyName, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,3,10">
                             <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="PhoneOutline" Margin="3"/>
-                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره تلفن ها" Margin="0,2,0,2"/>
+                                <materialDesign:PackIcon Kind="PhoneOutline" Margin="0,0,5,0"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره تلفن ها" Margin="0,0,0,2"/>
                             </StackPanel>
                             <ItemsControl ItemsSource="{Binding Path=SelectedCustomer.PhoneNumbers, Mode=OneWay}">
                                 <ItemsControl.ItemTemplate>
@@ -79,33 +79,33 @@
 
                         <StackPanel Orientation="Vertical" Margin="0,0,3,10">
                             <StackPanel Width="80" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="EmailOutline" Margin="3"/>
-                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="ایمیل" Margin="0,2,0,2"/>
+                                <materialDesign:PackIcon Kind="EmailOutline" Margin="0,0,5,0"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="ایمیل" Margin="0,0,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Path=SelectedCustomer.EmailAddress, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding Path=SelectedCustomer.EmailAddress, Mode=OneWay}" IsReadOnly="True" MaxLength="50" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,3,10">
                             <StackPanel Width="80" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="LocationOutline" Margin="3"/>
-                                <TextBlock MaxWidth="200" Height="auto" TextAlignment="Center" Text="آدرس" Margin="0,2,0,2"/>
+                                <materialDesign:PackIcon Kind="LocationOutline" Margin="0,0,5,0"/>
+                                <TextBlock MaxWidth="200" Height="auto" TextAlignment="Center" Text="آدرس" Margin="0,0,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Path=SelectedCustomer.PostAddress, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MinHeight="50" VerticalContentAlignment="Top" MaxWidth="200"/>
+                            <TextBox Text="{Binding Path=SelectedCustomer.PostAddress, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MinHeight="60" VerticalContentAlignment="Top" MaxWidth="200"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,3,10">
                             <StackPanel Width="100" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="CalendarOutline" Margin="3"/>
-                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد" Margin="0,2,0,2"/>
+                                <materialDesign:PackIcon Kind="CalendarOutline" Margin="0,0,5,0"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد" Margin="0,0,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Path=SelectedCustomer.DateJoined, Mode=OneWay}" IsReadOnly="True" MaxLength="10" MaxWidth="200" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding Path=SelectedCustomer.DateJoined, Mode=OneWay}" IsReadOnly="True" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                         </StackPanel>
                     </StackPanel>
 
                     <DockPanel LastChildFill="True"  Grid.Row="1" DockPanel.Dock="Bottom" Margin="0,0,3,5">
                         <StackPanel DockPanel.Dock = "Top" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="Text" Margin="3"/>
-                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="توضیحات" Margin="0,2,0,2"/>
+                            <materialDesign:PackIcon Kind="Text" Margin="0,0,5,0"/>
+                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="توضیحات" Margin="0,0,0,2"/>
                         </StackPanel>
                         <TextBox Text="{Binding SelectedCustomer.Descriptions, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MinHeight="50" Height="auto" VerticalContentAlignment="Top" MaxWidth="200"/>
                     </DockPanel>

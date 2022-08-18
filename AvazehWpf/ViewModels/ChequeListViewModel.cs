@@ -93,7 +93,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditCheque()
         {
-            if (Cheques == null || Cheques.Count == 0) return;
+            if (Cheques == null || Cheques.Count == 0 || SelectedCheque == null) return;
             WindowManager wm = new();
             await wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, SelectedCheque, RefreshPage));
         }
