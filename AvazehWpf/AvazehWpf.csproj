@@ -61,9 +61,17 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Printing\InvoiceDetails.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>InvoiceDetails.Designer.cs</LastGenOutput>
+    </None>
     <None Update="Printing\PrintInvoice.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>PrintInvoice.cs</LastGenOutput>
+    </None>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
 
@@ -78,10 +86,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Printing\InvoiceDetails.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>InvoiceDetails.xsd</DependentUpon>
+    </Compile>
     <Compile Update="Printing\PrintInvoice.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>PrintInvoice.rpt</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
   </ItemGroup>
 

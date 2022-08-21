@@ -22,7 +22,7 @@ namespace AvazehWpf.Printing
         private string _invoiceType;
         private Image _logo;
         private bool _hasAttachment;
-        
+
         public InvoiceModel Invoice
         {
             get => _invoice;
