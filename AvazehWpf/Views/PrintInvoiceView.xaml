@@ -14,7 +14,8 @@
         xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary"
         Title="Print Invoice" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1200" Height="675"
-        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]">
+        xmlns:cr="clr-namespace:SAPBusinessObjects.WPF.Viewer;assembly=SAPBusinessObjects.WPF.Viewer"
+        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]">    
     <Grid>
         
     </Grid>

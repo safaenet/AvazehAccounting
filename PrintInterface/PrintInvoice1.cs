@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AvazehWpf.Printing {
+namespace PrintInterface {
     using System;
     using System.ComponentModel;
     using CrystalDecisions.Shared;
@@ -41,7 +41,7 @@ namespace AvazehWpf.Printing {
         
         public override string FullResourceName {
             get {
-                return "AvazehWpf.Printing.PrintInvoice.rpt";
+                return "PrintInterface.PrintInvoice.rpt";
             }
             set {
                 // Do nothing

@@ -17,6 +17,10 @@ using System.Windows.Input;
 using System.Windows.Data;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
+using System.Xml.Linq;
+using System.Xml.Serialization;
+using System.Xml;
+using System.IO;
 
 namespace AvazehWpf.ViewModels
 {
@@ -291,13 +295,55 @@ namespace AvazehWpf.ViewModels
             CanSaveInvoiceChanges = false;
         }
 
-        public void PrintInvoice(object sender, object window)
+        public void PrintInvoiceMenu(object sender, object window)
         {
             ContextMenu cm = (window as Window).FindResource("PrintInvoiceCM") as ContextMenu;
             cm.PlacementTarget = sender as Button;
             cm.IsOpen = true;
             //WindowManager wm = new();
             //await wm.ShowWindowAsync(new PrintInvoiceRegularA5ViewModel(Invoice));
+        }
+
+        public async Task PrintInvoice(int t)
+        {
+            if (Invoice == null) return;
+            await ReloadInvoice(Invoice.Id);
+            PrintInvoiceModel pim = new();
+            Invoice.AsPrintModel(pim);
+            if (t == 12)
+            {
+                pim.MainHeaderText = "فاکتور فروش";
+            }
+            else if (t == 13)
+            {
+                pim.MainHeaderText = "فروشگاه آوازه";
+                pim.HeaderInvoiceType = "فاکتور فروش";
+                pim.HeaderDescription1 = "دوربین مداربسته، کرکره برقی، جک پارکینگی";
+                pim.HeaderDescription2 = "01734430827";
+            }
+            else if (t == 21)
+            {
+                pim.MainHeaderText = "پیش فاکتور";
+            }
+            else if (t == 22)
+            {
+                pim.MainHeaderText = "فروشگاه آوازه";
+                pim.HeaderInvoiceType = "پیش فاکتور";
+                pim.HeaderDescription1 = "دوربین مداربسته، کرکره برقی، جک پارکینگی";
+                pim.HeaderDescription2 = "01734430827";
+            }
+            pim.InvoiceType = t;
+            pim.FooterTextLeft = "";
+            pim.FooterTextRight = "توسعه دهنده نرم افزار: صفا دانا";
+            XmlSerializer xmlSerializer = new(pim.GetType());
+            StringWriter stringWriter = new();
+            xmlSerializer.Serialize(stringWriter, pim);
+            var UniqueFileName = $@"{DateTime.Now.Ticks}.xml";
+            string TempFolderName = "Temp";
+            Directory.CreateDirectory(TempFolderName);
+            var FilePath = TempFolderName + "\\" + UniqueFileName;
+            File.WriteAllText(FilePath, stringWriter.ToString());
+            
         }
 
         public async Task EditOwner()

@@ -17,29 +17,29 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="b2v"/>
         <ContextMenu x:Key="PrintInvoiceCM">
-                <MenuItem Header="فاکتور فروش بدون سربرگ" cal:Message.Attach="[Event Click] = [Action EditInvoice]">
+            <MenuItem Header="فاکتور فروش بدون سربرگ" cal:Message.Attach="[Event Click] = [Action PrintInvoice(11)]">
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="ReceiptOutline"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
-                <MenuItem Header="فاکتور فروش بدون سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action EditInvoice]">
+            <MenuItem Header="فاکتور فروش بدون سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoice(12)]">
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="ReceiptOutline"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="فاکتور فروش با سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action ViewPayments]">
+            <MenuItem Header="فاکتور فروش با سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoice(13)]">
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="ReceiptOutline"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
-                <MenuItem Header="پیش فاکتور بدون سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action ShowCustomerInvoices]">
+            <MenuItem Header="پیش فاکتور بدون سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoice(21)]">
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="InvoiceOutline"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="پیش فاکتور با سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action ShowAllInvoices]">
+            <MenuItem Header="پیش فاکتور با سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoice(22)]">
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="InvoiceOutline"/>
                     </MenuItem.Icon>
@@ -211,7 +211,7 @@
                             <TextBlock Text="حذف فاکتور" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action PrintInvoice($source, $view)]" Grid.Row="5" Margin="0,3,2,0">
+                    <Button cal:Message.Attach="[Event Click] = [Action PrintInvoiceMenu($source, $view)]" Grid.Row="5" Margin="0,3,2,0">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="PrinterOutline" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="چاپ فاکتور" VerticalAlignment="Center"/>

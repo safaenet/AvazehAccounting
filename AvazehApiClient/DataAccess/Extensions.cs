@@ -3,6 +3,7 @@ using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using System.Globalization;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace AvazehApiClient.DataAccess
 {
@@ -258,6 +259,44 @@ namespace AvazehApiClient.DataAccess
             To.DateUpdated = From.DateUpdated;
             To.TimeUpdated = From.TimeUpdated;
             To.Descriptions = From.Descriptions;
+        }
+
+        public static void AsPrintModel(this InvoiceModel invoice, PrintInvoiceModel piv)
+        {
+            if (invoice == null) return;
+            piv.Products = new();
+            piv.CustomerDescription = invoice.Customer.Descriptions;
+            piv.CustomerFullName = invoice.Customer.FullName;
+            piv.CustomerId = invoice.Customer.Id;
+            piv.InvoiceDate = invoice.DateCreated;
+            piv.InvoiceDescription = invoice.Descriptions;
+            piv.InvoiceFinStatus = invoice.InvoiceFinancialStatus.ToString();
+            piv.InvoiceId = invoice.Id;
+            piv.PhoneNumber = (invoice.Customer.PhoneNumbers == null || invoice.Customer.PhoneNumbers.Count == 0) ? "" : invoice.Customer.PhoneNumbers[0].ToString();
+            piv.TotalBalance = invoice.TotalBalance;
+            piv.TotalDiscountAmount = invoice.TotalDiscountAmount;
+            piv.TotalItemsSellSum = invoice.TotalItemsSellSum;
+            piv.TotalInvoiceSum = invoice.TotalInvoiceSum;
+            piv.TotalPayments = invoice.TotalPayments;
+            if (invoice.Items != null && invoice.Items.Count > 0)
+                foreach (var item in invoice.Items)
+                {
+                    InvoiceItemForPrintModel i = new();
+                    i.CountString = item.CountString;
+                    i.DateCreated = item.DateCreated;
+                    i.DateUpdated = item.DateUpdated;
+                    i.Delivered = item.Delivered;
+                    i.Descriptions = item.Descriptions;
+                    i.Id = item.Id;
+                    i.InvoiceId = item.Id;
+                    i.ProductName = item.Product.ProductName;
+                    i.ProductUnitName = item.Unit == null ? "" : item.Unit.UnitName;
+                    i.SellPrice = item.SellPrice;
+                    i.TimeCreated= item.TimeCreated;
+                    i.TimeUpdated= item.TimeUpdated;
+                    i.TotalPrice = item.TotalSellValue;
+                    piv.Products.Add(i);
+                }
         }
 
         public static async Task<ProductModel> GetItemByBarCodeAsync(this ICollectionManager<ProductModel> manager, string BarCode)
