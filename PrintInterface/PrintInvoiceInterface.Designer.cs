@@ -65,6 +65,7 @@
             this.ShowUserDescription.TabIndex = 0;
             this.ShowUserDescription.Text = "چاپ توضیحات کاربر";
             this.ShowUserDescription.UseVisualStyleBackColor = true;
+            this.ShowUserDescription.CheckedChanged += new System.EventHandler(this.ShowUserDescription_CheckedChanged);
             // 
             // ShowInvoiceDescription
             // 
@@ -75,6 +76,7 @@
             this.ShowInvoiceDescription.TabIndex = 0;
             this.ShowInvoiceDescription.Text = "چاپ توضیحات فاکتور";
             this.ShowInvoiceDescription.UseVisualStyleBackColor = true;
+            this.ShowInvoiceDescription.CheckedChanged += new System.EventHandler(this.ShowInvoiceDescription_CheckedChanged);
             // 
             // ShowCustomerDescription
             // 
@@ -85,6 +87,7 @@
             this.ShowCustomerDescription.TabIndex = 0;
             this.ShowCustomerDescription.Text = "چاپ توضیحات مشتری";
             this.ShowCustomerDescription.UseVisualStyleBackColor = true;
+            this.ShowCustomerDescription.CheckedChanged += new System.EventHandler(this.ShowCustomerDescription_CheckedChanged);
             // 
             // ShowPhoneNumber
             // 
@@ -95,6 +98,7 @@
             this.ShowPhoneNumber.TabIndex = 0;
             this.ShowPhoneNumber.Text = "چاپ شماره تماس";
             this.ShowPhoneNumber.UseVisualStyleBackColor = true;
+            this.ShowPhoneNumber.CheckedChanged += new System.EventHandler(this.ShowPhoneNumber_CheckedChanged);
             // 
             // ShowInvoiceId
             // 
@@ -105,6 +109,7 @@
             this.ShowInvoiceId.TabIndex = 0;
             this.ShowInvoiceId.Text = "چاپ شماره فاکتور";
             this.ShowInvoiceId.UseVisualStyleBackColor = true;
+            this.ShowInvoiceId.CheckedChanged += new System.EventHandler(this.ShowInvoiceId_CheckedChanged);
             // 
             // ShowInvoiceCreatedDate
             // 
@@ -115,6 +120,7 @@
             this.ShowInvoiceCreatedDate.TabIndex = 0;
             this.ShowInvoiceCreatedDate.Text = "چاپ تاریخ فاکتور";
             this.ShowInvoiceCreatedDate.UseVisualStyleBackColor = true;
+            this.ShowInvoiceCreatedDate.CheckedChanged += new System.EventHandler(this.ShowInvoiceCreatedDate_CheckedChanged);
             // 
             // crystalReportViewer
             // 

@@ -46,6 +46,7 @@ namespace PrintInterface
 
             PrintInvoice pi = new PrintInvoice();
             pi.SetDataSource(pim.Products);
+            pi.SetParameterValue("InvoiceId", pim.InvoiceId);
             pi.SetParameterValue("InvoiceDateCreated", pim.InvoiceDateCreated);
             pi.SetParameterValue("CustomerFullName", pim.CustomerFullName);
             pi.SetParameterValue("CustomerPhoneNumber", pim.CustomerPhoneNumber);
@@ -59,12 +60,49 @@ namespace PrintInterface
             pi.SetParameterValue("CustomerPreviousBalance", pim.CustomerPreviousBalance);
             pi.SetParameterValue("InvoiceFinStatus", pim.InvoiceFinStatus);
             pi.SetParameterValue("InvoiceType", pim.InvoiceType);
+            pi.SetParameterValue("ShowInvoiceId", true);
+            pi.SetParameterValue("ShowInvoiceCreatedDate", true);
+            pi.SetParameterValue("ShowCustomerPhoneNumber", true);
+            pi.SetParameterValue("ShowCustomerDescription", false);
+            pi.SetParameterValue("ShowInvoiceDescription", false);
+            pi.SetParameterValue("ShowUserDescription", false);
+            pi.SetParameterValue("HeaderPath", Application.StartupPath + @"\Images\UnOfficialSaleHeader.png");
             crystalReportViewer.ReportSource = pi;
         }
 
         private void PrintInvoiceInterface_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
+        }
+
+        private void ShowInvoiceId_CheckedChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void ShowInvoiceCreatedDate_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ShowPhoneNumber_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ShowCustomerDescription_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ShowInvoiceDescription_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ShowUserDescription_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
