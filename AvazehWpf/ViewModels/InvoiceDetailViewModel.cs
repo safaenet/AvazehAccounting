@@ -21,6 +21,7 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Xml;
 using System.IO;
+using System.Diagnostics;
 
 namespace AvazehWpf.ViewModels
 {
@@ -341,9 +342,10 @@ namespace AvazehWpf.ViewModels
             var UniqueFileName = $@"{DateTime.Now.Ticks}.xml";
             string TempFolderName = "Temp";
             Directory.CreateDirectory(TempFolderName);
-            var FilePath = TempFolderName + "\\" + UniqueFileName;
+            var FilePath = AppDomain.CurrentDomain.BaseDirectory + TempFolderName + @"\" + UniqueFileName;
             File.WriteAllText(FilePath, stringWriter.ToString());
-            
+            var PrintInterfacePath = AppDomain.CurrentDomain.BaseDirectory + "PrintInterface.exe";
+            Process.Start(PrintInterfacePath, FilePath);
         }
 
         public async Task EditOwner()

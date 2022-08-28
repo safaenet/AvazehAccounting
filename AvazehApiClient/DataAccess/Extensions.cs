@@ -268,11 +268,11 @@ namespace AvazehApiClient.DataAccess
             piv.CustomerDescription = invoice.Customer.Descriptions;
             piv.CustomerFullName = invoice.Customer.FullName;
             piv.CustomerId = invoice.Customer.Id;
-            piv.InvoiceDate = invoice.DateCreated;
+            piv.InvoiceDateCreated = invoice.DateCreated;
             piv.InvoiceDescription = invoice.Descriptions;
             piv.InvoiceFinStatus = invoice.InvoiceFinancialStatus.ToString();
             piv.InvoiceId = invoice.Id;
-            piv.PhoneNumber = (invoice.Customer.PhoneNumbers == null || invoice.Customer.PhoneNumbers.Count == 0) ? "" : invoice.Customer.PhoneNumbers[0].ToString();
+            piv.CustomerPhoneNumber = (invoice.Customer.PhoneNumbers == null || invoice.Customer.PhoneNumbers.Count == 0) ? "" : invoice.Customer.PhoneNumbers[0].ToString();
             piv.TotalBalance = invoice.TotalBalance;
             piv.TotalDiscountAmount = invoice.TotalDiscountAmount;
             piv.TotalItemsSellSum = invoice.TotalItemsSellSum;
@@ -288,7 +288,6 @@ namespace AvazehApiClient.DataAccess
                     i.Delivered = item.Delivered;
                     i.Descriptions = item.Descriptions;
                     i.Id = item.Id;
-                    i.InvoiceId = item.Id;
                     i.ProductName = item.Product.ProductName;
                     i.ProductUnitName = item.Unit == null ? "" : item.Unit.UnitName;
                     i.SellPrice = item.SellPrice;

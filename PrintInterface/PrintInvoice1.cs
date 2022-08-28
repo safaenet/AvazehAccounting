@@ -154,7 +154,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_FooterDescriptionRight {
+        public CrystalDecisions.Shared.IParameterField Parameter_FooterTextRight {
             get {
                 return this.DataDefinition.ParameterFields[8];
             }
@@ -162,7 +162,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_FooterDescriptionLeft {
+        public CrystalDecisions.Shared.IParameterField Parameter_FooterTextLeft {
             get {
                 return this.DataDefinition.ParameterFields[9];
             }
@@ -186,7 +186,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_IsInvoice {
+        public CrystalDecisions.Shared.IParameterField Parameter_InvoiceType {
             get {
                 return this.DataDefinition.ParameterFields[12];
             }

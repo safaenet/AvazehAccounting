@@ -14,8 +14,8 @@ namespace SharedLibrary.DalModels
         public List<InvoiceItemForPrintModel> Products;
         public int CustomerId;
         public string CustomerFullName;
-        public string PhoneNumber;
-        public string InvoiceDate;
+        public string CustomerPhoneNumber;
+        public string InvoiceDateCreated;
         public bool PrintDate;
         public bool PrintInvoiceDescription;
         public bool PrintCustomerDescription;

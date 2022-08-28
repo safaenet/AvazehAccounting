@@ -9,7 +9,6 @@ namespace PrintInterface
     public class InvoiceItemForPrintModel
     {
         public int Id { get; set; }
-        public int InvoiceId { get; set; }
         public string ProductName { get; set; }
         public double SellPrice { get; set; }
         public string CountString { get; set; }
