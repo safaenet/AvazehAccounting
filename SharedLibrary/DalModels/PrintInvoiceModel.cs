@@ -20,16 +20,16 @@ namespace SharedLibrary.DalModels
         public bool PrintInvoiceDescription;
         public bool PrintCustomerDescription;
         public bool PrintUserDescription;
-        public string InvoiceDescription;
-        public string CustomerDescription;
-        public string UserDescription;
+        public string InvoiceDescription = "";
+        public string CustomerDescription = "";
+        public string UserDescription = "";
         public string FooterTextLeft;
         public string FooterTextRight;
-        public string MainHeaderText;
-        public string HeaderDescription1;
-        public string HeaderDescription2;
-        public string HeaderInvoiceType;
-        public bool HasAttachment;
+        public string MainHeaderText = "";
+        public string HeaderDescription1 = "";
+        public string HeaderDescription2 = "";
+        public string LeftImagePath;
+        public string RightImagePath;
         public double TotalItemsSellSum;
         public double TotalDiscountAmount;
         public double TotalInvoiceSum;
@@ -38,5 +38,9 @@ namespace SharedLibrary.DalModels
         public double TotalBalance;
         public string InvoiceFinStatus;
         public int InvoiceType;
+
+        public int MainHeaderTextFontSize = 30;
+        public int HeaderDescriptionFontSize = 10;
+        public int InvoiceTypeTextFontSize = 16;
     }
 }

@@ -318,9 +318,6 @@ namespace AvazehWpf.ViewModels
             else if (t == 13)
             {
                 pim.MainHeaderText = "فروشگاه آوازه";
-                pim.HeaderInvoiceType = "فاکتور فروش";
-                pim.HeaderDescription1 = "دوربین مداربسته، کرکره برقی، جک پارکینگی";
-                pim.HeaderDescription2 = "01734430827";
             }
             else if (t == 21)
             {
@@ -329,13 +326,19 @@ namespace AvazehWpf.ViewModels
             else if (t == 22)
             {
                 pim.MainHeaderText = "فروشگاه آوازه";
-                pim.HeaderInvoiceType = "پیش فاکتور";
-                pim.HeaderDescription1 = "دوربین مداربسته، کرکره برقی، جک پارکینگی";
-                pim.HeaderDescription2 = "01734430827";
             }
             pim.InvoiceType = t;
-            pim.FooterTextLeft = "";
+            pim.HeaderDescription1 = "دوربین مداربسته، کرکره برقی، جک پارکینگی";
+            pim.HeaderDescription2 = "01734430827";
+            pim.FooterTextLeft = "Some Text Here";
             pim.FooterTextRight = "توسعه دهنده نرم افزار: صفا دانا";
+            pim.LeftImagePath = AppDomain.CurrentDomain.BaseDirectory + @"Images\LeftImage.png";
+            pim.RightImagePath = AppDomain.CurrentDomain.BaseDirectory + @"Images\RightImage.png";
+            pim.MainHeaderTextFontSize = 30;
+            pim.HeaderDescriptionFontSize = 10;
+            pim.InvoiceTypeTextFontSize = 16;
+            
+
             XmlSerializer xmlSerializer = new(pim.GetType());
             StringWriter stringWriter = new();
             xmlSerializer.Serialize(stringWriter, pim);

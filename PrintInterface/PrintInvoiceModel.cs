@@ -27,8 +27,8 @@ namespace PrintInterface
         private string mainHeaderText;
         private string headerDescription1;
         private string headerDescription2;
-        private string headerInvoiceType;
-        private bool hasAttachment;
+        private string leftImagePath;
+        private string rightImagePath;
         private double totalItemsSellSum;
         private double totalDiscountAmount;
         private double totalInvoiceSum;
@@ -37,6 +37,9 @@ namespace PrintInterface
         private double totalBalance;
         private string invoiceFinStatus;
         private int invoiceType;
+        private int mainHeaderTextFontSize = 30;
+        private int headerDescriptionFontSize = 10;
+        private int invoiceTypeTextFontSize = 16;
 
         public int InvoiceId { get => invoiceId; set => invoiceId = value; }
         public List<InvoiceItemForPrintModel> Products { get => products; set => products = value; }
@@ -56,8 +59,6 @@ namespace PrintInterface
         public string MainHeaderText { get => mainHeaderText; set => mainHeaderText = value; }
         public string HeaderDescription1 { get => headerDescription1; set => headerDescription1 = value; }
         public string HeaderDescription2 { get => headerDescription2; set => headerDescription2 = value; }
-        public string HeaderInvoiceType { get => headerInvoiceType; set => headerInvoiceType = value; }
-        public bool HasAttachment { get => hasAttachment; set => hasAttachment = value; }
         public double TotalItemsSellSum { get => totalItemsSellSum; set => totalItemsSellSum = value; }
         public double TotalDiscountAmount { get => totalDiscountAmount; set => totalDiscountAmount = value; }
         public double TotalInvoiceSum { get => totalInvoiceSum; set => totalInvoiceSum = value; }
@@ -66,5 +67,10 @@ namespace PrintInterface
         public double TotalBalance { get => totalBalance; set => totalBalance = value; }
         public string InvoiceFinStatus { get => invoiceFinStatus; set => invoiceFinStatus = value; }
         public int InvoiceType { get => invoiceType; set => invoiceType = value; }
+        public string LeftImagePath { get => leftImagePath; set => leftImagePath = value; }
+        public string RightImagePath { get => rightImagePath; set => rightImagePath = value; }
+        public int MainHeaderTextFontSize { get => mainHeaderTextFontSize; set => mainHeaderTextFontSize = value; }
+        public int HeaderDescriptionFontSize { get => headerDescriptionFontSize; set => headerDescriptionFontSize = value; }
+        public int InvoiceTypeTextFontSize { get => invoiceTypeTextFontSize; set => invoiceTypeTextFontSize = value; }
     }
 }

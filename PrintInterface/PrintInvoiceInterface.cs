@@ -21,14 +21,16 @@ namespace PrintInterface
         public PrintInvoiceInterface()
         {
             InitializeComponent();
+            args = Environment.GetCommandLineArgs();
         }
 
         PrintInvoiceModel pim = new PrintInvoiceModel();
-        PrintInvoice pi = new PrintInvoice();
+        PrintInvoicePortrait pi = new PrintInvoicePortrait();
+        string[] args;
+        string FilePath = "";
 
         private void PrintInvoice_Load(object sender, EventArgs e)
         {
-            string[] args = Environment.GetCommandLineArgs();
             if (args == null || args.Length < 2 || !File.Exists(args[1]))
             {
                 MessageBox.Show("پارامترهای لازم وارد نشده اند یا به درستی وارد نشده اند", "خطای پارامتر ورودی", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -39,6 +41,7 @@ namespace PrintInterface
             string xmlString = File.ReadAllText(FilePath);
             StringReader stringReader = new StringReader(xmlString);
             pim = xmlSerializer.Deserialize(stringReader) as PrintInvoiceModel;
+            File.Delete(FilePath);
 
             //var file = @"D:\Users\avazeh1\Downloads\AvazehAccountingClone\AvazehWpf\bin\Debug\net5.0-windows\Temp\637973019071157097.xml";
             //var xmlSerializer = new XmlSerializer(pim.GetType());
@@ -70,21 +73,29 @@ namespace PrintInterface
             pi.SetParameterValue("PageHeaderFontSize", 10);
             pi.SetParameterValue("DetailsFontSize", 10);
             pi.SetParameterValue("PageFooterFontSize", 10);
-            pi.SetParameterValue("LeftHeaderImage", Application.StartupPath + @"\Images\LeftImage.png");
-            pi.SetParameterValue("RightHeaderImage", Application.StartupPath + @"\Images\RightImage.png");
-            pi.SetParameterValue("MainHeaderText", "فروشگاه آوازه");
-            pi.SetParameterValue("HeaderDescription1", "دوربین مداربسته، کرکره برقی، جک پارکینگی");
-            pi.SetParameterValue("HeaderDescription2", "01734430827");
+            pi.SetParameterValue("DescriptionFontSize", 14);
+            pi.SetParameterValue("LeftHeaderImage", pim.LeftImagePath);
+            pi.SetParameterValue("RightHeaderImage", pim.RightImagePath);
+            pi.SetParameterValue("MainHeaderText", pim.MainHeaderText);
+            pi.SetParameterValue("HeaderDescription1", pim.HeaderDescription1);
+            pi.SetParameterValue("HeaderDescription2", pim.HeaderDescription2);
+            pi.SetParameterValue("CustomerDescription", pim.CustomerDescription);
+            pi.SetParameterValue("InvoiceDescription", pim.InvoiceDescription);
+            pi.SetParameterValue("UserDescription", pim.UserDescription);
+            pi.SetParameterValue("MainHeaderTextFontSize", pim.MainHeaderTextFontSize);
+            pi.SetParameterValue("HeaderDescriptionFontSize", pim.HeaderDescriptionFontSize);
+            pi.SetParameterValue("InvoiceTypeTextFontSize", pim.InvoiceTypeTextFontSize);
             crystalReportViewer.ReportSource = pi;
 
             cmbPageHeaderFontSize.Text = "10";
             cmbDetailsFontSize.Text = "10";
             cmbPageFooterFontSize.Text = "10";
-        }
-
-        private void PrintInvoiceInterface_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            Application.Exit();
+            cmbDescriptionFontSize.Text = "14";
+            if (string.IsNullOrEmpty(pim.CustomerPhoneNumber)) ShowPhoneNumber.Enabled = ShowPhoneNumber.Checked = false;
+            if (string.IsNullOrEmpty(pim.CustomerDescription)) ShowCustomerDescription.Enabled = ShowCustomerDescription.Checked = false;
+            if (string.IsNullOrEmpty(pim.InvoiceDescription)) ShowInvoiceDescription.Enabled = ShowInvoiceDescription.Checked = false;
+            if (string.IsNullOrEmpty(pim.UserDescription)) ShowUserDescription.Enabled = ShowUserDescription.Checked = false;
+            if (string.IsNullOrEmpty(pim.CustomerPhoneNumber) && string.IsNullOrEmpty(pim.InvoiceDescription) && string.IsNullOrEmpty(pim.UserDescription)) cmbDescriptionFontSize.Enabled = false;
         }
 
         private void RefreshCrystalReport()
@@ -151,6 +162,11 @@ namespace PrintInterface
         {
             pi.SetParameterValue("DescriptionFontSize", int.Parse((sender as ComboBox).Text));
             RefreshCrystalReport();
+        }
+
+        private void PrintInvoiceInterface_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

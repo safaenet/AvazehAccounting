@@ -59,10 +59,10 @@
       <DependentUpon>InvoiceDetails.cs</DependentUpon>
     </Compile>
     <Compile Include="InvoiceItemForPrintModel.cs" />
-    <Compile Include="PrintInvoice1.cs">
+    <Compile Include="PrintInvoicePortrait.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>PrintInvoice.rpt</DependentUpon>
+      <DependentUpon>PrintInvoicePortrait.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="PrintInvoiceInterface.cs">
@@ -74,9 +74,9 @@
     <Compile Include="PrintInvoiceModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="PrintInvoice.rpt">
+    <EmbeddedResource Include="PrintInvoicePortrait.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>PrintInvoice1.cs</LastGenOutput>
+      <LastGenOutput>PrintInvoicePortrait.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="PrintInvoiceInterface.resx">
       <DependentUpon>PrintInvoiceInterface.cs</DependentUpon>

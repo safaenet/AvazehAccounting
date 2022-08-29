@@ -265,11 +265,11 @@ namespace AvazehApiClient.DataAccess
         {
             if (invoice == null) return;
             piv.Products = new();
-            piv.CustomerDescription = invoice.Customer.Descriptions;
+            piv.CustomerDescription = string.IsNullOrEmpty(invoice.Customer.Descriptions) ? "" : invoice.Customer.Descriptions;
             piv.CustomerFullName = invoice.Customer.FullName;
             piv.CustomerId = invoice.Customer.Id;
             piv.InvoiceDateCreated = invoice.DateCreated;
-            piv.InvoiceDescription = invoice.Descriptions;
+            piv.InvoiceDescription = string.IsNullOrEmpty(invoice.Descriptions) ? "" : invoice.Descriptions;
             piv.InvoiceFinStatus = invoice.InvoiceFinancialStatus.ToString();
             piv.InvoiceId = invoice.Id;
             piv.CustomerPhoneNumber = (invoice.Customer.PhoneNumbers == null || invoice.Customer.PhoneNumbers.Count == 0) ? "" : invoice.Customer.PhoneNumbers[0].ToString();
