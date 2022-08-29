@@ -250,9 +250,73 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_HeaderPath {
+        public CrystalDecisions.Shared.IParameterField Parameter_PageHeaderFontSize {
             get {
                 return this.DataDefinition.ParameterFields[20];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_DetailsFontSize {
+            get {
+                return this.DataDefinition.ParameterFields[21];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_PageFooterFontSize {
+            get {
+                return this.DataDefinition.ParameterFields[22];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_DescriptionFontSize {
+            get {
+                return this.DataDefinition.ParameterFields[23];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_LeftHeaderImage {
+            get {
+                return this.DataDefinition.ParameterFields[24];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_RightHeaderImage {
+            get {
+                return this.DataDefinition.ParameterFields[25];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_MainHeaderText {
+            get {
+                return this.DataDefinition.ParameterFields[26];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_HeaderDescription1 {
+            get {
+                return this.DataDefinition.ParameterFields[27];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_HeaderDescription2 {
+            get {
+                return this.DataDefinition.ParameterFields[28];
             }
         }
     }

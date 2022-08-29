@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,7 @@ namespace PrintInterface
         }
 
         PrintInvoiceModel pim = new PrintInvoiceModel();
+        PrintInvoice pi = new PrintInvoice();
 
         private void PrintInvoice_Load(object sender, EventArgs e)
         {
@@ -44,17 +46,16 @@ namespace PrintInterface
             //StringReader stringReader = new StringReader(xmlString);
             //pim = xmlSerializer.Deserialize(stringReader) as PrintInvoiceModel;
 
-            PrintInvoice pi = new PrintInvoice();
             pi.SetDataSource(pim.Products);
             pi.SetParameterValue("InvoiceId", pim.InvoiceId);
             pi.SetParameterValue("InvoiceDateCreated", pim.InvoiceDateCreated);
             pi.SetParameterValue("CustomerFullName", pim.CustomerFullName);
             pi.SetParameterValue("CustomerPhoneNumber", pim.CustomerPhoneNumber);
-            pi.SetParameterValue("TotalItemsSellSum", pim.TotalItemsSellSum);
-            pi.SetParameterValue("TotalDiscountAmount", pim.TotalDiscountAmount);
-            pi.SetParameterValue("TotalInvoiceSum", pim.TotalInvoiceSum);
-            pi.SetParameterValue("TotalPayments", pim.TotalPayments);
-            pi.SetParameterValue("TotalBalance", pim.TotalBalance);
+            pi.SetParameterValue("TotalItemsSellSum", string.Format(CultureInfo.InvariantCulture, "{0:0,0}", pim.TotalItemsSellSum));
+            pi.SetParameterValue("TotalDiscountAmount", string.Format(CultureInfo.InvariantCulture, "{0:0,0}", pim.TotalDiscountAmount));
+            pi.SetParameterValue("TotalInvoiceSum", string.Format(CultureInfo.InvariantCulture, "{0:0,0}", pim.TotalInvoiceSum));
+            pi.SetParameterValue("TotalPayments", string.Format(CultureInfo.InvariantCulture, "{0:0,0}", pim.TotalPayments));
+            pi.SetParameterValue("TotalBalance", string.Format(CultureInfo.InvariantCulture, "{0:0,0}", pim.TotalBalance));
             pi.SetParameterValue("FooterTextRight", pim.FooterTextRight);
             pi.SetParameterValue("FooterTextLeft", pim.FooterTextLeft);
             pi.SetParameterValue("CustomerPreviousBalance", pim.CustomerPreviousBalance);
@@ -66,8 +67,19 @@ namespace PrintInterface
             pi.SetParameterValue("ShowCustomerDescription", false);
             pi.SetParameterValue("ShowInvoiceDescription", false);
             pi.SetParameterValue("ShowUserDescription", false);
-            pi.SetParameterValue("HeaderPath", Application.StartupPath + @"\Images\UnOfficialSaleHeader.png");
+            pi.SetParameterValue("PageHeaderFontSize", 10);
+            pi.SetParameterValue("DetailsFontSize", 10);
+            pi.SetParameterValue("PageFooterFontSize", 10);
+            pi.SetParameterValue("LeftHeaderImage", Application.StartupPath + @"\Images\LeftImage.png");
+            pi.SetParameterValue("RightHeaderImage", Application.StartupPath + @"\Images\RightImage.png");
+            pi.SetParameterValue("MainHeaderText", "فروشگاه آوازه");
+            pi.SetParameterValue("HeaderDescription1", "دوربین مداربسته، کرکره برقی، جک پارکینگی");
+            pi.SetParameterValue("HeaderDescription2", "01734430827");
             crystalReportViewer.ReportSource = pi;
+
+            cmbPageHeaderFontSize.Text = "10";
+            cmbDetailsFontSize.Text = "10";
+            cmbPageFooterFontSize.Text = "10";
         }
 
         private void PrintInvoiceInterface_FormClosed(object sender, FormClosedEventArgs e)
@@ -75,34 +87,70 @@ namespace PrintInterface
             Application.Exit();
         }
 
+        private void RefreshCrystalReport()
+        {
+            crystalReportViewer.ReportSource = pi;
+            crystalReportViewer.Refresh();
+        }
+
         private void ShowInvoiceId_CheckedChanged(object sender, EventArgs e)
         {
-            
+            pi.SetParameterValue("ShowInvoiceId", (sender as CheckBox).Checked);
+            RefreshCrystalReport();
         }
 
         private void ShowInvoiceCreatedDate_CheckedChanged(object sender, EventArgs e)
         {
-
+            pi.SetParameterValue("ShowInvoiceCreatedDate", (sender as CheckBox).Checked);
+            RefreshCrystalReport();
         }
 
         private void ShowPhoneNumber_CheckedChanged(object sender, EventArgs e)
         {
-
+            pi.SetParameterValue("ShowCustomerPhoneNumber", (sender as CheckBox).Checked);
+            RefreshCrystalReport();
         }
 
         private void ShowCustomerDescription_CheckedChanged(object sender, EventArgs e)
         {
-
+            pi.SetParameterValue("ShowCustomerDescription", (sender as CheckBox).Checked);
+            RefreshCrystalReport();
         }
 
         private void ShowInvoiceDescription_CheckedChanged(object sender, EventArgs e)
         {
-
+            pi.SetParameterValue("ShowInvoiceDescription", (sender as CheckBox).Checked);
+            RefreshCrystalReport();
         }
 
         private void ShowUserDescription_CheckedChanged(object sender, EventArgs e)
         {
+            pi.SetParameterValue("ShowUserDescription", (sender as CheckBox).Checked);
+            RefreshCrystalReport();
+        }
 
+        private void cmbPageHeaderFontSize_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            pi.SetParameterValue("PageHeaderFontSize", int.Parse((sender as ComboBox).Text));
+            RefreshCrystalReport();
+        }
+
+        private void cmbDetailsFontSize_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            pi.SetParameterValue("DetailsFontSize", int.Parse((sender as ComboBox).Text));
+            RefreshCrystalReport();
+        }
+
+        private void cmbPageFooterFontSize_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            pi.SetParameterValue("PageFooterFontSize", int.Parse((sender as ComboBox).Text));
+            RefreshCrystalReport();
+        }
+
+        private void cmbDescriptionFontSize_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            pi.SetParameterValue("DescriptionFontSize", int.Parse((sender as ComboBox).Text));
+            RefreshCrystalReport();
         }
     }
 }
