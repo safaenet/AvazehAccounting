@@ -19,6 +19,8 @@ namespace SharedLibrary.DalModels
         public bool PrintInvoiceId = true;
         public bool PrintDate = true;
         public bool PrintCustomerPhoneNumber = true;
+        public bool PrintCustomerPostAddress;
+        public string CustomerPostAddress;
         public bool PrintInvoiceDescription;
         public bool PrintCustomerDescription;
         public bool PrintUserDescription;

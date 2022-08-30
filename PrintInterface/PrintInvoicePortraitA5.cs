@@ -114,7 +114,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section5 {
+        public CrystalDecisions.CrystalReports.Engine.Section ReportFooterSection2 {
             get {
                 return this.ReportDefinition.Sections[8];
             }
@@ -122,7 +122,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section PageFooterSection2 {
+        public CrystalDecisions.CrystalReports.Engine.Section Section5 {
             get {
                 return this.ReportDefinition.Sections[9];
             }
@@ -130,9 +130,17 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section PageFooterSection3 {
+        public CrystalDecisions.CrystalReports.Engine.Section PageFooterSection2 {
             get {
                 return this.ReportDefinition.Sections[10];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.CrystalReports.Engine.Section PageFooterSection3 {
+            get {
+                return this.ReportDefinition.Sections[11];
             }
         }
         
@@ -413,6 +421,22 @@ namespace PrintInterface {
         public CrystalDecisions.Shared.IParameterField Parameter_InvoiceTypeTextFontSize {
             get {
                 return this.DataDefinition.ParameterFields[34];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_ShowCustomerPostAddress {
+            get {
+                return this.DataDefinition.ParameterFields[35];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_CustomerPostAddress {
+            get {
+                return this.DataDefinition.ParameterFields[36];
             }
         }
     }

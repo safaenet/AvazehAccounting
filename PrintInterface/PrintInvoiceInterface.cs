@@ -52,12 +52,17 @@ namespace PrintInterface
             cmbDescriptionFontSize.Text = pim.DescriptionFontSize.ToString();
             cmbPrintLayout.Text = pim.PrintLayout;
             cmbPageSize.Text = pim.PaperSize;
+            txtCustomerDescription.Text = pim.CustomerDescription;
+            txtInvoiceDescription.Text = pim.InvoiceDescription;
+            ShowCustomerPostAddress.Checked = pim.PrintCustomerPostAddress;
+            txtCustomerPostAddress.Text = pim.CustomerPostAddress;
             if (string.IsNullOrEmpty(pim.CustomerPhoneNumber)) ShowPhoneNumber.Enabled = ShowPhoneNumber.Checked = false;
             if (string.IsNullOrEmpty(pim.CustomerDescription)) ShowCustomerDescription.Enabled = ShowCustomerDescription.Checked = false;
             if (string.IsNullOrEmpty(pim.InvoiceDescription)) ShowInvoiceDescription.Enabled = ShowInvoiceDescription.Checked = false;
             if (pim.UserDescriptions == null || pim.UserDescriptions.Count == 0) ShowUserDescription.Enabled = ShowUserDescription.Checked = false;
             if (string.IsNullOrEmpty(pim.CustomerPhoneNumber) && string.IsNullOrEmpty(pim.InvoiceDescription) && (pim.UserDescriptions == null || pim.UserDescriptions.Count == 0)) cmbDescriptionFontSize.Enabled = false;
-            
+            if (string.IsNullOrEmpty(pim.CustomerPostAddress)) txtCustomerPostAddress.Enabled = ShowCustomerPostAddress.Enabled = false;
+
             CanRefresh = true;
 
             InitilizeReport();
@@ -91,6 +96,7 @@ namespace PrintInterface
             rd.SetParameterValue("ShowInvoiceId", pim.PrintInvoiceId);
             rd.SetParameterValue("ShowInvoiceCreatedDate", pim.PrintDate);
             rd.SetParameterValue("ShowCustomerPhoneNumber", pim.PrintCustomerPhoneNumber);
+            rd.SetParameterValue("ShowCustomerPostAddress", pim.PrintCustomerPostAddress);
             rd.SetParameterValue("ShowCustomerDescription", pim.PrintCustomerDescription);
             rd.SetParameterValue("ShowInvoiceDescription", pim.PrintInvoiceDescription);
             rd.SetParameterValue("ShowUserDescription", pim.PrintUserDescription);
@@ -108,6 +114,7 @@ namespace PrintInterface
             rd.SetParameterValue("MainHeaderTextFontSize", pim.MainHeaderTextFontSize);
             rd.SetParameterValue("HeaderDescriptionFontSize", pim.HeaderDescriptionFontSize);
             rd.SetParameterValue("InvoiceTypeTextFontSize", pim.InvoiceTypeTextFontSize);
+            rd.SetParameterValue("CustomerPostAddress", pim.CustomerPostAddress);
             rd.SetParameterValue("UserDescription", "");
             crystalReportViewer.ReportSource = rd;
         }
@@ -164,6 +171,7 @@ namespace PrintInterface
             if (!CanRefresh) return;
             pim.PrintUserDescription = (sender as CheckBox).Checked;
             rd.SetParameterValue("ShowUserDescription", pim.PrintUserDescription);
+            rd.SetParameterValue("UserDescription", txtUserDescription.Text);
             RefreshCrystalReport();
         }
 
@@ -236,6 +244,24 @@ namespace PrintInterface
             pim.PrintLayout = (sender as ComboBox).Text;
             if (!CanRefresh) return;
             InitilizeReport();
+            RefreshCrystalReport();
+        }
+
+        private void btnShowSettings_Click(object sender, EventArgs e)
+        {
+            gbSettings.Visible= !gbSettings.Visible;
+            if (gbSettings.Visible)
+            {
+                (sender as Button).Text = ">";
+            }
+            else (sender as Button).Text = "<";
+        }
+
+        private void ShowCustomerPostalAddress_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!CanRefresh) return;
+            pim.PrintCustomerPostAddress = (sender as CheckBox).Checked;
+            rd.SetParameterValue("ShowCustomerPostAddress", pim.PrintCustomerPostAddress);
             RefreshCrystalReport();
         }
     }

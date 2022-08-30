@@ -18,6 +18,8 @@ namespace PrintInterface
         private bool printInvoiceId;
         private bool printDate;
         private bool printCustomerPhoneNumber;
+        private bool printCustomerPostAddress;
+        private string customerPostAddress;
         private bool printInvoiceDescription;
         private bool printCustomerDescription;
         private bool printUserDescription;
@@ -90,5 +92,7 @@ namespace PrintInterface
         public string PaperSize { get => paperSize; set => paperSize = value; }
         public bool PrintCustomerPhoneNumber { get => printCustomerPhoneNumber; set => printCustomerPhoneNumber = value; }
         public bool PrintInvoiceId { get => printInvoiceId; set => printInvoiceId = value; }
+        public bool PrintCustomerPostAddress { get => printCustomerPostAddress; set => printCustomerPostAddress = value; }
+        public string CustomerPostAddress { get => customerPostAddress; set => customerPostAddress = value; }
     }
 }

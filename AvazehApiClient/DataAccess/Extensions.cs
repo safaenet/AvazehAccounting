@@ -268,6 +268,7 @@ namespace AvazehApiClient.DataAccess
             piv.CustomerDescription = string.IsNullOrEmpty(invoice.Customer.Descriptions) ? "" : invoice.Customer.Descriptions;
             piv.CustomerFullName = invoice.Customer.FullName;
             piv.CustomerId = invoice.Customer.Id;
+            piv.CustomerPostAddress = string.IsNullOrEmpty(invoice.Customer.PostAddress) ? "" : invoice.Customer.PostAddress;
             piv.InvoiceDateCreated = invoice.DateCreated;
             piv.InvoiceDescription = string.IsNullOrEmpty(invoice.Descriptions) ? "" : invoice.Descriptions;
             piv.InvoiceFinStatus = invoice.InvoiceFinancialStatus.ToString();
