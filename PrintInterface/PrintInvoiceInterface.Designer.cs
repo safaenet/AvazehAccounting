@@ -336,8 +336,6 @@
             // ShowPhoneNumber
             // 
             this.ShowPhoneNumber.AutoSize = true;
-            this.ShowPhoneNumber.Checked = true;
-            this.ShowPhoneNumber.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ShowPhoneNumber.Location = new System.Drawing.Point(153, 43);
             this.ShowPhoneNumber.Name = "ShowPhoneNumber";
             this.ShowPhoneNumber.Size = new System.Drawing.Size(107, 17);
@@ -349,8 +347,6 @@
             // ShowInvoiceId
             // 
             this.ShowInvoiceId.AutoSize = true;
-            this.ShowInvoiceId.Checked = true;
-            this.ShowInvoiceId.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ShowInvoiceId.Location = new System.Drawing.Point(153, 20);
             this.ShowInvoiceId.Name = "ShowInvoiceId";
             this.ShowInvoiceId.Size = new System.Drawing.Size(107, 17);
@@ -362,8 +358,6 @@
             // ShowInvoiceCreatedDate
             // 
             this.ShowInvoiceCreatedDate.AutoSize = true;
-            this.ShowInvoiceCreatedDate.Checked = true;
-            this.ShowInvoiceCreatedDate.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ShowInvoiceCreatedDate.Location = new System.Drawing.Point(12, 20);
             this.ShowInvoiceCreatedDate.Name = "ShowInvoiceCreatedDate";
             this.ShowInvoiceCreatedDate.Size = new System.Drawing.Size(98, 17);

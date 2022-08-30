@@ -66,9 +66,9 @@ namespace PrintInterface
             txtCustomerPostAddress.Text = pim.CustomerPostAddress;
 
             if (string.IsNullOrEmpty(pim.CustomerPhoneNumber)) ShowPhoneNumber.Enabled = ShowPhoneNumber.Checked = false;
-            if (string.IsNullOrEmpty(pim.CustomerDescription)) ShowCustomerDescription.Enabled = ShowCustomerDescription.Checked = false;
-            if (string.IsNullOrEmpty(pim.InvoiceDescription)) ShowInvoiceDescription.Enabled = ShowInvoiceDescription.Checked = false;
-            if (pim.UserDescriptions == null || pim.UserDescriptions.Count == 0) ShowUserDescription.Enabled = ShowUserDescription.Checked = false;
+            if (string.IsNullOrEmpty(pim.CustomerDescription)) ShowCustomerDescription.Enabled = txtCustomerDescription.Enabled = ShowCustomerDescription.Checked = false;
+            if (string.IsNullOrEmpty(pim.InvoiceDescription)) ShowInvoiceDescription.Enabled = txtInvoiceDescription.Enabled = ShowInvoiceDescription.Checked = false;
+            //if (pim.UserDescriptions == null || pim.UserDescriptions.Count == 0) ShowUserDescription.Enabled = ShowUserDescription.Checked = false;
             if (string.IsNullOrEmpty(pim.CustomerPhoneNumber) && string.IsNullOrEmpty(pim.InvoiceDescription) && (pim.UserDescriptions == null || pim.UserDescriptions.Count == 0)) cmbDescriptionFontSize.Enabled = false;
             if (string.IsNullOrEmpty(pim.CustomerPostAddress)) txtCustomerPostAddress.Enabled = ShowCustomerPostAddress.Enabled = false;
 
