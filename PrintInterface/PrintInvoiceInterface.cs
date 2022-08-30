@@ -46,16 +46,25 @@ namespace PrintInterface
             if (pim.UserDescriptions != null && pim.UserDescriptions.Count > 0)
                 cmbUserDescriptions.DataSource = pim.UserDescriptions.Select(i => i.DescriptionText).ToList();
 
+            ShowInvoiceId.Checked = pim.PrintInvoiceId;
+            ShowInvoiceCreatedDate.Checked = pim.PrintDate;
+            ShowPhoneNumber.Checked = pim.PrintCustomerPhoneNumber;
+            ShowCustomerPostAddress.Checked = pim.PrintCustomerPostAddress;
+            ShowCustomerDescription.Checked = pim.PrintCustomerDescription;
+            ShowInvoiceDescription.Checked = pim.PrintInvoiceDescription;
+            ShowUserDescription.Checked = pim.PrintUserDescription;
+
             cmbPageHeaderFontSize.Text = pim.PageHeaderFontSize.ToString();
             cmbDetailsFontSize.Text = pim.DetailsFontSize.ToString();
             cmbPageFooterFontSize.Text = pim.PageFooterFontSize.ToString();
             cmbDescriptionFontSize.Text = pim.DescriptionFontSize.ToString();
             cmbPrintLayout.Text = pim.PrintLayout;
             cmbPageSize.Text = pim.PaperSize;
+
             txtCustomerDescription.Text = pim.CustomerDescription;
             txtInvoiceDescription.Text = pim.InvoiceDescription;
-            ShowCustomerPostAddress.Checked = pim.PrintCustomerPostAddress;
             txtCustomerPostAddress.Text = pim.CustomerPostAddress;
+
             if (string.IsNullOrEmpty(pim.CustomerPhoneNumber)) ShowPhoneNumber.Enabled = ShowPhoneNumber.Checked = false;
             if (string.IsNullOrEmpty(pim.CustomerDescription)) ShowCustomerDescription.Enabled = ShowCustomerDescription.Checked = false;
             if (string.IsNullOrEmpty(pim.InvoiceDescription)) ShowInvoiceDescription.Enabled = ShowInvoiceDescription.Checked = false;
@@ -64,7 +73,6 @@ namespace PrintInterface
             if (string.IsNullOrEmpty(pim.CustomerPostAddress)) txtCustomerPostAddress.Enabled = ShowCustomerPostAddress.Enabled = false;
 
             CanRefresh = true;
-
             InitilizeReport();
         }
 
