@@ -34,7 +34,7 @@ namespace PrintInterface
         {
             if (!File.Exists(FilePath))
             {
-                MessageBox.Show("فایل فاکتور یافت نشد", "خطای پارامتر ورودی", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("فایل فاکتور یافت نشد\n" + FilePath, "خطای پارامتر ورودی", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
             var xmlSerializer = new XmlSerializer(pim.GetType());
@@ -46,12 +46,12 @@ namespace PrintInterface
             if (pim.UserDescriptions != null && pim.UserDescriptions.Count > 0)
                 cmbUserDescriptions.DataSource = pim.UserDescriptions.Select(i => i.DescriptionText).ToList();
 
-            cmbPageHeaderFontSize.Text = "10";
-            cmbDetailsFontSize.Text = "10";
-            cmbPageFooterFontSize.Text = "10";
-            cmbDescriptionFontSize.Text = "14";
-            cmbPrintLayout.Text = "عمودی";
-            cmbPageSize.Text = "A5";
+            cmbPageHeaderFontSize.Text = pim.PageHeaderFontSize.ToString();
+            cmbDetailsFontSize.Text = pim.DetailsFontSize.ToString();
+            cmbPageFooterFontSize.Text = pim.PageFooterFontSize.ToString();
+            cmbDescriptionFontSize.Text = pim.DescriptionFontSize.ToString();
+            cmbPrintLayout.Text = pim.PrintLayout;
+            cmbPageSize.Text = pim.PaperSize;
             if (string.IsNullOrEmpty(pim.CustomerPhoneNumber)) ShowPhoneNumber.Enabled = ShowPhoneNumber.Checked = false;
             if (string.IsNullOrEmpty(pim.CustomerDescription)) ShowCustomerDescription.Enabled = ShowCustomerDescription.Checked = false;
             if (string.IsNullOrEmpty(pim.InvoiceDescription)) ShowInvoiceDescription.Enabled = ShowInvoiceDescription.Checked = false;
@@ -65,12 +65,12 @@ namespace PrintInterface
 
         private void InitilizeReport()
         {
-            if (cmbPageSize.Text == "A5")
+            if (pim.PaperSize == "A5")
             {
-                if (cmbPrintLayout.Text == "عمودی") rd = new PrintInvoicePortraitA5();
+                if (pim.PrintLayout == "عمودی") rd = new PrintInvoicePortraitA5();
                 else rd = new PrintInvoiceLandscapeA5();
             }
-            else if (cmbPageSize.Text == "A4") rd = new PrintInvoicePortraitA4();
+            else if (pim.PaperSize == "A4") rd = new PrintInvoicePortraitA4();
 
 
             rd.SetDataSource(pim.Products);
@@ -122,70 +122,80 @@ namespace PrintInterface
         private void ShowInvoiceId_CheckedChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            rd.SetParameterValue("ShowInvoiceId", (sender as CheckBox).Checked);
+            pim.PrintInvoiceId = (sender as CheckBox).Checked;
+            rd.SetParameterValue("ShowInvoiceId", pim.PrintInvoiceId);
             RefreshCrystalReport();
         }
 
         private void ShowInvoiceCreatedDate_CheckedChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            rd.SetParameterValue("ShowInvoiceCreatedDate", (sender as CheckBox).Checked);
+            pim.PrintDate = (sender as CheckBox).Checked;
+            rd.SetParameterValue("ShowInvoiceCreatedDate", pim.PrintDate);
             RefreshCrystalReport();
         }
 
         private void ShowPhoneNumber_CheckedChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            rd.SetParameterValue("ShowCustomerPhoneNumber", (sender as CheckBox).Checked);
+            pim.PrintCustomerPhoneNumber = (sender as CheckBox).Checked;
+            rd.SetParameterValue("ShowCustomerPhoneNumber", pim.PrintCustomerPhoneNumber);
             RefreshCrystalReport();
         }
 
         private void ShowCustomerDescription_CheckedChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            rd.SetParameterValue("ShowCustomerDescription", (sender as CheckBox).Checked);
+            pim.PrintCustomerDescription = (sender as CheckBox).Checked;
+            rd.SetParameterValue("ShowCustomerDescription", pim.PrintCustomerDescription);
             RefreshCrystalReport();
         }
 
         private void ShowInvoiceDescription_CheckedChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            rd.SetParameterValue("ShowInvoiceDescription", (sender as CheckBox).Checked);
+            pim.PrintInvoiceDescription = (sender as CheckBox).Checked;
+            rd.SetParameterValue("ShowInvoiceDescription", pim.PrintInvoiceDescription);
             RefreshCrystalReport();
         }
 
         private void ShowUserDescription_CheckedChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            rd.SetParameterValue("ShowUserDescription", (sender as CheckBox).Checked);
+            pim.PrintUserDescription = (sender as CheckBox).Checked;
+            rd.SetParameterValue("ShowUserDescription", pim.PrintUserDescription);
             RefreshCrystalReport();
         }
 
         private void cmbPageHeaderFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            rd.SetParameterValue("PageHeaderFontSize", int.Parse((sender as ComboBox).Text));
+            pim.PageHeaderFontSize = int.Parse((sender as ComboBox).Text);
+            rd.SetParameterValue("PageHeaderFontSize", pim.PageHeaderFontSize);
             RefreshCrystalReport();
         }
 
         private void cmbDetailsFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            rd.SetParameterValue("DetailsFontSize", int.Parse((sender as ComboBox).Text));
+            pim.DetailsFontSize = int.Parse((sender as ComboBox).Text);
+            rd.SetParameterValue("DetailsFontSize", pim.DetailsFontSize);
             RefreshCrystalReport();
         }
 
         private void cmbPageFooterFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            rd.SetParameterValue("PageFooterFontSize", int.Parse((sender as ComboBox).Text));
+            pim.PageFooterFontSize = int.Parse((sender as ComboBox).Text);
+            rd.SetParameterValue("PageFooterFontSize", pim.PageFooterFontSize);
             RefreshCrystalReport();
         }
 
         private void cmbDescriptionFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            rd.SetParameterValue("DescriptionFontSize", int.Parse((sender as ComboBox).Text));
+            pim.DescriptionFontSize = int.Parse((sender as ComboBox).Text);
+            rd.SetParameterValue("DescriptionFontSize", pim.DescriptionFontSize);
             RefreshCrystalReport();
         }
 
@@ -209,7 +219,8 @@ namespace PrintInterface
 
         private void cmbPageSize_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbPageSize.Text == "A4")
+            pim.PaperSize = (sender as ComboBox).Text;
+            if (pim.PaperSize == "A4")
             {
                 cmbPrintLayout.Text = "عمودی";
                 cmbPrintLayout.Enabled = false;
@@ -222,6 +233,7 @@ namespace PrintInterface
 
         private void cmbPrintLayout_SelectedIndexChanged(object sender, EventArgs e)
         {
+            pim.PrintLayout = (sender as ComboBox).Text;
             if (!CanRefresh) return;
             InitilizeReport();
             RefreshCrystalReport();

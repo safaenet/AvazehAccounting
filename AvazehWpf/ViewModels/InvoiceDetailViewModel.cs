@@ -348,7 +348,7 @@ namespace AvazehWpf.ViewModels
             var FilePath = AppDomain.CurrentDomain.BaseDirectory + TempFolderName + @"\" + UniqueFileName;
             File.WriteAllText(FilePath, stringWriter.ToString());
             var PrintInterfacePath = AppDomain.CurrentDomain.BaseDirectory + "PrintInterface.exe";
-            var arguments = "invoice " + FilePath;
+            var arguments = "invoice \"" + FilePath + "\"";
             Process p = new Process
             {
                 StartInfo = new ProcessStartInfo(PrintInterfacePath, arguments)
