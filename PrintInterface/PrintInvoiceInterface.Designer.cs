@@ -372,9 +372,9 @@
             this.crystalReportViewer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.crystalReportViewer.Cursor = System.Windows.Forms.Cursors.Default;
             this.crystalReportViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.crystalReportViewer.Location = new System.Drawing.Point(279, 0);
+            this.crystalReportViewer.Location = new System.Drawing.Point(287, 0);
             this.crystalReportViewer.Name = "crystalReportViewer";
-            this.crystalReportViewer.Size = new System.Drawing.Size(655, 789);
+            this.crystalReportViewer.Size = new System.Drawing.Size(647, 789);
             this.crystalReportViewer.TabIndex = 0;
             this.crystalReportViewer.ToolPanelView = CrystalDecisions.Windows.Forms.ToolPanelViewType.None;
             // 
@@ -383,7 +383,7 @@
             this.btnShowSettings.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnShowSettings.Location = new System.Drawing.Point(267, 0);
             this.btnShowSettings.Name = "btnShowSettings";
-            this.btnShowSettings.Size = new System.Drawing.Size(12, 789);
+            this.btnShowSettings.Size = new System.Drawing.Size(20, 789);
             this.btnShowSettings.TabIndex = 2;
             this.btnShowSettings.Text = "<";
             this.btnShowSettings.UseVisualStyleBackColor = true;
