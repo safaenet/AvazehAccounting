@@ -67,6 +67,13 @@ namespace AvazehWebAPI.Controllers
             return result;
         }
 
+        [HttpGet("UserDescriptions")]
+        public async Task<ActionResult<List<UserDescriptionModel>>> GetUserDescriptionsAsync()
+        {
+            var result = await Manager.Processor.GetUserDescriptions();
+            return result;
+        }
+
         [HttpPost]
         public async Task<ActionResult<InvoiceModel>> CreateItemAsync(InvoiceModel_DTO_Create_Update model)
         {

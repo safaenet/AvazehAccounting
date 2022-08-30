@@ -17,5 +17,6 @@ namespace AvazehApiClient.DataAccess.Interfaces
         InvoiceListModel GetItemFromCollectionById(int Id);
         Task<List<ItemsForComboBox>> LoadProductItems(string SearchText = null);
         Task<double> GetCustomerTotalBalanceById(int CustomerId, int InvoiceId = 0);
+        Task<List<UserDescriptionModel>> GetUserDescriptions();
     }
 }

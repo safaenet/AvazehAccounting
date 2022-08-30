@@ -337,8 +337,8 @@ namespace AvazehWpf.ViewModels
             pim.MainHeaderTextFontSize = 30;
             pim.HeaderDescriptionFontSize = 10;
             pim.InvoiceTypeTextFontSize = 16;
+            pim.UserDescriptions = await InvoiceCollectionManager.GetUserDescriptions();
             
-
             XmlSerializer xmlSerializer = new(pim.GetType());
             StringWriter stringWriter = new();
             xmlSerializer.Serialize(stringWriter, pim);
@@ -348,7 +348,12 @@ namespace AvazehWpf.ViewModels
             var FilePath = AppDomain.CurrentDomain.BaseDirectory + TempFolderName + @"\" + UniqueFileName;
             File.WriteAllText(FilePath, stringWriter.ToString());
             var PrintInterfacePath = AppDomain.CurrentDomain.BaseDirectory + "PrintInterface.exe";
-            Process.Start(PrintInterfacePath, FilePath);
+            var arguments = "invoice " + FilePath;
+            Process p = new Process
+            {
+                StartInfo = new ProcessStartInfo(PrintInterfacePath, arguments)
+            };
+            p.Start();
         }
 
         public async Task EditOwner()

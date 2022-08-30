@@ -15,13 +15,15 @@ namespace PrintInterface
         private string customerFullName;
         private string customerPhoneNumber;
         private string invoiceDateCreated;
+        private bool printInvoiceId;
         private bool printDate;
+        private bool printCustomerPhoneNumber;
         private bool printInvoiceDescription;
         private bool printCustomerDescription;
         private bool printUserDescription;
         private string invoiceDescription;
         private string customerDescription;
-        private string userDescription;
+        private List<UserDescriptionModel> userDescriptions;
         private string footerTextLeft;
         private string footerTextRight;
         private string mainHeaderText;
@@ -37,9 +39,17 @@ namespace PrintInterface
         private double totalBalance;
         private string invoiceFinStatus;
         private int invoiceType;
+
         private int mainHeaderTextFontSize = 30;
         private int headerDescriptionFontSize = 10;
         private int invoiceTypeTextFontSize = 16;
+        private int pageHeaderFontSize = 10;
+        private int detailsFontSize = 10;
+        private int pageFooterFontSize = 10;
+        private int descriptionFontSize = 14;
+
+        private string printLayout; //Landscape, Portrait
+        private string paperSize; //A5, A4
 
         public int InvoiceId { get => invoiceId; set => invoiceId = value; }
         public List<InvoiceItemForPrintModel> Products { get => products; set => products = value; }
@@ -53,7 +63,7 @@ namespace PrintInterface
         public bool PrintUserDescription { get => printUserDescription; set => printUserDescription = value; }
         public string InvoiceDescription { get => invoiceDescription; set => invoiceDescription = value; }
         public string CustomerDescription { get => customerDescription; set => customerDescription = value; }
-        public string UserDescription { get => userDescription; set => userDescription = value; }
+        public List<UserDescriptionModel> UserDescriptions { get => userDescriptions; set => userDescriptions = value; }
         public string FooterTextLeft { get => footerTextLeft; set => footerTextLeft = value; }
         public string FooterTextRight { get => footerTextRight; set => footerTextRight = value; }
         public string MainHeaderText { get => mainHeaderText; set => mainHeaderText = value; }
@@ -72,5 +82,13 @@ namespace PrintInterface
         public int MainHeaderTextFontSize { get => mainHeaderTextFontSize; set => mainHeaderTextFontSize = value; }
         public int HeaderDescriptionFontSize { get => headerDescriptionFontSize; set => headerDescriptionFontSize = value; }
         public int InvoiceTypeTextFontSize { get => invoiceTypeTextFontSize; set => invoiceTypeTextFontSize = value; }
+        public int PageHeaderFontSize { get => pageHeaderFontSize; set => pageHeaderFontSize = value; }
+        public int DetailsFontSize { get => detailsFontSize; set => detailsFontSize = value; }
+        public int PageFooterFontSize { get => pageFooterFontSize; set => pageFooterFontSize = value; }
+        public int DescriptionFontSize { get => descriptionFontSize; set => descriptionFontSize = value; }
+        public string PrintLayout { get => printLayout; set => printLayout = value; }
+        public string PaperSize { get => paperSize; set => paperSize = value; }
+        public bool PrintCustomerPhoneNumber { get => printCustomerPhoneNumber; set => printCustomerPhoneNumber = value; }
+        public bool PrintInvoiceId { get => printInvoiceId; set => printInvoiceId = value; }
     }
 }

@@ -16,13 +16,15 @@ namespace SharedLibrary.DalModels
         public string CustomerFullName;
         public string CustomerPhoneNumber;
         public string InvoiceDateCreated;
-        public bool PrintDate;
+        public bool PrintInvoiceId = true;
+        public bool PrintDate = true;
+        public bool PrintCustomerPhoneNumber = true;
         public bool PrintInvoiceDescription;
         public bool PrintCustomerDescription;
         public bool PrintUserDescription;
         public string InvoiceDescription = "";
         public string CustomerDescription = "";
-        public string UserDescription = "";
+        public List<UserDescriptionModel> UserDescriptions;
         public string FooterTextLeft;
         public string FooterTextRight;
         public string MainHeaderText = "";
@@ -42,5 +44,12 @@ namespace SharedLibrary.DalModels
         public int MainHeaderTextFontSize = 30;
         public int HeaderDescriptionFontSize = 10;
         public int InvoiceTypeTextFontSize = 16;
+        public int PageHeaderFontSize = 10;
+        public int DetailsFontSize = 10;
+        public int PageFooterFontSize = 10;
+        public int DescriptionFontSize = 14;
+
+        public string PrintLayout = "عمودی"; //Landscape, Portrait
+        public string PaperSize = "A5"; //A5, A4
     }
 }

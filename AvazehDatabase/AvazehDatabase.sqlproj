@@ -71,6 +71,7 @@
     <Build Include="Database\ProductUnits.sql" />
     <Build Include="Database\Transactions.sql" />
     <Build Include="Database\TransactionItems.sql" />
+    <Build Include="Database\UserDescriptions.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="AvazehDatabase.refactorlog" />

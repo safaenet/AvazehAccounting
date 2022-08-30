@@ -141,5 +141,11 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
         {
             return (double)await ApiProcessor.GetValueOrNullAsync<double>(Key + "/CustomerBalance", CustomerId, InvoiceId);
         }
+
+        public async Task<List<UserDescriptionModel>> GetUserDescriptions()
+        {
+            var collection = await ApiProcessor.GetCollectionAsync<List<UserDescriptionModel>>(Key + "/UserDescriptions", null);
+            return collection is null ? null : collection;
+        }
     }
 }

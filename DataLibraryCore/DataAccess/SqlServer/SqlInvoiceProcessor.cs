@@ -102,9 +102,10 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] AS ItemName FROM Products {0}";
         private readonly string GetProductUnitsQuery = "SELECT [Id], [UnitName] FROM ProductUnits";
         private readonly string GetCustomerNamesQuery = "SELECT [Id], ISNULL(FirstName, '') + ' ' + ISNULL(LastName, '') AS ItemName FROM Customers {0} ORDER BY [FirstName], [LastName]";
-        private readonly string GetRecentPricesOfProduct = @"SELECT TOP({0}) it.SellPrice AS SellPrice, it.DateCreated AS DateSold FROM InvoiceItems it LEFT JOIN Invoices i ON it.InvoiceId = i.Id
+        private readonly string GetRecentPricesOfProductQuery = @"SELECT TOP({0}) it.SellPrice AS SellPrice, it.DateCreated AS DateSold FROM InvoiceItems it LEFT JOIN Invoices i ON it.InvoiceId = i.Id
                                                              LEFT JOIN Customers c ON i.CustomerId = c.Id LEFT JOIN Products p ON it.ProductId = p.Id
                                                              WHERE c.Id = {1} AND p.Id = {2} ORDER BY it.DateCreated DESC";
+        private readonly string GetUserDescriptionsQuery = "SELECT [Id], [DescriptionTitle], [DescriptionText] From UserDescriptions";
 
         private async Task<int> GetInvoiceIdFromInvoiceItemId(int Id)
         {
@@ -425,8 +426,14 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         public async Task<ObservableCollection<RecentSellPriceModel>> GetRecentSellPricesAsync(int MaxRecord, int CustomerId, int ProductId)
         {
-            var sql = string.Format(GetRecentPricesOfProduct, MaxRecord, CustomerId, ProductId);
+            var sql = string.Format(GetRecentPricesOfProductQuery, MaxRecord, CustomerId, ProductId);
             return await DataAccess.LoadDataAsync<RecentSellPriceModel, DynamicParameters>(sql, null);
+        }
+
+        public async Task<List<UserDescriptionModel>> GetUserDescriptions()
+        {
+            var items = await DataAccess.LoadDataAsync<UserDescriptionModel, DynamicParameters>(GetUserDescriptionsQuery, null);
+            return items?.ToList();
         }
 
         public ValidationResult ValidateItem(InvoiceModel item)

@@ -272,7 +272,7 @@ namespace AvazehApiClient.DataAccess
             piv.InvoiceDescription = string.IsNullOrEmpty(invoice.Descriptions) ? "" : invoice.Descriptions;
             piv.InvoiceFinStatus = invoice.InvoiceFinancialStatus.ToString();
             piv.InvoiceId = invoice.Id;
-            piv.CustomerPhoneNumber = (invoice.Customer.PhoneNumbers == null || invoice.Customer.PhoneNumbers.Count == 0) ? "" : invoice.Customer.PhoneNumbers[0].ToString();
+            piv.CustomerPhoneNumber = (invoice.Customer.PhoneNumbers == null || invoice.Customer.PhoneNumbers.Count == 0) ? "" : invoice.Customer.PhoneNumbers[0].PhoneNumber;
             piv.TotalBalance = invoice.TotalBalance;
             piv.TotalDiscountAmount = invoice.TotalDiscountAmount;
             piv.TotalItemsSellSum = invoice.TotalItemsSellSum;

@@ -16,14 +16,14 @@ namespace PrintInterface {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class PrintInvoicePortrait : ReportClass {
+    public class PrintInvoicePortraitA5 : ReportClass {
         
-        public PrintInvoicePortrait() {
+        public PrintInvoicePortraitA5() {
         }
         
         public override string ResourceName {
             get {
-                return "PrintInvoicePortrait.rpt";
+                return "PrintInvoicePortraitA5.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace PrintInterface {
         
         public override string FullResourceName {
             get {
-                return "PrintInterface.PrintInvoicePortrait.rpt";
+                return "PrintInterface.PrintInvoicePortraitA5.rpt";
             }
             set {
                 // Do nothing
@@ -418,9 +418,9 @@ namespace PrintInterface {
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class CachedPrintInvoicePortrait : Component, ICachedReport {
+    public class CachedPrintInvoicePortraitA5 : Component, ICachedReport {
         
-        public CachedPrintInvoicePortrait() {
+        public CachedPrintInvoicePortraitA5() {
         }
         
         [Browsable(false)]
@@ -457,7 +457,7 @@ namespace PrintInterface {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            PrintInvoicePortrait rpt = new PrintInvoicePortrait();
+            PrintInvoicePortraitA5 rpt = new PrintInvoicePortraitA5();
             rpt.Site = this.Site;
             return rpt;
         }

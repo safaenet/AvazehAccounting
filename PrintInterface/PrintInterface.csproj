@@ -59,10 +59,22 @@
       <DependentUpon>InvoiceDetails.cs</DependentUpon>
     </Compile>
     <Compile Include="InvoiceItemForPrintModel.cs" />
-    <Compile Include="PrintInvoicePortrait.cs">
+    <Compile Include="PrintInvoicePortraitA4.cs">
+      <DependentUpon>PrintInvoicePortraitA4.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="PrintInvoiceLandscapeA5.cs">
+      <DependentUpon>PrintInvoiceLandscapeA5.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="PrintInvoicePortraitA5.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>PrintInvoicePortrait.rpt</DependentUpon>
+      <DependentUpon>PrintInvoicePortraitA5.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="PrintInvoiceInterface.cs">
@@ -74,9 +86,18 @@
     <Compile Include="PrintInvoiceModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="PrintInvoicePortrait.rpt">
+    <Compile Include="UserDescriptionModel.cs" />
+    <EmbeddedResource Include="PrintInvoicePortraitA4.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>PrintInvoicePortrait.cs</LastGenOutput>
+      <LastGenOutput>PrintInvoicePortraitA4.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PrintInvoiceLandscapeA5.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>PrintInvoiceLandscapeA5.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PrintInvoicePortraitA5.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>PrintInvoicePortraitA5.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="PrintInvoiceInterface.resx">
       <DependentUpon>PrintInvoiceInterface.cs</DependentUpon>
