@@ -9,7 +9,9 @@ using SharedLibrary.Validators;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,6 +20,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using System.Xml.Serialization;
 
 namespace AvazehWpf.ViewModels
 {
@@ -161,6 +164,58 @@ namespace AvazehWpf.ViewModels
                 DeleteInvoice().ConfigureAwait(true);
                 e.Handled = true;
             }
+        }
+
+        public async Task PrintInvoice(int t)
+        {
+            if (Invoices == null || Invoices.Count == 0 || SelectedInvoice == null || SelectedInvoice.Id == 0) return;
+            var Invoice = await ICM.GetItemById(SelectedInvoice.Id);
+            if (Invoice == null) return;
+            PrintInvoiceModel pim = new();
+            Invoice.AsPrintModel(pim);
+            if (t == 12)
+            {
+                pim.MainHeaderText = "فاکتور فروش";
+            }
+            else if (t == 13)
+            {
+                pim.MainHeaderText = "فروشگاه آوازه";
+            }
+            else if (t == 21)
+            {
+                pim.MainHeaderText = "پیش فاکتور";
+            }
+            else if (t == 22)
+            {
+                pim.MainHeaderText = "فروشگاه آوازه";
+            }
+            pim.InvoiceType = t;
+            pim.HeaderDescription1 = "دوربین مداربسته، کرکره برقی، جک پارکینگی";
+            pim.HeaderDescription2 = "01734430827";
+            pim.FooterTextLeft = "Some Text Here";
+            pim.FooterTextRight = "توسعه دهنده نرم افزار: صفا دانا";
+            pim.LeftImagePath = AppDomain.CurrentDomain.BaseDirectory + @"Images\LeftImage.png";
+            pim.RightImagePath = AppDomain.CurrentDomain.BaseDirectory + @"Images\RightImage.png";
+            pim.MainHeaderTextFontSize = 30;
+            pim.HeaderDescriptionFontSize = 10;
+            pim.InvoiceTypeTextFontSize = 16;
+            pim.UserDescriptions = await ICM.GetUserDescriptions();
+
+            XmlSerializer xmlSerializer = new(pim.GetType());
+            StringWriter stringWriter = new();
+            xmlSerializer.Serialize(stringWriter, pim);
+            var UniqueFileName = $@"{DateTime.Now.Ticks}.xml";
+            string TempFolderName = "Temp";
+            Directory.CreateDirectory(TempFolderName);
+            var FilePath = AppDomain.CurrentDomain.BaseDirectory + TempFolderName + @"\" + UniqueFileName;
+            File.WriteAllText(FilePath, stringWriter.ToString());
+            var PrintInterfacePath = AppDomain.CurrentDomain.BaseDirectory + "PrintInterface.exe";
+            var arguments = "invoice \"" + FilePath + "\"";
+            Process p = new Process
+            {
+                StartInfo = new ProcessStartInfo(PrintInterfacePath, arguments)
+            };
+            p.Start();
         }
     }
 

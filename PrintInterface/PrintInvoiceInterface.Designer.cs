@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.gbSettings = new System.Windows.Forms.GroupBox();
+            this.txtCustomerPostAddress = new System.Windows.Forms.TextBox();
+            this.txtCustomerDescription = new System.Windows.Forms.TextBox();
+            this.txtInvoiceDescription = new System.Windows.Forms.TextBox();
             this.txtUserDescription = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -45,6 +48,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.cmbPageHeaderFontSize = new System.Windows.Forms.ComboBox();
             this.ShowUserDescription = new System.Windows.Forms.CheckBox();
+            this.ShowCustomerPostAddress = new System.Windows.Forms.CheckBox();
             this.ShowInvoiceDescription = new System.Windows.Forms.CheckBox();
             this.ShowCustomerDescription = new System.Windows.Forms.CheckBox();
             this.ShowPhoneNumber = new System.Windows.Forms.CheckBox();
@@ -52,10 +56,6 @@
             this.ShowInvoiceCreatedDate = new System.Windows.Forms.CheckBox();
             this.crystalReportViewer = new CrystalDecisions.Windows.Forms.CrystalReportViewer();
             this.btnShowSettings = new System.Windows.Forms.Button();
-            this.txtInvoiceDescription = new System.Windows.Forms.TextBox();
-            this.txtCustomerDescription = new System.Windows.Forms.TextBox();
-            this.ShowCustomerPostAddress = new System.Windows.Forms.CheckBox();
-            this.txtCustomerPostAddress = new System.Windows.Forms.TextBox();
             this.gbSettings.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -96,11 +96,45 @@
             this.gbSettings.Text = "تنظیمات چاپ";
             this.gbSettings.Visible = false;
             // 
+            // txtCustomerPostAddress
+            // 
+            this.txtCustomerPostAddress.Location = new System.Drawing.Point(13, 89);
+            this.txtCustomerPostAddress.Multiline = true;
+            this.txtCustomerPostAddress.Name = "txtCustomerPostAddress";
+            this.txtCustomerPostAddress.ReadOnly = true;
+            this.txtCustomerPostAddress.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtCustomerPostAddress.Size = new System.Drawing.Size(248, 53);
+            this.txtCustomerPostAddress.TabIndex = 3;
+            this.txtCustomerPostAddress.TextChanged += new System.EventHandler(this.txtUserDescription_TextChanged);
+            // 
+            // txtCustomerDescription
+            // 
+            this.txtCustomerDescription.Location = new System.Drawing.Point(13, 170);
+            this.txtCustomerDescription.Multiline = true;
+            this.txtCustomerDescription.Name = "txtCustomerDescription";
+            this.txtCustomerDescription.ReadOnly = true;
+            this.txtCustomerDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtCustomerDescription.Size = new System.Drawing.Size(248, 53);
+            this.txtCustomerDescription.TabIndex = 3;
+            this.txtCustomerDescription.TextChanged += new System.EventHandler(this.txtUserDescription_TextChanged);
+            // 
+            // txtInvoiceDescription
+            // 
+            this.txtInvoiceDescription.Location = new System.Drawing.Point(12, 251);
+            this.txtInvoiceDescription.Multiline = true;
+            this.txtInvoiceDescription.Name = "txtInvoiceDescription";
+            this.txtInvoiceDescription.ReadOnly = true;
+            this.txtInvoiceDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtInvoiceDescription.Size = new System.Drawing.Size(248, 53);
+            this.txtInvoiceDescription.TabIndex = 3;
+            this.txtInvoiceDescription.TextChanged += new System.EventHandler(this.txtUserDescription_TextChanged);
+            // 
             // txtUserDescription
             // 
             this.txtUserDescription.Location = new System.Drawing.Point(12, 360);
             this.txtUserDescription.Multiline = true;
             this.txtUserDescription.Name = "txtUserDescription";
+            this.txtUserDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtUserDescription.Size = new System.Drawing.Size(248, 53);
             this.txtUserDescription.TabIndex = 3;
             this.txtUserDescription.TextChanged += new System.EventHandler(this.txtUserDescription_TextChanged);
@@ -311,6 +345,17 @@
             this.ShowUserDescription.UseVisualStyleBackColor = true;
             this.ShowUserDescription.CheckedChanged += new System.EventHandler(this.ShowUserDescription_CheckedChanged);
             // 
+            // ShowCustomerPostAddress
+            // 
+            this.ShowCustomerPostAddress.AutoSize = true;
+            this.ShowCustomerPostAddress.Location = new System.Drawing.Point(147, 66);
+            this.ShowCustomerPostAddress.Name = "ShowCustomerPostAddress";
+            this.ShowCustomerPostAddress.Size = new System.Drawing.Size(113, 17);
+            this.ShowCustomerPostAddress.TabIndex = 0;
+            this.ShowCustomerPostAddress.Text = "چاپ آدرس مشتری";
+            this.ShowCustomerPostAddress.UseVisualStyleBackColor = true;
+            this.ShowCustomerPostAddress.CheckedChanged += new System.EventHandler(this.ShowCustomerPostalAddress_CheckedChanged);
+            // 
             // ShowInvoiceDescription
             // 
             this.ShowInvoiceDescription.AutoSize = true;
@@ -388,47 +433,6 @@
             this.btnShowSettings.Text = "<";
             this.btnShowSettings.UseVisualStyleBackColor = true;
             this.btnShowSettings.Click += new System.EventHandler(this.btnShowSettings_Click);
-            // 
-            // txtInvoiceDescription
-            // 
-            this.txtInvoiceDescription.Location = new System.Drawing.Point(12, 251);
-            this.txtInvoiceDescription.Multiline = true;
-            this.txtInvoiceDescription.Name = "txtInvoiceDescription";
-            this.txtInvoiceDescription.ReadOnly = true;
-            this.txtInvoiceDescription.Size = new System.Drawing.Size(248, 53);
-            this.txtInvoiceDescription.TabIndex = 3;
-            this.txtInvoiceDescription.TextChanged += new System.EventHandler(this.txtUserDescription_TextChanged);
-            // 
-            // txtCustomerDescription
-            // 
-            this.txtCustomerDescription.Location = new System.Drawing.Point(13, 170);
-            this.txtCustomerDescription.Multiline = true;
-            this.txtCustomerDescription.Name = "txtCustomerDescription";
-            this.txtCustomerDescription.ReadOnly = true;
-            this.txtCustomerDescription.Size = new System.Drawing.Size(248, 53);
-            this.txtCustomerDescription.TabIndex = 3;
-            this.txtCustomerDescription.TextChanged += new System.EventHandler(this.txtUserDescription_TextChanged);
-            // 
-            // ShowCustomerPostAddress
-            // 
-            this.ShowCustomerPostAddress.AutoSize = true;
-            this.ShowCustomerPostAddress.Location = new System.Drawing.Point(147, 66);
-            this.ShowCustomerPostAddress.Name = "ShowCustomerPostAddress";
-            this.ShowCustomerPostAddress.Size = new System.Drawing.Size(113, 17);
-            this.ShowCustomerPostAddress.TabIndex = 0;
-            this.ShowCustomerPostAddress.Text = "چاپ آدرس مشتری";
-            this.ShowCustomerPostAddress.UseVisualStyleBackColor = true;
-            this.ShowCustomerPostAddress.CheckedChanged += new System.EventHandler(this.ShowCustomerPostalAddress_CheckedChanged);
-            // 
-            // txtCustomerPostAddress
-            // 
-            this.txtCustomerPostAddress.Location = new System.Drawing.Point(13, 89);
-            this.txtCustomerPostAddress.Multiline = true;
-            this.txtCustomerPostAddress.Name = "txtCustomerPostAddress";
-            this.txtCustomerPostAddress.ReadOnly = true;
-            this.txtCustomerPostAddress.Size = new System.Drawing.Size(248, 53);
-            this.txtCustomerPostAddress.TabIndex = 3;
-            this.txtCustomerPostAddress.TextChanged += new System.EventHandler(this.txtUserDescription_TextChanged);
             // 
             // PrintInvoiceInterface
             // 
