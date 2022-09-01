@@ -11,7 +11,6 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
     {
         public int DataGridFontSize { get; set; }
         public int PageSize { get; set; }
-        public string QueryOrderBy { get; set; }
         public OrderType QueryOrderType { get; set; }
 
         public string NewItemColor { get; set; }
@@ -21,5 +20,6 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
 
         public bool RemindCloseCheques { get; set; }
         public int RemindDays { get; set; }
+        public string RemindColor { get; set; }
     }
 }

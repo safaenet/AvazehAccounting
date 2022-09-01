@@ -135,17 +135,56 @@
                                     <RowDefinition/>
                                     <RowDefinition/>
                                     <RowDefinition/>
+                                    <RowDefinition/>
                                 </Grid.RowDefinitions>
                                 <CheckBox Content="اضافه کردن اتوماتیک کالا در صورت عدم وجود" Margin="5" FlowDirection="RightToLeft"/>
                                 <CheckBox Grid.Row="1" Content="وجود اقلام مشابه در یک فاکتور" Margin="5" FlowDirection="RightToLeft"/>
-                                <CheckBox Grid.Row="2" Content="فعال سازی بارکد خوان" Margin="5" FlowDirection="RightToLeft"/>
+                                <Grid Grid.Row="2" Margin="5" Height="25" FlowDirection="RightToLeft">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <CheckBox Grid.Column="0" Content="فعال سازی بارکد خوان" Margin="0,5,5,5" FlowDirection="RightToLeft" VerticalContentAlignment="Center"/>
+                                    <Separator Grid.Column="1" Grid.Row="0" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+                                    <TextBlock Grid.Column="3" Text="مقدار پیشفرض اضافه کردن با بارکد" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <xctk:IntegerUpDown Grid.Column="4" Name="myUpDownControl" VerticalContentAlignment="Center" Width="50"/>
+                                </Grid>
                                 <Grid Grid.Row="3" Margin="5" Height="25" FlowDirection="RightToLeft">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="مقدار پیشفرض اضافه کردن با بارکد" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                    <xctk:IntegerUpDown Grid.Column="1" Name="myUpDownControl" VerticalContentAlignment="Center" Width="50"/>
+                                    <TextBlock Grid.Column="0" Text="سایز فونت لیست فاکتورها" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <xctk:IntegerUpDown Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
+                                    <Separator Grid.Column="2" Grid.Row="0" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+                                    <TextBlock Grid.Column="4" Text="سایز فونت جزئیات فاکتور" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <xctk:IntegerUpDown Grid.Column="5" VerticalContentAlignment="Center" Width="50"/>
+                                </Grid>
+
+                                <Grid Grid.Row="4" Margin="5" Height="25" FlowDirection="RightToLeft">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="تعداد فاکتور در هر صفحه" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <xctk:IntegerUpDown Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
+                                    <Separator Grid.Column="2" Grid.Row="0" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+                                    <TextBlock Grid.Column="4" Text="نحوه مرتب سازی" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <ComboBox Grid.Column="5" SelectedIndex="1" VerticalContentAlignment="Center" Width="60">
+                                        <ComboBoxItem Content="صعودی"/>
+                                        <ComboBoxItem Content="نزولی"/>
+                                    </ComboBox>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -157,74 +196,6 @@
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
                             <GroupBox Grid.Row="0" x:Name="groupBox2" FlowDirection="RightToLeft" Header="رنگ ها">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="35"/>
-                                        <RowDefinition Height="35"/>
-                                        <RowDefinition Height="35"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid Grid.Column="0" Grid.Row="0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فاکتورهای امروز" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
-                                    </Grid>
-                                    <Grid Grid.Column="2" Grid.Row="0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فاکتورهای امروز" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
-                                    </Grid>
-                                    <Grid Grid.Column="0" Grid.Row="1">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فاکتورهای بروز شده" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
-                                    </Grid>
-                                    <Grid Grid.Column="2" Grid.Row="1">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فایل های بروز شده" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
-                                    </Grid>
-                                    <Grid Grid.Column="0" Grid.Row="2">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فاکتورهای تسویه" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
-                                    </Grid>
-                                    <Separator Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" Margin="0,5,0,5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
-                                </Grid>
-                            </GroupBox>
-                        </Grid>
-                    </TabItem>
-                    <TabItem Header="چک">
-                        <Grid Background="#FFE5E5E5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                            </Grid.RowDefinitions>
-                            <GroupBox Grid.Row="0" x:Name="groupBox3" FlowDirection="RightToLeft" Header="رنگ ها">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
@@ -300,7 +271,120 @@
                                         <TextBlock Grid.Column="0" Text="فاکتورهای تسویه" VerticalAlignment="Center" Margin="5"/>
                                         <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
-                                    <Separator Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" Margin="0,5,0,5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+                                    <Separator Grid.Column="1" Grid.Row="0" Grid.RowSpan="4" Margin="0,5,0,5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+                                </Grid>
+                            </GroupBox>
+                            <Grid Grid.Row="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" Margin="5" Height="25" FlowDirection="RightToLeft">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="سایز فونت لیست فایل ها" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <xctk:IntegerUpDown Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
+                                    <Separator Grid.Column="2" Grid.Row="0" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+                                    <TextBlock Grid.Column="4" Text="سایز فونت جزئیات فایل" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <xctk:IntegerUpDown Grid.Column="5" VerticalContentAlignment="Center" Width="50"/>
+                                </Grid>
+
+                                <Grid Grid.Row="1" Margin="5" Height="25" FlowDirection="RightToLeft">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="تعداد فایل در هر صفحه" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <xctk:IntegerUpDown Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
+                                    <Separator Grid.Column="2" Grid.Row="0" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+                                    <TextBlock Grid.Column="4" Text="نحوه مرتب سازی" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <ComboBox Grid.Column="5" SelectedIndex="1" VerticalContentAlignment="Center" Width="60">
+                                        <ComboBoxItem Content="صعودی"/>
+                                        <ComboBoxItem Content="نزولی"/>
+                                    </ComboBox>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="چک">
+                        <Grid Background="#FFE5E5E5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <GroupBox Grid.Row="0" x:Name="groupBox3" FlowDirection="RightToLeft" Header="رنگ ها">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Column="0" Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="فاکتورهای امروز" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                    </Grid>
+                                    <Grid Grid.Column="2" Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="فاکتورهای امروز" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                    </Grid>
+                                    <Grid Grid.Column="0" Grid.Row="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="فاکتورهای بروز شده" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                    </Grid>
+                                    <Grid Grid.Column="2" Grid.Row="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="فایل های بروز شده" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                    </Grid>
+                                    <Grid Grid.Column="0" Grid.Row="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="فاکتورهای تسویه" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                    </Grid>
+                                    <Separator Grid.Column="1" Grid.Row="0" Grid.RowSpan="4" Margin="0,5,0,5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                 </Grid>
                             </GroupBox>
                             <Grid Grid.Row="1" Height="35" FlowDirection="RightToLeft">
@@ -309,9 +393,36 @@
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
-                                <CheckBox Grid.Column="0" Content="اعلام تاریخ وصول چک" VerticalAlignment="Center" Margin="5" FlowDirection="RightToLeft"/>
+                                <CheckBox Grid.Column="0" Content="اعلام تاریخ وصول چک" VerticalAlignment="Center" Margin="0,5,5,5" FlowDirection="RightToLeft"/>
                                 <xctk:IntegerUpDown Grid.Column="1" Name="myUpDownControl3" Margin="0,5,0,5" VerticalContentAlignment="Center" Width="50"/>
                                 <TextBlock Grid.Column="2" Text="روز قبل از تاریخ وصول" Margin="5" VerticalAlignment="Center" FlowDirection="RightToLeft"/>
+                            </Grid>
+                            <Grid Grid.Row="2" Margin="5" Height="25" FlowDirection="RightToLeft">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="سایز فونت لیست چک ها" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <xctk:IntegerUpDown Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
+                            </Grid>
+
+                            <Grid Grid.Row="3" Margin="5" Height="25" FlowDirection="RightToLeft">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="تعداد فایل در هر صفحه" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <xctk:IntegerUpDown Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
+                                <Separator Grid.Column="2" Grid.Row="0" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+                                <TextBlock Grid.Column="4" Text="نحوه مرتب سازی" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <ComboBox Grid.Column="5" SelectedIndex="1" VerticalContentAlignment="Center" Width="60">
+                                    <ComboBoxItem Content="صعودی"/>
+                                    <ComboBoxItem Content="نزولی"/>
+                                </ComboBox>
                             </Grid>
                         </Grid>
                     </TabItem>
@@ -396,8 +507,34 @@
                 </Grid>
             </TabItem>
             <TabItem Header="گزینه ها">
-                <Grid Background="#FFE5E5E5">
+                <Grid FlowDirection="RightToLeft" Background="#FFE5E5E5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="20"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Content="فاکتور جدید" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                    <CheckBox Content="نمایش فاکتورها" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                    <CheckBox Content="ویرایش فاکتورها" Grid.Column="4" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
                     
+                    <CheckBox Content="فایل جدید" Grid.Row="1" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                    <CheckBox Content="نمایش فایل ها" Grid.Row="1" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                    <CheckBox Content="ویرایش فایل ها" Grid.Row="1" Grid.Column="4" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                    
+                    <CheckBox Content="چک جدید" Grid.Row="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                    <CheckBox Content="نمایش چک ها" Grid.Row="2" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                    <CheckBox Content="ویرایش چک ها" Grid.Row="2" Grid.Column="4" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                    
+                    <CheckBox Content="نمایش مشتریان" Grid.Row="3" Grid.Column="0" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                    <CheckBox Content="نمایش کالاها" Grid.Row="3" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
                 </Grid>
             </TabItem>
         </TabControl>

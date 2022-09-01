@@ -21,11 +21,17 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
         public bool CanAddNewInvoice { get; set; }
         public bool CanViewInvoices { get; set; }
         public bool CanEditInvoices { get; set; }
-        public bool CanViewProducts { get; set; }
-        public bool CanViewCustomers { get; set; }
-        public bool CanViewCheques { get; set; }
+
+        public bool CanAddNewTransaction { get; set; }
         public bool CanViewTransactions { get; set; }
         public bool CanEditTransactions { get; set; }
+
+        public bool CanAddNewCheque { get; set; }
+        public bool CanViewCheques { get; set; }
+        public bool CanEditCheques { get; set; }
+
+        public bool CanViewProducts { get; set; }
+        public bool CanViewCustomers { get; set; }
     }
 
     public class TransactionShortcutModel
