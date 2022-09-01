@@ -9,8 +9,8 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
     public class AppSettingsModel
     {
         public GeneralSettingsModel GeneralSettings { get; set; }
-        public InvoiceListSettingsModel InvoiceListSettings { get; set; }
-        public InvoiceDetailSettingsModel InvoiceDetailSettings { get; set; }
+        public InvoiceSettingsModel InvoiceListSettings { get; set; }
         public InvoicePrintSettingsModel InvoicePrintSettings { get; set; }
+        public TransactionSettingsModel TransactionSettings { get; set; }
     }
 }

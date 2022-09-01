@@ -11,12 +11,13 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
         public string CompanyName { get; set; }
         public bool AutoSelectPersianLanguage { get; set; }
         public bool UseAuthentication { get; set; }
-        public bool AutoAddNewProducts { get; set; }
-        public int SimilarProductsInInvoice { get; set; }
-        public bool ShowTransactionShortcuts { get; set; }
+        public bool ShowTransactionShortcut1 { get; set; }
+        public bool ShowTransactionShortcut2 { get; set; }
+        public bool ShowTransactionShortcut3 { get; set; }
         public TransactionShortcutModel TransactionShortcut1 { get; set; }
         public TransactionShortcutModel TransactionShortcut2 { get; set; }
         public TransactionShortcutModel TransactionShortcut3 { get; set; }
+
         public bool CanAddNewInvoice { get; set; }
         public bool CanViewInvoices { get; set; }
         public bool CanEditInvoices { get; set; }
