@@ -28,6 +28,6 @@ namespace AvazehApiClient.DataAccess
 
         public async Task<ObservableCollection<ItemsForComboBox>> ReloadCustomerNames() => await Processor.GetCollectionAsync<ObservableCollection<ItemsForComboBox>>("Invoices/CustomerNames", null);
 
-        public async Task<AppSettingsModel> ReloadAllAppSettings() => await Processor.GetItemAsync<AppSettingsModel>("AppSettings/AllSettings", null);
+        public async Task<AppSettingsModel> ReloadAllAppSettings() => await Processor.GetItemAsync<AppSettingsModel>("AppSettings", null);
     }
 }

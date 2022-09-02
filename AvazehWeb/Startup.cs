@@ -1,3 +1,4 @@
+using DataLibraryCore.DataAccess;
 using DataLibraryCore.DataAccess.CollectionManagers;
 using DataLibraryCore.DataAccess.Interfaces;
 using DataLibraryCore.DataAccess.SqlServer;
@@ -31,6 +32,7 @@ namespace AvazehWeb
                 .AddScoped<IGeneralProcessor<ChequeModel>, SqlChequeProcessor<ChequeModel, ChequeEventModel, ChequeValidator>>()
                 .AddScoped<IInvoiceProcessor, SqlInvoiceProcessor>()
                 .AddScoped<ITransactionProcessor, SqlTransactionProcessor>()
+                .AddScoped<IAppSettingsManager, AppSettingsManager>()
                 .AddSingleton<IDataAccess, SqlDataAccess>()
 
                 .AddScoped(typeof(IGeneralCollectionManager<ProductModel, IGeneralProcessor<ProductModel>>), typeof(ProductCollectionManager))
