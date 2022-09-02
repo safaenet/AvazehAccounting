@@ -23,7 +23,7 @@ namespace AvazehWpf.ViewModels
 {
     public class TransactionDetailViewModel : ViewAware
     {
-        public TransactionDetailViewModel(ITransactionCollectionManager iManager, ITransactionDetailManager dManager, InvoiceDetailSingleton singleton, int? TransactionId, Func<Task> callBack)
+        public TransactionDetailViewModel(ITransactionCollectionManager iManager, ITransactionDetailManager dManager, SingletonClass singleton, int? TransactionId, Func<Task> callBack)
         {
             TransactionCollectionManager = iManager;
             TransactionDetailManager = dManager;
@@ -38,7 +38,7 @@ namespace AvazehWpf.ViewModels
         }
         private readonly ITransactionCollectionManager TransactionCollectionManager;
         private readonly ITransactionDetailManager TransactionDetailManager;
-        private InvoiceDetailSingleton Singleton;
+        private SingletonClass Singleton;
         private TransactionModel _Transaction;
         private readonly Func<Task> CallBackFunc;
         private ObservableCollection<ItemsForComboBox> productItems;

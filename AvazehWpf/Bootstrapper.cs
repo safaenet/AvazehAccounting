@@ -42,7 +42,7 @@ namespace AvazehWpf
                 .PerRequest<IInvoiceCollectionManager, InvoiceCollectionManagerAsync>()
                 .PerRequest<ITransactionCollectionManager, TransactionCollectionManagerAsync>()
                 .PerRequest<ITransactionDetailManager, TransactionDetailManager>()
-                .Singleton<InvoiceDetailSingleton>();
+                .Singleton<SingletonClass>();
         }
 
         protected override IEnumerable<object> GetAllInstances(Type serviceType)

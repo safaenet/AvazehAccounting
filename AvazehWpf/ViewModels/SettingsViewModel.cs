@@ -15,13 +15,27 @@ namespace AvazehWpf.ViewModels
 {
     public class SettingsViewModel : ViewAware
     {
-        public SettingsViewModel()
+        public SettingsViewModel(SingletonClass singleton)
+        {
+            Singleton = singleton;
+            LoadTransactionNames().ConfigureAwait(true);
+            LoadAllSettings().ConfigureAwait(true);
+        }
+
+        private async Task LoadTransactionNames()
+        {
+            TransactionItemsForComboBox = await Singleton.ReloadTransactionNames();
+        }
+
+        private async Task LoadAllSettings()
         {
             AppSettings = new();
-            AppSettings.InvoiceSettings = new();
+            var s = await Singleton.ReloadAllAppSettings();
+            if (s != null) AppSettings = s;
         }
 
         private AppSettingsModel appSettings;
+        SingletonClass Singleton;
         private ObservableCollection<ItemsForComboBox> transactionItemsForComboBox;
         private ItemsForComboBox selectedTransactionItem1;
         private ItemsForComboBox selectedTransactionItem2;
@@ -32,17 +46,21 @@ namespace AvazehWpf.ViewModels
             get { return appSettings; }
             set { appSettings = value; NotifyOfPropertyChange(() => AppSettings); }
         }
+
         public ObservableCollection<ItemsForComboBox> TransactionItemsForComboBox { get => transactionItemsForComboBox; set { transactionItemsForComboBox = value; NotifyOfPropertyChange(() => TransactionItemsForComboBox); } }
+
         public ItemsForComboBox SelectedTransactionItem1
         {
             get => selectedTransactionItem1;
             set { selectedTransactionItem1 = value; AppSettings.GeneralSettings.TransactionShortcut1.TransactionId = selectedTransactionItem1.Id; NotifyOfPropertyChange(() => SelectedTransactionItem1); }
         }
+
         public ItemsForComboBox SelectedTransactionItem2
         {
             get => selectedTransactionItem2;
             set { selectedTransactionItem2 = value; AppSettings.GeneralSettings.TransactionShortcut2.TransactionId = selectedTransactionItem2.Id; NotifyOfPropertyChange(() => SelectedTransactionItem2); }
         }
+
         public ItemsForComboBox SelectedTransactionItem3
         {
             get => selectedTransactionItem3;
@@ -52,6 +70,11 @@ namespace AvazehWpf.ViewModels
         public void SaveSettings()
         {
             
+        }
+
+        public void CloseWindow()
+        {
+
         }
     }
 }

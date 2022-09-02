@@ -9,6 +9,7 @@
         Title="تنظیمات" Height="auto" Width="450" MaxWidth="450" MinWidth="450">
     <Window.Resources>
         <viewmodels:StringToColorConverter x:Key="StringToColorConverter"/>
+        <viewmodels:PersianOrderStringToEnglishOrderStringConverter x:Key="PersianOrderStringToEnglishOrderStringConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -184,7 +185,7 @@
                                     <xctk:IntegerUpDown Text="{Binding AppSettings.InvoiceSettings.PageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
                                     <Separator Grid.Column="2" Grid.Row="0" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                     <TextBlock Grid.Column="4" Text="نحوه مرتب سازی" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                    <ComboBox Grid.Column="5" SelectedIndex="1" VerticalContentAlignment="Center" Width="60">
+                                    <ComboBox Text="{Binding AppSettings.InvoiceSettings.QueryOrderType, Converter={StaticResource PersianOrderStringToEnglishOrderStringConverter},Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="5" SelectedIndex="1" VerticalContentAlignment="Center" Width="70">
                                         <ComboBoxItem Content="صعودی"/>
                                         <ComboBoxItem Content="نزولی"/>
                                     </ComboBox>
@@ -314,7 +315,7 @@
                                     <xctk:IntegerUpDown Text="{Binding AppSettings.TransactionSettings.PageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
                                     <Separator Grid.Column="2" Grid.Row="0" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                     <TextBlock Grid.Column="4" Text="نحوه مرتب سازی" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                    <ComboBox Grid.Column="5" SelectedIndex="1" VerticalContentAlignment="Center" Width="60">
+                                    <ComboBox Grid.Column="5" SelectedIndex="1" VerticalContentAlignment="Center" Width="70">
                                         <ComboBoxItem Content="صعودی"/>
                                         <ComboBoxItem Content="نزولی"/>
                                     </ComboBox>
@@ -422,7 +423,7 @@
                                 <xctk:IntegerUpDown Text="{Binding AppSettings.ChequeSettings.PageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
                                 <Separator Grid.Column="2" Grid.Row="0" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                 <TextBlock Grid.Column="4" Text="نحوه مرتب سازی" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                <ComboBox Grid.Column="5" SelectedIndex="1" VerticalContentAlignment="Center" Width="60">
+                                <ComboBox Grid.Column="5" SelectedIndex="1" VerticalContentAlignment="Center" Width="70">
                                     <ComboBoxItem Content="صعودی"/>
                                     <ComboBoxItem Content="نزولی"/>
                                 </ComboBox>
@@ -467,7 +468,7 @@
                                 <RowDefinition Height="35"/>
                             </Grid.RowDefinitions>
                             <CheckBox IsChecked="{Binding AppSettings.GeneralSettings.ShowTransactionShortcut1, Mode=TwoWay}" Content="نمایش میانبر اول"/>
-                            <Grid IsEnabled="{Binding AppSettings.GeneralSettings.ShowTransactionShortcut1, Mode=TwoWay}" Grid.Row="1" Margin="5">
+                            <Grid IsEnabled="{Binding AppSettings.GeneralSettings.ShowTransactionShortcut1}" Grid.Row="1" Margin="5">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="*"/>
@@ -477,7 +478,7 @@
                                 <TextBlock Grid.Column="0" Text="نام میانبر اول" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                 <TextBox Text="{Binding AppSettings.GeneralSettings.TransactionShortcut1.ShortcutName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center"/>
                                 <TextBlock Grid.Column="2" Text="نام فایل" VerticalAlignment="Center" Margin="5,0,5,0"/>
-                                <ComboBox SelectedItem="{Binding SelectedTransactionItem1, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="ItemName" IsEditable="False" Grid.Column="3" VerticalContentAlignment="Center"/>
+                                <ComboBox ItemsSource="{Binding TransactionItemsForComboBox}" SelectedItem="{Binding SelectedTransactionItem1, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="ItemName" IsEditable="False" Grid.Column="3" VerticalContentAlignment="Center"/>
                             </Grid>
                         </Grid>
                         <Grid Grid.Row="1" FlowDirection="RightToLeft">
@@ -486,7 +487,7 @@
                                 <RowDefinition Height="35"/>
                             </Grid.RowDefinitions>
                             <CheckBox IsChecked="{Binding AppSettings.GeneralSettings.ShowTransactionShortcut2, Mode=TwoWay}" Content="نمایش میانبر دوم"/>
-                            <Grid IsEnabled="{Binding AppSettings.GeneralSettings.ShowTransactionShortcut2, Mode=TwoWay}" Grid.Row="1" Margin="5">
+                            <Grid IsEnabled="{Binding AppSettings.GeneralSettings.ShowTransactionShortcut2}" Grid.Row="1" Margin="5">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="*"/>
@@ -496,7 +497,7 @@
                                 <TextBlock Grid.Column="0" Text="نام میانبر دوم" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                 <TextBox Text="{Binding AppSettings.GeneralSettings.TransactionShortcut2.ShortcutName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center"/>
                                 <TextBlock Grid.Column="2" Text="نام فایل" VerticalAlignment="Center" Margin="5,0,5,0"/>
-                                <ComboBox SelectedItem="{Binding SelectedTransactionItem2, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="ItemName" IsEditable="False" Grid.Column="3" VerticalContentAlignment="Center"/>
+                                <ComboBox ItemsSource="{Binding TransactionItemsForComboBox}" SelectedItem="{Binding SelectedTransactionItem2, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="ItemName" IsEditable="False" Grid.Column="3" VerticalContentAlignment="Center"/>
                             </Grid>
                         </Grid>
                         <Grid Grid.Row="2" FlowDirection="RightToLeft">
@@ -505,7 +506,7 @@
                                 <RowDefinition Height="35"/>
                             </Grid.RowDefinitions>
                             <CheckBox IsChecked="{Binding AppSettings.GeneralSettings.ShowTransactionShortcut3, Mode=TwoWay}" Content="نمایش میانبر سوم"/>
-                            <Grid IsEnabled="{Binding AppSettings.GeneralSettings.ShowTransactionShortcut3, Mode=TwoWay}" Grid.Row="1" Margin="5">
+                            <Grid IsEnabled="{Binding AppSettings.GeneralSettings.ShowTransactionShortcut3}" Grid.Row="1" Margin="5">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="*"/>
@@ -515,7 +516,7 @@
                                 <TextBlock Grid.Column="0" Text="نام میانبر سوم" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                 <TextBox Text="{Binding AppSettings.GeneralSettings.TransactionShortcut3.ShortcutName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center"/>
                                 <TextBlock Grid.Column="2" Text="نام فایل" VerticalAlignment="Center" Margin="5,0,5,0"/>
-                                <ComboBox SelectedItem="{Binding SelectedTransactionItem3, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="ItemName" IsEditable="False" Grid.Column="3" VerticalContentAlignment="Center"/>
+                                <ComboBox ItemsSource="{Binding TransactionItemsForComboBox}" SelectedItem="{Binding SelectedTransactionItem3, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="ItemName" IsEditable="False" Grid.Column="3" VerticalContentAlignment="Center"/>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -555,6 +556,6 @@
         </TabControl>
 
         <Button x:Name="SaveSettings" Grid.Row="1" Content="ذخیره" Height="25" Margin="5,5,5,5"/>
-        <Button Grid.Row="2" Content="بستن" Height="25" Margin="5,0,5,5"/>
+        <Button x:Name="CloseWindow" Grid.Row="2" Content="بستن" Height="25" Margin="5,0,5,5"/>
     </Grid>
 </Window>

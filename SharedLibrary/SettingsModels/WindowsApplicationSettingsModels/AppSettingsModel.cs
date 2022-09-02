@@ -8,6 +8,14 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
 {
     public class AppSettingsModel
     {
+        public AppSettingsModel()
+        {
+            InvoiceSettings = new();
+            TransactionSettings = new();
+            ChequeSettings = new();
+            GeneralSettings = new();
+            InvoicePrintSettings = new();
+        }
         public GeneralSettingsModel GeneralSettings { get; set; }
         public InvoiceSettingsModel InvoiceSettings { get; set; }
         public InvoicePrintSettingsModel InvoicePrintSettings { get; set; }

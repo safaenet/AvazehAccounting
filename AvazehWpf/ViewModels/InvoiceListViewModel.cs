@@ -26,7 +26,7 @@ namespace AvazehWpf.ViewModels
 {
     public class InvoiceListViewModel : Screen
     {
-        public InvoiceListViewModel(IInvoiceCollectionManager manager, InvoiceDetailSingleton singleton)
+        public InvoiceListViewModel(IInvoiceCollectionManager manager, SingletonClass singleton)
         {
             ICM = manager;
             _SelectedInvoice = new();
@@ -36,7 +36,7 @@ namespace AvazehWpf.ViewModels
 
         private IInvoiceCollectionManager _ICM;
         private InvoiceListModel _SelectedInvoice;
-        private InvoiceDetailSingleton Singleton;
+        private SingletonClass Singleton;
 
         public InvoiceListModel SelectedInvoice
         {
@@ -325,7 +325,7 @@ namespace AvazehWpf.ViewModels
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value == null) return DependencyProperty.UnsetValue;
-            double input = (double)value;
+            //double input = (double)value;
            return Brushes.Black;
         }
 
@@ -334,6 +334,7 @@ namespace AvazehWpf.ViewModels
             throw new NotSupportedException();
         }
     }
+
     public class StringToColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -348,6 +349,23 @@ namespace AvazehWpf.ViewModels
             if (value == null) return DependencyProperty.UnsetValue;
             string input = ((Color)value).ToHex();
             return input;
+        }
+    }
+
+    public class PersianOrderStringToEnglishOrderStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value == null) return DependencyProperty.UnsetValue;
+            if ((OrderType)value == OrderType.ASC) return "صعودی";
+            return "نزولی";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value == null) return DependencyProperty.UnsetValue;
+            if ((string)value == "صعودی") return OrderType.ASC;
+            return OrderType.DESC;
         }
     }
 }

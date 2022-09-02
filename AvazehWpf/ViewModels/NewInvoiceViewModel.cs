@@ -22,7 +22,7 @@ namespace AvazehWpf.ViewModels
 {
     public class NewInvoiceViewModel : ViewAware
     {
-        public NewInvoiceViewModel(InvoiceDetailSingleton singleton, int? InvoiceId, IInvoiceCollectionManager icManager, ICollectionManager<CustomerModel> ccManager, Func<Task> callBack)
+        public NewInvoiceViewModel(SingletonClass singleton, int? InvoiceId, IInvoiceCollectionManager icManager, ICollectionManager<CustomerModel> ccManager, Func<Task> callBack)
         {
             ICM = icManager;
             CCM = ccManager;
@@ -43,7 +43,7 @@ namespace AvazehWpf.ViewModels
         }
         public IInvoiceCollectionManager ICM { get; set; }
         public ICollectionManager<CustomerModel> CCM { get; set; }
-        private InvoiceDetailSingleton Singleton;
+        private SingletonClass Singleton;
         private readonly int? InvoiceID;
         private ObservableCollection<ItemsForComboBox> customerNames;
         public ObservableCollection<ItemsForComboBox> CustomerNamesForComboBox { get => customerNames; set { customerNames = value; NotifyOfPropertyChange(() => CustomerNamesForComboBox); } }

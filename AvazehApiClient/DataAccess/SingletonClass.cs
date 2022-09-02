@@ -1,6 +1,7 @@
 ﻿using AvazehApiClient.DataAccess.Interfaces;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
+using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace AvazehApiClient.DataAccess
 {
-    public class InvoiceDetailSingleton
+    public class SingletonClass
     {
-        public InvoiceDetailSingleton(IApiProcessor processor)
+        public SingletonClass(IApiProcessor processor)
         {
             Processor = processor;
         }
@@ -26,5 +27,7 @@ namespace AvazehApiClient.DataAccess
         public async Task<ObservableCollection<ItemsForComboBox>> ReloadTransactionNames(int Id = 0) => await Processor.GetCollectionAsync<ObservableCollection<ItemsForComboBox>>("Transactions/TransactionNames", Id == 0 ? null : Id.ToString());
 
         public async Task<ObservableCollection<ItemsForComboBox>> ReloadCustomerNames() => await Processor.GetCollectionAsync<ObservableCollection<ItemsForComboBox>>("Invoices/CustomerNames", null);
+
+        public async Task<AppSettingsModel> ReloadAllAppSettings() => await Processor.GetItemAsync<AppSettingsModel>("AppSettings/AllSettings", null);
     }
 }

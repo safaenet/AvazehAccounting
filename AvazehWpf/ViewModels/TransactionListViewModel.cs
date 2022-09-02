@@ -17,7 +17,7 @@ namespace AvazehWpf.ViewModels
 {
     public class TransactionListViewModel : Screen
     {
-        public TransactionListViewModel(ITransactionCollectionManager manager, InvoiceDetailSingleton singleton)
+        public TransactionListViewModel(ITransactionCollectionManager manager, SingletonClass singleton)
         {
             TCM = manager;
             _SelectedTransaction = new();
@@ -27,7 +27,7 @@ namespace AvazehWpf.ViewModels
 
         private ITransactionCollectionManager _TCM;
         private TransactionListModel _SelectedTransaction;
-        private InvoiceDetailSingleton Singleton;
+        private SingletonClass Singleton;
 
         public TransactionListModel SelectedTransaction
         {

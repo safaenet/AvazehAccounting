@@ -8,6 +8,12 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
 {
     public class GeneralSettingsModel
     {
+        public GeneralSettingsModel()
+        {
+            TransactionShortcut1 = new();
+            TransactionShortcut2 = new();
+            TransactionShortcut3 = new();
+        }
         public string CompanyName { get; set; }
         public bool AutoSelectPersianLanguage { get; set; }
         public bool ShowTransactionShortcut1 { get; set; }

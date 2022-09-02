@@ -11,7 +11,7 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
     {
         public int DataGridFontSize { get; set; }
         public int PageSize { get; set; }
-        public OrderType QueryOrderType { get; set; }
+        public OrderType QueryOrderType { get; set; } = OrderType.DESC;
 
 
         public string NewItemColor { get; set; }
