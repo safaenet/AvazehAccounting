@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AvazehWpf.Views" FontFamily="Tahoma"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:SettingsViewModel}"
         mc:Ignorable="d"
         Title="تنظیمات" Height="auto" Width="450" MaxWidth="450" MinWidth="450">
     <Grid>
@@ -137,8 +137,8 @@
                                     <RowDefinition/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
-                                <CheckBox Content="اضافه کردن اتوماتیک کالا در صورت عدم وجود" Margin="5" FlowDirection="RightToLeft"/>
-                                <CheckBox Grid.Row="1" Content="وجود اقلام مشابه در یک فاکتور" Margin="5" FlowDirection="RightToLeft"/>
+                                <CheckBox IsChecked="{Binding AppSettings.InvoiceSettings.AutoAddNewProducts, Mode=TwoWay}" Content="اضافه کردن اتوماتیک کالا در صورت عدم وجود" Margin="5" FlowDirection="RightToLeft"/>
+                                <CheckBox IsChecked="{Binding AppSettings.InvoiceSettings.CanHaveSimilarItems, Mode=TwoWay}" Grid.Row="1" Content="وجود اقلام مشابه در یک فاکتور" Margin="5" FlowDirection="RightToLeft"/>
                                 <Grid Grid.Row="2" Margin="5" Height="25" FlowDirection="RightToLeft">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto"/>
@@ -147,10 +147,10 @@
                                         <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <CheckBox Grid.Column="0" Content="فعال سازی بارکد خوان" Margin="0,5,5,5" FlowDirection="RightToLeft" VerticalContentAlignment="Center"/>
+                                    <CheckBox IsChecked="{Binding AppSettings.InvoiceSettings.EnableBarcodeReader, Mode=TwoWay}" Grid.Column="0" Content="فعال سازی بارکد خوان" Margin="0,5,5,5" FlowDirection="RightToLeft" VerticalContentAlignment="Center"/>
                                     <Separator Grid.Column="1" Grid.Row="0" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                     <TextBlock Grid.Column="3" Text="مقدار پیشفرض اضافه کردن با بارکد" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                    <xctk:IntegerUpDown Grid.Column="4" Name="myUpDownControl" VerticalContentAlignment="Center" Width="50"/>
+                                    <xctk:IntegerUpDown Text="{Binding AppSettings.InvoiceSettings.BarcodeAddItemCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4" Name="myUpDownControl" VerticalContentAlignment="Center" Width="50"/>
                                 </Grid>
                                 <Grid Grid.Row="3" Margin="5" Height="25" FlowDirection="RightToLeft">
                                     <Grid.ColumnDefinitions>
@@ -162,10 +162,10 @@
                                         <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Text="سایز فونت لیست فاکتورها" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                    <xctk:IntegerUpDown Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
+                                    <xctk:IntegerUpDown Text="{Binding AppSettings.InvoiceSettings.DataGridFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
                                     <Separator Grid.Column="2" Grid.Row="0" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                     <TextBlock Grid.Column="4" Text="سایز فونت جزئیات فاکتور" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                    <xctk:IntegerUpDown Grid.Column="5" VerticalContentAlignment="Center" Width="50"/>
+                                    <xctk:IntegerUpDown Text="{Binding AppSettings.InvoiceSettings.DetailDataGridFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="5" VerticalContentAlignment="Center" Width="50"/>
                                 </Grid>
 
                                 <Grid Grid.Row="4" Margin="5" Height="25" FlowDirection="RightToLeft">
@@ -178,7 +178,7 @@
                                         <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Text="تعداد فاکتور در هر صفحه" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                    <xctk:IntegerUpDown Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
+                                    <xctk:IntegerUpDown Text="{Binding AppSettings.InvoiceSettings.PageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
                                     <Separator Grid.Column="2" Grid.Row="0" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                     <TextBlock Grid.Column="4" Text="نحوه مرتب سازی" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                     <ComboBox Grid.Column="5" SelectedIndex="1" VerticalContentAlignment="Center" Width="60">
@@ -292,10 +292,10 @@
                                         <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Text="سایز فونت لیست فایل ها" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                    <xctk:IntegerUpDown Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
+                                    <xctk:IntegerUpDown Text="{Binding AppSettings.TransactionSettings.DataGridFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
                                     <Separator Grid.Column="2" Grid.Row="0" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                     <TextBlock Grid.Column="4" Text="سایز فونت جزئیات فایل" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                    <xctk:IntegerUpDown Grid.Column="5" VerticalContentAlignment="Center" Width="50"/>
+                                    <xctk:IntegerUpDown Text="{Binding AppSettings.TransactionSettings.DetailDataGridFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="5" VerticalContentAlignment="Center" Width="50"/>
                                 </Grid>
 
                                 <Grid Grid.Row="1" Margin="5" Height="25" FlowDirection="RightToLeft">
@@ -308,7 +308,7 @@
                                         <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Text="تعداد فایل در هر صفحه" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                    <xctk:IntegerUpDown Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
+                                    <xctk:IntegerUpDown Text="{Binding AppSettings.TransactionSettings.PageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
                                     <Separator Grid.Column="2" Grid.Row="0" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                     <TextBlock Grid.Column="4" Text="نحوه مرتب سازی" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                     <ComboBox Grid.Column="5" SelectedIndex="1" VerticalContentAlignment="Center" Width="60">
@@ -393,8 +393,8 @@
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
-                                <CheckBox Grid.Column="0" Content="اعلام تاریخ وصول چک" VerticalAlignment="Center" Margin="0,5,5,5" FlowDirection="RightToLeft"/>
-                                <xctk:IntegerUpDown Grid.Column="1" Name="myUpDownControl3" Margin="0,5,0,5" VerticalContentAlignment="Center" Width="50"/>
+                                <CheckBox IsChecked="{Binding AppSettings.ChequeSettings.NotifyCloseCheques, Mode=TwoWay}" Grid.Column="0" Content="اعلام تاریخ وصول چک" VerticalAlignment="Center" Margin="0,5,5,5" FlowDirection="RightToLeft"/>
+                                <xctk:IntegerUpDown Text="{Binding AppSettings.ChequeSettings.NotifyDays, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Name="myUpDownControl3" Margin="0,5,0,5" VerticalContentAlignment="Center" Width="50"/>
                                 <TextBlock Grid.Column="2" Text="روز قبل از تاریخ وصول" Margin="5" VerticalAlignment="Center" FlowDirection="RightToLeft"/>
                             </Grid>
                             <Grid Grid.Row="2" Margin="5" Height="25" FlowDirection="RightToLeft">
@@ -403,7 +403,7 @@
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="سایز فونت لیست چک ها" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                <xctk:IntegerUpDown Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
+                                <xctk:IntegerUpDown Text="{Binding AppSettings.ChequeSettings.DataGridFontSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
                             </Grid>
 
                             <Grid Grid.Row="3" Margin="5" Height="25" FlowDirection="RightToLeft">
@@ -416,7 +416,7 @@
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="تعداد فایل در هر صفحه" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                <xctk:IntegerUpDown Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
+                                <xctk:IntegerUpDown Text="{Binding AppSettings.ChequeSettings.PageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
                                 <Separator Grid.Column="2" Grid.Row="0" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                 <TextBlock Grid.Column="4" Text="نحوه مرتب سازی" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                 <ComboBox Grid.Column="5" SelectedIndex="1" VerticalContentAlignment="Center" Width="60">
@@ -429,7 +429,7 @@
                 </TabControl>
                 
             </TabItem>
-            <TabItem Header="امنیت">
+            <TabItem Header="امنیت" IsEnabled="True">
                 <Grid Background="#FFE5E5E5"/>
             </TabItem>
             <TabItem Header="عمومی">
@@ -446,9 +446,9 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <CheckBox Grid.Column="0" Content="انتخاب خودکار زبان فارسی" FlowDirection="RightToLeft" VerticalContentAlignment="Center" Margin="5"/>
+                        <CheckBox IsChecked="{Binding AppSettings.GeneralSettings.AutoSelectPersianLanguage, Mode=TwoWay}" Grid.Column="0" Content="انتخاب خودکار زبان فارسی" FlowDirection="RightToLeft" VerticalContentAlignment="Center" Margin="5"/>
                         <Separator Grid.Column="1" Margin="0,5,0,5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
-                        <TextBox Grid.Column="2" Margin="5" Text="فروشگاه آوازه" VerticalContentAlignment="Center" FlowDirection="RightToLeft"/>
+                        <TextBox Text="{Binding AppSettings.GeneralSettings.CompanyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Margin="5" VerticalContentAlignment="Center" FlowDirection="RightToLeft"/>
                         <TextBlock Grid.Column="3" Text="نام مجموعه" VerticalAlignment="Center" Margin="5"/>
                     </Grid>
                     <Separator Grid.Row="1" Margin="0,0,0,5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
@@ -463,14 +463,18 @@
                                 <RowDefinition Height="20"/>
                                 <RowDefinition Height="35"/>
                             </Grid.RowDefinitions>
-                            <CheckBox Content="نمایش میانبر اول"/>
-                            <Grid Grid.Row="1" Margin="5">
+                            <CheckBox IsChecked="{Binding AppSettings.GeneralSettings.ShowTransactionShortcut1, Mode=TwoWay}" Content="نمایش میانبر اول"/>
+                            <Grid IsEnabled="{Binding AppSettings.GeneralSettings.ShowTransactionShortcut1, Mode=TwoWay}" Grid.Row="1" Margin="5">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="140"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="نام میانبر اول" Width="80" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                <TextBox Text="میانبر اول" Grid.Column="1" VerticalContentAlignment="Center"/>
+                                <TextBlock Grid.Column="0" Text="نام میانبر اول" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBox Text="{Binding AppSettings.GeneralSettings.TransactionShortcut1.ShortcutName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center"/>
+                                <TextBlock Grid.Column="2" Text="نام فایل" VerticalAlignment="Center" Margin="5,0,5,0"/>
+                                <ComboBox SelectedItem="{Binding SelectedTransactionItem1, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="ItemName" IsEditable="False" Grid.Column="3" VerticalContentAlignment="Center"/>
                             </Grid>
                         </Grid>
                         <Grid Grid.Row="1" FlowDirection="RightToLeft">
@@ -478,14 +482,18 @@
                                 <RowDefinition Height="20"/>
                                 <RowDefinition Height="35"/>
                             </Grid.RowDefinitions>
-                            <CheckBox Content="نمایش میانبر دوم"/>
-                            <Grid Grid.Row="1" Margin="5">
+                            <CheckBox IsChecked="{Binding AppSettings.GeneralSettings.ShowTransactionShortcut2, Mode=TwoWay}" Content="نمایش میانبر دوم"/>
+                            <Grid IsEnabled="{Binding AppSettings.GeneralSettings.ShowTransactionShortcut2, Mode=TwoWay}" Grid.Row="1" Margin="5">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="140"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="نام میانبر دوم" Width="80" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                <TextBox Text="میانبر دوم" Grid.Column="1" VerticalContentAlignment="Center"/>
+                                <TextBlock Grid.Column="0" Text="نام میانبر دوم" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBox Text="{Binding AppSettings.GeneralSettings.TransactionShortcut2.ShortcutName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center"/>
+                                <TextBlock Grid.Column="2" Text="نام فایل" VerticalAlignment="Center" Margin="5,0,5,0"/>
+                                <ComboBox SelectedItem="{Binding SelectedTransactionItem2, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="ItemName" IsEditable="False" Grid.Column="3" VerticalContentAlignment="Center"/>
                             </Grid>
                         </Grid>
                         <Grid Grid.Row="2" FlowDirection="RightToLeft">
@@ -493,14 +501,18 @@
                                 <RowDefinition Height="20"/>
                                 <RowDefinition Height="35"/>
                             </Grid.RowDefinitions>
-                            <CheckBox Content="نمایش میانبر سوم"/>
-                            <Grid Grid.Row="1" Margin="5">
+                            <CheckBox IsChecked="{Binding AppSettings.GeneralSettings.ShowTransactionShortcut3, Mode=TwoWay}" Content="نمایش میانبر سوم"/>
+                            <Grid IsEnabled="{Binding AppSettings.GeneralSettings.ShowTransactionShortcut3, Mode=TwoWay}" Grid.Row="1" Margin="5">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="140"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="نام میانبر سوم" Width="80" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                <TextBox Text="میانبر سوم" Grid.Column="1" VerticalContentAlignment="Center"/>
+                                <TextBlock Grid.Column="0" Text="نام میانبر سوم" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBox Text="{Binding AppSettings.GeneralSettings.TransactionShortcut3.ShortcutName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center"/>
+                                <TextBlock Grid.Column="2" Text="نام فایل" VerticalAlignment="Center" Margin="5,0,5,0"/>
+                                <ComboBox SelectedItem="{Binding SelectedTransactionItem3, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="ItemName" IsEditable="False" Grid.Column="3" VerticalContentAlignment="Center"/>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -521,20 +533,20 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
-                    <CheckBox Content="فاکتور جدید" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                    <CheckBox Content="نمایش فاکتورها" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                    <CheckBox Content="ویرایش فاکتورها" Grid.Column="4" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                    
-                    <CheckBox Content="فایل جدید" Grid.Row="1" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                    <CheckBox Content="نمایش فایل ها" Grid.Row="1" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                    <CheckBox Content="ویرایش فایل ها" Grid.Row="1" Grid.Column="4" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                    
-                    <CheckBox Content="چک جدید" Grid.Row="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                    <CheckBox Content="نمایش چک ها" Grid.Row="2" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                    <CheckBox Content="ویرایش چک ها" Grid.Row="2" Grid.Column="4" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                    
-                    <CheckBox Content="نمایش مشتریان" Grid.Row="3" Grid.Column="0" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                    <CheckBox Content="نمایش کالاها" Grid.Row="3" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                    <CheckBox Content="فاکتور جدید" IsChecked="{Binding AppSettings.GeneralSettings.CanAddNewInvoice, Mode=TwoWay}" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                    <CheckBox Content="نمایش فاکتورها" IsChecked="{Binding AppSettings.GeneralSettings.CanViewInvoices, Mode=TwoWay}" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                    <CheckBox Content="ویرایش فاکتورها" IsChecked="{Binding AppSettings.GeneralSettings.CanEditInvoices, Mode=TwoWay}" Grid.Column="4" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+
+                    <CheckBox Content="فایل جدید" IsChecked="{Binding AppSettings.GeneralSettings.CanAddNewTransaction, Mode=TwoWay}" Grid.Row="1" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                    <CheckBox Content="نمایش فایل ها" IsChecked="{Binding AppSettings.GeneralSettings.CanViewTransactions, Mode=TwoWay}" Grid.Row="1" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                    <CheckBox Content="ویرایش فایل ها" IsChecked="{Binding AppSettings.GeneralSettings.CanEditInvoices, Mode=TwoWay}" Grid.Row="1" Grid.Column="4" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+
+                    <CheckBox Content="چک جدید" IsChecked="{Binding AppSettings.GeneralSettings.CanAddNewCheque, Mode=TwoWay}" Grid.Row="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                    <CheckBox Content="نمایش چک ها" IsChecked="{Binding AppSettings.GeneralSettings.CanViewCheques, Mode=TwoWay}" Grid.Row="2" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                    <CheckBox Content="ویرایش چک ها" IsChecked="{Binding AppSettings.GeneralSettings.CanEditCheques, Mode=TwoWay}" Grid.Row="2" Grid.Column="4" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+
+                    <CheckBox Content="نمایش مشتریان" IsChecked="{Binding AppSettings.GeneralSettings.CanViewCustomers, Mode=TwoWay}" Grid.Row="3" Grid.Column="0" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                    <CheckBox Content="نمایش کالاها" IsChecked="{Binding AppSettings.GeneralSettings.CanViewProducts, Mode=TwoWay}" Grid.Row="3" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
                 </Grid>
             </TabItem>
         </TabControl>

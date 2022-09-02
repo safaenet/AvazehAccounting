@@ -10,7 +10,6 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
     {
         public string CompanyName { get; set; }
         public bool AutoSelectPersianLanguage { get; set; }
-        public bool UseAuthentication { get; set; }
         public bool ShowTransactionShortcut1 { get; set; }
         public bool ShowTransactionShortcut2 { get; set; }
         public bool ShowTransactionShortcut3 { get; set; }

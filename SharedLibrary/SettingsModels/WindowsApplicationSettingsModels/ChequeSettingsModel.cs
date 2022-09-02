@@ -18,8 +18,8 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
         public string NonSufficientFundItemColor { get; set; }
         public string CashedItemColor { get; set; }
 
-        public bool RemindCloseCheques { get; set; }
-        public int RemindDays { get; set; }
-        public string RemindColor { get; set; }
+        public bool NotifyCloseCheques { get; set; }
+        public int NotifyDays { get; set; }
+        public string NotificationColor { get; set; }
     }
 }
