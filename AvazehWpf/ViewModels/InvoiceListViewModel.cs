@@ -334,4 +334,20 @@ namespace AvazehWpf.ViewModels
             throw new NotSupportedException();
         }
     }
+    public class StringToColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null) return DependencyProperty.UnsetValue;
+            Color input = ((string)value).ToColor();
+            return input;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null) return DependencyProperty.UnsetValue;
+            string input = ((Color)value).ToHex();
+            return input;
+        }
+    }
 }

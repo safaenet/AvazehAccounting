@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using AvazehApiClient.DataAccess;
+using Xceed.Wpf.Toolkit;
 
 namespace AvazehWpf.ViewModels
 {
@@ -16,8 +17,10 @@ namespace AvazehWpf.ViewModels
     {
         public SettingsViewModel()
         {
-
+            AppSettings = new();
+            AppSettings.InvoiceSettings = new();
         }
+
         private AppSettingsModel appSettings;
         private ObservableCollection<ItemsForComboBox> transactionItemsForComboBox;
         private ItemsForComboBox selectedTransactionItem1;
@@ -45,6 +48,10 @@ namespace AvazehWpf.ViewModels
             get => selectedTransactionItem3;
             set { selectedTransactionItem3 = value; AppSettings.GeneralSettings.TransactionShortcut3.TransactionId = selectedTransactionItem3.Id; NotifyOfPropertyChange(() => SelectedTransactionItem3); }
         }
-        public Color NewInvoiceColor { get => AppSettings.InvoiceSettings.NewItemColor.ToColor(); set { AppSettings.InvoiceSettings.NewItemColor = value.ToHex(); NotifyOfPropertyChange(() => NewInvoiceColor); } }
+
+        public void SaveSettings()
+        {
+            
+        }
     }
 }

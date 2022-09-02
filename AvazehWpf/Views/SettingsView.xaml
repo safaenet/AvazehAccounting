@@ -7,6 +7,9 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:SettingsViewModel}"
         mc:Ignorable="d"
         Title="تنظیمات" Height="auto" Width="450" MaxWidth="450" MinWidth="450">
+    <Window.Resources>
+        <viewmodels:StringToColorConverter x:Key="StringToColorConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -43,7 +46,7 @@
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="فاکتورهای امروز" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.InvoiceSettings.NewItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="2" Grid.Row="0">
                                         <Grid.ColumnDefinitions>
@@ -51,8 +54,8 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فاکتورهای امروز" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <TextBlock Grid.Column="0" Text="فاکتورهای غیرفعال" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.InvoiceSettings.InactiveItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="0" Grid.Row="1">
                                         <Grid.ColumnDefinitions>
@@ -61,7 +64,7 @@
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="فاکتورهای بروز شده" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.InvoiceSettings.UpdatedItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="2" Grid.Row="1">
                                         <Grid.ColumnDefinitions>
@@ -69,8 +72,8 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فایل های بروز شده" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <TextBlock Grid.Column="0" Text="فاکتورهای آرشیو شده" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.InvoiceSettings.ArchiveItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="0" Grid.Row="2">
                                         <Grid.ColumnDefinitions>
@@ -79,7 +82,7 @@
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="فاکتورهای تسویه" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.InvoiceSettings.BalancedItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="2" Grid.Row="2">
                                         <Grid.ColumnDefinitions>
@@ -87,8 +90,8 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فایل های تسویه" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <TextBlock Grid.Column="0" Text="فاکتورهای حذف شده" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.InvoiceSettings.DeletedItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="0" Grid.Row="3">
                                         <Grid.ColumnDefinitions>
@@ -97,7 +100,7 @@
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="فاکتورهای بستانکار" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.InvoiceSettings.CreditorItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="2" Grid.Row="3">
                                         <Grid.ColumnDefinitions>
@@ -105,8 +108,8 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فایل های بستانکار" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <TextBlock Grid.Column="0" Text="اقلام جدید فاکتور" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.InvoiceSettings.DetailNewItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="0" Grid.Row="4">
                                         <Grid.ColumnDefinitions>
@@ -115,7 +118,7 @@
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="فاکتورهای بدهکار" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.InvoiceSettings.DeptorItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="2" Grid.Row="4">
                                         <Grid.ColumnDefinitions>
@@ -123,8 +126,8 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فایل های بدهکار" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <TextBlock Grid.Column="0" Text="اقلام بروز شده فاکتور" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.InvoiceSettings.DetailUpdatedItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Separator Grid.Column="1" Grid.Row="0" Grid.RowSpan="10" Margin="0,5,0,5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                 </Grid>
@@ -214,8 +217,8 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فاکتورهای امروز" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <TextBlock Grid.Column="0" Text="فایل های امروز" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.TransactionSettings.NewItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="2" Grid.Row="0">
                                         <Grid.ColumnDefinitions>
@@ -223,8 +226,8 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فاکتورهای امروز" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <TextBlock Grid.Column="0" Text="فایل های تسویه" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.TransactionSettings.BalancedItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="0" Grid.Row="1">
                                         <Grid.ColumnDefinitions>
@@ -232,8 +235,8 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فاکتورهای بروز شده" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <TextBlock Grid.Column="0" Text="فایل های بروز شده" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.TransactionSettings.UpdatedItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="2" Grid.Row="1">
                                         <Grid.ColumnDefinitions>
@@ -241,8 +244,8 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فایل های بروز شده" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <TextBlock Grid.Column="0" Text="فایل های تراز مثبت" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.TransactionSettings.PositiveItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="0" Grid.Row="2">
                                         <Grid.ColumnDefinitions>
@@ -250,8 +253,8 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فاکتورهای تسویه" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <TextBlock Grid.Column="0" Text="اقلام جدید فایل ها" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.TransactionSettings.DetailNewItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="2" Grid.Row="2">
                                         <Grid.ColumnDefinitions>
@@ -259,8 +262,8 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فاکتورهای تسویه" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <TextBlock Grid.Column="0" Text="فایل های تراز منفی" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.TransactionSettings.NegativeItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="0" Grid.Row="3">
                                         <Grid.ColumnDefinitions>
@@ -268,8 +271,8 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فاکتورهای تسویه" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <TextBlock Grid.Column="0" Text="اقلام بروزشده فایل ها" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.TransactionSettings.DetailUpdatedItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Separator Grid.Column="1" Grid.Row="0" Grid.RowSpan="4" Margin="0,5,0,5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                 </Grid>
@@ -345,7 +348,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فاکتورهای امروز" VerticalAlignment="Center" Margin="5"/>
+                                        <TextBlock Grid.Column="0" Text="چک های جدید" VerticalAlignment="Center" Margin="5"/>
                                         <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="2" Grid.Row="0">
@@ -354,7 +357,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فاکتورهای امروز" VerticalAlignment="Center" Margin="5"/>
+                                        <TextBlock Grid.Column="0" Text="چک های وصول شده" VerticalAlignment="Center" Margin="5"/>
                                         <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="0" Grid.Row="1">
@@ -363,7 +366,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فاکتورهای بروز شده" VerticalAlignment="Center" Margin="5"/>
+                                        <TextBlock Grid.Column="0" Text="چک های فروخته شده" VerticalAlignment="Center" Margin="5"/>
                                         <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="2" Grid.Row="1">
@@ -372,7 +375,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فایل های بروز شده" VerticalAlignment="Center" Margin="5"/>
+                                        <TextBlock Grid.Column="0" Text="اعلام چک های نزدیک" VerticalAlignment="Center" Margin="5"/>
                                         <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="0" Grid.Row="2">
@@ -381,7 +384,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="فاکتورهای تسویه" VerticalAlignment="Center" Margin="5"/>
+                                        <TextBlock Grid.Column="0" Text="چک های برگشت خورده" VerticalAlignment="Center" Margin="5"/>
                                         <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Separator Grid.Column="1" Grid.Row="0" Grid.RowSpan="4" Margin="0,5,0,5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
@@ -393,9 +396,9 @@
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
-                                <CheckBox IsChecked="{Binding AppSettings.ChequeSettings.NotifyCloseCheques, Mode=TwoWay}" Grid.Column="0" Content="اعلام تاریخ وصول چک" VerticalAlignment="Center" Margin="0,5,5,5" FlowDirection="RightToLeft"/>
+                                <CheckBox IsChecked="{Binding AppSettings.ChequeSettings.NotifyCloseCheques, Mode=TwoWay}" Grid.Column="0" Content="اعلام تاریخ وصول چک" VerticalAlignment="Center" Margin="0,0,5,0" FlowDirection="RightToLeft"/>
                                 <xctk:IntegerUpDown Text="{Binding AppSettings.ChequeSettings.NotifyDays, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Name="myUpDownControl3" Margin="0,5,0,5" VerticalContentAlignment="Center" Width="50"/>
-                                <TextBlock Grid.Column="2" Text="روز قبل از تاریخ وصول" Margin="5" VerticalAlignment="Center" FlowDirection="RightToLeft"/>
+                                <TextBlock Grid.Column="2" Text="روز قبل از تاریخ وصول" Margin="5,0,0,5" VerticalAlignment="Center" FlowDirection="RightToLeft"/>
                             </Grid>
                             <Grid Grid.Row="2" Margin="5" Height="25" FlowDirection="RightToLeft">
                                 <Grid.ColumnDefinitions>
@@ -551,7 +554,7 @@
             </TabItem>
         </TabControl>
 
-        <Button Grid.Row="1" Content="ذخیره" Height="25" Margin="5,5,5,5"/>
+        <Button x:Name="SaveSettings" Grid.Row="1" Content="ذخیره" Height="25" Margin="5,5,5,5"/>
         <Button Grid.Row="2" Content="بستن" Height="25" Margin="5,0,5,5"/>
     </Grid>
 </Window>
