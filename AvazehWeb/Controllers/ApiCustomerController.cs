@@ -44,9 +44,9 @@ namespace AvazehWebAPI.Controllers
         public async Task<ActionResult<CustomerModel>> CreateItemAsync(CustomerModel_DTO_Create_Update model)
         {
             var newItem = model.AsDaL();
-            if (!Manager.Processor.ValidateItem(newItem as CustomerModel).IsValid) return BadRequest(0);
-            await Manager.Processor.CreateItemAsync(newItem as CustomerModel);
-            return newItem as CustomerModel;
+            if (!Manager.Processor.ValidateItem(newItem).IsValid) return BadRequest(0);
+            await Manager.Processor.CreateItemAsync(newItem);
+            return newItem;
         }
 
         [HttpPut("{Id}")]

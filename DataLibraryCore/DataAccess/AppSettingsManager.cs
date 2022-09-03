@@ -1,4 +1,5 @@
 ﻿using DataLibraryCore.DataAccess.Interfaces;
+using SharedLibrary.SettingsModels;
 using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using System;
 using System.Collections.Generic;
@@ -53,35 +54,34 @@ namespace DataLibraryCore.DataAccess
             return true;
         }
 
-        public async Task<object> LoadSettings(string Section)
-        {
-            if (string.IsNullOrEmpty(Section)) return null;
-            var settings = await LoadAllSettingsAsync();
-            switch (Section)
-            {
-                case nameof(AppSettingsModel.InvoiceSettings):
-                    return settings.InvoiceSettings;
-
-                case nameof(AppSettingsModel.TransactionSettings):
-                    return settings.TransactionSettings;
-
-                case nameof(AppSettingsModel.ChequeSettings):
-                    return settings.ChequeSettings;
-
-                case nameof(AppSettingsModel.GeneralSettings):
-                    return settings.GeneralSettings;
-
-                case nameof(AppSettingsModel.InvoicePrintSettings):
-                    return settings.InvoicePrintSettings;
-
-                default: return null;
-            }
-        }
-
         public async Task<InvoiceSettingsModel> LoadInvoiceSettings()
         {
             var settings = await LoadAllSettingsAsync();
             return settings.InvoiceSettings;
+        }
+
+        public async Task<TransactionSettingsModel> LoadTransactionSettings()
+        {
+            var settings = await LoadAllSettingsAsync();
+            return settings.TransactionSettings;
+        }
+
+        public async Task<ChequeSettingsModel> LoadChequeSettings()
+        {
+            var settings = await LoadAllSettingsAsync();
+            return settings.ChequeSettings;
+        }
+
+        public async Task<GeneralSettingsModel> LoadGeneralSettings()
+        {
+            var settings = await LoadAllSettingsAsync();
+            return settings.GeneralSettings;
+        }
+
+        public async Task<InvoicePrintSettingsModel> LoadInvoicePrintSettings()
+        {
+            var settings = await LoadAllSettingsAsync();
+            return settings.InvoicePrintSettings;
         }
     }
 }

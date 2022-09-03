@@ -13,7 +13,6 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
         public int PageSize { get; set; } = 50;
         public OrderType QueryOrderType { get; set; } = OrderType.DESC;
 
-
         public string NewItemColor { get; set; }
         public string UpdatedItemColor { get; set; }
         public string BalancedItemColor { get; set; }

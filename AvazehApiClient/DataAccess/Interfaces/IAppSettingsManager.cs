@@ -2,16 +2,16 @@
 using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using System.Threading.Tasks;
 
-namespace DataLibraryCore.DataAccess.Interfaces
+namespace AvazehApiClient.DataAccess.Interfaces
 {
     public interface IAppSettingsManager
     {
-        Task<AppSettingsModel> LoadAllSettingsAsync();
-        Task<bool> SaveAllSettingsAsync(AppSettingsModel settings);
-        Task<InvoiceSettingsModel> LoadInvoiceSettings();
-        Task<TransactionSettingsModel> LoadTransactionSettings();
+        Task<AppSettingsModel> LoadAllAppSettings();
         Task<ChequeSettingsModel> LoadChequeSettings();
         Task<GeneralSettingsModel> LoadGeneralSettings();
         Task<InvoicePrintSettingsModel> LoadInvoicePrintSettings();
+        Task<InvoiceSettingsModel> LoadInvoiceSettings();
+        Task<TransactionSettingsModel> LoadTransactionSettings();
+        Task SaveAllAppSettings(AppSettingsModel Settings);
     }
 }

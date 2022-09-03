@@ -17,6 +17,7 @@
         <viewmodels:NameToBrushConverterForForeground x:Key="NameToBrushConverterForForeground"/>
         <viewmodels:AmountToBrushConverterForBackground x:Key="AmountToBrushConverterForBackground"/>
         <viewmodels:AmountToBrushConverterForForeground x:Key="AmountToBrushConverterForForeground"/>
+        <viewmodels:StringToColorConverter x:Key="StringToColorConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.Resources>
@@ -106,7 +107,7 @@
                     </StackPanel>
                 </Button>
             </Grid>
-            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditInvoice]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" HorizontalGridLinesBrush="LightGray" ItemsSource="{Binding Invoices}" SelectedItem="{Binding SelectedInvoice}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False">
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditInvoice]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" HorizontalGridLinesBrush="LightGray" FontSize="{Binding InvoiceSettings.DataGridFontSize}" ItemsSource="{Binding Invoices}" SelectedItem="{Binding SelectedInvoice}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditInvoice]">

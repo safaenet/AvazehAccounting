@@ -28,9 +28,10 @@ namespace AvazehWpf.ViewModels
 {
     public class InvoiceListViewModel : Screen
     {
-        public InvoiceListViewModel(IInvoiceCollectionManager manager, SingletonClass singleton)
+        public InvoiceListViewModel(IInvoiceCollectionManager manager, SingletonClass singleton, IAppSettingsManager settingsManager)
         {
             ICM = manager;
+            ASM = settingsManager;
             _SelectedInvoice = new();
             Singleton = singleton;
             LoadSettings().ConfigureAwait(true);
@@ -38,10 +39,12 @@ namespace AvazehWpf.ViewModels
         }
 
         private IInvoiceCollectionManager _ICM;
+        private IAppSettingsManager ASM;
         private InvoiceListModel _SelectedInvoice;
         private SingletonClass Singleton;
-        private InvoiceSettingsModel Settings;
-        private InvoicePrintSettingsModel PrintSettings;
+        public InvoiceSettingsModel InvoiceSettings { get; private set; }
+        public InvoicePrintSettingsModel PrintSettings { get; private set; }
+        public GeneralSettingsModel GeneralSettings { get; private set; }
 
         public InvoiceListModel SelectedInvoice
         {
@@ -77,7 +80,10 @@ namespace AvazehWpf.ViewModels
 
         private async Task LoadSettings()
         {
-            Settings = await Singleton.LoadAppSettings(nameof(AppSettingsModel.InvoiceSettings)) as InvoiceSettingsModel;
+            var Settings = await ASM.LoadAllAppSettings();
+            InvoiceSettings = Settings.InvoiceSettings;
+            PrintSettings = Settings.InvoicePrintSettings;
+            GeneralSettings = Settings.GeneralSettings;
         }
 
         public async Task AddNewInvoice()
@@ -359,6 +365,21 @@ namespace AvazehWpf.ViewModels
             if (value == null) return DependencyProperty.UnsetValue;
             string input = ((Color)value).ToHex();
             return input;
+        }
+    }
+
+    public class StringToBrushConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null) return DependencyProperty.UnsetValue;
+            SolidColorBrush brush = new SolidColorBrush(((string)value).ToColor());
+            return brush;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
         }
     }
 

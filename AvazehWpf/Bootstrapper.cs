@@ -42,6 +42,7 @@ namespace AvazehWpf
                 .PerRequest<IInvoiceCollectionManager, InvoiceCollectionManagerAsync>()
                 .PerRequest<ITransactionCollectionManager, TransactionCollectionManagerAsync>()
                 .PerRequest<ITransactionDetailManager, TransactionDetailManager>()
+                .PerRequest<IAppSettingsManager, AppSettingsManager>()
                 .Singleton<SingletonClass>();
         }
 

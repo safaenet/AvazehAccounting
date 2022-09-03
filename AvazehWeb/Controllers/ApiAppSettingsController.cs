@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.DalModels;
+using SharedLibrary.SettingsModels;
 using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using System.Threading.Tasks;
 
@@ -26,21 +27,50 @@ namespace AvazehWeb.Controllers
             return item;
         }
 
-        [HttpGet("{Section}")]
-        public async Task<ActionResult<object>> GetSettingsAsync(string Section)
-        {
-            if (string.IsNullOrEmpty(Section)) return NotFound("Couldn't find specific Item");
-            var item = await Manager.LoadSettings(Section);
-            if (item is null) return NotFound("Couldn't find specific Item");
-            return item;
-        }
-
-        [HttpGet("InvoiceSettings")]
+        [HttpGet(nameof(AppSettingsModel.InvoiceSettings))]
         public async Task<ActionResult<InvoiceSettingsModel>> GetInvoiceSettingsAsync()
         {
             var item = await Manager.LoadInvoiceSettings();
             if (item is null) return NotFound("Couldn't find specific Item");
             return item;
+        }
+
+        [HttpGet(nameof(AppSettingsModel.TransactionSettings))]
+        public async Task<ActionResult<TransactionSettingsModel>> GetTransactionSettingsAsync()
+        {
+            var item = await Manager.LoadTransactionSettings();
+            if (item is null) return NotFound("Couldn't find specific Item");
+            return item;
+        }
+
+        [HttpGet(nameof(AppSettingsModel.ChequeSettings))]
+        public async Task<ActionResult<ChequeSettingsModel>> GetChequeSettingsAsync()
+        {
+            var item = await Manager.LoadChequeSettings();
+            if (item is null) return NotFound("Couldn't find specific Item");
+            return item;
+        }
+
+        [HttpGet(nameof(AppSettingsModel.GeneralSettings))]
+        public async Task<ActionResult<GeneralSettingsModel>> GetGeneralSettingsAsync()
+        {
+            var item = await Manager.LoadGeneralSettings();
+            if (item is null) return NotFound("Couldn't find specific Item");
+            return item;
+        }
+
+        [HttpGet(nameof(AppSettingsModel.InvoicePrintSettings))]
+        public async Task<ActionResult<InvoicePrintSettingsModel>> GetInvoicePrintSettingsAsync()
+        {
+            var item = await Manager.LoadInvoicePrintSettings();
+            if (item is null) return NotFound("Couldn't find specific Item");
+            return item;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<bool>> SaveAllSettingsAsync(AppSettingsModel Settings)
+        {
+            return await Manager.SaveAllSettingsAsync(Settings);
         }
     }
 }
