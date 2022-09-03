@@ -14,7 +14,7 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
             TransactionShortcut2 = new();
             TransactionShortcut3 = new();
         }
-        public string CompanyName { get; set; }
+        public string CompanyName { get; set; } = "آوازه";
         public bool AutoSelectPersianLanguage { get; set; }
         public bool ShowTransactionShortcut1 { get; set; }
         public bool ShowTransactionShortcut2 { get; set; }
@@ -23,25 +23,25 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
         public TransactionShortcutModel TransactionShortcut2 { get; set; }
         public TransactionShortcutModel TransactionShortcut3 { get; set; }
 
-        public bool CanAddNewInvoice { get; set; }
-        public bool CanViewInvoices { get; set; }
-        public bool CanEditInvoices { get; set; }
+        public bool CanAddNewInvoice { get; set; } = true;
+        public bool CanViewInvoices { get; set; } = true;
+        public bool CanEditInvoices { get; set; } = true;
 
-        public bool CanAddNewTransaction { get; set; }
-        public bool CanViewTransactions { get; set; }
-        public bool CanEditTransactions { get; set; }
+        public bool CanAddNewTransaction { get; set; } = true;
+        public bool CanViewTransactions { get; set; } = true;
+        public bool CanEditTransactions { get; set; } = true;
 
-        public bool CanAddNewCheque { get; set; }
-        public bool CanViewCheques { get; set; }
-        public bool CanEditCheques { get; set; }
+        public bool CanAddNewCheque { get; set; } = true;
+        public bool CanViewCheques { get; set; } = true;
+        public bool CanEditCheques { get; set; } = true;
 
-        public bool CanViewProducts { get; set; }
-        public bool CanViewCustomers { get; set; }
+        public bool CanViewProducts { get; set; } = true;
+        public bool CanViewCustomers { get; set; } = true;
     }
 
     public class TransactionShortcutModel
     {
         public int TransactionId { get; set; }
-        public string ShortcutName { get; set; }
+        public string ShortcutName { get; set; } = "نام میانبر";
     }
 }

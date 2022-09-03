@@ -9,8 +9,8 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
 {
     public class InvoiceSettingsModel
     {
-        public int DataGridFontSize { get; set; }
-        public int PageSize { get; set; }
+        public int DataGridFontSize { get; set; } = 12;
+        public int PageSize { get; set; } = 50;
         public OrderType QueryOrderType { get; set; } = OrderType.DESC;
 
 
@@ -24,13 +24,13 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
         public string ArchiveItemColor { get; set; }
         public string DeletedItemColor { get; set; }
 
-        public int DetailDataGridFontSize { get; set; }
+        public int DetailDataGridFontSize { get; set; } = 12;
         public string DetailNewItemColor { get; set; }
         public string DetailUpdatedItemColor { get; set; }
-        public bool DetailShowNetProfit { get; set; }
-        public bool EnableBarcodeReader { get; set; }
-        public int BarcodeAddItemCount { get; set; }
-        public bool AutoAddNewProducts { get; set; }
-        public bool CanHaveSimilarItems { get; set; }
+        public bool DetailShowNetProfit { get; set; } = true;
+        public bool EnableBarcodeReader { get; set; } = true;
+        public int BarcodeAddItemCount { get; set; } = 1;
+        public bool AutoAddNewProducts { get; set; } = true;
+        public bool CanHaveSimilarItems { get; set; } = true;
     }
 }

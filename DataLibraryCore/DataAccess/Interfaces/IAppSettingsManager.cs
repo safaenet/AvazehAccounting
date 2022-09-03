@@ -7,5 +7,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
     {
         Task<AppSettingsModel> LoadAllSettingsAsync();
         Task<bool> SaveAllSettingsAsync(AppSettingsModel settings);
+        Task<object> LoadSettings(string Section);
+        Task<InvoiceSettingsModel> LoadInvoiceSettings();
     }
 }

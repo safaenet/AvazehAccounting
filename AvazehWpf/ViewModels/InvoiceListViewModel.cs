@@ -5,6 +5,8 @@ using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
+using SharedLibrary.SettingsModels;
+using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using SharedLibrary.Validators;
 using System;
 using System.Collections.Generic;
@@ -31,12 +33,15 @@ namespace AvazehWpf.ViewModels
             ICM = manager;
             _SelectedInvoice = new();
             Singleton = singleton;
+            LoadSettings().ConfigureAwait(true);
             Search().ConfigureAwait(true);
         }
 
         private IInvoiceCollectionManager _ICM;
         private InvoiceListModel _SelectedInvoice;
         private SingletonClass Singleton;
+        private InvoiceSettingsModel Settings;
+        private InvoicePrintSettingsModel PrintSettings;
 
         public InvoiceListModel SelectedInvoice
         {
@@ -69,6 +74,11 @@ namespace AvazehWpf.ViewModels
         public string SearchText { get; set; }
         public int SelectedFinStatus { get; set; } = 1;
         public int SelectedLifeStatus { get; set; }
+
+        private async Task LoadSettings()
+        {
+            Settings = await Singleton.LoadAppSettings(nameof(AppSettingsModel.InvoiceSettings)) as InvoiceSettingsModel;
+        }
 
         public async Task AddNewInvoice()
         {
