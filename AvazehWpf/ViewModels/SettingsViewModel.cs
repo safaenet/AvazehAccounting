@@ -10,14 +10,16 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using AvazehApiClient.DataAccess;
 using Xceed.Wpf.Toolkit;
+using AvazehApiClient.DataAccess.Interfaces;
 
 namespace AvazehWpf.ViewModels
 {
     public class SettingsViewModel : ViewAware
     {
-        public SettingsViewModel(SingletonClass singleton)
+        public SettingsViewModel(SingletonClass singleton, IAppSettingsManager settingsManager)
         {
             Singleton = singleton;
+            SettingsManager = settingsManager;
             LoadTransactionNames().ConfigureAwait(true);
             LoadAllSettings().ConfigureAwait(true);
         }
@@ -30,11 +32,12 @@ namespace AvazehWpf.ViewModels
         private async Task LoadAllSettings()
         {
             AppSettings = new();
-            var s = await Singleton.ReloadAllAppSettings();
+            var s = await SettingsManager.LoadAllAppSettings();
             if (s != null) AppSettings = s;
         }
 
         private AppSettingsModel appSettings;
+        IAppSettingsManager SettingsManager;
         SingletonClass Singleton;
         private ObservableCollection<ItemsForComboBox> transactionItemsForComboBox;
         private ItemsForComboBox selectedTransactionItem1;
@@ -69,7 +72,7 @@ namespace AvazehWpf.ViewModels
 
         public void SaveSettings()
         {
-            
+            SettingsManager.SaveAllAppSettings(AppSettings);
         }
 
         public void CloseWindow()

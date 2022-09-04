@@ -17,7 +17,7 @@
         <viewmodels:NameToBrushConverterForForeground x:Key="NameToBrushConverterForForeground"/>
         <viewmodels:AmountToBrushConverterForBackground x:Key="AmountToBrushConverterForBackground"/>
         <viewmodels:AmountToBrushConverterForForeground x:Key="AmountToBrushConverterForForeground"/>
-        <viewmodels:StringToColorConverter x:Key="StringToColorConverter"/>
+        <viewmodels:TestMultivalueConverter x:Key="TestMultivalueConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.Resources>
@@ -169,11 +169,21 @@
                         </MenuItem>
                     </ContextMenu>
                 </DataGrid.ContextMenu>
+                <DataGrid.Resources>
+                    
+                </DataGrid.Resources>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="شماره" Binding="{Binding Path=Id, Mode=OneWay}" Width="50" >
+                    <DataGridTextColumn Header="شماره" x:Name="col1" Binding="{Binding Path=Id, Mode=OneWay}" Width="50">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Background" Value="{Binding Path=DateCreated, Converter={StaticResource NameToBrushConverterForBackground}}"/>
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource TestMultivalueConverter}">
+                                            <Binding ElementName="col1" Path="Value"/>
+                                            <Binding Source="NewItemColor"/>
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
                                 <Setter Property="Foreground" Value="{Binding Path=DateCreated, Converter={StaticResource NameToBrushConverterForForeground}}"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>

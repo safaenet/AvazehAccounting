@@ -42,7 +42,7 @@ namespace AvazehWpf.ViewModels
         private IAppSettingsManager ASM;
         private InvoiceListModel _SelectedInvoice;
         private SingletonClass Singleton;
-        public InvoiceSettingsModel InvoiceSettings { get; private set; }
+        public InvoiceSettingsModel InvoiceSettings { get; set; }
         public InvoicePrintSettingsModel PrintSettings { get; private set; }
         public GeneralSettingsModel GeneralSettings { get; private set; }
 
@@ -368,21 +368,6 @@ namespace AvazehWpf.ViewModels
         }
     }
 
-    public class StringToBrushConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value == null) return DependencyProperty.UnsetValue;
-            SolidColorBrush brush = new SolidColorBrush(((string)value).ToColor());
-            return brush;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotSupportedException();
-        }
-    }
-
     public class PersianOrderStringToEnglishOrderStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -397,6 +382,38 @@ namespace AvazehWpf.ViewModels
             if (value == null) return DependencyProperty.UnsetValue;
             if ((string)value == "صعودی") return OrderType.ASC;
             return OrderType.DESC;
+        }
+    }
+
+    public class TestMultivalueConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (values.Length == 1) return DependencyProperty.UnsetValue;
+            if (values.Count() >= 2)
+            {
+                //if (string.IsNullOrEmpty(values[0].ToString()) || string.IsNullOrEmpty(values[1].ToString()))
+                //    return DependencyProperty.UnsetValue;
+                //else return Brushes.AliceBlue;
+                return Brushes.AliceBlue;
+            }
+            else
+            {
+                Brush b;
+
+                switch ((string)values[0])
+                {
+                    case "0": b=Brushes.LightPink; break;
+                    default: b=Brushes.Yellow;break;
+
+                }
+                return b;
+            }
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }
