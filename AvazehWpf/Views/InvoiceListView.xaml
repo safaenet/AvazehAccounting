@@ -9,7 +9,6 @@
         xmlns:local="clr-namespace:AvazehWpf" mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
-        xmlns:vm="clr-namespace:AvazehWpf.ViewModels;assembly=AvazehWpf"
         d:DataContext="{d:DesignInstance Type=viewmodels:InvoiceListViewModel}"
         Title="فاکتور ها" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1030" Height="650">
@@ -19,6 +18,7 @@
         <viewmodels:AmountToBrushConverterForBackground x:Key="AmountToBrushConverterForBackground"/>
         <viewmodels:AmountToBrushConverterForForeground x:Key="AmountToBrushConverterForForeground"/>
         <viewmodels:TestMultivalueConverter x:Key="TestMultivalueConverter"/>
+        <local:AppSettings x:Key="settings"/>
     </Window.Resources>
     <Grid>
         <Grid.Resources>
@@ -180,7 +180,7 @@
                                 <Setter Property="Background">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource TestMultivalueConverter}">
-                                            <Binding Source="{Binding InvoiceSettings.NewItemColor, Source={StaticResource ss}}"/>
+                                            <Binding Path="Settings.InvoiceSettings.NewItemColor" Source="{StaticResource settings}"/>
                                             <Binding Path="DateCreated"/>
                                         </MultiBinding>
                                     </Setter.Value>

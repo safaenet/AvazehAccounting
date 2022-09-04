@@ -45,6 +45,7 @@ namespace AvazehWpf.ViewModels
         public InvoiceSettingsModel InvoiceSettings { get; set; }
         public InvoicePrintSettingsModel PrintSettings { get; private set; }
         public GeneralSettingsModel GeneralSettings { get; private set; }
+        public string MyProperty { get; set; } = "safa";
 
         public InvoiceListModel SelectedInvoice
         {
