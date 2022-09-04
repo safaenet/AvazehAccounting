@@ -22,6 +22,8 @@ using System.Xml.Serialization;
 using System.Xml;
 using System.IO;
 using System.Diagnostics;
+using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
+using SharedLibrary.SettingsModels;
 
 namespace AvazehWpf.ViewModels
 {
@@ -31,8 +33,10 @@ namespace AvazehWpf.ViewModels
         {
             InvoiceCollectionManager = iManager;
             InvoiceDetailManager = dManager;
+            ASM = settingsManager;
             CallBackFunc = callBack;
             Singleton = singleton;
+            LoadSettings().ConfigureAwait(true);
             if (InvoiceId is not null)
             {
                 ReloadInvoice(InvoiceId).ConfigureAwait(true);
@@ -42,12 +46,16 @@ namespace AvazehWpf.ViewModels
 
         private readonly IInvoiceCollectionManager InvoiceCollectionManager;
         private readonly IInvoiceDetailManager InvoiceDetailManager;
+        private readonly IAppSettingsManager ASM;
         private readonly SingletonClass Singleton;
         private InvoiceModel _Invoice;
         private readonly Func<Task> CallBackFunc;
         private ObservableCollection<ItemsForComboBox> productItems;
         private ObservableCollection<ProductUnitModel> productUnits;
         private ObservableCollection<RecentSellPriceModel> recentSellPrices;
+        public InvoiceSettingsModel InvoiceSettings { get; private set; }
+        public InvoicePrintSettingsModel PrintSettings { get; private set; }
+        public GeneralSettingsModel GeneralSettings { get; private set; }
         private InvoiceItemModel _workItem = new();
         private bool CanUpdateRowFromDB = true; //False when user DoubleClicks on a row.
         private bool EdittingItem = false;
@@ -66,6 +74,13 @@ namespace AvazehWpf.ViewModels
         private double customerTotalBalancePlusThis;
         private bool isProductInputDropDownOpen;
         private string windowTitle;
+        private async Task LoadSettings()
+        {
+            var Settings = await ASM.LoadAllAppSettings();
+            InvoiceSettings = Settings.InvoiceSettings;
+            PrintSettings = Settings.InvoicePrintSettings;
+            GeneralSettings = Settings.GeneralSettings;
+        }
 
         public string WindowTitle
         {
@@ -144,37 +159,64 @@ namespace AvazehWpf.ViewModels
         {
             if (Invoice == null) return;
             ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(InvoiceCollectionManager.ApiProcessor);
-            if (SelectedProductItem == null && ProductInput != null && ProductInput.Length > 0 && EdittingItem == false) //Search barcode
+            if (SelectedProductItem == null && ProductInput != null && ProductInput.Length > 0 && EdittingItem == false) //Search by Entered text
             {
-                var product = await productManager.GetItemByBarCodeAsync(ProductInput);
-                ProductInput = "";
-                if (product == null)
+                if (InvoiceSettings.EnableBarcodeReader) //Search Barcode
                 {
-                    //Show some red color as "not found" error.
-                    return;
-                }
-                if (Invoice.Items == null) Invoice.Items = new();
-                var item = Invoice.Items.FirstOrDefault(x => x.Product.Id == product.Id);
-                if (item == null) //If doesnt exsist in list, add new
-                {
-                    WorkItem = new();
-                    WorkItem.InvoiceId = Invoice.Id;
-                    WorkItem.Product = product;
-                    WorkItem.SellPrice = product.SellPrice;
-                    WorkItem.BuyPrice = product.BuyPrice;
-                    WorkItem.CountString = (1).ToString();
-                    var addedItem = await InvoiceDetailManager.CreateItemAsync(WorkItem);
-                    if (addedItem is not null)
+                    var product = await productManager.GetItemByBarCodeAsync(ProductInput);
+                    if (product != null) //Found by barcode.
                     {
-                        //Validate here
-                        Invoice.Items.Add(addedItem);
+                        if (Invoice.Items == null) Invoice.Items = new();
+                        var item = Invoice.Items.FirstOrDefault(x => x.Product.Id == product.Id);
+                        if (item == null) //If doesnt exsist in list, add new
+                        {
+                            WorkItem = new();
+                            WorkItem.InvoiceId = Invoice.Id;
+                            WorkItem.Product = product;
+                            WorkItem.SellPrice = product.SellPrice;
+                            WorkItem.BuyPrice = product.BuyPrice;
+                            WorkItem.CountString = InvoiceSettings.BarcodeAddItemCount.ToString();
+                            var addedItem = await InvoiceDetailManager.CreateItemAsync(WorkItem);
+                            if (addedItem is not null)
+                            {
+                                //Validate here
+                                Invoice.Items.Add(addedItem);
+                            }
+                        }
+                        else //if exists in list, update it to "BarcodeAddItemCount" more
+                        {
+                            WorkItem = item;
+                            WorkItem.CountString = (WorkItem.CountValue + InvoiceSettings.BarcodeAddItemCount).ToString();
+                            await UpdateItemInDatabase(WorkItem);
+                        }
                     }
-                }
-                else //if exists in list, update it to one more
-                {
-                    WorkItem = item;
-                    WorkItem.CountString = (WorkItem.CountValue + 1).ToString();
-                    await UpdateItemInDatabase(WorkItem);
+                    else if (InvoiceSettings.AutoAddNewProducts) //Not found by barcode, Try to create new product.
+                    {
+                        if (MessageBox.Show("نام کالای وارد شده موجود نیست. آیا به لیست کالاها اضافه شود ؟", "اضافه کردن کالا", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
+                        {
+                            ProductModel newProduct = new();
+                            newProduct.SellPrice = WorkItem.SellPrice;
+                            newProduct.ProductName = ProductInput;
+                            if (long.TryParse(ProductInput, out _)) newProduct.Barcode = ProductInput;
+                            newProduct.BuyPrice = WorkItem.BuyPrice;
+                            var p = await productManager.CreateItemAsync(newProduct);
+                            if (p is not null)
+                            {
+                                ItemsForComboBox item = new() { Id = p.Id, ItemName = p.ProductName };
+                                ProductItemsForComboBox.Add(item);
+                                SelectedProductItem = item;
+                                WorkItem.Id = p.Id;
+                                WorkItem.InvoiceId = Invoice.Id;
+                                WorkItem.Product = p;
+                                //Add newly created product to invoice:
+                                if (Invoice.Items == null) Invoice.Items = new();
+                                var addedItem = await InvoiceDetailManager.CreateItemAsync(WorkItem);
+                                if (addedItem is not null)
+                                    Invoice.Items.Add(addedItem);
+                            }
+                        }
+                    }
+                    else MessageBox.Show("نام کالای وارد شده موجود نیست", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else

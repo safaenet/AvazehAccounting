@@ -199,14 +199,14 @@
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="کل بدهی" FontWeight="Bold" Margin="3,0,0,2" VerticalAlignment="Center"/>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="0,0,3,3" HorizontalAlignment="Right">
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding InvoiceSettings.DetailShowNetProfit}" Margin="0,0,3,3" HorizontalAlignment="Right">
                             <TextBlock Text="{Binding Invoice.NetProfit, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Visibility="{Binding IsChecked, ElementName=ShowNetProfit, Converter={StaticResource b2v}}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="118" VerticalAlignment="Center"/>
                             <CheckBox x:Name="ShowNetProfit" FlowDirection="RightToLeft">
                                 <TextBlock Text="سود خالص" Margin="0,0,0,2"/>
                             </CheckBox>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="0,0,3,0" HorizontalAlignment="Right">
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding InvoiceSettings.DetailShowNetProfit}" Margin="0,0,3,0" HorizontalAlignment="Right">
                             <TextBlock Text="{Binding Invoice.CurrentProfit, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Visibility="{Binding IsChecked, ElementName=ShowNetProfit, Converter={StaticResource b2v}}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="120" VerticalAlignment="Center"/>
                             <TextBlock Text="سود جاری" Margin="0,0,22,2"/>
                         </StackPanel>
@@ -336,7 +336,7 @@
                 </StackPanel>
             </Grid>
             <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditItem()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
-                      Grid.Row="1" ItemsSource="{Binding Invoice.Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" FlowDirection="RightToLeft" AutoGenerateColumns="False"
+                      Grid.Row="1" ItemsSource="{Binding Invoice.Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" FlowDirection="RightToLeft" AutoGenerateColumns="False" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding InvoiceSettings.DetailDataGridFontSize}" RowHeight="25"
                       IsTabStop="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
@@ -347,6 +347,10 @@
                         </MenuItem>
                     </ContextMenu>
                 </DataGrid.ContextMenu>
+                <DataGrid.Resources>
+                    <local:DateToColorConverter x:Key="DateToColorConverter"/>
+                    <local:AmountToColorConverter x:Key="AmountToColorConverter"/>
+                </DataGrid.Resources>                
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="ت" CanUserResize="False">
                         <DataGridTemplateColumn.CellTemplate>
@@ -388,12 +392,73 @@
                     <DataGridTextColumn Header="جمع کل" Binding="{Binding TotalSellValue, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="{Binding NetProfit}" />
+                                <Setter Property="ToolTip" Value="{Binding NetProfit}"/>
                             </Style>
                         </DataGridTextColumn.CellStyle>
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource AmountToColorConverter}">
+                                            <Binding Path="NetProfit"/>
+                                            <Binding Source="null"/>
+                                            <Binding Source="null"/>
+                                            <Binding Path="Settings.InvoiceSettings.DetailNegativeProfitColor" Source="{StaticResource AppSettings}"/>
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding DateCreated, Mode=OneWay}" Width="70"/>
-                    <DataGridTextColumn Header="تاریخ ویرایش" Binding="{Binding DateUpdated, Mode=OneWay}" Width="72"/>
+                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding DateCreated, Mode=OneWay}" Width="70">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource DateToColorConverter}">
+                                            <Binding Path="DateCreated"/>
+                                            <Binding Path="CurrentPersianDate" Source="{StaticResource AppSettings}"/>
+                                            <Binding Path="Settings.InvoiceSettings.DetailNewItemColor" Source="{StaticResource AppSettings}"/>
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Foreground">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource DateToColorConverter}">
+                                            <Binding Path="DateCreated"/>
+                                            <Binding Path="CurrentPersianDate" Source="{StaticResource AppSettings}"/>
+                                            <Binding Source="#FF000000"/>
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="تاریخ ویرایش" Binding="{Binding DateUpdated, Mode=OneWay}" Width="72">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource DateToColorConverter}">
+                                            <Binding Path="DateUpdated"/>
+                                            <Binding Path="CurrentPersianDate" Source="{StaticResource AppSettings}"/>
+                                            <Binding Path="Settings.InvoiceSettings.DetailUpdatedItemColor" Source="{StaticResource AppSettings}"/>
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Foreground">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource DateToColorConverter}">
+                                            <Binding Path="DateUpdated"/>
+                                            <Binding Path="CurrentPersianDate" Source="{StaticResource AppSettings}"/>
+                                            <Binding Source="#FF000000"/>
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="ساعت ویرایش" Binding="{Binding TimeUpdated, Mode=OneWay}" Width="82"/>
                     <DataGridTextColumn Header="توضیحات" Binding="{Binding Descriptions, Mode=OneWay}" Width="*" MinWidth="80"/>
                 </DataGrid.Columns>

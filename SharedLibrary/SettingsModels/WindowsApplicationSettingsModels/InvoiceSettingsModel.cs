@@ -26,6 +26,7 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
         public int DetailDataGridFontSize { get; set; } = 12;
         public string DetailNewItemColor { get; set; } = "#FFF5F533";
         public string DetailUpdatedItemColor { get; set; } = "#FFDEDEDE";
+        public string DetailNegativeProfitColor { get; set; } = "#ffffadad";
         public bool DetailShowNetProfit { get; set; } = true;
         public bool EnableBarcodeReader { get; set; } = true;
         public int BarcodeAddItemCount { get; set; } = 1;

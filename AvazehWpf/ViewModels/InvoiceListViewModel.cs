@@ -42,7 +42,7 @@ namespace AvazehWpf.ViewModels
         private readonly IAppSettingsManager ASM;
         private InvoiceListModel _SelectedInvoice;
         private readonly SingletonClass Singleton;
-        public InvoiceSettingsModel InvoiceSettings { get; set; }
+        public InvoiceSettingsModel InvoiceSettings { get; private set; }
         public InvoicePrintSettingsModel PrintSettings { get; private set; }
         public GeneralSettingsModel GeneralSettings { get; private set; }
 
