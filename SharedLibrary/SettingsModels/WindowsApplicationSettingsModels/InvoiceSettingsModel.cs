@@ -15,6 +15,7 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
 
         public string NewItemColor { get; set; } = "#FFF5F533";
         public string UpdatedItemColor { get; set; } = "#FFDEDEDE";
+
         public string BalancedItemColor { get; set; } = "#ff94ffb6";
         public string DeptorItemColor { get; set; } = "#ffff9c7a";
         public string CreditorItemColor { get; set; } = "#ff7ad3ff";

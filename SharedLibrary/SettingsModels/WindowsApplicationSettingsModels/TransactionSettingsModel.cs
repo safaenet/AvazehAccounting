@@ -13,14 +13,15 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
         public int PageSize { get; set; } = 50;
         public OrderType QueryOrderType { get; set; } = OrderType.DESC;
 
-        public string NewItemColor { get; set; }
-        public string UpdatedItemColor { get; set; }
-        public string BalancedItemColor { get; set; }
-        public string PositiveItemColor { get; set; }
-        public string NegativeItemColor { get; set; }
+        public string NewItemColor { get; set; } = "#FFF5F533";
+        public string UpdatedItemColor { get; set; } = "#FFDEDEDE";
+
+        public string BalancedItemColor { get; set; } = "#ff94ffb6";
+        public string PositiveItemColor { get; set; } = "#ff7ad3ff";
+        public string NegativeItemColor { get; set; } = "#ffff9c7a";
 
         public int DetailDataGridFontSize { get; set; } = 12;
-        public string DetailNewItemColor { get; set; }
-        public string DetailUpdatedItemColor { get; set; }
+        public string DetailNewItemColor { get; set; } = "#FFF5F533";
+        public string DetailUpdatedItemColor { get; set; } = "#FFDEDEDE";
     }
 }
