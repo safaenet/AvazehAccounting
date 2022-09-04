@@ -27,7 +27,7 @@ namespace AvazehWpf.ViewModels
 {
     public class InvoiceDetailViewModel : ViewAware
     {
-        public InvoiceDetailViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, SingletonClass singleton, int? InvoiceId, Func<Task> callBack)
+        public InvoiceDetailViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, IAppSettingsManager settingsManager, SingletonClass singleton, int? InvoiceId, Func<Task> callBack)
         {
             InvoiceCollectionManager = iManager;
             InvoiceDetailManager = dManager;

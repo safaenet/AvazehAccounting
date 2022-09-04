@@ -13,11 +13,11 @@
         Title="Transactions" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1030" Height="650">
     <Window.Resources>
-        <viewmodels:NameToBrushConverterForBackground x:Key="NameToBrushConverterForBackground"/>
-        <viewmodels:NameToBrushConverterForForeground x:Key="NameToBrushConverterForForeground"/>
-        <viewmodels:AmountToBrushConverterForBackground x:Key="AmountToBrushConverterForBackground"/>
-        <viewmodels:AmountToBrushConverterForBackgroundInverted x:Key="AmountToBrushConverterForBackgroundInverted"/>
-        <viewmodels:AmountToBrushConverterForForeground x:Key="AmountToBrushConverterForForeground"/>
+        <local:NameToBrushConverterForBackground x:Key="NameToBrushConverterForBackground"/>
+        <local:NameToBrushConverterForForeground x:Key="NameToBrushConverterForForeground"/>
+        <local:AmountToBrushConverterForBackground x:Key="AmountToBrushConverterForBackground"/>
+        <local:AmountToBrushConverterForBackgroundInverted x:Key="AmountToBrushConverterForBackgroundInverted"/>
+        <local:AmountToBrushConverterForForeground x:Key="AmountToBrushConverterForForeground"/>
     </Window.Resources>
     <Grid>
         <Grid.Resources>

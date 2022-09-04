@@ -3,13 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AvazehWpf.Views" FontFamily="Tahoma"
+        xmlns:local="clr-namespace:AvazehWpf" FontFamily="Tahoma"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:SettingsViewModel}"
         mc:Ignorable="d"
         Title="تنظیمات" Height="auto" Width="450" MaxWidth="450" MinWidth="450">
     <Window.Resources>
-        <viewmodels:StringToColorConverter x:Key="StringToColorConverter"/>
-        <viewmodels:PersianOrderStringToEnglishOrderStringConverter x:Key="PersianOrderStringToEnglishOrderStringConverter"/>
+        <local:StringToColorConverter x:Key="StringToColorConverter"/>
+        <local:PersianOrderStringToEnglishOrderStringConverter x:Key="PersianOrderStringToEnglishOrderStringConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>

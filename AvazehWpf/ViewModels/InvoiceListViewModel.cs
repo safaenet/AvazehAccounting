@@ -39,13 +39,12 @@ namespace AvazehWpf.ViewModels
         }
 
         private IInvoiceCollectionManager _ICM;
-        private IAppSettingsManager ASM;
+        private readonly IAppSettingsManager ASM;
         private InvoiceListModel _SelectedInvoice;
-        private SingletonClass Singleton;
+        private readonly SingletonClass Singleton;
         public InvoiceSettingsModel InvoiceSettings { get; set; }
         public InvoicePrintSettingsModel PrintSettings { get; private set; }
         public GeneralSettingsModel GeneralSettings { get; private set; }
-        public string MyProperty { get; set; } = "safa";
 
         public InvoiceListModel SelectedInvoice
         {
@@ -85,10 +84,14 @@ namespace AvazehWpf.ViewModels
             InvoiceSettings = Settings.InvoiceSettings;
             PrintSettings = Settings.InvoicePrintSettings;
             GeneralSettings = Settings.GeneralSettings;
+
+            ICM.PageSize = InvoiceSettings.PageSize;
+            ICM.QueryOrderType = InvoiceSettings.QueryOrderType;
         }
 
         public async Task AddNewInvoice()
         {
+            if (!GeneralSettings.CanAddNewInvoice) return;
             WindowManager wm = new();
             ICollectionManager<CustomerModel> cManager = new CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>(ICM.ApiProcessor);
             await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, null, ICM, cManager, Search));
@@ -114,6 +117,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task Search()
         {
+            if (GeneralSettings != null && !GeneralSettings.CanViewInvoices) return;
             InvoiceFinancialStatus? FinStatus = SelectedFinStatus >= Enum.GetNames(typeof(InvoiceFinancialStatus)).Length ? null : (InvoiceFinancialStatus)SelectedFinStatus;
             InvoiceLifeStatus? LifeStatus = SelectedLifeStatus >= Enum.GetNames(typeof(InvoiceLifeStatus)).Length ? null : (InvoiceLifeStatus)SelectedLifeStatus;
             ICM.SearchValue = SearchText;
@@ -125,7 +129,8 @@ namespace AvazehWpf.ViewModels
 
         public void SearchSync()
         {
-            Task.Run(Search);
+            if (GeneralSettings.CanViewInvoices)
+                Task.Run(Search);
         }
 
         public async Task SearchBoxKeyDownHandler(ActionExecutionContext context)
@@ -138,9 +143,10 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditInvoice()
         {
+            if (!GeneralSettings.CanEditInvoices) return;
             if (Invoices == null || Invoices.Count == 0 || SelectedInvoice == null) return;
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, new InvoiceDetailManager(ICM.ApiProcessor), Singleton, SelectedInvoice.Id, RefreshPage));
+            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, new InvoiceDetailManager(ICM.ApiProcessor), ASM, Singleton, SelectedInvoice.Id, RefreshPage));
         }
 
         public async Task DeleteInvoice()
@@ -185,6 +191,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task PrintInvoice(int t)
         {
+            if (!GeneralSettings.CanViewInvoices) return;
             if (Invoices == null || Invoices.Count == 0 || SelectedInvoice == null || SelectedInvoice.Id == 0) return;
             var Invoice = await ICM.GetItemById(SelectedInvoice.Id);
             if (Invoice == null) return;
@@ -243,9 +250,14 @@ namespace AvazehWpf.ViewModels
             Dictionary<int, string> choices = new();
             for (int i = 0; i < Enum.GetNames(typeof(InvoiceFinancialStatus)).Length; i++)
             {
-                choices.Add(i, Enum.GetName(typeof(InvoiceFinancialStatus), i));
+                if (Enum.GetName(typeof(InvoiceFinancialStatus), i) == InvoiceFinancialStatus.Balanced.ToString())
+                    choices.Add(i, "تسویه");
+                else if (Enum.GetName(typeof(InvoiceFinancialStatus), i) == InvoiceFinancialStatus.Deptor.ToString())
+                    choices.Add(i, "بدهکار");
+                else if (Enum.GetName(typeof(InvoiceFinancialStatus), i) == InvoiceFinancialStatus.Creditor.ToString())
+                    choices.Add(i, "بستانکار");
             }
-            choices.Add(Enum.GetNames(typeof(InvoiceFinancialStatus)).Length, "All");
+            choices.Add(Enum.GetNames(typeof(InvoiceFinancialStatus)).Length, "همه");
             return choices;
         }
 
@@ -254,167 +266,17 @@ namespace AvazehWpf.ViewModels
             Dictionary<int, string> choices = new();
             for (int i = 0; i < Enum.GetNames(typeof(InvoiceLifeStatus)).Length; i++)
             {
-                choices.Add(i, Enum.GetName(typeof(InvoiceLifeStatus), i));
+                if (Enum.GetName(typeof(InvoiceLifeStatus), i) == InvoiceLifeStatus.Active.ToString())
+                    choices.Add(i, "فعال");
+                else if (Enum.GetName(typeof(InvoiceLifeStatus), i) == InvoiceLifeStatus.Inactive.ToString())
+                    choices.Add(i, "غیرفعال");
+                else if (Enum.GetName(typeof(InvoiceLifeStatus), i) == InvoiceLifeStatus.Archive.ToString())
+                    choices.Add(i, "آرشیو شده");
+                else if (Enum.GetName(typeof(InvoiceLifeStatus), i) == InvoiceLifeStatus.Deleted.ToString())
+                    choices.Add(i, "حذف شده");
             }
-            choices.Add(Enum.GetNames(typeof(InvoiceLifeStatus)).Length, "All");
+            choices.Add(Enum.GetNames(typeof(InvoiceLifeStatus)).Length, "همه");
             return choices;
-        }
-    }
-    
-    public class NameToBrushConverterForBackground : IValueConverter
-    {
-        private readonly string CurrentPersianDate =new PersianCalendar().GetPersianDate();
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            if(value == null) return DependencyProperty.UnsetValue;
-            string input = value.ToString();
-            if(input == CurrentPersianDate) return Brushes.LightYellow;
-            return DependencyProperty.UnsetValue;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotSupportedException();
-        }
-    }
-
-    public class NameToBrushConverterForForeground : IValueConverter
-    {
-        private readonly string CurrentPersianDate = new PersianCalendar().GetPersianDate();
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            if (value == null) return DependencyProperty.UnsetValue;
-            string input = value.ToString();
-            if (input == CurrentPersianDate) return Brushes.Black;
-            return DependencyProperty.UnsetValue;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotSupportedException();
-        }
-    }
-
-    public class AmountToBrushConverterForBackground : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            if (value == null) return DependencyProperty.UnsetValue;
-            double input = (double)value;
-            return input switch
-            {
-                < 0 => Brushes.LightBlue,
-                0 => Brushes.LightGreen,
-                > 0 => Brushes.LightPink,
-                _ => throw new NotImplementedException(),
-            };
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotSupportedException();
-        }
-    }
-
-    public class AmountToBrushConverterForBackgroundInverted : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            if (value == null) return DependencyProperty.UnsetValue;
-            double input = (double)value;
-            return input switch
-            {
-                < 0 => Brushes.LightPink,
-                0 => Brushes.LightGreen,
-                > 0 => Brushes.LightBlue,
-                _ => throw new NotImplementedException(),
-            };
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotSupportedException();
-        }
-    }
-
-    public class AmountToBrushConverterForForeground : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            if (value == null) return DependencyProperty.UnsetValue;
-            //double input = (double)value;
-           return Brushes.Black;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotSupportedException();
-        }
-    }
-
-    public class StringToColorConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value == null) return DependencyProperty.UnsetValue;
-            Color input = ((string)value).ToColor();
-            return input;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value == null) return DependencyProperty.UnsetValue;
-            string input = ((Color)value).ToHex();
-            return input;
-        }
-    }
-
-    public class PersianOrderStringToEnglishOrderStringConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            if (value == null) return DependencyProperty.UnsetValue;
-            if ((OrderType)value == OrderType.ASC) return "صعودی";
-            return "نزولی";
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            if (value == null) return DependencyProperty.UnsetValue;
-            if ((string)value == "صعودی") return OrderType.ASC;
-            return OrderType.DESC;
-        }
-    }
-
-    public class TestMultivalueConverter : IMultiValueConverter
-    {
-        public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            if (values.Length == 1) return DependencyProperty.UnsetValue;
-            if (values.Count() >= 2)
-            {
-                //if (string.IsNullOrEmpty(values[0].ToString()) || string.IsNullOrEmpty(values[1].ToString()))
-                //    return DependencyProperty.UnsetValue;
-                //else return Brushes.AliceBlue;
-                return Brushes.AliceBlue;
-            }
-            else
-            {
-                Brush b;
-
-                switch ((string)values[0])
-                {
-                    case "0": b=Brushes.LightPink; break;
-                    default: b=Brushes.Yellow;break;
-
-                }
-                return b;
-            }
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
         }
     }
 }

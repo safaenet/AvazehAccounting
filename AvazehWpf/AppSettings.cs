@@ -13,6 +13,7 @@ namespace AvazehWpf
         public AppSettings()
         {
             Settings = new();
+            CurrentPersianDate = new System.Globalization.PersianCalendar().GetPersianDate();
             LoadSettings().ConfigureAwait(false);
         }
 
@@ -25,5 +26,6 @@ namespace AvazehWpf
         private AppSettingsModel settings;
 
         public AppSettingsModel Settings { get => settings; set => settings = value; }
+        public string CurrentPersianDate { get; init; }
     }
 }

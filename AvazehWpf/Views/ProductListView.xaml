@@ -13,8 +13,8 @@
         Width="1350" Height="650">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="b2v"/>
-        <viewmodels:NameToBrushConverterForBackground x:Key="NameToBrushConverterForBackground"/>
-        <viewmodels:NameToBrushConverterForForeground x:Key="NameToBrushConverterForForeground"/>
+        <local:NameToBrushConverterForBackground x:Key="NameToBrushConverterForBackground"/>
+        <local:NameToBrushConverterForForeground x:Key="NameToBrushConverterForForeground"/>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
