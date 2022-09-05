@@ -289,7 +289,7 @@
                         <TextBlock TextAlignment="Center" Text="قیمت فروش" Margin="0,0,0,0"/>
                     </StackPanel>
                     <ComboBox ItemsSource="{Binding RecentSellPrices}" SelectedValuePath="SellPrice" DisplayMemberPath="SellPrice" Text="{Binding WorkItem.SellPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}"
-                              cal:Message.Attach="[Event GotFocus] = [Action SellPrice_GotFocus()]"
+                              cal:Message.Attach="[Event GotFocus] = [Action SellPrice_GotFocus()]; [Event KeyUp] = [Action CalculateTotalAmountOfWorkItem($source, $eventArgs)]"
                               IsDropDownOpen="{Binding IsSellPriceDropDownOpen, Mode=TwoWay}" IsEditable="True" Height="25" VerticalContentAlignment="Center" TabIndex="4"/>
                 </StackPanel>
 
@@ -314,7 +314,7 @@
                         <materialDesign:PackIcon Kind="Counter" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="تعداد" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <TextBox Text="{Binding WorkItem.CountString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding WorkItem.CountValue}" TabIndex="1" VerticalContentAlignment="Center" Height="25"/>
+                    <TextBox Text="{Binding WorkItem.CountString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" cal:Message.Attach="[Event TextChanged]=[Action CalculateTotalAmountOfWorkItem($source, $eventArgs)]" ToolTip="{Binding WorkItem.CountValue}" TabIndex="1" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="9" Orientation="Vertical" Margin="0,0,0,0">

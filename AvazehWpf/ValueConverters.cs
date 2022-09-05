@@ -197,6 +197,21 @@ namespace AvazehWpf
             return DependencyProperty.UnsetValue;
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => throw new NotImplementedException();
+    }
+    public class SumOfValues : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values == null || values.Length == 0) return DependencyProperty.UnsetValue;
+            long result = 0;
+            foreach (var item in values)
+                if (!string.IsNullOrEmpty(item.ToString()) && long.TryParse(item.ToString(), out long l))
+                    result *= l;
+                else return DependencyProperty.UnsetValue;
+            return result;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }

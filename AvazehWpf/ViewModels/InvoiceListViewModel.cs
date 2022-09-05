@@ -84,6 +84,7 @@ namespace AvazehWpf.ViewModels
             InvoiceSettings = Settings.InvoiceSettings;
             PrintSettings = Settings.InvoicePrintSettings;
             GeneralSettings = Settings.GeneralSettings;
+            PrintSettings.UserDescriptions = await ICM.GetUserDescriptions();
 
             ICM.PageSize = InvoiceSettings.PageSize;
             ICM.QueryOrderType = InvoiceSettings.QueryOrderType;
@@ -196,34 +197,13 @@ namespace AvazehWpf.ViewModels
             var Invoice = await ICM.GetItemById(SelectedInvoice.Id);
             if (Invoice == null) return;
             PrintInvoiceModel pim = new();
+            pim.PrintSettings = PrintSettings;
             Invoice.AsPrintModel(pim);
-            if (t == 12)
-            {
-                pim.MainHeaderText = "فاکتور فروش";
-            }
-            else if (t == 13)
-            {
-                pim.MainHeaderText = "فروشگاه آوازه";
-            }
-            else if (t == 21)
-            {
-                pim.MainHeaderText = "پیش فاکتور";
-            }
-            else if (t == 22)
-            {
-                pim.MainHeaderText = "فروشگاه آوازه";
-            }
+            if (t == 12) pim.PrintSettings.MainHeaderText = "فاکتور فروش";
+            else if (t == 13) pim.PrintSettings.MainHeaderText = "فروشگاه آوازه";
+            else if (t == 21) pim.PrintSettings.MainHeaderText = "پیش فاکتور";
+            else if (t == 22) pim.PrintSettings.MainHeaderText = "فروشگاه آوازه";
             pim.InvoiceType = t;
-            pim.HeaderDescription1 = "دوربین مداربسته، کرکره برقی، جک پارکینگی";
-            pim.HeaderDescription2 = "01734430827";
-            pim.FooterTextLeft = "Some Text Here";
-            pim.FooterTextRight = "توسعه دهنده نرم افزار: صفا دانا";
-            pim.LeftImagePath = AppDomain.CurrentDomain.BaseDirectory + @"Images\LeftImage.png";
-            pim.RightImagePath = AppDomain.CurrentDomain.BaseDirectory + @"Images\RightImage.png";
-            pim.MainHeaderTextFontSize = 30;
-            pim.HeaderDescriptionFontSize = 10;
-            pim.InvoiceTypeTextFontSize = 16;
-            pim.UserDescriptions = await ICM.GetUserDescriptions();
 
             XmlSerializer xmlSerializer = new(pim.GetType());
             StringWriter stringWriter = new();

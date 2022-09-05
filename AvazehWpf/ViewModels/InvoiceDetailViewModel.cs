@@ -31,8 +31,8 @@ namespace AvazehWpf.ViewModels
     {
         public InvoiceDetailViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, IAppSettingsManager settingsManager, SingletonClass singleton, int? InvoiceId, Func<Task> callBack)
         {
-            InvoiceCollectionManager = iManager;
-            InvoiceDetailManager = dManager;
+            ICM = iManager;
+            IDM = dManager;
             ASM = settingsManager;
             CallBackFunc = callBack;
             Singleton = singleton;
@@ -44,8 +44,8 @@ namespace AvazehWpf.ViewModels
             GetComboboxItems().ConfigureAwait(true);
         }
 
-        private readonly IInvoiceCollectionManager InvoiceCollectionManager;
-        private readonly IInvoiceDetailManager InvoiceDetailManager;
+        private readonly IInvoiceCollectionManager ICM;
+        private readonly IInvoiceDetailManager IDM;
         private readonly IAppSettingsManager ASM;
         private readonly SingletonClass Singleton;
         private InvoiceModel _Invoice;
@@ -124,7 +124,7 @@ namespace AvazehWpf.ViewModels
         private async Task ReloadInvoice(int? InvoiceId)
         {
             if (InvoiceId is null) return;
-            Invoice = await InvoiceCollectionManager.GetItemById((int)InvoiceId);
+            Invoice = await ICM.GetItemById((int)InvoiceId);
             WindowTitle = Invoice.Customer.FullName + " - فاکتور";
             await ReloadCustomerPreviousBalance();
         }
@@ -132,7 +132,7 @@ namespace AvazehWpf.ViewModels
         public async Task ReloadCustomerPreviousBalance()
         {
             if (Invoice is null) return;
-            CustomerPreviousTotalBalance = await InvoiceCollectionManager.GetCustomerTotalBalanceById(Invoice.Customer.Id, Invoice.Id);
+            CustomerPreviousTotalBalance = await ICM.GetCustomerTotalBalanceById(Invoice.Customer.Id, Invoice.Id);
             ReloadCustomerTotalBalance();
         }
 
@@ -158,7 +158,7 @@ namespace AvazehWpf.ViewModels
         public async Task AddOrUpdateItem()
         {
             if (Invoice == null) return;
-            ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(InvoiceCollectionManager.ApiProcessor);
+            ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(ICM.ApiProcessor);
             if (SelectedProductItem == null && ProductInput != null && ProductInput.Length > 0 && EdittingItem == false) //Search by Entered text
             {
                 if (InvoiceSettings.EnableBarcodeReader) //Search Barcode
@@ -176,11 +176,11 @@ namespace AvazehWpf.ViewModels
                             WorkItem.SellPrice = product.SellPrice;
                             WorkItem.BuyPrice = product.BuyPrice;
                             WorkItem.CountString = InvoiceSettings.BarcodeAddItemCount.ToString();
-                            var addedItem = await InvoiceDetailManager.CreateItemAsync(WorkItem);
+                            var addedItem = await IDM.CreateItemAsync(WorkItem);
                             if (addedItem is not null)
                             {
                                 //Validate here
-                                Invoice.Items.Add(addedItem);
+                                Invoice.Items.Insert(0, addedItem);
                             }
                         }
                         else //if exists in list, update it to "BarcodeAddItemCount" more
@@ -210,9 +210,9 @@ namespace AvazehWpf.ViewModels
                                 WorkItem.Product = p;
                                 //Add newly created product to invoice:
                                 if (Invoice.Items == null) Invoice.Items = new();
-                                var addedItem = await InvoiceDetailManager.CreateItemAsync(WorkItem);
+                                var addedItem = await IDM.CreateItemAsync(WorkItem);
                                 if (addedItem is not null)
-                                    Invoice.Items.Add(addedItem);
+                                    Invoice.Items.Insert(0, addedItem);
                             }
                         }
                     }
@@ -224,7 +224,7 @@ namespace AvazehWpf.ViewModels
                 if (WorkItem == null || SelectedProductItem == null || SelectedProductItem.Id == 0) return;
                 WorkItem.InvoiceId = Invoice.Id;
                 WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
-                var validate = InvoiceDetailManager.ValidateItem(WorkItem);
+                var validate = IDM.ValidateItem(WorkItem);
                 if (!validate.IsValid)
                 {
                     var str = "";
@@ -236,9 +236,9 @@ namespace AvazehWpf.ViewModels
                 if (EdittingItem == false) //New Item
                 {
                     if (Invoice.Items == null) Invoice.Items = new();
-                    var addedItem = await InvoiceDetailManager.CreateItemAsync(WorkItem);
+                    var addedItem = await IDM.CreateItemAsync(WorkItem);
                     if (addedItem is not null)
-                        Invoice.Items.Add(addedItem);
+                        Invoice.Items.Insert(0, addedItem);
                 }
                 else //Edit Item
                 {
@@ -258,7 +258,7 @@ namespace AvazehWpf.ViewModels
 
         private async Task UpdateItemInDatabase(InvoiceItemModel item)
         {
-            var ResultItem = await InvoiceDetailManager.UpdateItemAsync(item);
+            var ResultItem = await IDM.UpdateItemAsync(item);
             var EdittedItem = Invoice.Items.FirstOrDefault(x => x.Id == item.Id);
             if (ResultItem != null) ResultItem.Clone(EdittedItem);
             RefreshDataGrid();
@@ -269,7 +269,7 @@ namespace AvazehWpf.ViewModels
             if (Invoice == null || Invoice.Items == null || !Invoice.Items.Any() || SelectedItem == null) return;
             var result = MessageBox.Show("Are you sure you want to delete this row ?", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
-            if (await InvoiceDetailManager.DeleteItemAsync(SelectedItem.Id))
+            if (await IDM.DeleteItemAsync(SelectedItem.Id))
             {
                 if (SelectedItem.Id == WorkItem.Id)
                 {
@@ -300,7 +300,7 @@ namespace AvazehWpf.ViewModels
             if (Invoice == null) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete Invoice for {Invoice.Customer.FullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
-            if (await InvoiceCollectionManager.DeleteItemAsync(Invoice.Id) == false) MessageBox.Show($"Invoice with ID: {Invoice.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            if (await ICM.DeleteItemAsync(Invoice.Id) == false) MessageBox.Show($"Invoice with ID: {Invoice.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             CloseWindow();
         }
 
@@ -325,12 +325,12 @@ namespace AvazehWpf.ViewModels
         public async Task ViewPayments()
         {
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(InvoiceCollectionManager, InvoiceDetailManager, Invoice, RefreshAndReloadCustomerTotalBalance, true));
+            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(ICM, IDM, Invoice, RefreshAndReloadCustomerTotalBalance, true));
         }
 
         public async Task SaveInvoiceChanges()
         {
-            var result = await InvoiceCollectionManager.UpdateItemAsync(Invoice);
+            var result = await ICM.UpdateItemAsync(Invoice);
             Invoice.DateUpdated = result.DateUpdated;
             Invoice.TimeUpdated = result.TimeUpdated;
             RefreshDataGrid();
@@ -352,34 +352,19 @@ namespace AvazehWpf.ViewModels
             if (Invoice == null) return;
             await ReloadInvoice(Invoice.Id);
             PrintInvoiceModel pim = new();
+            pim.PrintSettings = PrintSettings;
             Invoice.AsPrintModel(pim);
-            if (t == 12)
-            {
-                pim.MainHeaderText = "فاکتور فروش";
-            }
-            else if (t == 13)
-            {
-                pim.MainHeaderText = "فروشگاه آوازه";
-            }
-            else if (t == 21)
-            {
-                pim.MainHeaderText = "پیش فاکتور";
-            }
-            else if (t == 22)
-            {
-                pim.MainHeaderText = "فروشگاه آوازه";
-            }
+            /* 11: فاکتور فروش بدون سربرگ
+             * 12: فاکتور فروش با سربرگ غیررسمی
+             * 13: فاکتور فروش با سربرگ غیررسمی
+             * 21: پیش فاکتور با سربرگ غیررسمی
+             * 22: پیش فاکتور با سربرگ رسمی
+             */
+            if (t == 12) pim.PrintSettings.MainHeaderText = "فاکتور فروش";
+            else if (t == 13) pim.PrintSettings.MainHeaderText = "فروشگاه آوازه";
+            else if (t == 21) pim.PrintSettings.MainHeaderText = "پیش فاکتور";
+            else if (t == 22) pim.PrintSettings.MainHeaderText = "فروشگاه آوازه";
             pim.InvoiceType = t;
-            pim.HeaderDescription1 = "دوربین مداربسته، کرکره برقی، جک پارکینگی";
-            pim.HeaderDescription2 = "01734430827";
-            pim.FooterTextLeft = "Some Text Here";
-            pim.FooterTextRight = "توسعه دهنده نرم افزار: صفا دانا";
-            pim.LeftImagePath = AppDomain.CurrentDomain.BaseDirectory + @"Images\LeftImage.png";
-            pim.RightImagePath = AppDomain.CurrentDomain.BaseDirectory + @"Images\RightImage.png";
-            pim.MainHeaderTextFontSize = 30;
-            pim.HeaderDescriptionFontSize = 10;
-            pim.InvoiceTypeTextFontSize = 16;
-            pim.UserDescriptions = await InvoiceCollectionManager.GetUserDescriptions();
             
             XmlSerializer xmlSerializer = new(pim.GetType());
             StringWriter stringWriter = new();
@@ -402,8 +387,8 @@ namespace AvazehWpf.ViewModels
         {
             if (Invoice is null) return;
             WindowManager wm = new();
-            ICollectionManager<CustomerModel> cManager = new CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>(InvoiceCollectionManager.ApiProcessor);
-            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, Invoice.Id, InvoiceCollectionManager, cManager, RefreshAndReloadCustomerTotalBalanceAsync));
+            ICollectionManager<CustomerModel> cManager = new CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>(ICM.ApiProcessor);
+            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, Invoice.Id, ICM, cManager, RefreshAndReloadCustomerTotalBalanceAsync));
         }
 
         public void CloseWindow()
@@ -437,12 +422,12 @@ namespace AvazehWpf.ViewModels
         {
             if (Invoice == null || SelectedProductItem == null) return;
             if (CanUpdateRowFromDB is false) return;
-            ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(InvoiceCollectionManager.ApiProcessor);
+            ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(ICM.ApiProcessor);
             WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
             WorkItem.BuyPrice = WorkItem.Product.BuyPrice;
             WorkItem.SellPrice = WorkItem.Product.SellPrice;
             RecentSellPrices?.Clear();
-            var recents = await InvoiceDetailManager.GetRecentSellPrices(1, Invoice.Customer.Id, WorkItem.Product.Id);
+            var recents = await IDM.GetRecentSellPrices(1, Invoice.Customer.Id, WorkItem.Product.Id);
             if (recents != null && recents.Count > 0) RecentSellPrices = recents;
             if (RecentSellPrices == null) RecentSellPrices = new();
             RecentSellPrices.Add(new RecentSellPriceModel { SellPrice = WorkItem.Product.SellPrice, DateSold = "اکنون" });
@@ -471,9 +456,14 @@ namespace AvazehWpf.ViewModels
             ProductUnits = await Singleton.ReloadProductUnits();
         }
 
-        void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        public void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
+
+        public void CalculateTotalAmountOfWorkItem(object sender, TextChangedEventArgs e)
+        {
+            NotifyOfPropertyChange(() => WorkItem);
         }
     }
 

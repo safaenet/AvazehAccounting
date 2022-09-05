@@ -28,6 +28,7 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
         public string DetailNewItemColor { get; set; } = "#FFF5F533";
         public string DetailUpdatedItemColor { get; set; } = "#FFDEDEDE";
         public string DetailNegativeProfitColor { get; set; } = "#ffffadad";
+        public OrderType DetailQueryOrderType { get; set; } = OrderType.DESC;
         public bool DetailShowNetProfit { get; set; } = true;
         public bool EnableBarcodeReader { get; set; } = true;
         public int BarcodeAddItemCount { get; set; } = 1;

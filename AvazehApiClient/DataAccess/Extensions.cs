@@ -264,21 +264,8 @@ namespace AvazehApiClient.DataAccess
         public static void AsPrintModel(this InvoiceModel invoice, PrintInvoiceModel piv)
         {
             if (invoice == null) return;
-            piv.Products = new();
-            piv.CustomerDescription = string.IsNullOrEmpty(invoice.Customer.Descriptions) ? "" : invoice.Customer.Descriptions;
-            piv.CustomerFullName = invoice.Customer.FullName;
-            piv.CustomerId = invoice.Customer.Id;
-            piv.CustomerPostAddress = string.IsNullOrEmpty(invoice.Customer.PostAddress) ? "" : invoice.Customer.PostAddress;
-            piv.InvoiceDateCreated = invoice.DateCreated;
-            piv.InvoiceDescription = string.IsNullOrEmpty(invoice.Descriptions) ? "" : invoice.Descriptions;
-            piv.InvoiceFinStatus = invoice.InvoiceFinancialStatus.ToString();
             piv.InvoiceId = invoice.Id;
-            piv.CustomerPhoneNumber = (invoice.Customer.PhoneNumbers == null || invoice.Customer.PhoneNumbers.Count == 0) ? "" : invoice.Customer.PhoneNumbers[0].PhoneNumber;
-            piv.TotalBalance = invoice.TotalBalance;
-            piv.TotalDiscountAmount = invoice.TotalDiscountAmount;
-            piv.TotalItemsSellSum = invoice.TotalItemsSellSum;
-            piv.TotalInvoiceSum = invoice.TotalInvoiceSum;
-            piv.TotalPayments = invoice.TotalPayments;
+            piv.Products = new();
             if (invoice.Items != null && invoice.Items.Count > 0)
                 foreach (var item in invoice.Items)
                 {
@@ -297,6 +284,19 @@ namespace AvazehApiClient.DataAccess
                     i.TotalPrice = item.TotalSellValue;
                     piv.Products.Add(i);
                 }
+            piv.CustomerId = invoice.Customer.Id;
+            piv.CustomerFullName = invoice.Customer.FullName;
+            piv.CustomerPhoneNumber = (invoice.Customer.PhoneNumbers == null || invoice.Customer.PhoneNumbers.Count == 0) ? "" : invoice.Customer.PhoneNumbers[0].PhoneNumber;
+            piv.InvoiceDateCreated = invoice.DateCreated;
+            piv.CustomerPostAddress = string.IsNullOrEmpty(invoice.Customer.PostAddress) ? "" : invoice.Customer.PostAddress;
+            piv.CustomerDescription = string.IsNullOrEmpty(invoice.Customer.Descriptions) ? "" : invoice.Customer.Descriptions;
+            piv.InvoiceDescription = string.IsNullOrEmpty(invoice.Descriptions) ? "" : invoice.Descriptions;
+            piv.InvoiceFinStatus = invoice.InvoiceFinancialStatus.ToString();
+            piv.TotalBalance = invoice.TotalBalance;
+            piv.TotalDiscountAmount = invoice.TotalDiscountAmount;
+            piv.TotalItemsSellSum = invoice.TotalItemsSellSum;
+            piv.TotalInvoiceSum = invoice.TotalInvoiceSum;
+            piv.TotalPayments = invoice.TotalPayments;
         }
 
         public static async Task<ProductModel> GetItemByBarCodeAsync(this ICollectionManager<ProductModel> manager, string BarCode)

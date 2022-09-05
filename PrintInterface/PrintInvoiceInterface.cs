@@ -32,6 +32,10 @@ namespace PrintInterface
 
         private void PrintInvoice_Load(object sender, EventArgs e)
         {
+            //var xmlSerializer = new XmlSerializer(pim.GetType());
+            //string xmlString = File.ReadAllText(@"D:\Users\avazeh1\Downloads\AvazehAccountingClone\AvazehWpf\bin\Debug\net5.0-windows\Temp\637980039153641537.xml");
+            //StringReader stringReader = new StringReader(xmlString);
+            //pim = xmlSerializer.Deserialize(stringReader) as PrintInvoiceModel;
             if (!File.Exists(FilePath))
             {
                 MessageBox.Show("فایل فاکتور یافت نشد\n" + FilePath, "خطای پارامتر ورودی", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -43,8 +47,8 @@ namespace PrintInterface
             pim = xmlSerializer.Deserialize(stringReader) as PrintInvoiceModel;
             File.Delete(FilePath);
 
-            if (pim.UserDescriptions != null && pim.UserDescriptions.Count > 0)
-                cmbUserDescriptions.DataSource = pim.UserDescriptions.Select(i => i.DescriptionText).ToList();
+            if (pim.PrintSettings.UserDescriptions != null && pim.PrintSettings.UserDescriptions.Count > 0)
+                cmbUserDescriptions.DataSource = pim.PrintSettings.UserDescriptions.Select(i => i.DescriptionText).ToList();
 
             ShowInvoiceId.Checked = pim.PrintInvoiceId;
             ShowInvoiceCreatedDate.Checked = pim.PrintDate;
@@ -54,12 +58,12 @@ namespace PrintInterface
             ShowInvoiceDescription.Checked = pim.PrintInvoiceDescription;
             ShowUserDescription.Checked = pim.PrintUserDescription;
 
-            cmbPageHeaderFontSize.Text = pim.PageHeaderFontSize.ToString();
-            cmbDetailsFontSize.Text = pim.DetailsFontSize.ToString();
-            cmbPageFooterFontSize.Text = pim.PageFooterFontSize.ToString();
-            cmbDescriptionFontSize.Text = pim.DescriptionFontSize.ToString();
-            cmbPrintLayout.Text = pim.PrintLayout;
-            cmbPageSize.Text = pim.PaperSize;
+            cmbPageHeaderFontSize.Text = pim.PrintSettings.PageHeaderFontSize.ToString();
+            cmbDetailsFontSize.Text = pim.PrintSettings.DetailsFontSize.ToString();
+            cmbPageFooterFontSize.Text = pim.PrintSettings.PageFooterFontSize.ToString();
+            cmbDescriptionFontSize.Text = pim.PrintSettings.DescriptionFontSize.ToString();
+            cmbPrintLayout.Text = pim.PrintSettings.DefaultPrintLayout;
+            cmbPageSize.Text = pim.PrintSettings.DefaultPaperSize;
 
             txtCustomerDescription.Text = pim.CustomerDescription;
             txtInvoiceDescription.Text = pim.InvoiceDescription;
@@ -68,7 +72,7 @@ namespace PrintInterface
             if (string.IsNullOrEmpty(pim.CustomerPhoneNumber)) ShowPhoneNumber.Enabled = ShowPhoneNumber.Checked = false;
             if (string.IsNullOrEmpty(pim.CustomerDescription)) ShowCustomerDescription.Enabled = txtCustomerDescription.Enabled = ShowCustomerDescription.Checked = false;
             if (string.IsNullOrEmpty(pim.InvoiceDescription)) ShowInvoiceDescription.Enabled = txtInvoiceDescription.Enabled = ShowInvoiceDescription.Checked = false;
-            if (string.IsNullOrEmpty(pim.CustomerPhoneNumber) && string.IsNullOrEmpty(pim.InvoiceDescription) && (pim.UserDescriptions == null || pim.UserDescriptions.Count == 0)) cmbDescriptionFontSize.Enabled = false;
+            if (string.IsNullOrEmpty(pim.CustomerPhoneNumber) && string.IsNullOrEmpty(pim.InvoiceDescription) && (pim.PrintSettings.UserDescriptions == null || pim.PrintSettings.UserDescriptions.Count == 0)) cmbDescriptionFontSize.Enabled = false;
             if (string.IsNullOrEmpty(pim.CustomerPostAddress)) txtCustomerPostAddress.Enabled = ShowCustomerPostAddress.Enabled = false;
 
             CanRefresh = true;
@@ -77,12 +81,12 @@ namespace PrintInterface
 
         private void InitilizeReport()
         {
-            if (pim.PaperSize == "A5")
+            if (pim.PrintSettings.DefaultPaperSize == "A5")
             {
-                if (pim.PrintLayout == "عمودی") rd = new PrintInvoicePortraitA5();
+                if (pim.PrintSettings.DefaultPrintLayout == "عمودی") rd = new PrintInvoicePortraitA5();
                 else rd = new PrintInvoiceLandscapeA5();
             }
-            else if (pim.PaperSize == "A4") rd = new PrintInvoicePortraitA4();
+            else if (pim.PrintSettings.DefaultPaperSize == "A4") rd = new PrintInvoicePortraitA4();
 
 
             rd.SetDataSource(pim.Products);
@@ -95,8 +99,8 @@ namespace PrintInterface
             rd.SetParameterValue("TotalInvoiceSum", pim.TotalInvoiceSum);
             rd.SetParameterValue("TotalPayments", pim.TotalPayments);
             rd.SetParameterValue("TotalBalance", pim.TotalBalance);
-            rd.SetParameterValue("FooterTextRight", pim.FooterTextRight);
-            rd.SetParameterValue("FooterTextLeft", pim.FooterTextLeft);
+            rd.SetParameterValue("FooterTextRight", pim.PrintSettings.FooterTextRight);
+            rd.SetParameterValue("FooterTextLeft", pim.PrintSettings.FooterTextLeft);
             rd.SetParameterValue("CustomerPreviousBalance", pim.CustomerPreviousBalance);
             rd.SetParameterValue("InvoiceFinStatus", pim.InvoiceFinStatus);
             rd.SetParameterValue("InvoiceType", pim.InvoiceType);
@@ -107,20 +111,20 @@ namespace PrintInterface
             rd.SetParameterValue("ShowCustomerDescription", pim.PrintCustomerDescription);
             rd.SetParameterValue("ShowInvoiceDescription", pim.PrintInvoiceDescription);
             rd.SetParameterValue("ShowUserDescription", pim.PrintUserDescription);
-            rd.SetParameterValue("PageHeaderFontSize", pim.PageHeaderFontSize);
-            rd.SetParameterValue("DetailsFontSize", pim.DetailsFontSize);
-            rd.SetParameterValue("PageFooterFontSize", pim.PageFooterFontSize);
-            rd.SetParameterValue("DescriptionFontSize", pim.DescriptionFontSize);
-            rd.SetParameterValue("LeftHeaderImage", pim.LeftImagePath);
-            rd.SetParameterValue("RightHeaderImage", pim.RightImagePath);
-            rd.SetParameterValue("MainHeaderText", pim.MainHeaderText);
-            rd.SetParameterValue("HeaderDescription1", pim.HeaderDescription1);
-            rd.SetParameterValue("HeaderDescription2", pim.HeaderDescription2);
+            rd.SetParameterValue("PageHeaderFontSize", pim.PrintSettings.PageHeaderFontSize);
+            rd.SetParameterValue("DetailsFontSize", pim.PrintSettings.DetailsFontSize);
+            rd.SetParameterValue("PageFooterFontSize", pim.PrintSettings.PageFooterFontSize);
+            rd.SetParameterValue("DescriptionFontSize", pim.PrintSettings.DescriptionFontSize);
+            rd.SetParameterValue("LeftHeaderImage", pim.PrintSettings.LeftHeaderImage);
+            rd.SetParameterValue("RightHeaderImage", pim.PrintSettings.RightHeaderImage);
+            rd.SetParameterValue("MainHeaderText", pim.PrintSettings.MainHeaderText);
+            rd.SetParameterValue("HeaderDescription1", pim.PrintSettings.HeaderDescription1);
+            rd.SetParameterValue("HeaderDescription2", pim.PrintSettings.HeaderDescription2);
             rd.SetParameterValue("CustomerDescription", pim.CustomerDescription);
             rd.SetParameterValue("InvoiceDescription", pim.InvoiceDescription);
-            rd.SetParameterValue("MainHeaderTextFontSize", pim.MainHeaderTextFontSize);
-            rd.SetParameterValue("HeaderDescriptionFontSize", pim.HeaderDescriptionFontSize);
-            rd.SetParameterValue("InvoiceTypeTextFontSize", pim.InvoiceTypeTextFontSize);
+            rd.SetParameterValue("MainHeaderTextFontSize", pim.PrintSettings.MainHeaderTextFontSize);
+            rd.SetParameterValue("HeaderDescriptionFontSize", pim.PrintSettings.HeaderDescriptionFontSize);
+            rd.SetParameterValue("InvoiceTypeTextFontSize", pim.PrintSettings.InvoiceTypeTextFontSize);
             rd.SetParameterValue("CustomerPostAddress", pim.CustomerPostAddress);
             rd.SetParameterValue("UserDescription", "");
             crystalReportViewer.ReportSource = rd;
@@ -185,32 +189,32 @@ namespace PrintInterface
         private void cmbPageHeaderFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            pim.PageHeaderFontSize = int.Parse((sender as ComboBox).Text);
-            rd.SetParameterValue("PageHeaderFontSize", pim.PageHeaderFontSize);
+            pim.PrintSettings.PageHeaderFontSize = int.Parse((sender as ComboBox).Text);
+            rd.SetParameterValue("PageHeaderFontSize", pim.PrintSettings.PageHeaderFontSize);
             RefreshCrystalReport();
         }
 
         private void cmbDetailsFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            pim.DetailsFontSize = int.Parse((sender as ComboBox).Text);
-            rd.SetParameterValue("DetailsFontSize", pim.DetailsFontSize);
+            pim.PrintSettings.DetailsFontSize = int.Parse((sender as ComboBox).Text);
+            rd.SetParameterValue("DetailsFontSize", pim.PrintSettings.DetailsFontSize);
             RefreshCrystalReport();
         }
 
         private void cmbPageFooterFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            pim.PageFooterFontSize = int.Parse((sender as ComboBox).Text);
-            rd.SetParameterValue("PageFooterFontSize", pim.PageFooterFontSize);
+            pim.PrintSettings.PageFooterFontSize = int.Parse((sender as ComboBox).Text);
+            rd.SetParameterValue("PageFooterFontSize", pim.PrintSettings.PageFooterFontSize);
             RefreshCrystalReport();
         }
 
         private void cmbDescriptionFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            pim.DescriptionFontSize = int.Parse((sender as ComboBox).Text);
-            rd.SetParameterValue("DescriptionFontSize", pim.DescriptionFontSize);
+            pim.PrintSettings.DescriptionFontSize = int.Parse((sender as ComboBox).Text);
+            rd.SetParameterValue("DescriptionFontSize", pim.PrintSettings.DescriptionFontSize);
             RefreshCrystalReport();
         }
 
@@ -234,8 +238,8 @@ namespace PrintInterface
 
         private void cmbPageSize_SelectedIndexChanged(object sender, EventArgs e)
         {
-            pim.PaperSize = (sender as ComboBox).Text;
-            if (pim.PaperSize == "A4")
+            pim.PrintSettings.DefaultPaperSize = (sender as ComboBox).Text;
+            if (pim.PrintSettings.DefaultPaperSize == "A4")
             {
                 cmbPrintLayout.Text = "عمودی";
                 cmbPrintLayout.Enabled = false;
@@ -248,7 +252,7 @@ namespace PrintInterface
 
         private void cmbPrintLayout_SelectedIndexChanged(object sender, EventArgs e)
         {
-            pim.PrintLayout = (sender as ComboBox).Text;
+            pim.PrintSettings.DefaultPrintLayout = (sender as ComboBox).Text;
             if (!CanRefresh) return;
             InitilizeReport();
             RefreshCrystalReport();

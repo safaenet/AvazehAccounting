@@ -90,7 +90,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 p.SellPrice pSellPrice, p.Barcode, p.CountString pCountString, p.DateCreated pDateCreated,
                 p.TimeCreated pTimeCreated, p.DateUpdated pDateUpdated, p.TimeUpdated pTimeUpdated, p.Descriptions pDescriptions,
                 u.Id AS puId, u.UnitName
-                FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id LEFT JOIN ProductUnits u ON it.ProductUnitId = u.Id WHERE it.InvoiceId IN (SELECT i.Id FROM @invoices i);
+                FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id LEFT JOIN ProductUnits u ON it.ProductUnitId = u.Id WHERE it.InvoiceId IN (SELECT i.Id FROM @invoices i) ORDER BY [Id] DESC;
             SELECT * FROM InvoicePayments WHERE InvoiceId IN (SELECT i.Id FROM @invoices i);
             SELECT * FROM PhoneNumbers WHERE CustomerId IN (SELECT i.CustomerId FROM @invoices i);";
         private readonly string GetSingleInvoiceItemQuery = @"SELECT it.*, p.[Id] AS pId,

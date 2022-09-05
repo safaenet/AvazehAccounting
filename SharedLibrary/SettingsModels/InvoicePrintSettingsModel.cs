@@ -1,31 +1,29 @@
-﻿using System;
+﻿using SharedLibrary.DalModels;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharedLibrary.SettingsModels
 {
     public class InvoicePrintSettingsModel
     {
-        public string MainHeaderText { get; set; }
-        public string HeaderDescription1 { get; set; }
-        public string HeaderDescription2 { get; set; }
-        public string LeftHeaderImage { get; set; }
-        public string RightHeaderImage { get; set; }
-        public string[] UserDescriptions { get; set; }
-        public string FooterTextLeft { get; set; }
-        public string FooterTextRight { get; set; }
+        public string MainHeaderText { get; set; } = "فروشگاه آوازه";
+        public string HeaderDescription1 { get; set; } = "کرکره برقی، جک پارکینگی، دزدگیر اماکن";
+        public string HeaderDescription2 { get; set; } = "01734430827 - 09357330303";
+        public string LeftHeaderImage { get; set; } = @"\Images\LeftImage.png";
+        public string RightHeaderImage { get; set; } = @"\Images\RightImage.png";
+        public List<UserDescriptionModel> UserDescriptions { get; set; }
+        public string FooterTextLeft { get; set; } = "کیفیت برتر، قیمت مناسب";
+        public string FooterTextRight { get; set; } = "توسعه دهنده نرم افزار: صفا دانا";
 
-        public int MainHeaderTextFontSize { get; set; }
-        public int HeaderDescriptionFontSize { get; set; }
-        public int InvoiceTypeTextFontSize { get; set; }
-        public int PageHeaderFontSize { get; set; }
-        public int DetailsFontSize { get; set; }
-        public int PageFooterFontSize { get; set; }
-        public int DescriptionFontSize { get; set; }
+        public int MainHeaderTextFontSize { get; set; } = 30;
+        public int HeaderDescriptionFontSize { get; set; } = 10;
+        public int InvoiceTypeTextFontSize { get; set; } = 16;
+        public int PageHeaderFontSize { get; set; } = 10;
+        public int DetailsFontSize { get; set; } = 10;
+        public int PageFooterFontSize { get; set; } = 10;
+        public int DescriptionFontSize { get; set; } = 14;
 
-        public string PrintLayout { get; set; }
-        public string PaperSize { get; set; }
+        public string DefaultPrintLayout { get; set; } = "عمودی"; //Landscape, Portrait
+        public string DefaultPaperSize { get; set; } = "A5"; //A5, A4
     }
 }

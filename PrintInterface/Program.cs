@@ -16,6 +16,8 @@ namespace PrintInterface
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            //Application.Run(new PrintInvoiceInterface());
             string[] args = Environment.GetCommandLineArgs();
             if (args == null || args.Length < 3)
             {

@@ -59,6 +59,7 @@
       <DependentUpon>InvoiceDetails.cs</DependentUpon>
     </Compile>
     <Compile Include="InvoiceItemForPrintModel.cs" />
+    <Compile Include="InvoicePrintSettingsModel.cs" />
     <Compile Include="PrintInvoicePortraitA4.cs">
       <DependentUpon>PrintInvoicePortraitA4.rpt</DependentUpon>
       <AutoGen>True</AutoGen>
