@@ -74,6 +74,14 @@ namespace AvazehWpf.ViewModels
         private double customerTotalBalancePlusThis;
         private bool isProductInputDropDownOpen;
         private string windowTitle;
+        private string phoneNumberText;
+
+        public string PhoneNumberText
+        {
+            get { return phoneNumberText; }
+            set { phoneNumberText = value; }
+        }
+
         private async Task LoadSettings()
         {
             var Settings = await ASM.LoadAllAppSettings();
@@ -365,7 +373,7 @@ namespace AvazehWpf.ViewModels
             else if (t == 21) pim.PrintSettings.MainHeaderText = "پیش فاکتور";
             else if (t == 22) pim.PrintSettings.MainHeaderText = "فروشگاه آوازه";
             pim.InvoiceType = t;
-            
+            if (!string.IsNullOrEmpty(PhoneNumberText)) pim.CustomerPhoneNumber = PhoneNumberText;
             XmlSerializer xmlSerializer = new(pim.GetType());
             StringWriter stringWriter = new();
             xmlSerializer.Serialize(stringWriter, pim);

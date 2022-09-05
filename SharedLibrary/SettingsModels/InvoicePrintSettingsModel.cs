@@ -15,9 +15,18 @@ namespace SharedLibrary.SettingsModels
         public string FooterTextLeft { get; set; } = "کیفیت برتر، قیمت مناسب";
         public string FooterTextRight { get; set; } = "توسعه دهنده نرم افزار: صفا دانا";
 
-        public int MainHeaderTextFontSize { get; set; } = 30;
-        public int HeaderDescriptionFontSize { get; set; } = 10;
-        public int InvoiceTypeTextFontSize { get; set; } = 16;
+        public int MainHeaderTextFontSizeA5P { get; set; } = 30;
+        public int HeaderDescriptionFontSizeA5P { get; set; } = 10;
+        public int InvoiceTypeTextFontSizeA5P { get; set; } = 16;
+
+        public int MainHeaderTextFontSizeA5L { get; set; } = 30;
+        public int HeaderDescriptionFontSizeA5L { get; set; } = 10;
+        public int InvoiceTypeTextFontSizeA5L { get; set; } = 14;
+
+        public int MainHeaderTextFontSizeA4P { get; set; } = 30;
+        public int HeaderDescriptionFontSizeA4P { get; set; } = 10;
+        public int InvoiceTypeTextFontSizeA4P { get; set; } = 14;
+
         public int PageHeaderFontSize { get; set; } = 10;
         public int DetailsFontSize { get; set; } = 10;
         public int PageFooterFontSize { get; set; } = 10;
