@@ -94,7 +94,7 @@
                                 <Button x:Name="EditOwner" TabIndex="7" Width="20" Margin="0,0,2,0">
                                     <materialDesign:PackIcon Kind="EditOutline" Width="15" Height="15"/>
                                 </Button>
-                                <TextBox Text="{Binding Invoice.Customer.FullName, Mode=OneWay}" IsReadOnly="True" MaxWidth="200" Width="175" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                <TextBox Text="{Binding Invoice.Customer.FullName, Mode=OneWay}" IsReadOnly="True" MaxWidth="200" Width="175" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]"/>
                             </StackPanel>
                         </StackPanel>
 
@@ -174,7 +174,7 @@
                             <materialDesign:PackIcon Kind="CommentAccountOutline" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="توضیحات" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Invoice.Descriptions, Mode=TwoWay}" TextWrapping="Wrap" MinHeight="50" Height="auto" HorizontalContentAlignment="Right" VerticalContentAlignment="Top"/>
+                        <TextBox Text="{Binding Invoice.Descriptions, Mode=TwoWay}" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]" TextWrapping="Wrap" MinHeight="50" Height="auto" HorizontalContentAlignment="Right" VerticalContentAlignment="Top"/>
                     </DockPanel>
 
                     <StackPanel Grid.Row="2" Orientation="Vertical">
@@ -297,7 +297,7 @@
                         <materialDesign:PackIcon Kind="ImageDescription" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="توضیحات" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <TextBox Text="{Binding WorkItem.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TabIndex="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="25"/>
+                    <TextBox Text="{Binding WorkItem.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]" TabIndex="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="4" Width="90" Orientation="Vertical" Margin="0,0,3,0">
@@ -339,8 +339,8 @@
                         <materialDesign:PackIcon Kind="Rename" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="نام کالا" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <ComboBox IsTextSearchEnabled="True" IsEditable="True" VerticalContentAlignment="Center" Height="25"
-                              cal:Message.Attach="[Event SelectionChanged]=[Action ProductNames_SelectionChanged($source, $eventArgs)]; [Event PreviewTextInput]=[Action ProductNames_PreviewTextInput()]"
+                    <ComboBox IsTextSearchEnabled="True" IsEditable="True" VerticalContentAlignment="Center" Height="25" local:FocusExtension.IsFocused="{Binding ProductsComboboxHasFocus}"
+                              cal:Message.Attach="[Event SelectionChanged]=[Action ProductNames_SelectionChanged($source, $eventArgs)]; [Event PreviewTextInput]=[Action ProductNames_PreviewTextInput()]; [Event GotFocus] = [Action SetKeyboardLayout]"
                               ItemsSource="{Binding ProductItemsForComboBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsDropDownOpen="{Binding IsProductInputDropDownOpen, Mode=TwoWay}"
                               SelectedItem="{Binding SelectedProductItem, Mode=TwoWay}" TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ItemName"
                               Text="{Binding ProductInput,Mode=TwoWay}">

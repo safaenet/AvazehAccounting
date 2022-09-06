@@ -30,8 +30,6 @@ namespace AvazehWpf.ViewModels
     {
         public InvoiceListViewModel(IInvoiceCollectionManager manager, SingletonClass singleton, IAppSettingsManager settingsManager)
         {
-            CultureInfo culture = new CultureInfo("fa-ir");
-            InputLanguageManager.SetInputLanguage(this., culture);
             ICM = manager;
             ASM = settingsManager;
             _SelectedInvoice = new();
@@ -86,6 +84,7 @@ namespace AvazehWpf.ViewModels
         private async Task LoadSettings()
         {
             var Settings = await ASM.LoadAllAppSettings();
+            if (Settings == null) Settings = new();
             InvoiceSettings = Settings.InvoiceSettings;
             PrintSettings = Settings.InvoicePrintSettings;
             GeneralSettings = Settings.GeneralSettings;
@@ -226,6 +225,12 @@ namespace AvazehWpf.ViewModels
                 StartInfo = new ProcessStartInfo(PrintInterfacePath, arguments)
             };
             p.Start();
+        }
+
+        public void SetKeyboardLayout()
+        {
+            if (GeneralSettings.AutoSelectPersianLanguage)
+                ExtensionsAndStatics.ChangeLanguageToPersian();
         }
     }
 

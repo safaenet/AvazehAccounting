@@ -24,6 +24,7 @@ using System.IO;
 using System.Diagnostics;
 using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using SharedLibrary.SettingsModels;
+using System.Globalization;
 
 namespace AvazehWpf.ViewModels
 {
@@ -56,6 +57,7 @@ namespace AvazehWpf.ViewModels
         private ObservableCollection<ItemsForComboBox> productItems;
         private ObservableCollection<ProductUnitModel> productUnits;
         private ObservableCollection<RecentSellPriceModel> recentSellPrices;
+        public bool ProductsComboboxHasFocus { get => productsComboboxHasFocus; set { productsComboboxHasFocus = value; NotifyOfPropertyChange(() => ProductsComboboxHasFocus); } }
         public InvoiceSettingsModel InvoiceSettings { get => invoiceSettings; private set { invoiceSettings = value; NotifyOfPropertyChange(() => InvoiceSettings); } }
         public InvoicePrintSettingsModel PrintSettings { get => printSettings; private set { printSettings = value; NotifyOfPropertyChange(() => PrintSettings); } }
         public GeneralSettingsModel GeneralSettings { get => generalSettings; private set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); } }
@@ -78,6 +80,7 @@ namespace AvazehWpf.ViewModels
         private bool isProductInputDropDownOpen;
         private string windowTitle;
         private string phoneNumberText;
+        private bool productsComboboxHasFocus;
 
         public string PhoneNumberText
         {
@@ -88,6 +91,7 @@ namespace AvazehWpf.ViewModels
         private async Task LoadSettings()
         {
             var Settings = await ASM.LoadAllAppSettings();
+            if (Settings == null) Settings = new();
             InvoiceSettings = Settings.InvoiceSettings;
             PrintSettings = Settings.InvoicePrintSettings;
             GeneralSettings = Settings.GeneralSettings;
@@ -265,6 +269,7 @@ namespace AvazehWpf.ViewModels
             ReloadCustomerTotalBalance();
             NotifyOfPropertyChange(() => Invoice.Items);
             NotifyOfPropertyChange(() => Invoice);
+            ProductsComboboxHasFocus = true;
         }
 
         private async Task UpdateItemInDatabase(InvoiceItemModel item)
@@ -476,6 +481,13 @@ namespace AvazehWpf.ViewModels
         public void CalculateTotalAmountOfWorkItem(object sender, TextChangedEventArgs e)
         {
             NotifyOfPropertyChange(() => WorkItem);
+        }
+
+        public void SetKeyboardLayout()
+        {
+            if (GeneralSettings.AutoSelectPersianLanguage)
+                if (GeneralSettings.AutoSelectPersianLanguage)
+                    ExtensionsAndStatics.ChangeLanguageToPersian();
         }
     }
 
