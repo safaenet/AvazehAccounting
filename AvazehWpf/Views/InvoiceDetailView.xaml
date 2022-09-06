@@ -216,7 +216,7 @@
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="کل بدهی" FontWeight="Bold" Margin="3,0,0,2" VerticalAlignment="Center"/>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Visibility="{Binding InvoiceSettings.DetailShowNetProfit}" Margin="0,0,3,3" HorizontalAlignment="Right">
+                        <StackPanel Orientation="Horizontal" IsEnabled="{Binding InvoiceSettings.DetailShowNetProfit}" Margin="0,0,3,3" HorizontalAlignment="Right">
                             <TextBlock Text="{Binding Invoice.NetProfit, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Visibility="{Binding IsChecked, ElementName=ShowNetProfit, Converter={StaticResource b2v}}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="118" VerticalAlignment="Center"/>
                             <CheckBox x:Name="ShowNetProfit" FlowDirection="RightToLeft">
                                 <TextBlock Text="سود خالص" Margin="0,0,0,2"/>
@@ -310,7 +310,7 @@
                               IsDropDownOpen="{Binding IsSellPriceDropDownOpen, Mode=TwoWay}" IsEditable="True" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TabIndex="4"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="5" Visibility="{Binding IsChecked, ElementName=ShowNetProfit, Converter={StaticResource b2v}}" Width="90" Orientation="Vertical" Margin="0,0,3,0">
+                <StackPanel Grid.Column="5" Visibility="{Binding IsChecked, ElementName=ShowNetProfit, Converter={StaticResource b2v}}" IsEnabled="{Binding InvoiceSettings.DetailShowNetProfit}" Width="90" Orientation="Vertical" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="Money" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="قیمت خرید" Margin="0,0,0,0"/>
@@ -353,7 +353,8 @@
                 </StackPanel>
             </Grid>
             <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditItem()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
-                      Grid.Row="1" ItemsSource="{Binding Invoice.Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" FlowDirection="RightToLeft" AutoGenerateColumns="False" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding InvoiceSettings.DetailDataGridFontSize}" RowHeight="25"
+                      Grid.Row="1" ItemsSource="{Binding Invoice.Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" FlowDirection="RightToLeft" AutoGenerateColumns="False"
+                      CellStyle="{StaticResource Body_Content_DataGrid_Centering}" HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding InvoiceSettings.DetailDataGridFontSize}"
                       IsTabStop="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
@@ -382,6 +383,7 @@
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Setter Property="ToolTip" Value="{Binding Product.Id}"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
@@ -389,13 +391,14 @@
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Setter Property="ToolTip" Value="{Binding TotalBuyValue}"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="قیمت" Binding="{Binding SellPrice, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="80">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="{Binding TotalSellValue}" />
+                                <Setter Property="ToolTip" Value="{Binding TotalSellValue}"/>
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>

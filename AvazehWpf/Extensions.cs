@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace AvazehWpf
@@ -15,6 +17,11 @@ namespace AvazehWpf
             if (long.TryParse(s.Substring(1), System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out _))
                 return (Color)ColorConverter.ConvertFromString(s);
             return Colors.Transparent;
+        }
+
+        public static void ChangeLanguage(string cl)
+        {
+            InputLanguageManager.Current.CurrentInputLanguage = new CultureInfo(cl);
         }
     }
 }

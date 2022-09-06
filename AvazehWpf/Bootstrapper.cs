@@ -60,9 +60,19 @@ namespace AvazehWpf
             Initialize();
         }
 
+        AppSettingsManager ASP = new(new ApiProcessor());
+        SharedLibrary.SettingsModels.WindowsApplicationSettingsModels.GeneralSettingsModel GS;
+        private void LoadGeneralSettings()
+        {
+            GS = System.Threading.Tasks.Task.Run(ASP.LoadGeneralSettings).Result;
+            if (GS.AutoSelectPersianLanguage) System.Windows.Input.InputLanguageManager.Current.CurrentInputLanguage = new System.Globalization.CultureInfo("FA");
+        }
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
+            //LoadGeneralSettings();
+            System.Windows.Input.InputLanguageManager.Current.CurrentInputLanguage = new System.Globalization.CultureInfo("fa");
             DisplayRootViewFor<InvoiceListViewModel>();
         }
+        
     }
 }

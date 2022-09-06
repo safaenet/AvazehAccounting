@@ -50,12 +50,15 @@ namespace AvazehWpf.ViewModels
         private readonly SingletonClass Singleton;
         private InvoiceModel _Invoice;
         private readonly Func<Task> CallBackFunc;
+        private InvoiceSettingsModel invoiceSettings;
+        private InvoicePrintSettingsModel printSettings;
+        private GeneralSettingsModel generalSettings;
         private ObservableCollection<ItemsForComboBox> productItems;
         private ObservableCollection<ProductUnitModel> productUnits;
         private ObservableCollection<RecentSellPriceModel> recentSellPrices;
-        public InvoiceSettingsModel InvoiceSettings { get; private set; }
-        public InvoicePrintSettingsModel PrintSettings { get; private set; }
-        public GeneralSettingsModel GeneralSettings { get; private set; }
+        public InvoiceSettingsModel InvoiceSettings { get => invoiceSettings; private set { invoiceSettings = value; NotifyOfPropertyChange(() => InvoiceSettings); } }
+        public InvoicePrintSettingsModel PrintSettings { get => printSettings; private set { printSettings = value; NotifyOfPropertyChange(() => PrintSettings); } }
+        public GeneralSettingsModel GeneralSettings { get => generalSettings; private set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); } }
         private InvoiceItemModel _workItem = new();
         private bool CanUpdateRowFromDB = true; //False when user DoubleClicks on a row.
         private bool EdittingItem = false;
@@ -131,7 +134,7 @@ namespace AvazehWpf.ViewModels
 
         private async Task ReloadInvoice(int? InvoiceId)
         {
-            if (InvoiceId is null) return;
+            if (InvoiceId is null || (int)InvoiceId == 0) return;
             Invoice = await ICM.GetItemById((int)InvoiceId);
             WindowTitle = Invoice.Customer.FullName + " - فاکتور";
             await ReloadCustomerPreviousBalance();
@@ -396,7 +399,7 @@ namespace AvazehWpf.ViewModels
             if (Invoice is null) return;
             WindowManager wm = new();
             ICollectionManager<CustomerModel> cManager = new CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>(ICM.ApiProcessor);
-            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, Invoice.Id, ICM, cManager, RefreshAndReloadCustomerTotalBalanceAsync));
+            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, Invoice.Id, ICM, cManager, RefreshAndReloadCustomerTotalBalanceAsync, ASM));
         }
 
         public void CloseWindow()
@@ -406,7 +409,8 @@ namespace AvazehWpf.ViewModels
 
         public async Task ClosingWindow()
         {
-            await CallBackFunc?.Invoke();
+            if (CallBackFunc != null)
+                await CallBackFunc?.Invoke();
         }
 
         public void SellPrice_GotFocus()

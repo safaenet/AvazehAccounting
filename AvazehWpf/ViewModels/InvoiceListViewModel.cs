@@ -30,6 +30,8 @@ namespace AvazehWpf.ViewModels
     {
         public InvoiceListViewModel(IInvoiceCollectionManager manager, SingletonClass singleton, IAppSettingsManager settingsManager)
         {
+            CultureInfo culture = new CultureInfo("fa-ir");
+            InputLanguageManager.SetInputLanguage(this., culture);
             ICM = manager;
             ASM = settingsManager;
             _SelectedInvoice = new();
@@ -41,10 +43,13 @@ namespace AvazehWpf.ViewModels
         private IInvoiceCollectionManager _ICM;
         private readonly IAppSettingsManager ASM;
         private InvoiceListModel _SelectedInvoice;
+        private InvoiceSettingsModel invoiceSettings;
+        private InvoicePrintSettingsModel printSettings;
+        private GeneralSettingsModel generalSettings;
         private readonly SingletonClass Singleton;
-        public InvoiceSettingsModel InvoiceSettings { get; private set; }
-        public InvoicePrintSettingsModel PrintSettings { get; private set; }
-        public GeneralSettingsModel GeneralSettings { get; private set; }
+        public InvoiceSettingsModel InvoiceSettings { get => invoiceSettings; private set { invoiceSettings = value; NotifyOfPropertyChange(() => InvoiceSettings); } }
+        public InvoicePrintSettingsModel PrintSettings { get => printSettings; private set { printSettings = value; NotifyOfPropertyChange(() => PrintSettings); } }
+        public GeneralSettingsModel GeneralSettings { get => generalSettings; private set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); } }
 
         public InvoiceListModel SelectedInvoice
         {
@@ -95,7 +100,8 @@ namespace AvazehWpf.ViewModels
             if (!GeneralSettings.CanAddNewInvoice) return;
             WindowManager wm = new();
             ICollectionManager<CustomerModel> cManager = new CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>(ICM.ApiProcessor);
-            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, null, ICM, cManager, Search));
+            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, null, ICM, cManager, Search, ASM));
+
         }
 
         public async Task PreviousPage()
@@ -144,8 +150,8 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditInvoice()
         {
-            if (!GeneralSettings.CanEditInvoices) return;
-            if (Invoices == null || Invoices.Count == 0 || SelectedInvoice == null) return;
+            if (GeneralSettings == null || !GeneralSettings.CanEditInvoices) return;
+            if (Invoices == null || Invoices.Count == 0 || SelectedInvoice == null || SelectedInvoice.Id == 0) return;
             WindowManager wm = new();
             await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, new InvoiceDetailManager(ICM.ApiProcessor), ASM, Singleton, SelectedInvoice.Id, RefreshPage));
         }
