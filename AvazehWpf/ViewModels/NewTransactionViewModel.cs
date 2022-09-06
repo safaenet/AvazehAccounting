@@ -22,9 +22,11 @@ namespace AvazehWpf.ViewModels
 {
     public class NewTransactionViewModel : ViewAware
     {
-        public NewTransactionViewModel(int? TransactionId, ITransactionCollectionManager icManager, Func<Task> callBack)
+        public NewTransactionViewModel(SingletonClass singleton, int? TransactionId, ITransactionCollectionManager icManager, Func<Task> callBack, IAppSettingsManager settingsManager)
         {
             TCM = icManager;
+            ASM = settingsManager;
+            Singleton = singleton;
             TransactionID = TransactionId;
             CallBack = callBack;
             if (TransactionID == null)
@@ -39,6 +41,8 @@ namespace AvazehWpf.ViewModels
             }
         }
         public ITransactionCollectionManager TCM { get; set; }
+        private SingletonClass Singleton;
+        private IAppSettingsManager ASM;
         private readonly int? TransactionID;
         private string transactionName;
         private string buttonTitle;
@@ -81,7 +85,12 @@ namespace AvazehWpf.ViewModels
                 TransactionModel t = new();
                 t.FileName = TransactionInput;
                 var newTransaction = await TCM.CreateItemAsync(t);
-                if (newTransaction != null) CloseWindow();
+                if (newTransaction != null)
+                {
+                    WindowManager wm = new();
+                    await wm.ShowWindowAsync(new TransactionDetailViewModel(TCM, new TransactionDetailManager(TCM.ApiProcessor), ASM, Singleton, newTransaction.Id, null));
+                    CloseWindow();
+                }
                 else MessageBox.Show("خطا هنگام ایجاد فایل جدید", TransactionInput, MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else //Update Owner

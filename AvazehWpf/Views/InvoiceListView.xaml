@@ -27,7 +27,7 @@
             </Setter>
         </Style>
     </Window.Resources>
-    <Grid IsEnabled="{Binding GeneralSettings.CanViewInvoices}">
+    <Grid Visibility="{Binding GeneralSettings.CanViewInvoices}">
         <Grid.Resources>
             <Style TargetType="TextBox">
                 <Setter Property="TextAlignment" Value="Center"/>
@@ -182,7 +182,7 @@
                 <DataGrid.Resources>
                     <local:DateToColorConverter x:Key="DateToColorConverter"/>
                     <local:AmountToColorConverter x:Key="AmountToColorConverter"/>
-                    <local:EnglishToPersianFinStatusConverter x:Key="EnglishToPersianFinStatusConverter"/>
+                    <local:EnglishToPersianInvoiceFinStatusConverter x:Key="EnglishToPersianInvoiceFinStatusConverter"/>
                 </DataGrid.Resources>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="شماره" Binding="{Binding Path=Id, Mode=OneWay}" Width="50">
@@ -215,7 +215,7 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="TextAlignment" Value="Center"/>
                             </Style>
-                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="تاریخ بروزرسانی" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="89">
                         <DataGridTextColumn.ElementStyle>
@@ -247,7 +247,7 @@
                     <DataGridTextColumn Header="جمع پرداخت ها" Binding="{Binding Path=TotalPayments, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120"/>
                     <DataGridTextColumn Header="نوع فاکتور" Binding="{Binding Path=LifeStatus, Mode=OneWay}" Width="57"/>
                     <DataGridTextColumn Header="تراز کل" Binding="{Binding Path=TotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120"/>
-                    <DataGridTextColumn Header="وضعیت مالی" Binding="{Binding Path=InvoiceFinancialStatus, Converter={StaticResource EnglishToPersianFinStatusConverter}, Mode=OneWay}" Width="80">
+                    <DataGridTextColumn Header="وضعیت مالی" Binding="{Binding Path=InvoiceFinancialStatus, Converter={StaticResource EnglishToPersianInvoiceFinStatusConverter}, Mode=OneWay}" Width="80">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Background">

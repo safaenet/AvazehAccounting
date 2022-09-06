@@ -102,15 +102,6 @@ namespace AvazehWpf.ViewModels
             ICM.QueryOrderType = InvoiceSettings.QueryOrderType;
         }
 
-        public async Task AddNewInvoice()
-        {
-            if (!GeneralSettings.CanAddNewInvoice) return;
-            WindowManager wm = new();
-            ICollectionManager<CustomerModel> cManager = new CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>(ICM.ApiProcessor);
-            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, null, ICM, cManager, Search, ASM));
-
-        }
-
         public async Task PreviousPage()
         {
             await ICM.LoadPreviousPageAsync();
@@ -129,6 +120,14 @@ namespace AvazehWpf.ViewModels
             NotifyOfPropertyChange(() => Invoices);
         }
 
+        public async Task AddNewInvoice()
+        {
+            if (!GeneralSettings.CanAddNewInvoice) return;
+            WindowManager wm = new();
+            ICollectionManager<CustomerModel> cManager = new CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>(ICM.ApiProcessor);
+            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, null, ICM, cManager, Search, ASM));
+        }
+
         public async Task Search()
         {
             if (GeneralSettings != null && !GeneralSettings.CanViewInvoices) return;
@@ -143,8 +142,7 @@ namespace AvazehWpf.ViewModels
 
         public void SearchSync()
         {
-            if (GeneralSettings.CanViewInvoices)
-                Task.Run(Search);
+            Task.Run(Search);
         }
 
         public async Task SearchBoxKeyDownHandler(ActionExecutionContext context)
@@ -250,11 +248,11 @@ namespace AvazehWpf.ViewModels
             for (int i = 0; i < Enum.GetNames(typeof(InvoiceFinancialStatus)).Length; i++)
             {
                 if (Enum.GetName(typeof(InvoiceFinancialStatus), i) == InvoiceFinancialStatus.Balanced.ToString())
-                    choices.Add(i, "تسویه");
+                    choices.Add((int)InvoiceFinancialStatus.Balanced, "تسویه");
                 else if (Enum.GetName(typeof(InvoiceFinancialStatus), i) == InvoiceFinancialStatus.Deptor.ToString())
-                    choices.Add(i, "بدهکار");
+                    choices.Add((int)InvoiceFinancialStatus.Deptor, "بدهکار");
                 else if (Enum.GetName(typeof(InvoiceFinancialStatus), i) == InvoiceFinancialStatus.Creditor.ToString())
-                    choices.Add(i, "بستانکار");
+                    choices.Add((int)InvoiceFinancialStatus.Creditor, "بستانکار");
             }
             choices.Add(Enum.GetNames(typeof(InvoiceFinancialStatus)).Length, "همه");
             return choices;
@@ -266,13 +264,13 @@ namespace AvazehWpf.ViewModels
             for (int i = 0; i < Enum.GetNames(typeof(InvoiceLifeStatus)).Length; i++)
             {
                 if (Enum.GetName(typeof(InvoiceLifeStatus), i) == InvoiceLifeStatus.Active.ToString())
-                    choices.Add(i, "فعال");
+                    choices.Add((int)InvoiceLifeStatus.Active, "فعال");
                 else if (Enum.GetName(typeof(InvoiceLifeStatus), i) == InvoiceLifeStatus.Inactive.ToString())
-                    choices.Add(i, "غیرفعال");
+                    choices.Add((int)InvoiceLifeStatus.Inactive, "غیرفعال");
                 else if (Enum.GetName(typeof(InvoiceLifeStatus), i) == InvoiceLifeStatus.Archive.ToString())
-                    choices.Add(i, "آرشیو شده");
+                    choices.Add((int)InvoiceLifeStatus.Archive, "آرشیو شده");
                 else if (Enum.GetName(typeof(InvoiceLifeStatus), i) == InvoiceLifeStatus.Deleted.ToString())
-                    choices.Add(i, "حذف شده");
+                    choices.Add((int)InvoiceLifeStatus.Deleted, "حذف شده");
             }
             choices.Add(Enum.GetNames(typeof(InvoiceLifeStatus)).Length, "همه");
             return choices;
