@@ -135,7 +135,7 @@
             this.txtUserDescription.Multiline = true;
             this.txtUserDescription.Name = "txtUserDescription";
             this.txtUserDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtUserDescription.Size = new System.Drawing.Size(248, 53);
+            this.txtUserDescription.Size = new System.Drawing.Size(248, 126);
             this.txtUserDescription.TabIndex = 3;
             this.txtUserDescription.TextChanged += new System.EventHandler(this.txtUserDescription_TextChanged);
             // 
@@ -151,7 +151,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(59, 476);
+            this.label7.Location = new System.Drawing.Point(59, 549);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(53, 13);
             this.label7.TabIndex = 2;
@@ -160,7 +160,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(210, 476);
+            this.label5.Location = new System.Drawing.Point(210, 549);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(52, 13);
             this.label5.TabIndex = 2;
@@ -169,7 +169,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(53, 449);
+            this.label3.Location = new System.Drawing.Point(53, 522);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(51, 13);
             this.label3.TabIndex = 2;
@@ -195,7 +195,7 @@
             this.cmbPageSize.Items.AddRange(new object[] {
             "A5",
             "A4"});
-            this.cmbPageSize.Location = new System.Drawing.Point(12, 473);
+            this.cmbPageSize.Location = new System.Drawing.Point(12, 546);
             this.cmbPageSize.Name = "cmbPageSize";
             this.cmbPageSize.Size = new System.Drawing.Size(41, 21);
             this.cmbPageSize.TabIndex = 1;
@@ -204,7 +204,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(190, 449);
+            this.label4.Location = new System.Drawing.Point(190, 522);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(72, 13);
             this.label4.TabIndex = 2;
@@ -217,7 +217,7 @@
             this.cmbPrintLayout.Items.AddRange(new object[] {
             "عمودی",
             "افقی"});
-            this.cmbPrintLayout.Location = new System.Drawing.Point(149, 473);
+            this.cmbPrintLayout.Location = new System.Drawing.Point(149, 546);
             this.cmbPrintLayout.Name = "cmbPrintLayout";
             this.cmbPrintLayout.Size = new System.Drawing.Size(60, 21);
             this.cmbPrintLayout.TabIndex = 1;
@@ -226,7 +226,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(53, 422);
+            this.label2.Location = new System.Drawing.Point(53, 495);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(69, 13);
             this.label2.TabIndex = 2;
@@ -248,7 +248,7 @@
             "13",
             "14",
             "15"});
-            this.cmbPageFooterFontSize.Location = new System.Drawing.Point(12, 446);
+            this.cmbPageFooterFontSize.Location = new System.Drawing.Point(12, 519);
             this.cmbPageFooterFontSize.Name = "cmbPageFooterFontSize";
             this.cmbPageFooterFontSize.Size = new System.Drawing.Size(35, 21);
             this.cmbPageFooterFontSize.TabIndex = 1;
@@ -275,7 +275,7 @@
             "18",
             "19",
             "20"});
-            this.cmbDescriptionFontSize.Location = new System.Drawing.Point(149, 446);
+            this.cmbDescriptionFontSize.Location = new System.Drawing.Point(149, 519);
             this.cmbDescriptionFontSize.Name = "cmbDescriptionFontSize";
             this.cmbDescriptionFontSize.Size = new System.Drawing.Size(35, 21);
             this.cmbDescriptionFontSize.TabIndex = 1;
@@ -297,7 +297,7 @@
             "13",
             "14",
             "15"});
-            this.cmbDetailsFontSize.Location = new System.Drawing.Point(12, 419);
+            this.cmbDetailsFontSize.Location = new System.Drawing.Point(12, 492);
             this.cmbDetailsFontSize.Name = "cmbDetailsFontSize";
             this.cmbDetailsFontSize.Size = new System.Drawing.Size(35, 21);
             this.cmbDetailsFontSize.TabIndex = 1;
@@ -306,7 +306,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(186, 422);
+            this.label1.Location = new System.Drawing.Point(186, 495);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(78, 13);
             this.label1.TabIndex = 2;
@@ -328,7 +328,7 @@
             "13",
             "14",
             "15"});
-            this.cmbPageHeaderFontSize.Location = new System.Drawing.Point(149, 419);
+            this.cmbPageHeaderFontSize.Location = new System.Drawing.Point(149, 492);
             this.cmbPageHeaderFontSize.Name = "cmbPageHeaderFontSize";
             this.cmbPageHeaderFontSize.Size = new System.Drawing.Size(35, 21);
             this.cmbPageHeaderFontSize.TabIndex = 1;

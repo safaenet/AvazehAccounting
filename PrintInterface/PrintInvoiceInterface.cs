@@ -48,7 +48,11 @@ namespace PrintInterface
             File.Delete(FilePath);
 
             if (pim.PrintSettings.UserDescriptions != null && pim.PrintSettings.UserDescriptions.Count > 0)
-                cmbUserDescriptions.DataSource = pim.PrintSettings.UserDescriptions.Select(i => i.DescriptionText).ToList();
+            {
+                cmbUserDescriptions.DataSource = pim.PrintSettings.UserDescriptions;
+                cmbUserDescriptions.DisplayMember = nameof(UserDescriptionModel.DescriptionTitle);
+                cmbUserDescriptions.ValueMember = nameof(UserDescriptionModel.DescriptionText);
+            }
 
             ShowInvoiceId.Checked = pim.PrintInvoiceId;
             ShowInvoiceCreatedDate.Checked = pim.PrintDate;
@@ -122,12 +126,33 @@ namespace PrintInterface
             rd.SetParameterValue("HeaderDescription2", pim.PrintSettings.HeaderDescription2);
             rd.SetParameterValue("CustomerDescription", pim.CustomerDescription);
             rd.SetParameterValue("InvoiceDescription", pim.InvoiceDescription);
-            rd.SetParameterValue("MainHeaderTextFontSize", pim.PrintSettings.MainHeaderTextFontSize);
-            rd.SetParameterValue("HeaderDescriptionFontSize", pim.PrintSettings.HeaderDescriptionFontSize);
-            rd.SetParameterValue("InvoiceTypeTextFontSize", pim.PrintSettings.InvoiceTypeTextFontSize);
+            SetFontSizeValuesBasedOnPaper();
             rd.SetParameterValue("CustomerPostAddress", pim.CustomerPostAddress);
             rd.SetParameterValue("UserDescription", "");
             crystalReportViewer.ReportSource = rd;
+        }
+
+        private void SetFontSizeValuesBasedOnPaper()
+        {
+            if (pim.PrintSettings.DefaultPaperSize == "A4")
+            {
+                rd.SetParameterValue("MainHeaderTextFontSize", pim.PrintSettings.MainHeaderTextFontSizeA4P);
+                rd.SetParameterValue("HeaderDescriptionFontSize", pim.PrintSettings.HeaderDescriptionFontSizeA4P);
+                rd.SetParameterValue("InvoiceTypeTextFontSize", pim.PrintSettings.InvoiceTypeTextFontSizeA4P);
+            }
+            else if (pim.PrintSettings.DefaultPaperSize == "A5")
+                if (pim.PrintSettings.DefaultPrintLayout == "عمودی")
+                {
+                    rd.SetParameterValue("MainHeaderTextFontSize", pim.PrintSettings.MainHeaderTextFontSizeA5P);
+                    rd.SetParameterValue("HeaderDescriptionFontSize", pim.PrintSettings.HeaderDescriptionFontSizeA5P);
+                    rd.SetParameterValue("InvoiceTypeTextFontSize", pim.PrintSettings.InvoiceTypeTextFontSizeA5P);
+                }
+                else if (pim.PrintSettings.DefaultPrintLayout == "افقی")
+                {
+                    rd.SetParameterValue("MainHeaderTextFontSize", pim.PrintSettings.MainHeaderTextFontSizeA5L);
+                    rd.SetParameterValue("HeaderDescriptionFontSize", pim.PrintSettings.HeaderDescriptionFontSizeA5L);
+                    rd.SetParameterValue("InvoiceTypeTextFontSize", pim.PrintSettings.InvoiceTypeTextFontSizeA5L);
+                }
         }
 
         private void RefreshCrystalReport()
@@ -225,7 +250,7 @@ namespace PrintInterface
 
         private void cmbUserDescriptions_SelectedIndexChanged(object sender, EventArgs e)
         {
-            txtUserDescription.Text = cmbUserDescriptions.Text;
+            txtUserDescription.Text = (string)cmbUserDescriptions.SelectedValue;
         }
 
         private void txtUserDescription_TextChanged(object sender, EventArgs e)

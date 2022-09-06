@@ -185,13 +185,13 @@ namespace AvazehWpf
             switch ((double)values[0])
             {
                 case 0:
-                    if (string.IsNullOrEmpty((string)values[1])) return DependencyProperty.UnsetValue;
+                    if (values[1] is not string || string.IsNullOrEmpty((string)values[1])) return DependencyProperty.UnsetValue;
                     return new SolidColorBrush(((string)values[1]).ToColor());
                 case > 0:
-                    if (string.IsNullOrEmpty((string)values[2])) return DependencyProperty.UnsetValue;
+                    if (values[2] is not string || string.IsNullOrEmpty((string)values[2])) return DependencyProperty.UnsetValue;
                     return new SolidColorBrush(((string)values[2]).ToColor());
                 case < 0:
-                    if (string.IsNullOrEmpty((string)values[3])) return DependencyProperty.UnsetValue;
+                    if (values[3] is not string || string.IsNullOrEmpty((string)values[3])) return DependencyProperty.UnsetValue;
                     return new SolidColorBrush(((string)values[3]).ToColor());
             }
             return DependencyProperty.UnsetValue;

@@ -13,9 +13,15 @@ namespace PrintInterface
         private List<UserDescriptionModel> userDescriptions;
         private string footerTextLeft = "کیفیت برتر، قیمت مناسب";
         private string footerTextRight = "توسعه دهنده نرم افزار: صفا دانا";
-        private int mainHeaderTextFontSize = 30;
-        private int headerDescriptionFontSize = 10;
-        private int invoiceTypeTextFontSize = 16;
+        private int mainHeaderTextFontSizeA5P = 30;
+        private int headerDescriptionFontSizeA5P = 10;
+        private int invoiceTypeTextFontSizeA5P = 16;
+        private int mainHeaderTextFontSizeA5L = 30;
+        private int headerDescriptionFontSizeA5L = 10;
+        private int invoiceTypeTextFontSizeA5L = 14;
+        private int mainHeaderTextFontSizeA4P = 30;
+        private int headerDescriptionFontSizeA4P = 10;
+        private int invoiceTypeTextFontSizeA4P = 14;
         private int pageHeaderFontSize = 10;
         private int detailsFontSize = 10;
         private int pageFooterFontSize = 10;
@@ -31,9 +37,19 @@ namespace PrintInterface
         public List<UserDescriptionModel> UserDescriptions { get => userDescriptions; set => userDescriptions = value; }
         public string FooterTextLeft { get => footerTextLeft; set => footerTextLeft = value; }
         public string FooterTextRight { get => footerTextRight; set => footerTextRight = value; }
-        public int MainHeaderTextFontSize { get => mainHeaderTextFontSize; set => mainHeaderTextFontSize = value; }
-        public int HeaderDescriptionFontSize { get => headerDescriptionFontSize; set => headerDescriptionFontSize = value; }
-        public int InvoiceTypeTextFontSize { get => invoiceTypeTextFontSize; set => invoiceTypeTextFontSize = value; }
+
+        public int MainHeaderTextFontSizeA5P { get => mainHeaderTextFontSizeA5P; set => mainHeaderTextFontSizeA5P = value; }
+        public int HeaderDescriptionFontSizeA5P { get => headerDescriptionFontSizeA5P; set => headerDescriptionFontSizeA5P = value; }
+        public int InvoiceTypeTextFontSizeA5P { get => invoiceTypeTextFontSizeA5P; set => invoiceTypeTextFontSizeA5P = value; }
+
+        public int MainHeaderTextFontSizeA5L { get => mainHeaderTextFontSizeA5L; set => mainHeaderTextFontSizeA5L = value; }
+        public int HeaderDescriptionFontSizeA5L { get => headerDescriptionFontSizeA5L; set => headerDescriptionFontSizeA5L = value; }
+        public int InvoiceTypeTextFontSizeA5L { get => invoiceTypeTextFontSizeA5L; set => invoiceTypeTextFontSizeA5L = value; }
+
+        public int MainHeaderTextFontSizeA4P { get => mainHeaderTextFontSizeA4P; set => mainHeaderTextFontSizeA4P = value; }
+        public int HeaderDescriptionFontSizeA4P { get => headerDescriptionFontSizeA4P; set => headerDescriptionFontSizeA4P = value; }
+        public int InvoiceTypeTextFontSizeA4P { get => invoiceTypeTextFontSizeA4P; set => invoiceTypeTextFontSizeA4P = value; }
+
         public int PageHeaderFontSize { get => pageHeaderFontSize; set => pageHeaderFontSize = value; }
         public int DetailsFontSize { get => detailsFontSize; set => detailsFontSize = value; }
         public int PageFooterFontSize { get => pageFooterFontSize; set => pageFooterFontSize = value; }
