@@ -168,6 +168,7 @@ namespace AvazehWpf.ViewModels
             CanUpdateRowFromDB = true;
             NotifyOfPropertyChange(() => WorkItem);
             NotifyOfPropertyChange(() => SelectedProductUnit);
+            FocusOnProductsCombobox();
         }
 
         public async Task AddOrUpdateItem()
@@ -269,7 +270,12 @@ namespace AvazehWpf.ViewModels
             ReloadCustomerTotalBalance();
             NotifyOfPropertyChange(() => Invoice.Items);
             NotifyOfPropertyChange(() => Invoice);
-            ProductsComboboxHasFocus = true;
+            FocusOnProductsCombobox();
+        }
+
+        public void FocusOnProductsCombobox()
+        {
+            ((GetView() as Window).FindName("ProductsCombobox") as ComboBox).Focus();
         }
 
         private async Task UpdateItemInDatabase(InvoiceItemModel item)
@@ -478,6 +484,11 @@ namespace AvazehWpf.ViewModels
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();
         }
 
+        public void CountStringTextbox_GotFocus(object sender)
+        {
+            (sender as TextBox).SelectAll();
+        }
+
         public void CalculateTotalAmountOfWorkItem(object sender, TextChangedEventArgs e)
         {
             NotifyOfPropertyChange(() => WorkItem);
@@ -485,7 +496,7 @@ namespace AvazehWpf.ViewModels
 
         public void SetKeyboardLayout()
         {
-            if (GeneralSettings.AutoSelectPersianLanguage)
+            if (GeneralSettings != null && GeneralSettings.AutoSelectPersianLanguage)
                 if (GeneralSettings.AutoSelectPersianLanguage)
                     ExtensionsAndStatics.ChangeLanguageToPersian();
         }

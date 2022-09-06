@@ -44,6 +44,7 @@ namespace AvazehWpf.ViewModels
         private InvoiceSettingsModel invoiceSettings;
         private InvoicePrintSettingsModel printSettings;
         private GeneralSettingsModel generalSettings;
+        private string searchText;
         private readonly SingletonClass Singleton;
         public InvoiceSettingsModel InvoiceSettings { get => invoiceSettings; private set { invoiceSettings = value; NotifyOfPropertyChange(() => InvoiceSettings); } }
         public InvoicePrintSettingsModel PrintSettings { get => printSettings; private set { printSettings = value; NotifyOfPropertyChange(() => PrintSettings); } }
@@ -77,7 +78,14 @@ namespace AvazehWpf.ViewModels
             }
         }
 
-        public string SearchText { get; set; }
+        public string SearchText
+        {
+            get => searchText; set
+            {
+                searchText = value;
+                NotifyOfPropertyChange(() => SearchText);
+            }
+        }
         public int SelectedFinStatus { get; set; } = 1;
         public int SelectedLifeStatus { get; set; }
 

@@ -13,7 +13,7 @@
         xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary"
         Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1200" Height="675"
-        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]">
+        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]; [Event Loaded] = [FocusOnProductsCombobox()]">
     <Window.Resources>
         <local:AppSettings x:Key="AppSettings"/>
         <!--body content datagrid cell vertical centering-->
@@ -331,7 +331,7 @@
                         <materialDesign:PackIcon Kind="Counter" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="تعداد" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <TextBox Text="{Binding WorkItem.CountString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" cal:Message.Attach="[Event TextChanged]=[Action CalculateTotalAmountOfWorkItem($source, $eventArgs)]" ToolTip="{Binding WorkItem.CountValue}" TabIndex="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="25"/>
+                    <TextBox Text="{Binding WorkItem.CountString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" cal:Message.Attach="[Event TextChanged]=[Action CalculateTotalAmountOfWorkItem($source, $eventArgs)]; [Event GotFocus]=[Action CountStringTextbox_GotFocus($source)]" ToolTip="{Binding WorkItem.CountValue}" TabIndex="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="9" Orientation="Vertical" Margin="0,0,0,0">
@@ -339,7 +339,7 @@
                         <materialDesign:PackIcon Kind="Rename" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="نام کالا" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <ComboBox IsTextSearchEnabled="True" IsEditable="True" VerticalContentAlignment="Center" Height="25" local:FocusExtension.IsFocused="{Binding ProductsComboboxHasFocus}"
+                    <ComboBox IsTextSearchEnabled="True" IsEditable="True" VerticalContentAlignment="Center" Height="25" x:Name="ProductsCombobox"
                               cal:Message.Attach="[Event SelectionChanged]=[Action ProductNames_SelectionChanged($source, $eventArgs)]; [Event PreviewTextInput]=[Action ProductNames_PreviewTextInput()]; [Event GotFocus] = [Action SetKeyboardLayout]"
                               ItemsSource="{Binding ProductItemsForComboBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsDropDownOpen="{Binding IsProductInputDropDownOpen, Mode=TwoWay}"
                               SelectedItem="{Binding SelectedProductItem, Mode=TwoWay}" TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ItemName"
