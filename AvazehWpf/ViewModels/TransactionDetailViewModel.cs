@@ -18,6 +18,7 @@ using System.Windows.Data;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
 using SharedLibrary.Enums;
+using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 
 namespace AvazehWpf.ViewModels
 {
@@ -30,6 +31,7 @@ namespace AvazehWpf.ViewModels
             ASM = settingsManager;
             CallBackFunc = callBack;
             Singleton = singleton;
+            LoadSettings().ConfigureAwait(true);
             if (TransactionId is not null)
             {
                 TDM.TransactionId = (int)TransactionId;
@@ -43,6 +45,10 @@ namespace AvazehWpf.ViewModels
         private SingletonClass Singleton;
         private TransactionModel _Transaction;
         private readonly Func<Task> CallBackFunc;
+        private TransactionSettingsModel transactionSettings;
+        private GeneralSettingsModel generalSettings;
+        public TransactionSettingsModel TransactionSettings { get => transactionSettings; private set { transactionSettings = value; NotifyOfPropertyChange(() => TransactionSettings); } }
+        public GeneralSettingsModel GeneralSettings { get => generalSettings; private set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); } }
         private ObservableCollection<ItemsForComboBox> productItems;
         private ObservableCollection<ItemsForComboBox> transactionsForComboBox;
         private TransactionItemModel _workItem = new();
@@ -80,6 +86,14 @@ namespace AvazehWpf.ViewModels
             set { _Transaction = value; NotifyOfPropertyChange(() => Transaction); }
         }
 
+        private async Task LoadSettings()
+        {
+            var Settings = await ASM.LoadAllAppSettings();
+            if (Settings == null) Settings = new();
+            TransactionSettings = Settings.TransactionSettings;
+            GeneralSettings = Settings.GeneralSettings;
+        }
+
         private async Task ReloadTransaction(int? TransactionId)
         {
             if (TransactionId is null || (int)TransactionId == 0) return;
@@ -102,54 +116,62 @@ namespace AvazehWpf.ViewModels
             if (Transaction == null || WorkItem == null) return;
             WorkItem.TransactionId = Transaction.Id;
             var validate = TDM.ValidateItem(WorkItem);
-            if (!validate.IsValid)
+            if (validate.IsValid)
+            {
+                if (EdittingItem == false) //New Item
+                {
+                    if (Transaction.Items == null) Transaction.Items = new();
+                    var addedItem = await TDM.CreateItemAsync(WorkItem);
+                    if (addedItem is not null)
+                    {
+                        Transaction.Items.Add(addedItem);
+                        if (addedItem.TotalValue > 0) Transaction.TotalPositiveItemsSum += addedItem.TotalValue;
+                        else if (addedItem.TotalValue < 0) Transaction.TotalNegativeItemsSum += addedItem.TotalValue;
+                        if (TransactionsForComboBox.Where(x => x.IsChecked).Any())
+                        {
+                            if (MessageBox.Show("آیا در فایل یا فایل های دیگری که انتخاب کرده اید نیز ثبت شود؟ ", "ثبت در فایل های دیگر", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
+                            {
+                                foreach (var item in TransactionsForComboBox)
+                                {
+                                    if (item.IsChecked)
+                                    {
+                                        WorkItem.TransactionId = item.Id;
+                                        WorkItem.Descriptions += $" -ثبت شده از فایل {Transaction.FileName}- ";
+                                        await TDM.CreateItemAsync(WorkItem);
+                                        item.IsChecked = false;
+                                    }
+                                }
+                                var temp = TransactionsForComboBox;
+                                TransactionsForComboBox = null;
+                                TransactionsForComboBox = temp;
+                                WorkItem.TransactionId = Transaction.Id;
+                            }
+                        }
+                    }
+                }
+                else //Edit Item
+                {
+                    await UpdateItemInDatabase(WorkItem);
+                    EdittingItem = false;
+                }
+            }
+            else
             {
                 var str = "";
                 foreach (var error in validate.Errors)
                     str += error.ErrorMessage + "\n";
                 MessageBox.Show(str, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-            if (EdittingItem == false) //New Item
-            {
-                if (Transaction.Items == null) Transaction.Items = new();
-                var addedItem = await TDM.CreateItemAsync(WorkItem);
-                if (addedItem is not null)
-                {
-                    Transaction.Items.Add(addedItem);
-                    if (addedItem.TotalValue > 0) Transaction.TotalPositiveItemsSum += addedItem.TotalValue;
-                    else if (addedItem.TotalValue < 0) Transaction.TotalNegativeItemsSum += addedItem.TotalValue;
-                    if (TransactionsForComboBox.Where(x => x.IsChecked).Any())
-                    {
-                        if (MessageBox.Show("آیا در فایل یا فایل های دیگری که انتخاب کرده اید نیز ثبت شود؟ ", "ثبت در فایل های دیگر", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
-                        {
-                            foreach (var item in TransactionsForComboBox)
-                            {
-                                if (item.IsChecked)
-                                {
-                                    WorkItem.TransactionId = item.Id;
-                                    WorkItem.Descriptions += $" -ثبت شده از فایل {Transaction.FileName}- ";
-                                    await TDM.CreateItemAsync(WorkItem);
-                                    item.IsChecked = false;
-                                }
-                            }
-                            var temp = TransactionsForComboBox;
-                            TransactionsForComboBox = null;
-                            TransactionsForComboBox = temp;
-                            WorkItem.TransactionId = Transaction.Id;
-                        }
-                    }
-                }
-            }
-            else //Edit Item
-            {
-                await UpdateItemInDatabase(WorkItem);
-                EdittingItem = false;
             }
             WorkItem = new();
             selectedItem_Backup = new();
             NotifyOfPropertyChange(() => Transaction.Items);
             NotifyOfPropertyChange(() => Transaction);
+            FocusOnProductsCombobox();
+        }
+
+        public void FocusOnProductsCombobox()
+        {
+            ((GetView() as Window).FindName("ProductsCombobox") as ComboBox).Focus();
         }
 
         private async Task UpdateItemInDatabase(TransactionItemModel item)
@@ -267,21 +289,13 @@ namespace AvazehWpf.ViewModels
             IsTitleInputDropDownOpen = true;
         }
 
-        public async Task SearchBoxKeyDownHandler(ActionExecutionContext context)
-        {
-            if (context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
-            {
-                await Search();
-            }
-        }
-
         public void ProductNames_PreviewTextInput(object sender, EventArgs e)
         {
             var combo = sender as ComboBox;
             combo.IsDropDownOpen = true;
         }
 
-        public void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        public async Task Window_PreviewKeyDown(object window, object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
             {
@@ -291,6 +305,14 @@ namespace AvazehWpf.ViewModels
                     EdittingItem = false;
                     WorkItem = new();
                 }
+            }
+            else if (e.Key == Key.Enter)
+            {
+                if (((window as Window).FindName("SearchText") as TextBox).IsFocused)
+                {
+                    await Search();
+                }
+                else await AddOrUpdateItem();
             }
         }
 
@@ -313,6 +335,18 @@ namespace AvazehWpf.ViewModels
         void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
+
+        public void Textbox_GotFocus(object sender)
+        {
+            (sender as TextBox).SelectAll();
+        }
+
+        public void SetKeyboardLayout()
+        {
+            if (GeneralSettings != null && GeneralSettings.AutoSelectPersianLanguage)
+                if (GeneralSettings.AutoSelectPersianLanguage)
+                    ExtensionsAndStatics.ChangeLanguageToPersian();
         }
     }
 

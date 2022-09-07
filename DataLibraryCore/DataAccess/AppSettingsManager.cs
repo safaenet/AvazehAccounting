@@ -1,8 +1,12 @@
-﻿using DataLibraryCore.DataAccess.Interfaces;
+﻿using Dapper;
+using DataLibraryCore.DataAccess.Interfaces;
+using DataLibraryCore.DataAccess.SqlServer;
+using SharedLibrary.DalModels;
 using SharedLibrary.SettingsModels;
 using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -17,9 +21,14 @@ namespace DataLibraryCore.DataAccess
         public AppSettingsManager()
         {
             CheckSettingsFile().ConfigureAwait(true);
+            DataAccess = new SqlDataAccess();
         }
 
         private readonly string SettingsFileName = AppDomain.CurrentDomain.BaseDirectory + "appsettings.xml";
+        private readonly IDataAccess DataAccess;
+        private readonly string GetUserDescriptionsQuery = "SELECT [Id], [DescriptionTitle], [DescriptionText] From UserDescriptions";
+        private readonly string DeleteUserDescriptionsQuery = "DELETE FROM UserDescriptions";
+        private readonly string InsertUserDescriptionsQuery = "INSERT INTO UserDescriptions (DescriptionTitle, DescriptionText) VALUES (@descriptionTitle, @descriptionText)";
 
         private async Task CheckSettingsFile()
         {
@@ -44,12 +53,15 @@ namespace DataLibraryCore.DataAccess
             string xmlString = await File.ReadAllTextAsync(SettingsFileName);
             StringReader stringReader = new StringReader(xmlString);
             settings = xmlSerializer.Deserialize(stringReader) as AppSettingsModel;
+            if (settings != null && settings.InvoicePrintSettings != null) settings.InvoicePrintSettings.UserDescriptions = await GetUserDescriptionsAsync();
             return settings;
         }
 
         public async Task<bool> SaveAllSettingsAsync(AppSettingsModel settings)
         {
             if (settings == null) return false;
+            if (settings.InvoicePrintSettings != null) await InsertUserDescriptionsToDatabaseAsync(settings.InvoicePrintSettings.UserDescriptions);
+            settings.InvoicePrintSettings.UserDescriptions = null;
             await WriteSettingsFileToDisk(settings);
             return true;
         }
@@ -82,6 +94,19 @@ namespace DataLibraryCore.DataAccess
         {
             var settings = await LoadAllSettingsAsync();
             return settings.InvoicePrintSettings;
+        }
+
+        private async Task<List<UserDescriptionModel>> GetUserDescriptionsAsync()
+        {
+            var items = await DataAccess.LoadDataAsync<UserDescriptionModel, DynamicParameters>(GetUserDescriptionsQuery, null);
+            return items.AsList();
+        }
+
+        private async Task<int> InsertUserDescriptionsToDatabaseAsync(List<UserDescriptionModel> descriptions)
+        {
+            await DataAccess.SaveDataAsync<DynamicParameters>(DeleteUserDescriptionsQuery, null);
+            if (descriptions != null && descriptions.Count != 0) return await DataAccess.SaveDataAsync(InsertUserDescriptionsQuery, descriptions);
+            return 0;
         }
     }
 }

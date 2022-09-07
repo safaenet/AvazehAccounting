@@ -57,7 +57,6 @@ namespace AvazehWpf.ViewModels
         private ObservableCollection<ItemsForComboBox> productItems;
         private ObservableCollection<ProductUnitModel> productUnits;
         private ObservableCollection<RecentSellPriceModel> recentSellPrices;
-        public bool ProductsComboboxHasFocus { get => productsComboboxHasFocus; set { productsComboboxHasFocus = value; NotifyOfPropertyChange(() => ProductsComboboxHasFocus); } }
         public InvoiceSettingsModel InvoiceSettings { get => invoiceSettings; private set { invoiceSettings = value; NotifyOfPropertyChange(() => InvoiceSettings); } }
         public InvoicePrintSettingsModel PrintSettings { get => printSettings; private set { printSettings = value; NotifyOfPropertyChange(() => PrintSettings); } }
         public GeneralSettingsModel GeneralSettings { get => generalSettings; private set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); } }
@@ -80,7 +79,6 @@ namespace AvazehWpf.ViewModels
         private bool isProductInputDropDownOpen;
         private string windowTitle;
         private string phoneNumberText;
-        private bool productsComboboxHasFocus;
 
         public string PhoneNumberText
         {
@@ -237,29 +235,34 @@ namespace AvazehWpf.ViewModels
             }
             else
             {
-                if (WorkItem == null || SelectedProductItem == null || SelectedProductItem.Id == 0) return;
-                WorkItem.InvoiceId = Invoice.Id;
-                WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
-                var validate = IDM.ValidateItem(WorkItem);
-                if (!validate.IsValid)
+                if (WorkItem != null && SelectedProductItem != null && SelectedProductItem.Id != 0)
                 {
-                    var str = "";
-                    foreach (var error in validate.Errors)
-                        str += error.ErrorMessage + "\n";
-                    MessageBox.Show(str, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-                if (EdittingItem == false) //New Item
-                {
-                    if (Invoice.Items == null) Invoice.Items = new();
-                    var addedItem = await IDM.CreateItemAsync(WorkItem);
-                    if (addedItem is not null)
-                        Invoice.Items.Insert(0, addedItem);
-                }
-                else //Edit Item
-                {
-                    await UpdateItemInDatabase(WorkItem);
-                    EdittingItem = false;
+                    WorkItem.InvoiceId = Invoice.Id;
+                    WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
+                    var validate = IDM.ValidateItem(WorkItem);
+                    if (validate.IsValid)
+                    {
+                        if (EdittingItem == false) //New Item
+                        {
+                            if (Invoice.Items == null) Invoice.Items = new();
+                            var addedItem = await IDM.CreateItemAsync(WorkItem);
+                            if (addedItem is not null)
+                                Invoice.Items.Insert(0, addedItem);
+                        }
+                        else //Edit Item
+                        {
+                            await UpdateItemInDatabase(WorkItem);
+                            EdittingItem = false;
+                        }
+                    }
+                    else
+                    {
+                        var str = "";
+                        foreach (var error in validate.Errors)
+                            str += error.ErrorMessage + "\n";
+                        MessageBox.Show(str, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
                 }
             }
             ProductUnitModel temp = WorkItem.Unit;

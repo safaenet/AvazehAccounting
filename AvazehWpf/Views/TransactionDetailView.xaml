@@ -14,8 +14,21 @@
         xmlns:dlc2="clr-namespace:SharedLibrary.DtoModels;assembly=SharedLibrary"
         Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1200" Height="650"
-        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]">
+        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $source, $eventArgs)]">
     <Window.Resources>
+        <local:AppSettings x:Key="AppSettings"/>
+        <!--body content datagrid cell vertical centering-->
+        <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <viewmodels:BooleanToReverseConverter x:Key="b2r"/>
     </Window.Resources>
     <Grid>
@@ -119,7 +132,7 @@
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="توضیحات" Margin="0,2,0,2"/>
                         </StackPanel>
                         <TextBox Text="{Binding Transaction.Descriptions, Mode=TwoWay}"
-                                 cal:Message.Attach="[Event TextChanged]=[Action FileDescriptions_TextChanged]" TextWrapping="Wrap" HorizontalContentAlignment="Right" MinHeight="50" Height="auto" VerticalContentAlignment="Top"/>
+                                 cal:Message.Attach="[Event TextChanged]=[Action FileDescriptions_TextChanged]; [Event GotFocus] = [Action SetKeyboardLayout]" TextWrapping="Wrap" HorizontalContentAlignment="Right" MinHeight="50" Height="auto" VerticalContentAlignment="Top"/>
                     </DockPanel>
 
                     <StackPanel Grid.Row="2" Orientation="Vertical">
@@ -198,28 +211,28 @@
                 </Grid.Resources>
                 <Button x:Name="PreviousPage" Width="100" Height="25" HorizontalAlignment="Left" Margin="0,0,3,0" Grid.Column="0">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="arrow_back_ios_new" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
-                        <TextBlock Text="Previous" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                        <materialDesign:PackIcon Kind="ArrowLeftCircleOutline" Margin="3"/>
+                        <TextBlock Text="صفحه قبل" VerticalAlignment="Center" Margin="5,0,0,0"/>
                     </StackPanel>
                 </Button>
                 <Button x:Name="NextPage" Grid.Column="1" Width="100" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Next" VerticalAlignment="Center" Margin="5,0,5,0"/>
-                        <TextBlock Text="arrow_forward_ios" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
+                        <TextBlock Text="صفحه بعد" VerticalAlignment="Center" Margin="5,0,5,0"/>
+                        <materialDesign:PackIcon Kind="ArrowRightCircleOutline" Margin="3" HorizontalAlignment="Right"/>
                     </StackPanel>
                 </Button>
                 <Separator Grid.Column="2" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                 <ComboBox Margin="3,0,3,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Grid.Column="3" BorderThickness="2" BorderBrush="DarkGray" Height="25" VerticalContentAlignment="Center"
                           ItemsSource="{Binding Source={StaticResource FinStatusItems}}" SelectedValuePath="Key" DisplayMemberPath="Value"
                           SelectedValue="{Binding SelectedFinStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action Search]"/>
-                <Button x:Name="Search" Grid.Column="4" Width="100" Height="25" Margin="0,0,3,0" >
+                <Button x:Name="Search" Grid.Column="4" Width="150" Height="25" Margin="0,0,3,0" >
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="search" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
-                        <TextBlock Text="Search" VerticalAlignment="Center" Margin="30,0,30,0"/>
-                        <TextBlock Text="search" Width="12" FontFamily="{StaticResource mdi}" FontStyle="Normal" VerticalAlignment="Center"/>
+                        <materialDesign:PackIcon Kind="DatabaseSearchOutline" Margin="0"/>
+                        <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
+                        <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="0"/>
                     </StackPanel>
                 </Button>
-                <TextBox x:Name="SearchText" Grid.Column="5" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]" VerticalContentAlignment="Center" Margin="0,0,3,0"/>
+                <TextBox x:Name="SearchText" Grid.Column="5" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]" VerticalContentAlignment="Center" Margin="0,0,3,0"/>
             </Grid>
             <Separator Grid.Row="1" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
             <Grid Grid.Row="2">
@@ -232,7 +245,7 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="AddOrUpdateItem" IsDefault="True" Grid.Column="0" TabIndex="7" Width="40" Margin="0,0,5,3">
+                <Button x:Name="AddOrUpdateItem" Grid.Column="0" TabIndex="7" Width="40" Margin="0,0,5,3">
                     <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Width="30" Height="30"/>
                 </Button>
 
@@ -272,7 +285,7 @@
                         <materialDesign:PackIcon Kind="CommentOutline" Margin="0,0,5,0"/>
                         <TextBlock TextAlignment="Center" Text="توضیحات" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <TextBox Text="{Binding WorkItem.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="50" TabIndex="5" VerticalContentAlignment="Center" Height="25"/>
+                    <TextBox Text="{Binding WorkItem.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="50" TabIndex="5" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="4" Width="120" Orientation="Vertical" Margin="0,0,3,0">
@@ -281,7 +294,7 @@
                         <TextBlock TextAlignment="Center" Text="مبلغ" Margin="0,0,0,0"/>
                     </StackPanel>
                     <TextBox Text="{Binding WorkItem.Amount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}"
-                             cal:Message.Attach="[Event TextChanged]=[Action CountAndAmount_TextChanged()]" TabIndex="3" VerticalContentAlignment="Center" Height="25"/>
+                             cal:Message.Attach="[Event TextChanged]=[Action CountAndAmount_TextChanged()]; [Event GotFocus]=[Action Textbox_GotFocus($source)]" TabIndex="3" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="5" Width="100" Orientation="Vertical" Margin="0,0,3,0">
@@ -290,7 +303,7 @@
                         <TextBlock TextAlignment="Center" Text="تعداد" Margin="0,0,0,0"/>
                     </StackPanel>
                     <TextBox Text="{Binding WorkItem.CountString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding WorkItem.CountValue}"
-                             cal:Message.Attach="[Event TextChanged]=[Action CountAndAmount_TextChanged()]" MaxLength="50" TabIndex="1" VerticalContentAlignment="Center" Height="25"/>
+                             cal:Message.Attach="[Event TextChanged]=[Action CountAndAmount_TextChanged()]; [Event GotFocus]=[Action Textbox_GotFocus($source)]" MaxLength="50" TabIndex="1" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="6" Orientation="Vertical" Margin="0,0,1,0">
@@ -298,9 +311,9 @@
                         <materialDesign:PackIcon Kind="IdentificationCardOutline" Margin="0,0,5,0"/>
                         <TextBlock TextAlignment="Center" Text="عنوان" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <ComboBox IsTextSearchEnabled="True" IsEditable="True" VerticalContentAlignment="Center" Height="25"
+                    <ComboBox IsTextSearchEnabled="True" IsEditable="True" VerticalContentAlignment="Center" Height="25" x:Name="ProductsCombobox"
                               ItemsSource="{Binding ProductItemsForComboBox}" IsDropDownOpen="{Binding IsTitleInputDropDownOpen, Mode=TwoWay}"
-                              cal:Message.Attach="[Event PreviewTextInput]=[Action ProductNames_PreviewTextInput()]"
+                              cal:Message.Attach="[Event PreviewTextInput]=[Action ProductNames_PreviewTextInput()]; [Event GotFocus] = [Action SetKeyboardLayout]"
                               TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ItemName"
                               Text="{Binding WorkItem.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     </ComboBox>
@@ -308,14 +321,65 @@
             </Grid>
             <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditItem()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
                       Grid.Row="3" ItemsSource="{Binding Transaction.Items}" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}" FlowDirection="RightToLeft" AutoGenerateColumns="False"
-                      IsTabStop="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35">
+                      IsTabStop="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35" CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
+                       HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding TransactionSettings.DetailDataGridFontSize}">
+                <DataGrid.Resources>
+                    <local:DateToColorConverter x:Key="DateToColorConverter"/>
+                    <local:AmountToColorConverter x:Key="AmountToColorConverter"/>
+                </DataGrid.Resources>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="عنوان" Binding="{Binding Title, Mode=OneWay}" Width="230"/>
                     <DataGridTextColumn Header="تعداد" Binding="{Binding CountString, Mode=OneWay}" Width="90"/>
                     <DataGridTextColumn Header="مبلغ" Binding="{Binding Amount, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120"/>
                     <DataGridTextColumn Header="جمع کل" Binding="{Binding TotalValue, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120"/>
-                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding DateCreated, Mode=OneWay}" Width="70"/>
-                    <DataGridTextColumn Header="تاریخ ویرایش" Binding="{Binding DateUpdated, Mode=OneWay}" Width="73"/>
+                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding DateCreated, Mode=OneWay}" Width="70">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource DateToColorConverter}">
+                                            <Binding Path="DateCreated"/>
+                                            <Binding Path="CurrentPersianDate" Source="{StaticResource AppSettings}"/>
+                                            <Binding Path="Settings.TransactionSettings.DetailNewItemColor" Source="{StaticResource AppSettings}"/>
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Foreground">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource DateToColorConverter}">
+                                            <Binding Path="DateCreated"/>
+                                            <Binding Path="CurrentPersianDate" Source="{StaticResource AppSettings}"/>
+                                            <Binding Source="#FF000000"/>
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="تاریخ ویرایش" Binding="{Binding DateUpdated, Mode=OneWay}" Width="73">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource DateToColorConverter}">
+                                            <Binding Path="DateUpdated"/>
+                                            <Binding Path="CurrentPersianDate" Source="{StaticResource AppSettings}"/>
+                                            <Binding Path="Settings.TransactionSettings.DetailUpdatedItemColor" Source="{StaticResource AppSettings}"/>
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Foreground">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource DateToColorConverter}">
+                                            <Binding Path="DateUpdated"/>
+                                            <Binding Path="CurrentPersianDate" Source="{StaticResource AppSettings}"/>
+                                            <Binding Source="#FF000000"/>
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="ساعت ویرایش" Binding="{Binding TimeUpdated, Mode=OneWay}" Width="83"/>
                     <DataGridTextColumn Header="توضیحات" Binding="{Binding Descriptions, Mode=OneWay}" Width="*"/>
                 </DataGrid.Columns>

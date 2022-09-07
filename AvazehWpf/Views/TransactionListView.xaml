@@ -69,13 +69,13 @@
                 </Grid.Resources>
                 <Button IsEnabled="False" x:Name="PrintList" Grid.Column="0" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Printer" Margin="3"/>
+                        <materialDesign:PackIcon Kind="PrinterOutline" Margin="3"/>
                         <TextBlock Text="چاپ لیست" VerticalAlignment="Center" Margin="5,0,30,0"/>
                     </StackPanel>
                 </Button>
                 <Button x:Name="AddNewTransaction" IsEnabled="{Binding GeneralSettings.CanAddNewTransaction}" Grid.Column="1" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="NotePlus" Margin="3"/>
+                        <materialDesign:PackIcon Kind="NotePlusOutline" Margin="3"/>
                         <TextBlock Text="فایل جدید" VerticalAlignment="Center" Margin="5,0,30,0"/>
                     </StackPanel>
                 </Button>
@@ -84,7 +84,7 @@
                           SelectedValue="{Binding SelectedFinStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action Search]"/>
                 <Button x:Name="Search" Grid.Column="3" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="DatabaseSearch" Margin="3"/>
+                        <materialDesign:PackIcon Kind="DatabaseSearchOutline" Margin="3"/>
                         <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="3" HorizontalAlignment="Right"/>
                     </StackPanel>
@@ -99,14 +99,14 @@
                 </Grid.ColumnDefinitions>
                 <Button x:Name="PreviousPage" Grid.Column="0" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="ArrowLeftCircle" Margin="3"/>
+                        <materialDesign:PackIcon Kind="ArrowLeftCircleOutline" Margin="3"/>
                         <TextBlock Text="صفحه قبل" VerticalAlignment="Center" Margin="30,0,30,0"/>
                     </StackPanel>
                 </Button>
                 <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="صفحه بعد" VerticalAlignment="Center" Margin="30,0,30,0"/>
-                        <materialDesign:PackIcon Kind="ArrowRightCircle" Margin="3" HorizontalAlignment="Right"/>
+                        <materialDesign:PackIcon Kind="ArrowRightCircleOutline" Margin="3" HorizontalAlignment="Right"/>
                     </StackPanel>
                 </Button>
             </Grid>
@@ -137,11 +137,6 @@
                     <local:AmountToColorConverter x:Key="AmountToColorConverter"/>
                     <local:NameToBrushConverterForBackground x:Key="NameToBrushConverterForBackground"/>
                     <local:EnglishToPersianTransactionFinStatusConverter x:Key="EnglishToPersianTransactionFinStatusConverter"/>
-                    
-                    <local:NameToBrushConverterForForeground x:Key="NameToBrushConverterForForeground"/>
-                    <local:AmountToBrushConverterForBackground x:Key="AmountToBrushConverterForBackground"/>
-                    <local:AmountToBrushConverterForBackgroundInverted x:Key="AmountToBrushConverterForBackgroundInverted"/>
-                    <local:AmountToBrushConverterForForeground x:Key="AmountToBrushConverterForForeground"/>
                 </DataGrid.Resources>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="شماره" Binding="{Binding Path=Id, Mode=OneWay}" Width="50">
