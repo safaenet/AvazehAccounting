@@ -299,6 +299,36 @@ namespace AvazehApiClient.DataAccess
             piv.TotalPayments = invoice.TotalPayments;
         }
 
+        public static void AsPrintModel(this TransactionModel transaction, PrintTransactionModel ptm)
+        {
+            if (transaction == null) return;
+            ptm.TransactionId = transaction.Id;
+            ptm.FileName = transaction.FileName;
+            ptm.Items = new();
+            if (transaction.Items != null && transaction.Items.Count > 0)
+                foreach (var item in transaction.Items)
+                {
+                    TransactionItemForPrintModel i = new();
+                    i.Id = item.Id;
+                    i.Title = item.Title;
+                    i.CountString = item.CountString;
+                    i.Amount = item.Amount;
+                    i.TotalPrice = item.TotalValue;
+                    i.DateCreated = item.DateCreated;
+                    i.TimeCreated = item.TimeCreated;
+                    i.DateUpdated = item.DateUpdated;
+                    i.TimeUpdated = item.TimeUpdated;
+                    i.Descriptions = item.Descriptions;
+                    ptm.Items.Add(i);
+                }
+            ptm.TransactionDateCreated = transaction.DateCreated;
+            ptm.TransactionDescription = string.IsNullOrEmpty(transaction.Descriptions) ? "" : transaction.Descriptions;
+            ptm.TransactionFinStatus = transaction.TransactionFinancialStatus.ToString();
+            ptm.TotalPositiveItemsSum = transaction.TotalPositiveItemsSum;
+            ptm.TotalNegativeItemsSum = transaction.TotalNegativeItemsSum;
+            ptm.TotalBalance = transaction.TotalBalance;
+        }
+
         public static async Task<ProductModel> GetItemByBarCodeAsync(this ICollectionManager<ProductModel> manager, string BarCode)
         {
             return await manager.ApiProcessor.GetItemAsync<ProductModel>("Product/BarCode", BarCode);

@@ -34,7 +34,7 @@ namespace PrintInterface
         private double totalBalance;
         private string invoiceFinStatus;
         private int invoiceType;
-        private InvoicePrintSettingsModel printSettings;
+        private PrintSettingsModel printSettings;
 
         public int InvoiceId { get => invoiceId; set => invoiceId = value; }
         public List<InvoiceItemForPrintModel> Products { get => products; set => products = value; }
@@ -60,6 +60,6 @@ namespace PrintInterface
         public bool PrintInvoiceId { get => printInvoiceId; set => printInvoiceId = value; }
         public bool PrintCustomerPostAddress { get => printCustomerPostAddress; set => printCustomerPostAddress = value; }
         public string CustomerPostAddress { get => customerPostAddress; set => customerPostAddress = value; }
-        public InvoicePrintSettingsModel PrintSettings { get => printSettings; set => printSettings = value; }
+        public PrintSettingsModel PrintSettings { get => printSettings; set => printSettings = value; }
     }
 }

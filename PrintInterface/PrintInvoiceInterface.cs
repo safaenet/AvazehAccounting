@@ -138,20 +138,20 @@ namespace PrintInterface
             {
                 rd.SetParameterValue("MainHeaderTextFontSize", pim.PrintSettings.MainHeaderTextFontSizeA4P);
                 rd.SetParameterValue("HeaderDescriptionFontSize", pim.PrintSettings.HeaderDescriptionFontSizeA4P);
-                rd.SetParameterValue("InvoiceTypeTextFontSize", pim.PrintSettings.InvoiceTypeTextFontSizeA4P);
+                rd.SetParameterValue("InvoiceTypeTextFontSize", pim.PrintSettings.TypeTextFontSizeA4P);
             }
             else if (pim.PrintSettings.DefaultPaperSize == "A5")
                 if (pim.PrintSettings.DefaultPrintLayout == "عمودی")
                 {
                     rd.SetParameterValue("MainHeaderTextFontSize", pim.PrintSettings.MainHeaderTextFontSizeA5P);
                     rd.SetParameterValue("HeaderDescriptionFontSize", pim.PrintSettings.HeaderDescriptionFontSizeA5P);
-                    rd.SetParameterValue("InvoiceTypeTextFontSize", pim.PrintSettings.InvoiceTypeTextFontSizeA5P);
+                    rd.SetParameterValue("InvoiceTypeTextFontSize", pim.PrintSettings.TypeTextFontSizeA5P);
                 }
                 else if (pim.PrintSettings.DefaultPrintLayout == "افقی")
                 {
                     rd.SetParameterValue("MainHeaderTextFontSize", pim.PrintSettings.MainHeaderTextFontSizeA5L);
                     rd.SetParameterValue("HeaderDescriptionFontSize", pim.PrintSettings.HeaderDescriptionFontSizeA5L);
-                    rd.SetParameterValue("InvoiceTypeTextFontSize", pim.PrintSettings.InvoiceTypeTextFontSizeA5L);
+                    rd.SetParameterValue("InvoiceTypeTextFontSize", pim.PrintSettings.TypeTextFontSizeA5L);
                 }
         }
 

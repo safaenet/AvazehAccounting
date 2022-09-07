@@ -32,7 +32,7 @@ namespace AvazehWpf.ViewModels
         private ITransactionCollectionManager _TCM;
         private readonly IAppSettingsManager ASM;
         private TransactionSettingsModel transactionSettings;
-        private InvoicePrintSettingsModel printSettings;
+        private PrintSettingsModel printSettings;
         private GeneralSettingsModel generalSettings;
         private TransactionListModel _SelectedTransaction;
         private SingletonClass Singleton;
@@ -86,7 +86,7 @@ namespace AvazehWpf.ViewModels
                 NotifyOfPropertyChange(() => TransactionSettings);
             }
         }
-        public InvoicePrintSettingsModel PrintSettings
+        public PrintSettingsModel PrintSettings
         {
             get => printSettings; set
             {

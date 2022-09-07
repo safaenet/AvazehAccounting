@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SharedLibrary.SettingsModels
 {
-    public class InvoicePrintSettingsModel
+    public class PrintSettingsModel
     {
         public string MainHeaderText { get; set; } = "فروشگاه آوازه";
         public string HeaderDescription1 { get; set; } = "کرکره برقی، جک پارکینگی، دزدگیر اماکن";
@@ -17,15 +17,15 @@ namespace SharedLibrary.SettingsModels
 
         public int MainHeaderTextFontSizeA5P { get; set; } = 30;
         public int HeaderDescriptionFontSizeA5P { get; set; } = 10;
-        public int InvoiceTypeTextFontSizeA5P { get; set; } = 16;
+        public int TypeTextFontSizeA5P { get; set; } = 16; //پیش فاکتور، فاکتور فروش، جزئیات فایل
 
         public int MainHeaderTextFontSizeA5L { get; set; } = 30;
         public int HeaderDescriptionFontSizeA5L { get; set; } = 10;
-        public int InvoiceTypeTextFontSizeA5L { get; set; } = 14;
+        public int TypeTextFontSizeA5L { get; set; } = 14; //پیش فاکتور، فاکتور فروش، جزئیات فایل
 
         public int MainHeaderTextFontSizeA4P { get; set; } = 30;
         public int HeaderDescriptionFontSizeA4P { get; set; } = 10;
-        public int InvoiceTypeTextFontSizeA4P { get; set; } = 14;
+        public int TypeTextFontSizeA4P { get; set; } = 14; //پیش فاکتور، فاکتور فروش، جزئیات فایل
 
         public int PageHeaderFontSize { get; set; } = 10;
         public int DetailsFontSize { get; set; } = 10;

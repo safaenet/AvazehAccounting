@@ -90,7 +90,7 @@ namespace DataLibraryCore.DataAccess
             return settings.GeneralSettings;
         }
 
-        public async Task<InvoicePrintSettingsModel> LoadInvoicePrintSettings()
+        public async Task<PrintSettingsModel> LoadInvoicePrintSettings()
         {
             var settings = await LoadAllSettingsAsync();
             return settings.InvoicePrintSettings;

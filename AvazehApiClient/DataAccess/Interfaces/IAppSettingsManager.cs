@@ -9,7 +9,7 @@ namespace AvazehApiClient.DataAccess.Interfaces
         Task<AppSettingsModel> LoadAllAppSettings();
         Task<ChequeSettingsModel> LoadChequeSettings();
         Task<GeneralSettingsModel> LoadGeneralSettings();
-        Task<InvoicePrintSettingsModel> LoadInvoicePrintSettings();
+        Task<PrintSettingsModel> LoadInvoicePrintSettings();
         Task<InvoiceSettingsModel> LoadInvoiceSettings();
         Task<TransactionSettingsModel> LoadTransactionSettings();
         Task SaveAllAppSettings(AppSettingsModel Settings);

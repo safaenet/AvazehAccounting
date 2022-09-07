@@ -52,13 +52,13 @@ namespace AvazehWpf.ViewModels
         private InvoiceModel _Invoice;
         private readonly Func<Task> CallBackFunc;
         private InvoiceSettingsModel invoiceSettings;
-        private InvoicePrintSettingsModel printSettings;
+        private PrintSettingsModel printSettings;
         private GeneralSettingsModel generalSettings;
         private ObservableCollection<ItemsForComboBox> productItems;
         private ObservableCollection<ProductUnitModel> productUnits;
         private ObservableCollection<RecentSellPriceModel> recentSellPrices;
         public InvoiceSettingsModel InvoiceSettings { get => invoiceSettings; private set { invoiceSettings = value; NotifyOfPropertyChange(() => InvoiceSettings); } }
-        public InvoicePrintSettingsModel PrintSettings { get => printSettings; private set { printSettings = value; NotifyOfPropertyChange(() => PrintSettings); } }
+        public PrintSettingsModel PrintSettings { get => printSettings; private set { printSettings = value; NotifyOfPropertyChange(() => PrintSettings); } }
         public GeneralSettingsModel GeneralSettings { get => generalSettings; private set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); } }
         private InvoiceItemModel _workItem = new();
         private bool CanUpdateRowFromDB = true; //False when user DoubleClicks on a row.
@@ -368,8 +368,6 @@ namespace AvazehWpf.ViewModels
             ContextMenu cm = (window as Window).FindResource("PrintInvoiceCM") as ContextMenu;
             cm.PlacementTarget = sender as Button;
             cm.IsOpen = true;
-            //WindowManager wm = new();
-            //await wm.ShowWindowAsync(new PrintInvoiceRegularA5ViewModel(Invoice));
         }
 
         public async Task PrintInvoice(int t)

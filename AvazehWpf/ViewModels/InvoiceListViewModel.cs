@@ -42,12 +42,12 @@ namespace AvazehWpf.ViewModels
         private readonly IAppSettingsManager ASM;
         private InvoiceListModel _SelectedInvoice;
         private InvoiceSettingsModel invoiceSettings;
-        private InvoicePrintSettingsModel printSettings;
+        private PrintSettingsModel printSettings;
         private GeneralSettingsModel generalSettings;
         private string searchText;
         private readonly SingletonClass Singleton;
         public InvoiceSettingsModel InvoiceSettings { get => invoiceSettings; private set { invoiceSettings = value; NotifyOfPropertyChange(() => InvoiceSettings); } }
-        public InvoicePrintSettingsModel PrintSettings { get => printSettings; private set { printSettings = value; NotifyOfPropertyChange(() => PrintSettings); } }
+        public PrintSettingsModel PrintSettings { get => printSettings; private set { printSettings = value; NotifyOfPropertyChange(() => PrintSettings); } }
         public GeneralSettingsModel GeneralSettings { get => generalSettings; private set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); } }
 
         public InvoiceListModel SelectedInvoice

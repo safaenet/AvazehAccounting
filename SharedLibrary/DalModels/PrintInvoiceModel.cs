@@ -36,6 +36,6 @@ namespace SharedLibrary.DalModels
         public bool PrintInvoiceId = true;
         public bool PrintDate = true;
         public bool PrintCustomerPhoneNumber = true;
-        public InvoicePrintSettingsModel PrintSettings = new();
+        public PrintSettingsModel PrintSettings = new();
     }
 }

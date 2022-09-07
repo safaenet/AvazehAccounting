@@ -26,6 +26,8 @@ namespace PrintInterface
             }
             else if (args[1] == "invoice")
                 Application.Run(new PrintInvoiceInterface());
+            else if (args[1] == "transaction")
+                Application.Run(new PrintTransactionInterface());
             else Application.Exit();
         }
     }

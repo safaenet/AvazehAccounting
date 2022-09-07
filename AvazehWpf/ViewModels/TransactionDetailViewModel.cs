@@ -19,6 +19,10 @@ using System.Collections.ObjectModel;
 using System.Windows.Threading;
 using SharedLibrary.Enums;
 using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
+using SharedLibrary.SettingsModels;
+using System.Xml.Serialization;
+using System.IO;
+using System.Diagnostics;
 
 namespace AvazehWpf.ViewModels
 {
@@ -47,8 +51,10 @@ namespace AvazehWpf.ViewModels
         private readonly Func<Task> CallBackFunc;
         private TransactionSettingsModel transactionSettings;
         private GeneralSettingsModel generalSettings;
+        private PrintSettingsModel printSettings;
         public TransactionSettingsModel TransactionSettings { get => transactionSettings; private set { transactionSettings = value; NotifyOfPropertyChange(() => TransactionSettings); } }
         public GeneralSettingsModel GeneralSettings { get => generalSettings; private set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); } }
+        public PrintSettingsModel PrintSettings { get => printSettings; private set { printSettings = value; NotifyOfPropertyChange(() => PrintSettings); } }
         private ObservableCollection<ItemsForComboBox> productItems;
         private ObservableCollection<ItemsForComboBox> transactionsForComboBox;
         private TransactionItemModel _workItem = new();
@@ -246,6 +252,31 @@ namespace AvazehWpf.ViewModels
             Transaction.TimeUpdated = result.TimeUpdated;
             RefreshDataGrid();
             CanSaveTransactionChanges = false;
+        }
+
+        public async Task PrintTransaction()
+        {
+            if (Transaction == null) return;
+            await ReloadTransaction(Transaction.Id);
+            PrintTransactionModel pim = new();
+            pim.PrintSettings = PrintSettings;
+            Transaction.AsPrintModel(pim);
+            //if (t == 12) pim.PrintSettings.MainHeaderText = "فاکتور فروش";
+            XmlSerializer xmlSerializer = new(pim.GetType());
+            StringWriter stringWriter = new();
+            xmlSerializer.Serialize(stringWriter, pim);
+            var UniqueFileName = $@"{DateTime.Now.Ticks}.xml";
+            string TempFolderName = "Temp";
+            Directory.CreateDirectory(TempFolderName);
+            var FilePath = AppDomain.CurrentDomain.BaseDirectory + TempFolderName + @"\" + UniqueFileName;
+            File.WriteAllText(FilePath, stringWriter.ToString());
+            var PrintInterfacePath = AppDomain.CurrentDomain.BaseDirectory + "PrintInterface.exe";
+            var arguments = "transaction \"" + FilePath + "\"";
+            Process p = new Process
+            {
+                StartInfo = new ProcessStartInfo(PrintInterfacePath, arguments)
+            };
+            p.Start();
         }
 
         public async Task Search()

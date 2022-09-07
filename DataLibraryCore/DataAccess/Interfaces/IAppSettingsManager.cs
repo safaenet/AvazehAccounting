@@ -12,6 +12,6 @@ namespace DataLibraryCore.DataAccess.Interfaces
         Task<TransactionSettingsModel> LoadTransactionSettings();
         Task<ChequeSettingsModel> LoadChequeSettings();
         Task<GeneralSettingsModel> LoadGeneralSettings();
-        Task<InvoicePrintSettingsModel> LoadInvoicePrintSettings();
+        Task<PrintSettingsModel> LoadInvoicePrintSettings();
     }
 }

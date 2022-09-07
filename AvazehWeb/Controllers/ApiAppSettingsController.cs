@@ -60,7 +60,7 @@ namespace AvazehWeb.Controllers
         }
 
         [HttpGet(nameof(AppSettingsModel.InvoicePrintSettings))]
-        public async Task<ActionResult<InvoicePrintSettingsModel>> GetInvoicePrintSettingsAsync()
+        public async Task<ActionResult<PrintSettingsModel>> GetInvoicePrintSettingsAsync()
         {
             var item = await Manager.LoadInvoicePrintSettings();
             if (item is null) return NotFound("Couldn't find specific Item");
