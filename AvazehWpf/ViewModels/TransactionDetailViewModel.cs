@@ -98,6 +98,7 @@ namespace AvazehWpf.ViewModels
             if (Settings == null) Settings = new();
             TransactionSettings = Settings.TransactionSettings;
             GeneralSettings = Settings.GeneralSettings;
+            PrintSettings = Settings.PrintSettings;
         }
 
         private async Task ReloadTransaction(int? TransactionId)
@@ -254,14 +255,21 @@ namespace AvazehWpf.ViewModels
             CanSaveTransactionChanges = false;
         }
 
-        public async Task PrintTransaction()
+        public void PrintTransactionMenu(object sender, object window)
+        {
+            ContextMenu cm = (window as Window).FindResource("PrintTransactionCM") as ContextMenu;
+            cm.PlacementTarget = sender as Button;
+            cm.IsOpen = true;
+        }
+
+        public async Task PrintTransaction(int t)
         {
             if (Transaction == null) return;
             await ReloadTransaction(Transaction.Id);
             PrintTransactionModel pim = new();
             pim.PrintSettings = PrintSettings;
             Transaction.AsPrintModel(pim);
-            //if (t == 12) pim.PrintSettings.MainHeaderText = "فاکتور فروش";
+            pim.TransactionType = t;
             XmlSerializer xmlSerializer = new(pim.GetType());
             StringWriter stringWriter = new();
             xmlSerializer.Serialize(stringWriter, pim);

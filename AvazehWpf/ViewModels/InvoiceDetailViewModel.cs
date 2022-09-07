@@ -91,7 +91,7 @@ namespace AvazehWpf.ViewModels
             var Settings = await ASM.LoadAllAppSettings();
             if (Settings == null) Settings = new();
             InvoiceSettings = Settings.InvoiceSettings;
-            PrintSettings = Settings.InvoicePrintSettings;
+            PrintSettings = Settings.PrintSettings;
             GeneralSettings = Settings.GeneralSettings;
         }
 

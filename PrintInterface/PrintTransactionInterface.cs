@@ -85,6 +85,7 @@ namespace PrintInterface
             else if (ptm.PrintSettings.DefaultPaperSize == "A4") rd = new PrintInvoicePortraitA4();
 
             rd.SetDataSource(ptm.Items);
+            rd.SetParameterValue(nameof(ptm.FileName), ptm.FileName);
             rd.SetParameterValue(nameof(ptm.TransactionId), ptm.TransactionId);
             rd.SetParameterValue(nameof(ptm.TransactionDateCreated), ptm.TransactionDateCreated);
             rd.SetParameterValue(nameof(ptm.TotalPositiveItemsSum), ptm.TotalPositiveItemsSum);
@@ -107,6 +108,7 @@ namespace PrintInterface
             rd.SetParameterValue(nameof(ptm.PrintSettings.HeaderDescription1), ptm.PrintSettings.HeaderDescription1);
             rd.SetParameterValue(nameof(ptm.PrintSettings.HeaderDescription2), ptm.PrintSettings.HeaderDescription2);
             rd.SetParameterValue(nameof(ptm.TransactionDescription), ptm.TransactionDescription);
+            rd.SetParameterValue(nameof(ptm.TransactionType), ptm.TransactionType);
             SetFontSizeValuesBasedOnPaper();
             rd.SetParameterValue("UserDescription", "");
             crystalReportViewer.ReportSource = rd;

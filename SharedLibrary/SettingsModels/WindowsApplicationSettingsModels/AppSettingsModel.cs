@@ -14,11 +14,11 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
             TransactionSettings = new();
             ChequeSettings = new();
             GeneralSettings = new();
-            InvoicePrintSettings = new();
+            PrintSettings = new();
         }
         public GeneralSettingsModel GeneralSettings { get; set; }
         public InvoiceSettingsModel InvoiceSettings { get; set; }
-        public PrintSettingsModel InvoicePrintSettings { get; set; }
+        public PrintSettingsModel PrintSettings { get; set; }
         public TransactionSettingsModel TransactionSettings { get; set; }
         public ChequeSettingsModel ChequeSettings { get; set; }
     }

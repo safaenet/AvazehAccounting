@@ -21,6 +21,7 @@ namespace SharedLibrary.DalModels
         public double TotalPositiveItemsSum;
         public double TotalNegativeItemsSum;
 
+        public int TransactionType;
         public bool PrintTransactionDescription;
         public bool PrintUserDescription;
         public bool PrintTransactionId = true;

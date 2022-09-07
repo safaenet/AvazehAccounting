@@ -30,6 +30,18 @@
             </Setter>
         </Style>
         <viewmodels:BooleanToReverseConverter x:Key="b2r"/>
+        <ContextMenu x:Key="PrintTransactionCM">
+            <MenuItem Header="بدون سربرگ" cal:Message.Attach="[Event Click] = [Action PrintTransaction(11)]">
+                <MenuItem.Icon>
+                    <materialDesign:PackIcon Kind="ReceiptOutline"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="با سربرگ" cal:Message.Attach="[Event Click] = [Action PrintTransaction(13)]">
+                <MenuItem.Icon>
+                    <materialDesign:PackIcon Kind="ReceiptOutline"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
     </Window.Resources>
     <Grid>
         <Grid.Resources>
@@ -180,10 +192,10 @@
                             <TextBlock Text="حذف فایل" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="PrintTransaction" Grid.Row="5" Height="30" Margin="0,3,3,0">
+                    <Button cal:Message.Attach="[Event Click] = [Action PrintTransactionMenu($source, $view)]" Grid.Row="5" Height="30" Margin="0,3,3,0">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="PrinterOutline" Width="20" Height="20" Margin="3"/>
-                            <TextBlock Text="چاپ" VerticalAlignment="Center"/>
+                            <TextBlock Text="چاپ فایل" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                 </Grid>

@@ -53,15 +53,15 @@ namespace DataLibraryCore.DataAccess
             string xmlString = await File.ReadAllTextAsync(SettingsFileName);
             StringReader stringReader = new StringReader(xmlString);
             settings = xmlSerializer.Deserialize(stringReader) as AppSettingsModel;
-            if (settings != null && settings.InvoicePrintSettings != null) settings.InvoicePrintSettings.UserDescriptions = await GetUserDescriptionsAsync();
+            if (settings != null && settings.PrintSettings != null) settings.PrintSettings.UserDescriptions = await GetUserDescriptionsAsync();
             return settings;
         }
 
         public async Task<bool> SaveAllSettingsAsync(AppSettingsModel settings)
         {
             if (settings == null) return false;
-            if (settings.InvoicePrintSettings != null) await InsertUserDescriptionsToDatabaseAsync(settings.InvoicePrintSettings.UserDescriptions);
-            settings.InvoicePrintSettings.UserDescriptions = null;
+            if (settings.PrintSettings != null) await InsertUserDescriptionsToDatabaseAsync(settings.PrintSettings.UserDescriptions);
+            settings.PrintSettings.UserDescriptions = null;
             await WriteSettingsFileToDisk(settings);
             return true;
         }
@@ -93,7 +93,7 @@ namespace DataLibraryCore.DataAccess
         public async Task<PrintSettingsModel> LoadInvoicePrintSettings()
         {
             var settings = await LoadAllSettingsAsync();
-            return settings.InvoicePrintSettings;
+            return settings.PrintSettings;
         }
 
         private async Task<List<UserDescriptionModel>> GetUserDescriptionsAsync()

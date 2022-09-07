@@ -59,7 +59,7 @@ namespace AvazehWeb.Controllers
             return item;
         }
 
-        [HttpGet(nameof(AppSettingsModel.InvoicePrintSettings))]
+        [HttpGet(nameof(AppSettingsModel.PrintSettings))]
         public async Task<ActionResult<PrintSettingsModel>> GetInvoicePrintSettingsAsync()
         {
             var item = await Manager.LoadInvoicePrintSettings();

@@ -24,7 +24,7 @@ namespace AvazehApiClient.DataAccess
         public async Task<TransactionSettingsModel> LoadTransactionSettings() => await Processor.GetItemAsync<TransactionSettingsModel>($"{ Key }/{ nameof(AppSettingsModel.TransactionSettings) }", null);
         public async Task<ChequeSettingsModel> LoadChequeSettings() => await Processor.GetItemAsync<ChequeSettingsModel>($"{ Key }/{ nameof(AppSettingsModel.ChequeSettings) }", null);
         public async Task<GeneralSettingsModel> LoadGeneralSettings() => await Processor.GetItemAsync<GeneralSettingsModel>($"{ Key }/{ nameof(AppSettingsModel.GeneralSettings) }", null);
-        public async Task<PrintSettingsModel> LoadInvoicePrintSettings() => await Processor.GetItemAsync<PrintSettingsModel>($"{ Key }/{ nameof(AppSettingsModel.InvoicePrintSettings) }", null);
+        public async Task<PrintSettingsModel> LoadInvoicePrintSettings() => await Processor.GetItemAsync<PrintSettingsModel>($"{ Key }/{ nameof(AppSettingsModel.PrintSettings) }", null);
 
     }
 }

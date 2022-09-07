@@ -138,7 +138,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_TotalInvoiceSum {
+        public CrystalDecisions.Shared.IParameterField Parameter_TotalBalance {
             get {
                 return this.DataDefinition.ParameterFields[1];
             }
@@ -146,7 +146,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_TotalBalance {
+        public CrystalDecisions.Shared.IParameterField Parameter_FooterTextRight {
             get {
                 return this.DataDefinition.ParameterFields[2];
             }
@@ -154,7 +154,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_FooterTextRight {
+        public CrystalDecisions.Shared.IParameterField Parameter_FooterTextLeft {
             get {
                 return this.DataDefinition.ParameterFields[3];
             }
@@ -162,7 +162,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_FooterTextLeft {
+        public CrystalDecisions.Shared.IParameterField Parameter_TransactionFinStatus {
             get {
                 return this.DataDefinition.ParameterFields[4];
             }
@@ -170,7 +170,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_TransactionFinStatus {
+        public CrystalDecisions.Shared.IParameterField Parameter_TransactionType {
             get {
                 return this.DataDefinition.ParameterFields[5];
             }
@@ -178,7 +178,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_InvoiceType {
+        public CrystalDecisions.Shared.IParameterField Parameter_PrintTransactionId {
             get {
                 return this.DataDefinition.ParameterFields[6];
             }
@@ -186,7 +186,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_PrintTransactionId {
+        public CrystalDecisions.Shared.IParameterField Parameter_PrintDate {
             get {
                 return this.DataDefinition.ParameterFields[7];
             }
@@ -194,7 +194,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_PrintDate {
+        public CrystalDecisions.Shared.IParameterField Parameter_PrintTransactionDescription {
             get {
                 return this.DataDefinition.ParameterFields[8];
             }
@@ -202,7 +202,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_PrintTransactionDescription {
+        public CrystalDecisions.Shared.IParameterField Parameter_PrintUserDescription {
             get {
                 return this.DataDefinition.ParameterFields[9];
             }
@@ -210,7 +210,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_PrintUserDescription {
+        public CrystalDecisions.Shared.IParameterField Parameter_TransactionId {
             get {
                 return this.DataDefinition.ParameterFields[10];
             }
@@ -218,7 +218,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_TransactionId {
+        public CrystalDecisions.Shared.IParameterField Parameter_PageHeaderFontSize {
             get {
                 return this.DataDefinition.ParameterFields[11];
             }
@@ -226,7 +226,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_PageHeaderFontSize {
+        public CrystalDecisions.Shared.IParameterField Parameter_DetailsFontSize {
             get {
                 return this.DataDefinition.ParameterFields[12];
             }
@@ -234,7 +234,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_DetailsFontSize {
+        public CrystalDecisions.Shared.IParameterField Parameter_PageFooterFontSize {
             get {
                 return this.DataDefinition.ParameterFields[13];
             }
@@ -242,7 +242,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_PageFooterFontSize {
+        public CrystalDecisions.Shared.IParameterField Parameter_DescriptionFontSize {
             get {
                 return this.DataDefinition.ParameterFields[14];
             }
@@ -250,7 +250,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_DescriptionFontSize {
+        public CrystalDecisions.Shared.IParameterField Parameter_LeftHeaderImage {
             get {
                 return this.DataDefinition.ParameterFields[15];
             }
@@ -258,7 +258,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_LeftHeaderImage {
+        public CrystalDecisions.Shared.IParameterField Parameter_RightHeaderImage {
             get {
                 return this.DataDefinition.ParameterFields[16];
             }
@@ -266,7 +266,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_RightHeaderImage {
+        public CrystalDecisions.Shared.IParameterField Parameter_MainHeaderText {
             get {
                 return this.DataDefinition.ParameterFields[17];
             }
@@ -274,7 +274,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_MainHeaderText {
+        public CrystalDecisions.Shared.IParameterField Parameter_HeaderDescription1 {
             get {
                 return this.DataDefinition.ParameterFields[18];
             }
@@ -282,7 +282,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_HeaderDescription1 {
+        public CrystalDecisions.Shared.IParameterField Parameter_HeaderDescription2 {
             get {
                 return this.DataDefinition.ParameterFields[19];
             }
@@ -290,7 +290,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_HeaderDescription2 {
+        public CrystalDecisions.Shared.IParameterField Parameter_TransactionDescription {
             get {
                 return this.DataDefinition.ParameterFields[20];
             }
@@ -298,7 +298,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_TransactionDescription {
+        public CrystalDecisions.Shared.IParameterField Parameter_UserDescription {
             get {
                 return this.DataDefinition.ParameterFields[21];
             }
@@ -306,7 +306,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_UserDescription {
+        public CrystalDecisions.Shared.IParameterField Parameter_MainHeaderTextFontSize {
             get {
                 return this.DataDefinition.ParameterFields[22];
             }
@@ -314,7 +314,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_MainHeaderTextFontSize {
+        public CrystalDecisions.Shared.IParameterField Parameter_HeaderDescriptionFontSize {
             get {
                 return this.DataDefinition.ParameterFields[23];
             }
@@ -322,7 +322,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_HeaderDescriptionFontSize {
+        public CrystalDecisions.Shared.IParameterField Parameter_TotalPositiveItemsSum {
             get {
                 return this.DataDefinition.ParameterFields[24];
             }
@@ -330,7 +330,7 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_InvoiceTypeTextFontSize {
+        public CrystalDecisions.Shared.IParameterField Parameter_TotalNegativeItemsSum {
             get {
                 return this.DataDefinition.ParameterFields[25];
             }
@@ -338,25 +338,9 @@ namespace PrintInterface {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_TotalPositiveItemsSum {
-            get {
-                return this.DataDefinition.ParameterFields[26];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_TotalNegativeItemsSum {
-            get {
-                return this.DataDefinition.ParameterFields[27];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public CrystalDecisions.Shared.IParameterField Parameter_FileName {
             get {
-                return this.DataDefinition.ParameterFields[28];
+                return this.DataDefinition.ParameterFields[26];
             }
         }
     }
