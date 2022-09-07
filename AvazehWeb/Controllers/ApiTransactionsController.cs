@@ -22,7 +22,7 @@ namespace AvazehWebAPI.Controllers
 
         //GET /Customer?Id=1&SearchText=sometext
         [HttpGet]
-        public async Task<ActionResult<ItemsCollection_DTO<TransactionListModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "Id", OrderType orderType = OrderType.DESC,TransactionFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false)
+        public async Task<ActionResult<ItemsCollection_DTO<TransactionListModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "Id", OrderType orderType = OrderType.DESC, TransactionFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false)
         {
             Manager.GenerateWhereClause(SearchText, OrderBy, orderType, FinStatus);
             Manager.PageSize = PageSize;

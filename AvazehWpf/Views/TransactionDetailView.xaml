@@ -323,6 +323,15 @@
                       Grid.Row="3" ItemsSource="{Binding Transaction.Items}" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}" FlowDirection="RightToLeft" AutoGenerateColumns="False"
                       IsTabStop="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35" CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
                        HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding TransactionSettings.DetailDataGridFontSize}">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteItem]">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="DeleteOutline"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
                 <DataGrid.Resources>
                     <local:DateToColorConverter x:Key="DateToColorConverter"/>
                     <local:AmountToColorConverter x:Key="AmountToColorConverter"/>
@@ -353,6 +362,7 @@
                                         </MultiBinding>
                                     </Setter.Value>
                                 </Setter>
+                                <Setter Property="TextAlignment" Value="Center"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
@@ -377,6 +387,7 @@
                                         </MultiBinding>
                                     </Setter.Value>
                                 </Setter>
+                                <Setter Property="TextAlignment" Value="Center"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>

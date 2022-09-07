@@ -124,7 +124,7 @@ namespace AvazehWpf.ViewModels
                     var addedItem = await TDM.CreateItemAsync(WorkItem);
                     if (addedItem is not null)
                     {
-                        Transaction.Items.Add(addedItem);
+                        Transaction.Items.Insert(0, addedItem);
                         if (addedItem.TotalValue > 0) Transaction.TotalPositiveItemsSum += addedItem.TotalValue;
                         else if (addedItem.TotalValue < 0) Transaction.TotalNegativeItemsSum += addedItem.TotalValue;
                         if (TransactionsForComboBox.Where(x => x.IsChecked).Any())
@@ -200,7 +200,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteItem()
         {
-            if (Transaction == null || Transaction.Items == null || !Transaction.Items.Any() || SelectedItem == null) return;
+            if (Transaction == null || Transaction.Items == null || Transaction.Items.Count == 0 || SelectedItem == null || SelectedItem.Id == 0) return;
             var result = MessageBox.Show("Are you sure you want to delete this row ?", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
             if (await TDM.DeleteItemAsync(SelectedItem.Id))

@@ -41,7 +41,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private readonly string GetTransactionNamesQuery = "SELECT [Id], [FileName] AS ItemName FROM Transactions {0}";
         private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Transactions SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated WHERE [Id] = @id";
         private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON
-            SELECT * FROM Transactions t WHERE t.[Id] = {0}";
+            SELECT * FROM Transactions t WHERE t.[Id] = {0} ORDER BY t.[Id] DESC";
 
         private async Task<int> GetTransactionIdFromTransactionItemId(int Id)
         {
