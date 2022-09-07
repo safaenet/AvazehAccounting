@@ -86,11 +86,11 @@
             this.gbSettings.Text = "تنظیمات چاپ";
             this.gbSettings.Visible = false;
             // 
-            // txtInvoiceDescription
+            // txtTransactionDescription
             // 
             this.txtTransactionDescription.Location = new System.Drawing.Point(14, 66);
             this.txtTransactionDescription.Multiline = true;
-            this.txtTransactionDescription.Name = "txtInvoiceDescription";
+            this.txtTransactionDescription.Name = "txtTransactionDescription";
             this.txtTransactionDescription.ReadOnly = true;
             this.txtTransactionDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtTransactionDescription.Size = new System.Drawing.Size(248, 53);
@@ -313,36 +313,36 @@
             this.ShowUserDescription.UseVisualStyleBackColor = true;
             this.ShowUserDescription.CheckedChanged += new System.EventHandler(this.ShowUserDescription_CheckedChanged);
             // 
-            // ShowInvoiceDescription
+            // ShowTransactionDescription
             // 
             this.ShowTransactionDescription.AutoSize = true;
             this.ShowTransactionDescription.Location = new System.Drawing.Point(150, 43);
-            this.ShowTransactionDescription.Name = "ShowInvoiceDescription";
+            this.ShowTransactionDescription.Name = "ShowTransactionDescription";
             this.ShowTransactionDescription.Size = new System.Drawing.Size(110, 17);
             this.ShowTransactionDescription.TabIndex = 0;
             this.ShowTransactionDescription.Text = "چاپ توضیحات فایل";
             this.ShowTransactionDescription.UseVisualStyleBackColor = true;
             this.ShowTransactionDescription.CheckedChanged += new System.EventHandler(this.ShowTransactionDescription_CheckedChanged);
             // 
-            // ShowInvoiceId
+            // ShowTransactionId
             // 
             this.ShowTransactionId.AutoSize = true;
-            this.ShowTransactionId.Location = new System.Drawing.Point(153, 20);
-            this.ShowTransactionId.Name = "ShowInvoiceId";
-            this.ShowTransactionId.Size = new System.Drawing.Size(107, 17);
+            this.ShowTransactionId.Location = new System.Drawing.Point(160, 20);
+            this.ShowTransactionId.Name = "ShowTransactionId";
+            this.ShowTransactionId.Size = new System.Drawing.Size(100, 17);
             this.ShowTransactionId.TabIndex = 0;
-            this.ShowTransactionId.Text = "چاپ شماره فاکتور";
+            this.ShowTransactionId.Text = "چاپ شماره فایل";
             this.ShowTransactionId.UseVisualStyleBackColor = true;
             this.ShowTransactionId.CheckedChanged += new System.EventHandler(this.ShowTransactionId_CheckedChanged);
             // 
-            // ShowInvoiceCreatedDate
+            // ShowTransactionCreatedDate
             // 
             this.ShowTransactionCreatedDate.AutoSize = true;
-            this.ShowTransactionCreatedDate.Location = new System.Drawing.Point(12, 20);
-            this.ShowTransactionCreatedDate.Name = "ShowInvoiceCreatedDate";
-            this.ShowTransactionCreatedDate.Size = new System.Drawing.Size(98, 17);
+            this.ShowTransactionCreatedDate.Location = new System.Drawing.Point(14, 20);
+            this.ShowTransactionCreatedDate.Name = "ShowTransactionCreatedDate";
+            this.ShowTransactionCreatedDate.Size = new System.Drawing.Size(91, 17);
             this.ShowTransactionCreatedDate.TabIndex = 0;
-            this.ShowTransactionCreatedDate.Text = "چاپ تاریخ فاکتور";
+            this.ShowTransactionCreatedDate.Text = "چاپ تاریخ فایل";
             this.ShowTransactionCreatedDate.UseVisualStyleBackColor = true;
             this.ShowTransactionCreatedDate.CheckedChanged += new System.EventHandler(this.ShowTransactionCreatedDate_CheckedChanged);
             // 
