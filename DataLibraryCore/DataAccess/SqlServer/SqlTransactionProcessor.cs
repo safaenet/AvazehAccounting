@@ -26,10 +26,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private const string QueryOrderBy = "Id";
         private const OrderType QueryOrderType = OrderType.ASC;
         private readonly string CreateTransactionQuery = @"INSERT INTO Transactions (FileName, DateCreated, TimeCreated, Descriptions)
-            VALUES (@fileName, @dateCreated, @timeCreated, @descriptions);
-            SELECT @id = @@IDENTITY;";
-        private readonly string UpdateTransactionQuery = @"UPDATE Transactions SET FileName = @fileName, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, Descriptions = @descriptions
-            WHERE Id = @id";
+            VALUES (@fileName, @dateCreated, @timeCreated, @descriptions); SELECT @id = @@IDENTITY;";
+        private readonly string UpdateTransactionQuery = @"UPDATE Transactions SET FileName = @fileName, DateCreated = @dateCreated, TimeCreated = @timeCreated, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
+            Descriptions = @descriptions WHERE Id = @id";
         private readonly string DeleteTransactionQuery = @"DELETE FROM Transactions WHERE Id = @id";
         private readonly string GetSingleTransactionItemQuery = "SELECT * FROM TransactionItems WHERE [Id] = {0}";
         private readonly string InsertTransactionItemQuery = @"INSERT INTO TransactionItems (TransactionId, Title, Amount, CountString, CountValue, DateCreated, TimeCreated, Descriptions)
@@ -40,8 +39,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] AS ItemName FROM Products {0}";
         private readonly string GetTransactionNamesQuery = "SELECT [Id], [FileName] AS ItemName FROM Transactions {0}";
         private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Transactions SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated WHERE [Id] = @id";
-        private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON
-            SELECT * FROM Transactions t WHERE t.[Id] = {0} ORDER BY t.[Id] DESC";
+        private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON SELECT * FROM Transactions t WHERE t.[Id] = {0} ORDER BY t.[Id] DESC";
 
         private async Task<int> GetTransactionIdFromTransactionItemId(int Id)
         {
@@ -112,10 +110,10 @@ namespace DataLibraryCore.DataAccess.SqlServer
             ";
         }
 
-        public ValidationResult ValidateItem(TransactionModel product)
+        public ValidationResult ValidateItem(TransactionModel transaction)
         {
             TransactionValidator validator = new();
-            var result = validator.Validate(product);
+            var result = validator.Validate(transaction);
             return result;
         }
 
