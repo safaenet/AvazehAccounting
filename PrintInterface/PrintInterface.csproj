@@ -59,6 +59,18 @@
       <DependentUpon>PrintDetails.cs</DependentUpon>
     </Compile>
     <Compile Include="InvoiceItemForPrintModel.cs" />
+    <Compile Include="PrintTransactionPortraitA4.cs">
+      <DependentUpon>PrintTransactionPortraitA4.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="PrintTransactionLandscapeA5.cs">
+      <DependentUpon>PrintTransactionLandscapeA5.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="PrintTransactionPortraitA5.cs">
       <DependentUpon>PrintTransactionPortraitA5.rpt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -102,6 +114,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TransactionItemForPrintModel.cs" />
     <Compile Include="UserDescriptionModel.cs" />
+    <EmbeddedResource Include="PrintTransactionPortraitA4.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>PrintTransactionPortraitA4.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PrintTransactionLandscapeA5.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>PrintTransactionLandscapeA5.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="PrintTransactionPortraitA5.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>PrintTransactionPortraitA5.cs</LastGenOutput>

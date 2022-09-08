@@ -1,11 +1,10 @@
 ﻿<Window x:Class="AvazehWpf.Views.SettingsView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AvazehWpf" FontFamily="Tahoma"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:SettingsViewModel}"
-        mc:Ignorable="d"
         Title="تنظیمات" Height="auto" Width="450" MaxWidth="450" MinWidth="450">
     <Window.Resources>
         <local:StringToColorConverter x:Key="StringToColorConverter"/>
@@ -552,6 +551,9 @@
                     <CheckBox Content="نمایش مشتریان" IsChecked="{Binding AppSettings.GeneralSettings.CanViewCustomers, Mode=TwoWay}" Grid.Row="3" Grid.Column="0" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
                     <CheckBox Content="نمایش کالاها" IsChecked="{Binding AppSettings.GeneralSettings.CanViewProducts, Mode=TwoWay}" Grid.Row="3" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
                 </Grid>
+            </TabItem>
+            <TabItem Header="چاپ">
+                
             </TabItem>
         </TabControl>
 

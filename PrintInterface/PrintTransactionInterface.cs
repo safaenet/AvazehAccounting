@@ -22,7 +22,7 @@ namespace PrintInterface
         {
             InitializeComponent();
             var args = Environment.GetCommandLineArgs();
-            FilePath = args[2]; //Report file path
+            //FilePath = args[2]; //Report file path
         }
 
         PrintTransactionModel ptm = new PrintTransactionModel();
@@ -32,20 +32,21 @@ namespace PrintInterface
 
         private void PrintWindow_Load(object sender, EventArgs e)
         {
-            //var xmlSerializer = new XmlSerializer(pim.GetType());
-            //string xmlString = File.ReadAllText(@"D:\Users\avazeh1\Downloads\AvazehAccountingClone\AvazehWpf\bin\Debug\net5.0-windows\Temp\637980039153641537.xml");
-            //StringReader stringReader = new StringReader(xmlString);
-            //pim = xmlSerializer.Deserialize(stringReader) as PrintInvoiceModel;
-            if (!File.Exists(FilePath))
-            {
-                MessageBox.Show("فایل فاکتور یافت نشد\n" + FilePath, "خطای پارامتر ورودی", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit();
-            }
             var xmlSerializer = new XmlSerializer(ptm.GetType());
-            string xmlString = File.ReadAllText(FilePath);
+            string xmlString = File.ReadAllText(@"D:\Users\avazeh1\Downloads\AvazehAccountingClone\AvazehWpf\bin\Debug\net5.0-windows\Temp\637982546060107715.xml");
             StringReader stringReader = new StringReader(xmlString);
             ptm = xmlSerializer.Deserialize(stringReader) as PrintTransactionModel;
-            File.Delete(FilePath);
+
+            //if (!File.Exists(FilePath))
+            //{
+            //    MessageBox.Show("فایل فاکتور یافت نشد\n" + FilePath, "خطای پارامتر ورودی", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    Application.Exit();
+            //}
+            //var xmlSerializer = new XmlSerializer(ptm.GetType());
+            //string xmlString = File.ReadAllText(FilePath);
+            //StringReader stringReader = new StringReader(xmlString);
+            //ptm = xmlSerializer.Deserialize(stringReader) as PrintTransactionModel;
+            //File.Delete(FilePath);
 
             if (ptm.PrintSettings.UserDescriptions != null && ptm.PrintSettings.UserDescriptions.Count > 0)
             {
@@ -79,10 +80,10 @@ namespace PrintInterface
         {
             if (ptm.PrintSettings.DefaultPaperSize == "A5")
             {
-                if (ptm.PrintSettings.DefaultPrintLayout == "عمودی") rd = new PrintInvoicePortraitA5();
-                else rd = new PrintInvoiceLandscapeA5();
+                if (ptm.PrintSettings.DefaultPrintLayout == "عمودی") rd = new PrintTransactionPortraitA5();
+                else rd = new PrintTransactionLandscapeA5();
             }
-            else if (ptm.PrintSettings.DefaultPaperSize == "A4") rd = new PrintInvoicePortraitA4();
+            else if (ptm.PrintSettings.DefaultPaperSize == "A4") rd = new PrintTransactionPortraitA4();
 
             rd.SetDataSource(ptm.Items);
             rd.SetParameterValue(nameof(ptm.FileName), ptm.FileName);
@@ -98,6 +99,7 @@ namespace PrintInterface
             rd.SetParameterValue(nameof(ptm.PrintDate), ptm.PrintDate);
             rd.SetParameterValue(nameof(ptm.PrintTransactionDescription), ptm.PrintTransactionDescription);
             rd.SetParameterValue(nameof(ptm.PrintUserDescription), ptm.PrintUserDescription);
+            if(ptm.PrintUserDescription) rd.SetParameterValue("UserDescription", txtUserDescription.Text); else rd.SetParameterValue("UserDescription", "");
             rd.SetParameterValue(nameof(ptm.PrintSettings.PageHeaderFontSize), ptm.PrintSettings.PageHeaderFontSize);
             rd.SetParameterValue(nameof(ptm.PrintSettings.DetailsFontSize), ptm.PrintSettings.DetailsFontSize);
             rd.SetParameterValue(nameof(ptm.PrintSettings.PageFooterFontSize), ptm.PrintSettings.PageFooterFontSize);
@@ -110,7 +112,6 @@ namespace PrintInterface
             rd.SetParameterValue(nameof(ptm.TransactionDescription), ptm.TransactionDescription);
             rd.SetParameterValue(nameof(ptm.TransactionType), ptm.TransactionType);
             SetFontSizeValuesBasedOnPaper();
-            rd.SetParameterValue("UserDescription", "");
             crystalReportViewer.ReportSource = rd;
         }
 
@@ -120,20 +121,17 @@ namespace PrintInterface
             {
                 rd.SetParameterValue("MainHeaderTextFontSize", ptm.PrintSettings.MainHeaderTextFontSizeA4P);
                 rd.SetParameterValue("HeaderDescriptionFontSize", ptm.PrintSettings.HeaderDescriptionFontSizeA4P);
-                rd.SetParameterValue("InvoiceTypeTextFontSize", ptm.PrintSettings.TypeTextFontSizeA4P);
             }
             else if (ptm.PrintSettings.DefaultPaperSize == "A5")
                 if (ptm.PrintSettings.DefaultPrintLayout == "عمودی")
                 {
                     rd.SetParameterValue("MainHeaderTextFontSize", ptm.PrintSettings.MainHeaderTextFontSizeA5P);
                     rd.SetParameterValue("HeaderDescriptionFontSize", ptm.PrintSettings.HeaderDescriptionFontSizeA5P);
-                    rd.SetParameterValue("InvoiceTypeTextFontSize", ptm.PrintSettings.TypeTextFontSizeA5P);
                 }
                 else if (ptm.PrintSettings.DefaultPrintLayout == "افقی")
                 {
                     rd.SetParameterValue("MainHeaderTextFontSize", ptm.PrintSettings.MainHeaderTextFontSizeA5L);
                     rd.SetParameterValue("HeaderDescriptionFontSize", ptm.PrintSettings.HeaderDescriptionFontSizeA5L);
-                    rd.SetParameterValue("InvoiceTypeTextFontSize", ptm.PrintSettings.TypeTextFontSizeA5L);
                 }
         }
 
@@ -216,7 +214,7 @@ namespace PrintInterface
 
         private void cmbUserDescriptions_SelectedIndexChanged(object sender, EventArgs e)
         {
-            txtUserDescription.Text = (string)cmbUserDescriptions.SelectedValue;
+            txtUserDescription.Text = cmbUserDescriptions.SelectedValue.ToString();
         }
 
         private void txtUserDescription_TextChanged(object sender, EventArgs e)
