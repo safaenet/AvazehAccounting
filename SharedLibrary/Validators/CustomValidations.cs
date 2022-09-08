@@ -13,15 +13,7 @@ namespace SharedLibrary.Validators
         public override bool IsValid(object value)
         {
             var str = (string)value;
-            try
-            {
-                _ = StandardCalculator.CalculateFromString(str);
-            }
-            catch
-            {
-                return false;
-            }
-            return true;
+            return StandardCalculator.IsCalculatable(str);
         }
     }
 }

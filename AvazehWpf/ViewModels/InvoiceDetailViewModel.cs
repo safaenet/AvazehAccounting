@@ -356,6 +356,11 @@ namespace AvazehWpf.ViewModels
         public async Task SaveInvoiceChanges()
         {
             var result = await ICM.UpdateItemAsync(Invoice);
+            if (result == null)
+            {
+                MessageBox.Show("خطا در ذخیره تغییرات", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             Invoice.DateUpdated = result.DateUpdated;
             Invoice.TimeUpdated = result.TimeUpdated;
             RefreshDataGrid();

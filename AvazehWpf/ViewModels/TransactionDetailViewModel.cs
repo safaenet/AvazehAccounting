@@ -249,6 +249,11 @@ namespace AvazehWpf.ViewModels
         public async Task SaveTransactionChanges()
         {
             var result = await TCM.UpdateItemAsync(Transaction);
+            if (result == null)
+            {
+                MessageBox.Show("خطا در ذخیره تغییرات", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             Transaction.DateUpdated = result.DateUpdated;
             Transaction.TimeUpdated = result.TimeUpdated;
             RefreshDataGrid();

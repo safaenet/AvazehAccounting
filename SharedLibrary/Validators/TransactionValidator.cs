@@ -16,6 +16,8 @@ namespace SharedLibrary.Validators
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty().WithMessage("{PropertyName} cannot be empty")
                 .MaximumLength(100).WithMessage("{PropertyName} cannot be more than 100 characters ({TotalLength})");
+            RuleFor(x => x.DateCreated).Matches(@"\d\d\d\d/\d\d/\d\d$").WithMessage("{PropertyName} not valid.");
+            RuleFor(x => x.TimeCreated).Matches(@"\d\d:\d\d:\d\d$").WithMessage("{PropertyName} not valid.");
         }
     }
 }

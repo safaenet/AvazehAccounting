@@ -15,6 +15,7 @@ namespace SharedLibrary.Validators
             //RuleFor(i => i.LifeStatus).NotEmpty().WithMessage("{PropertyName} cannot be empty");
 
             RuleFor(i => i.DiscountValue).GreaterThanOrEqualTo(0).WithMessage("{PropertyName} must be >= Zero");
+            RuleFor(i => i.DateCreated).Matches(@"\d\d\d\d/\d\d/\d\d$").WithMessage("{PropertyName} not valid.");
         }
     }
 }
