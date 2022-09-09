@@ -13,6 +13,7 @@ using AvazehApiClient.DataAccess.Interfaces;
 using SharedLibrary.DalModels;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace AvazehWpf.ViewModels
 {
@@ -36,6 +37,14 @@ namespace AvazehWpf.ViewModels
         private UserDescriptionModel selectedUserDescriptionModel;
         private ObservableCollection<UserDescriptionModel> userDescriptions;
         private string verifyPassword;
+        private bool settingsLoaded;
+
+        public bool SettingsLoaded
+        {
+            get { return settingsLoaded; }
+            set { settingsLoaded = value; NotifyOfPropertyChange(() => SettingsLoaded); }
+        }
+
 
         public string VerifyPassword
         {
@@ -99,6 +108,7 @@ namespace AvazehWpf.ViewModels
             var s = await SettingsManager.LoadAllAppSettings();
             if (s != null) AppSettings = s;
             UserDescriptions = new(AppSettings.PrintSettings.UserDescriptions);
+            SettingsLoaded = true;
         }
 
         public void AddNewUserDescription()
@@ -116,6 +126,10 @@ namespace AvazehWpf.ViewModels
             UserDescriptions.Remove(SelectedUserDescriptionModel);
             NotifyOfPropertyChange(() => SelectedUserDescriptionModel);
             NotifyOfPropertyChange(() => AppSettings);
+        }
+        public void Window_PreviewKeyDown(KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape) CloseWindow();
         }
 
         public void SaveSettings()
@@ -142,7 +156,7 @@ namespace AvazehWpf.ViewModels
 
         public void CloseWindow()
         {
-
+            (GetView() as Window).Close();
         }
     }
 }

@@ -4,8 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AvazehWpf" FontFamily="Tahoma"
+        xmlns:cal="http://www.caliburnproject.org"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" d:DataContext="{d:DesignInstance Type=viewmodels:SettingsViewModel}"
-        Title="تنظیمات" Height="auto" Width="450" MaxWidth="450" MinWidth="450">
+        Title="تنظیمات" Height="550" Width="450" MaxWidth="450" MinWidth="450" IsEnabled="{Binding SettingsLoaded}"
+        cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($eventArgs)]">
     <Window.Resources>
         <local:StringToColorConverter x:Key="StringToColorConverter"/>
         <local:PersianOrderStringToEnglishOrderStringConverter x:Key="PersianOrderStringToEnglishOrderStringConverter"/>
@@ -596,6 +598,7 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="35"/>
+                                <RowDefinition Height="auto"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <Grid Grid.Row="0">
@@ -618,10 +621,12 @@
                                 </ComboBox>
                                 <TextBlock Grid.Column="4" Text="سایز کاغذ پیش فرض" VerticalAlignment="Center" Margin="0,0,5,0"/>
                             </Grid>
-                            <TabControl Grid.Row="1">
+                            <Separator Grid.Row="1" Margin="0,5,0,5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+                            <TabControl Grid.Row="2">
                                 <TabItem Header="عنوان">
                                     <Grid>
                                         <Grid.RowDefinitions>
+                                            <RowDefinition Height="35"/>
                                             <RowDefinition Height="35"/>
                                             <RowDefinition Height="35"/>
                                             <RowDefinition Height="35"/>
@@ -650,17 +655,19 @@
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="auto"/>
-                                                <ColumnDefinition Width="auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox Text="{Binding AppSettings.PrintSettings.HeaderDescription1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Margin="0,5,5,5" VerticalContentAlignment="Center" FlowDirection="RightToLeft"/>
+                                            <TextBlock Grid.Column="1" Text="توضیحات 1" VerticalAlignment="Center" Margin="5"/>
+                                        </Grid>
+                                        <Grid Grid.Row="2">
+                                            <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="auto"/>
                                             </Grid.ColumnDefinitions>
                                             <TextBox Text="{Binding AppSettings.PrintSettings.HeaderDescription2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Margin="0,5,5,5" VerticalContentAlignment="Center" FlowDirection="RightToLeft"/>
                                             <TextBlock Grid.Column="1" Text="توضیحات 2" VerticalAlignment="Center" Margin="5"/>
-                                            <Separator Grid.Column="2" Margin="0,5,0,5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
-                                            <TextBox Text="{Binding AppSettings.PrintSettings.HeaderDescription1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="3" Margin="5" VerticalContentAlignment="Center" FlowDirection="RightToLeft"/>
-                                            <TextBlock Grid.Column="4" Text="توضیحات 1" VerticalAlignment="Center" Margin="5"/>
                                         </Grid>
-                                        <Grid Grid.Row="2">
+                                        <Grid Grid.Row="3">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="auto"/>
                                                 <ColumnDefinition Width="auto"/>
@@ -680,7 +687,7 @@
                                             <xctk:IntegerUpDown Text="{Binding AppSettings.PrintSettings.HeaderDescriptionFontSizeA5P, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="A5 عمودی" Grid.Column="6" Margin="0,5,5,5" VerticalContentAlignment="Center" Width="40"/>
                                             <TextBlock Grid.Column="7" Text="فونت توضیحات" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                         </Grid>
-                                        <Grid Grid.Row="3">
+                                        <Grid Grid.Row="4">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="auto"/>
@@ -689,7 +696,7 @@
                                             <TextBlock Grid.Column="1" Text="آدرس عکس سمت راست" VerticalAlignment="Center" Margin="5"/>
                                         </Grid>
 
-                                        <Grid Grid.Row="4">
+                                        <Grid Grid.Row="5">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="auto"/>
