@@ -115,24 +115,28 @@ namespace AvazehWpf.ViewModels
 
         public async Task PreviousPage()
         {
+            if (!GeneralSettings.CanViewTransactions) return;
             await TCM.LoadPreviousPageAsync();
             NotifyOfPropertyChange(() => Transactions);
         }
 
         public async Task NextPage()
         {
+            if (!GeneralSettings.CanViewTransactions) return;
             await TCM.LoadNextPageAsync();
             NotifyOfPropertyChange(() => Transactions);
         }
 
         public async Task RefreshPage()
         {
+            if (!GeneralSettings.CanViewTransactions) return;
             await TCM.RefreshPage();
             NotifyOfPropertyChange(() => Transactions);
         }
 
         public async Task Search()
         {
+            if (!GeneralSettings.CanViewTransactions) return;
             if (GeneralSettings != null && !GeneralSettings.CanViewTransactions) return;
             TransactionFinancialStatus? FinStatus = SelectedFinStatus >= Enum.GetNames(typeof(TransactionFinancialStatus)).Length ? null : (TransactionFinancialStatus)SelectedFinStatus;
             TCM.SearchValue = SearchText;
@@ -151,7 +155,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditTransaction()
         {
-            if (GeneralSettings == null || !GeneralSettings.CanEditTransactions) return;
+            if (GeneralSettings == null || !GeneralSettings.CanViewTransactions) return;
             if (Transactions == null || Transactions.Count == 0 || SelectedTransaction == null || SelectedTransaction.Id == 0) return;
             var tdm = SC.GetInstance<ITransactionDetailManager>();
             WindowManager wm = new();
@@ -160,6 +164,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteTransaction()
         {
+            if (!GeneralSettings.CanEditTransactions) return;
             if (Transactions == null || Transactions.Count == 0 || SelectedTransaction == null || SelectedTransaction.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete Transaction file {SelectedTransaction.FileName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
@@ -170,6 +175,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task RenameTransaction()
         {
+            if (!GeneralSettings.CanEditTransactions) return;
             if (SelectedTransaction == null) return;
             WindowManager wm = new();
             await wm.ShowDialogAsync(new NewTransactionViewModel(Singleton, SelectedTransaction.Id, TCM, RefreshPage, ASM, SC));

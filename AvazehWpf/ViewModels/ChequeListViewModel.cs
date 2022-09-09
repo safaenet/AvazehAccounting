@@ -84,6 +84,7 @@ namespace AvazehWpf.ViewModels
 
         public void AddNewCheque()
         {
+            if (!GeneralSettings.CanAddNewCheque) return;
             WindowManager wm = new();
             wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, null, RefreshPage));
         }
@@ -108,6 +109,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task Search()
         {
+            if (!GeneralSettings.CanViewCheques) return;
             CCM.SearchValue = SearchText;
             await CCM.LoadFirstPageAsync();
             NotifyOfPropertyChange(() => Cheques);
@@ -124,6 +126,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditCheque()
         {
+            if (!GeneralSettings.CanEditCheques) return;
             if (Cheques == null || Cheques.Count == 0 || SelectedCheque == null) return;
             WindowManager wm = new();
             await wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, SelectedCheque, RefreshPage));
@@ -131,6 +134,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteCheque()
         {
+            if (!GeneralSettings.CanEditCheques) return;
             if (Cheques == null || Cheques.Count == 0 || SelectedCheque == null || SelectedCheque.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete cheque from {SelectedCheque.Drawer}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;

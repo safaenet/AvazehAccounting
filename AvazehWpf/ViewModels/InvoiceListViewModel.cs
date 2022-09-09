@@ -107,18 +107,21 @@ namespace AvazehWpf.ViewModels
 
         public async Task PreviousPage()
         {
+            if (!GeneralSettings.CanViewInvoices) return;
             await ICM.LoadPreviousPageAsync();
             NotifyOfPropertyChange(() => Invoices);
         }
 
         public async Task NextPage()
         {
+            if (!GeneralSettings.CanViewInvoices) return;
             await ICM.LoadNextPageAsync();
             NotifyOfPropertyChange(() => Invoices);
         }
 
         public async Task RefreshPage()
         {
+            if (!GeneralSettings.CanViewInvoices) return;
             await ICM.RefreshPage();
             NotifyOfPropertyChange(() => Invoices);
         }
@@ -158,7 +161,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditInvoice()
         {
-            if (GeneralSettings == null || !GeneralSettings.CanEditInvoices) return;
+            if (GeneralSettings == null || !GeneralSettings.CanViewInvoices) return;
             if (Invoices == null || Invoices.Count == 0 || SelectedInvoice == null || SelectedInvoice.Id == 0) return;
             var idm = SC.GetInstance<IInvoiceDetailManager>();
             WindowManager wm = new();
@@ -167,6 +170,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteInvoice()
         {
+            if (!GeneralSettings.CanEditInvoices) return;
             if (Invoices == null || Invoices.Count == 0 || SelectedInvoice == null || SelectedInvoice.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete invoice of {SelectedInvoice.CustomerFullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
@@ -177,6 +181,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task ViewPayments()
         {
+            if (!GeneralSettings.CanViewInvoices || !GeneralSettings.CanEditInvoices) return;
             if (SelectedInvoice is null) return;
             WindowManager wm = new();
             var invoice = await ICM.GetItemById(SelectedInvoice.Id);

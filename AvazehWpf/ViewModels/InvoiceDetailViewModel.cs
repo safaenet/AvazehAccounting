@@ -138,6 +138,7 @@ namespace AvazehWpf.ViewModels
 
         private async Task ReloadInvoice(int? InvoiceId)
         {
+            if (!GeneralSettings.CanViewInvoices) return;
             if (InvoiceId is null || (int)InvoiceId == 0) return;
             Invoice = await ICM.GetItemById((int)InvoiceId);
             WindowTitle = Invoice.Customer.FullName + " - فاکتور";
@@ -159,6 +160,7 @@ namespace AvazehWpf.ViewModels
 
         public void EditItem() //DataGrid doubleClick event
         {
+            if(!GeneralSettings.CanEditInvoices) return;
             if (Invoice == null || SelectedItem == null) return;
             CanUpdateRowFromDB = false;
             EdittingItem = true;
@@ -173,6 +175,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task AddOrUpdateItem()
         {
+            if (!GeneralSettings.CanEditInvoices) return;
             if (Invoice == null) return;
             var pcm = SC.GetInstance<ICollectionManager<ProductModel>>();
             if (SelectedProductItem == null && ProductInput != null && ProductInput.Length > 0 && EdittingItem == false) //Search by Entered text
@@ -285,6 +288,7 @@ namespace AvazehWpf.ViewModels
 
         private async Task UpdateItemInDatabase(InvoiceItemModel item)
         {
+            if (!GeneralSettings.CanEditInvoices) return;
             var ResultItem = await IDM.UpdateItemAsync(item);
             var EdittedItem = Invoice.Items.FirstOrDefault(x => x.Id == item.Id);
             if (ResultItem != null) ResultItem.Clone(EdittedItem);
@@ -293,6 +297,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteItem()
         {
+            if (!GeneralSettings.CanEditInvoices) return;
             if (Invoice == null || Invoice.Items == null || !Invoice.Items.Any() || SelectedItem == null) return;
             var result = MessageBox.Show("Are you sure you want to delete this row ?", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
@@ -324,6 +329,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteInvoiceAndClose()
         {
+            if (!GeneralSettings.CanEditInvoices) return;
             if (Invoice == null) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete Invoice for {Invoice.Customer.FullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
@@ -357,6 +363,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task SaveInvoiceChanges()
         {
+            if (!GeneralSettings.CanEditInvoices) return;
             var result = await ICM.UpdateItemAsync(Invoice);
             if (result == null)
             {
@@ -415,6 +422,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditOwner()
         {
+            if (!GeneralSettings.CanEditInvoices) return;
             if (Invoice is null) return;
             WindowManager wm = new();
             var ccm = SC.GetInstance<ICollectionManager<CustomerModel>>();

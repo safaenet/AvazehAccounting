@@ -11,6 +11,20 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:ChequeListViewModel}"
         Title="چک ها" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1350" Height="650">
+    <Window.Resources>
+        <!--body content datagrid cell vertical centering-->
+        <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3"/>
@@ -164,7 +178,9 @@
                     </StackPanel>
                 </Button>
             </Grid>
-            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditCheque()]" Grid.Row="2" ItemsSource="{Binding Cheques}" SelectedItem="{Binding SelectedCheque}" AutoGenerateColumns="False" FlowDirection="RightToLeft" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False">
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditCheque()]" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Grid.Row="2" ItemsSource="{Binding Cheques}"
+                      HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding ChequeSettings.DataGridFontSize}" SelectedItem="{Binding SelectedCheque}"
+                      AutoGenerateColumns="False" FlowDirection="RightToLeft" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditCheque]">

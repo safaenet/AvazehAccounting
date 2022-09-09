@@ -111,6 +111,7 @@ namespace AvazehWpf.ViewModels
 
         public void EditItem() //DataGrid doubleClick event
         {
+            if (!GeneralSettings.CanEditTransactions) return;
             if (Transaction == null || SelectedItem == null) return;
             EdittingItem = true;
             SelectedItem.Clone(WorkItem);
@@ -120,6 +121,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task AddOrUpdateItem()
         {
+            if (!GeneralSettings.CanEditTransactions) return;
             if (Transaction == null || WorkItem == null) return;
             WorkItem.TransactionId = Transaction.Id;
             var validate = TDM.ValidateItem(WorkItem);
@@ -183,6 +185,7 @@ namespace AvazehWpf.ViewModels
 
         private async Task UpdateItemInDatabase(TransactionItemModel item)
         {
+            if (!GeneralSettings.CanEditTransactions) return;
             var ResultItem = await TDM.UpdateItemAsync(item);
             var EdittedItem = Transaction.Items.FirstOrDefault(x => x.Id == item.Id);
             if (ResultItem != null) ResultItem.Clone(EdittedItem);
@@ -207,6 +210,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteItem()
         {
+            if (!GeneralSettings.CanEditTransactions) return;
             if (Transaction == null || Transaction.Items == null || Transaction.Items.Count == 0 || SelectedItem == null || SelectedItem.Id == 0) return;
             var result = MessageBox.Show("Are you sure you want to delete this row ?", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
@@ -231,6 +235,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteTransactionAndClose()
         {
+            if (!GeneralSettings.CanEditTransactions) return;
             if (Transaction == null) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete Transaction file {Transaction.FileName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
@@ -248,6 +253,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task SaveTransactionChanges()
         {
+            if (!GeneralSettings.CanEditTransactions) return;
             var result = await TCM.UpdateItemAsync(Transaction);
             if (result == null)
             {
@@ -294,6 +300,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task Search()
         {
+            if (!GeneralSettings.CanViewTransactions) return;
             TransactionFinancialStatus? FinStatus = SelectedFinStatus >= Enum.GetNames(typeof(TransactionFinancialStatus)).Length ? null : (TransactionFinancialStatus)SelectedFinStatus;
             TDM.SearchValue = SearchText;
             EdittingItem = false;
@@ -306,6 +313,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task PreviousPage()
         {
+            if (!GeneralSettings.CanViewTransactions) return;
             await TDM.LoadPreviousPageAsync();
             Transaction.Items= TDM.Items;
             NotifyOfPropertyChange(() => Transaction);
@@ -313,6 +321,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task NextPage()
         {
+            if (!GeneralSettings.CanViewTransactions) return;
             await TDM.LoadNextPageAsync();
             Transaction.Items= TDM.Items;
             NotifyOfPropertyChange(() => Transaction);

@@ -143,9 +143,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public async Task<ObservableCollection<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
         {
             string sqlTemp = $@"INSERT @cheques SELECT * FROM Cheques
-                                { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
-                                ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
-            string query = string.Format(SelectChequeQuery, sqlTemp);
+                                { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") } ORDER BY [{ OrderBy }]
+                                OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
+            string query = string.Format(SelectChequeQuery, sqlTemp, OrderBy, Order);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
             var reader = await conn.QueryMultipleAsync(query, null);
             var Mapped = reader.MapObservableCollectionOfChequesAsync<TModel, TSub, int>
