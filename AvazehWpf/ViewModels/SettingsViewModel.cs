@@ -11,6 +11,9 @@ using System.Windows.Media;
 using AvazehApiClient.DataAccess;
 using Xceed.Wpf.Toolkit;
 using AvazehApiClient.DataAccess.Interfaces;
+using SharedLibrary.DalModels;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace AvazehWpf.ViewModels
 {
@@ -24,18 +27,6 @@ namespace AvazehWpf.ViewModels
             LoadAllSettings().ConfigureAwait(true);
         }
 
-        private async Task LoadTransactionNames()
-        {
-            TransactionItemsForComboBox = await Singleton.ReloadTransactionNames();
-        }
-
-        private async Task LoadAllSettings()
-        {
-            AppSettings = new();
-            var s = await SettingsManager.LoadAllAppSettings();
-            if (s != null) AppSettings = s;
-        }
-
         private AppSettingsModel appSettings;
         IAppSettingsManager SettingsManager;
         SingletonClass Singleton;
@@ -43,6 +34,15 @@ namespace AvazehWpf.ViewModels
         private ItemsForComboBox selectedTransactionItem1;
         private ItemsForComboBox selectedTransactionItem2;
         private ItemsForComboBox selectedTransactionItem3;
+        private UserDescriptionModel selectedUserDescriptionModel;
+        private ObservableCollection<UserDescriptionModel> userDescriptions;
+
+        public ObservableCollection<UserDescriptionModel> UserDescriptions
+        {
+            get { return userDescriptions; }
+            set { userDescriptions = value; NotifyOfPropertyChange(() => UserDescriptions); }
+        }
+
 
         public AppSettingsModel AppSettings
         {
@@ -70,8 +70,50 @@ namespace AvazehWpf.ViewModels
             set { selectedTransactionItem3 = value; AppSettings.GeneralSettings.TransactionShortcut3.TransactionId = selectedTransactionItem3.Id; NotifyOfPropertyChange(() => SelectedTransactionItem3); }
         }
 
+        public UserDescriptionModel SelectedUserDescriptionModel
+        {
+            get => selectedUserDescriptionModel;
+            set
+            {
+                selectedUserDescriptionModel = value;
+                NotifyOfPropertyChange(() => SelectedUserDescriptionModel);
+                //((GetView() as Window).FindName("cmbUserDescriptions") as ComboBox).
+            }
+        }
+
+        private async Task LoadTransactionNames()
+        {
+            TransactionItemsForComboBox = await Singleton.ReloadTransactionNames();
+        }
+
+        private async Task LoadAllSettings()
+        {
+            AppSettings = new();
+            var s = await SettingsManager.LoadAllAppSettings();
+            if (s != null) AppSettings = s;
+            UserDescriptions = new(AppSettings.PrintSettings.UserDescriptions);
+        }
+
+        public void AddNewUserDescription()
+        {
+            UserDescriptionModel model = new();
+            model.DescriptionTitle = "توضیحات جدید";
+            UserDescriptions.Add(model);
+            SelectedUserDescriptionModel = model;
+            NotifyOfPropertyChange(() => SelectedUserDescriptionModel);
+            NotifyOfPropertyChange(() => AppSettings);
+        }
+
+        public void DeleteUserDescription()
+        {
+            UserDescriptions.Remove(SelectedUserDescriptionModel);
+            NotifyOfPropertyChange(() => SelectedUserDescriptionModel);
+            NotifyOfPropertyChange(() => AppSettings);
+        }
+
         public void SaveSettings()
         {
+            AppSettings.PrintSettings.UserDescriptions = UserDescriptions.ToList();
             SettingsManager.SaveAllAppSettings(AppSettings);
         }
 
