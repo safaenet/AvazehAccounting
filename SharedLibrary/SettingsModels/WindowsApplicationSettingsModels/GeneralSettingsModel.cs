@@ -16,6 +16,9 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
         }
         public string CompanyName { get; set; } = "آوازه";
         public bool AutoSelectPersianLanguage { get; set; }
+        public bool RequireAuthentication { get; set; }
+        public string Username { get; set; } = "admin";
+        public string Password { get; set; } = "admin";
         public bool ShowTransactionShortcut1 { get; set; }
         public bool ShowTransactionShortcut2 { get; set; }
         public bool ShowTransactionShortcut3 { get; set; }

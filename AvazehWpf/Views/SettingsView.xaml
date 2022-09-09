@@ -433,7 +433,36 @@
                 
             </TabItem>
             <TabItem Header="امنیت" IsEnabled="True">
-                <Grid Background="#FFE5E5E5"/>
+                <Grid Background="#FFE5E5E5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="35"/>
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text="{Binding AppSettings.GeneralSettings.Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Margin="5" VerticalContentAlignment="Center" FlowDirection="RightToLeft"/>
+                        <TextBlock Grid.Column="1" Text="نام کاربری" VerticalAlignment="Center" Margin="5"/>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text="{Binding AppSettings.GeneralSettings.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Margin="5" VerticalContentAlignment="Center" FlowDirection="RightToLeft"/>
+                        <TextBlock Grid.Column="1" Text="رمز عبور" VerticalAlignment="Center" Margin="5"/>
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Grid.Column="1" IsChecked="{Binding AppSettings.GeneralSettings.RequireAuthentication, Mode=TwoWay}" Content="فعال" VerticalContentAlignment="Center" Margin="5"/>
+                    </Grid>
+                </Grid>
             </TabItem>
             <TabItem Header="عمومی">
                 <Grid Background="#FFE5E5E5">
