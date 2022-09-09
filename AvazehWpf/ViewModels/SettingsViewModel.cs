@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using AvazehApiClient.DataAccess;
-using Xceed.Wpf.Toolkit;
 using AvazehApiClient.DataAccess.Interfaces;
 using SharedLibrary.DalModels;
 using System.Windows;
@@ -36,6 +35,14 @@ namespace AvazehWpf.ViewModels
         private ItemsForComboBox selectedTransactionItem3;
         private UserDescriptionModel selectedUserDescriptionModel;
         private ObservableCollection<UserDescriptionModel> userDescriptions;
+        private string verifyPassword;
+
+        public string VerifyPassword
+        {
+            get { return verifyPassword; }
+            set { verifyPassword = value; NotifyOfPropertyChange(() => VerifyPassword); }
+        }
+
 
         public ObservableCollection<UserDescriptionModel> UserDescriptions
         {
@@ -113,6 +120,22 @@ namespace AvazehWpf.ViewModels
 
         public void SaveSettings()
         {
+            if (AppSettings.GeneralSettings.RequireAuthentication)
+            {
+                var pass1 = (((GetView() as Window).FindName("Password1")) as PasswordBox).Password;
+                var pass2 = (((GetView() as Window).FindName("Password2")) as PasswordBox).Password;
+                if (pass1 != pass2)
+                {
+                    MessageBox.Show("رمز عبور و تایید آن برابر نیستند", "خطای رمز", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                else if (pass1.Length < 4)
+                {
+                    MessageBox.Show("رمز عبور باید بزرگتر از 3 کاراکتر باشد", "خطای رمز", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                else AppSettings.GeneralSettings.Password = pass1;
+            }
             AppSettings.PrintSettings.UserDescriptions = UserDescriptions.ToList();
             SettingsManager.SaveAllAppSettings(AppSettings);
         }

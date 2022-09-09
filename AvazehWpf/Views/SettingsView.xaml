@@ -438,6 +438,7 @@
                         <RowDefinition Height="35"/>
                         <RowDefinition Height="35"/>
                         <RowDefinition Height="35"/>
+                        <RowDefinition Height="35"/>
                     </Grid.RowDefinitions>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -452,10 +453,18 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Text="{Binding AppSettings.GeneralSettings.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Margin="5" VerticalContentAlignment="Center" FlowDirection="RightToLeft"/>
+                        <PasswordBox x:Name="Password1" PasswordChar="*" Grid.Column="0" Margin="5" VerticalContentAlignment="Center" FlowDirection="RightToLeft"/>
                         <TextBlock Grid.Column="1" Text="رمز عبور" VerticalAlignment="Center" Margin="5"/>
                     </Grid>
                     <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <PasswordBox x:Name="Password2" PasswordChar="*" Grid.Column="0" Margin="5" VerticalContentAlignment="Center" FlowDirection="RightToLeft"/>
+                        <TextBlock Grid.Column="1" Text="تایید رمز عبور" VerticalAlignment="Center" Margin="5"/>
+                    </Grid>
+                    <Grid Grid.Row="3">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="auto"/>
