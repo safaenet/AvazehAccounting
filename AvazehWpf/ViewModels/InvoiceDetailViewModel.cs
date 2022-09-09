@@ -30,11 +30,12 @@ namespace AvazehWpf.ViewModels
 {
     public class InvoiceDetailViewModel : ViewAware
     {
-        public InvoiceDetailViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, IAppSettingsManager settingsManager, SingletonClass singleton, int? InvoiceId, Func<Task> callBack)
+        public InvoiceDetailViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, IAppSettingsManager settingsManager, SingletonClass singleton, int? InvoiceId, Func<Task> callBack, SimpleContainer sc)
         {
             ICM = iManager;
             IDM = dManager;
             ASM = settingsManager;
+            SC = sc;
             CallBackFunc = callBack;
             Singleton = singleton;
             LoadSettings().ConfigureAwait(true);
@@ -48,6 +49,7 @@ namespace AvazehWpf.ViewModels
         private readonly IInvoiceCollectionManager ICM;
         private readonly IInvoiceDetailManager IDM;
         private readonly IAppSettingsManager ASM;
+        SimpleContainer SC;
         private readonly SingletonClass Singleton;
         private InvoiceModel _Invoice;
         private readonly Func<Task> CallBackFunc;
@@ -172,12 +174,12 @@ namespace AvazehWpf.ViewModels
         public async Task AddOrUpdateItem()
         {
             if (Invoice == null) return;
-            ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(ICM.ApiProcessor);
+            var pcm = SC.GetInstance<ICollectionManager<ProductModel>>();
             if (SelectedProductItem == null && ProductInput != null && ProductInput.Length > 0 && EdittingItem == false) //Search by Entered text
             {
                 if (InvoiceSettings.EnableBarcodeReader) //Search Barcode
                 {
-                    var product = await productManager.GetItemByBarCodeAsync(ProductInput);
+                    var product = await pcm.GetItemByBarCodeAsync(ProductInput);
                     if (product != null) //Found by barcode.
                     {
                         if (Invoice.Items == null) Invoice.Items = new();
@@ -213,7 +215,7 @@ namespace AvazehWpf.ViewModels
                             newProduct.ProductName = ProductInput;
                             if (long.TryParse(ProductInput, out _)) newProduct.Barcode = ProductInput;
                             newProduct.BuyPrice = WorkItem.BuyPrice;
-                            var p = await productManager.CreateItemAsync(newProduct);
+                            var p = await pcm.CreateItemAsync(newProduct);
                             if (p is not null)
                             {
                                 ItemsForComboBox item = new() { Id = p.Id, ItemName = p.ProductName };
@@ -238,7 +240,7 @@ namespace AvazehWpf.ViewModels
                 if (WorkItem != null && SelectedProductItem != null && SelectedProductItem.Id != 0)
                 {
                     WorkItem.InvoiceId = Invoice.Id;
-                    WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
+                    WorkItem.Product = await pcm.GetItemById(SelectedProductItem.Id);
                     var validate = IDM.ValidateItem(WorkItem);
                     if (validate.IsValid)
                     {
@@ -350,7 +352,7 @@ namespace AvazehWpf.ViewModels
         public async Task ViewPayments()
         {
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(ICM, IDM, Invoice, RefreshAndReloadCustomerTotalBalance, true));
+            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(ICM, IDM, Invoice, RefreshAndReloadCustomerTotalBalance, SC, true));
         }
 
         public async Task SaveInvoiceChanges()
@@ -415,8 +417,8 @@ namespace AvazehWpf.ViewModels
         {
             if (Invoice is null) return;
             WindowManager wm = new();
-            ICollectionManager<CustomerModel> cManager = new CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>(ICM.ApiProcessor);
-            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, Invoice.Id, ICM, cManager, RefreshAndReloadCustomerTotalBalanceAsync, ASM));
+            var ccm = SC.GetInstance<ICollectionManager<CustomerModel>>();
+            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, Invoice.Id, ICM, ccm, RefreshAndReloadCustomerTotalBalanceAsync, ASM, SC));
         }
 
         public void CloseWindow()
@@ -451,8 +453,8 @@ namespace AvazehWpf.ViewModels
         {
             if (Invoice == null || SelectedProductItem == null) return;
             if (CanUpdateRowFromDB is false) return;
-            ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(ICM.ApiProcessor);
-            WorkItem.Product = await productManager.GetItemById(SelectedProductItem.Id);
+            var pcm = SC.GetInstance<ICollectionManager<ProductModel>>();
+            WorkItem.Product = await pcm.GetItemById(SelectedProductItem.Id);
             WorkItem.BuyPrice = WorkItem.Product.BuyPrice;
             WorkItem.SellPrice = WorkItem.Product.SellPrice;
             RecentSellPrices?.Clear();

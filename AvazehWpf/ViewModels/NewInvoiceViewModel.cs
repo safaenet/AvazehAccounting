@@ -22,11 +22,12 @@ namespace AvazehWpf.ViewModels
 {
     public class NewInvoiceViewModel : ViewAware
     {
-        public NewInvoiceViewModel(SingletonClass singleton, int? InvoiceId, IInvoiceCollectionManager icManager, ICollectionManager<CustomerModel> ccManager, Func<Task> callBack, IAppSettingsManager settingsManager)
+        public NewInvoiceViewModel(SingletonClass singleton, int? InvoiceId, IInvoiceCollectionManager icManager, ICollectionManager<CustomerModel> ccManager, Func<Task> callBack, IAppSettingsManager settingsManager, SimpleContainer sc)
         {
             ICM = icManager;
             CCM = ccManager;
             ASM = settingsManager;
+            SC = sc;
             Singleton = singleton;
             InvoiceID = InvoiceId;
             GetComboboxItems().ConfigureAwait(true);
@@ -44,6 +45,7 @@ namespace AvazehWpf.ViewModels
         }
         public IInvoiceCollectionManager ICM { get; set; }
         private IAppSettingsManager ASM;
+        SimpleContainer SC;
         public ICollectionManager<CustomerModel> CCM { get; set; }
         private SingletonClass Singleton;
         private readonly int? InvoiceID;
@@ -114,7 +116,8 @@ namespace AvazehWpf.ViewModels
                 if (newInvoice != null)
                 {
                     WindowManager wm = new();
-                    await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, new InvoiceDetailManager(ICM.ApiProcessor), ASM, Singleton, newInvoice.Id, null));
+                    var idm = SC.GetInstance<IInvoiceDetailManager>();
+                    await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, idm, ASM, Singleton, newInvoice.Id, null, SC));
                     CloseWindow();
                 }
                 else MessageBox.Show("خطا هنگام ایجاد فاکتور جدید", CustomerInput, MessageBoxButton.OK, MessageBoxImage.Error);

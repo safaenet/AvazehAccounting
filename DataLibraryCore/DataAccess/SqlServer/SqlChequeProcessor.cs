@@ -45,7 +45,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
 	        [Identifier] [char](20),
 	        [Descriptions] [ntext])
             {0}
-            SELECT * FROM @cheques ORDER BY [Id] ASC;
+            SELECT * FROM @cheques ORDER BY {1} {2};
             SELECT * FROM ChequeEvents WHERE ChequeId IN (SELECT c.Id FROM @cheques c);";
         private readonly string DeleteChequeQuery = @"DELETE FROM Cheques WHERE Id = @id";
 

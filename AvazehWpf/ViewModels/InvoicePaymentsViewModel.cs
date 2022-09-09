@@ -17,11 +17,12 @@ namespace AvazehWpf.ViewModels
 {
     public class InvoicePaymentsViewModel : ViewAware
     {
-        public InvoicePaymentsViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, InvoiceModel invoice, System.Action callBack, bool ReloadInvoiceNeeded = false)
+        public InvoicePaymentsViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, InvoiceModel invoice, System.Action callBack, SimpleContainer sc, bool ReloadInvoiceNeeded = false)
         {
             Invoice = invoice;
             InvoiceCollectionManager = iManager;
             InvoiceDetailManager = dManager;
+            SC = sc;
             CallBackAction = callBack;
             if (ReloadInvoiceNeeded && Invoice != null)
                 ReloadInvoice(Invoice.Id).ConfigureAwait(true);
@@ -31,6 +32,7 @@ namespace AvazehWpf.ViewModels
         public double CustomerTotalBalance { get => customerTotalBalance; private set { customerTotalBalance = value; NotifyOfPropertyChange(() => CustomerTotalBalance); } }
         private readonly IInvoiceCollectionManager InvoiceCollectionManager;
         private readonly IInvoiceDetailManager InvoiceDetailManager;
+        SimpleContainer SC;
         private readonly System.Action CallBackAction;
         private bool EdittingItem = false;
         private InvoicePaymentModel _workItem = new();
@@ -62,7 +64,6 @@ namespace AvazehWpf.ViewModels
         public async Task AddOrUpdateItem()
         {
             if (Invoice == null) return;
-            ICollectionManager<ProductModel> productManager = new ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>(InvoiceCollectionManager.ApiProcessor);
             if (WorkItem == null) return;
             WorkItem.InvoiceId = Invoice.Id;
             var validate = InvoiceDetailManager.ValidateItem(WorkItem);

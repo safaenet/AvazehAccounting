@@ -11,7 +11,10 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
         xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary"
-        Title="{Binding GeneralSettings.CompanyName}" FontFamily="Tahoma" Height="450" Width="250" IsEnabled="{Binding SettingsLoaded}">
+        Title="{Binding GeneralSettings.CompanyName}" FontFamily="Tahoma" Height="450" Width="250">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="b2v"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -32,7 +35,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="16"/>
                 </Grid.RowDefinitions>
-                <materialDesign:PackIcon Kind="PlusBoxOutline" Height="50" Width="50" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <materialDesign:PackIcon Kind="PlusBoxOutline" Height="50" Width="50" Foreground="DarkBlue" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 <TextBlock Grid.Row="1" Text="فاکتور جدید" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
             </Grid>
         </Button>
@@ -43,7 +46,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="16"/>
                 </Grid.RowDefinitions>
-                <materialDesign:PackIcon Kind="FilePlusOutline" Height="50" Width="50" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <materialDesign:PackIcon Kind="FilePlusOutline" Height="50" Width="50" Foreground="DarkGreen" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 <TextBlock Grid.Row="1" Text="فایل جدید" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
             </Grid>
         </Button>
@@ -54,7 +57,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="16"/>
                 </Grid.RowDefinitions>
-                <materialDesign:PackIcon Kind="FileDocumentBoxesOutline" Height="45" Width="45" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <materialDesign:PackIcon Kind="FileDocumentBoxesOutline" Height="45" Width="45" Foreground="DarkCyan" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 <TextBlock Grid.Row="1" Text="لیست فاکتورها" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
             </Grid>
         </Button>
@@ -65,7 +68,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="16"/>
                 </Grid.RowDefinitions>
-                <materialDesign:PackIcon Kind="FileSearchOutline" Height="50" Width="50" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <materialDesign:PackIcon Kind="FileSearchOutline" Height="50" Width="50" Foreground="DarkGoldenrod" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 <TextBlock Grid.Row="1" Text="لیست فایل ها" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
             </Grid>
         </Button>
@@ -76,7 +79,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="16"/>
                 </Grid.RowDefinitions>
-                <materialDesign:PackIcon Kind="ChequeBook" Height="50" Width="50" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <materialDesign:PackIcon Kind="ChequeBook" Height="50" Width="50" Foreground="DarkKhaki" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 <TextBlock Grid.Row="1" Text="چک ها" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
             </Grid>
         </Button>
@@ -87,7 +90,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="16"/>
                 </Grid.RowDefinitions>
-                <materialDesign:PackIcon Kind="BoxOutline" Height="50" Width="50" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <materialDesign:PackIcon Kind="BoxOutline" Height="50" Width="50" Foreground="DarkSalmon" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 <TextBlock Grid.Row="1" Text="کالا ها" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
             </Grid>
         </Button>
@@ -98,40 +101,40 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="16"/>
                 </Grid.RowDefinitions>
-                <materialDesign:PackIcon Kind="PeopleGroupOutline" Height="50" Width="50" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <materialDesign:PackIcon Kind="PeopleGroupOutline" Height="50" Width="50" Foreground="DarkOliveGreen" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 <TextBlock Grid.Row="1" Text="مشتریان" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
             </Grid>
         </Button>
 
-        <Button Grid.Row="2" Grid.Column="1" x:Name="TransactionShortcut1" Visibility="{Binding GeneralSettings.ShowTransactionShortcut1}" Margin="2,2,2,2">
+        <Button Grid.Row="2" Grid.Column="1" x:Name="TransactionShortcut1" Visibility="{Binding GeneralSettings.ShowTransactionShortcut1,Converter={StaticResource b2v}}" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="16"/>
                 </Grid.RowDefinitions>
-                <materialDesign:PackIcon Kind="FileAccountOutline" Height="50" Width="50" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <materialDesign:PackIcon Kind="FileAccountOutline" Height="50" Width="50" Foreground="DarkMagenta" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 <TextBlock Grid.Row="1" Text="{Binding GeneralSettings.TransactionShortcut1.ShortcutName}" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
             </Grid>
         </Button>
 
-        <Button Grid.Row="3" Grid.Column="1" x:Name="TransactionShortcut2" Visibility="{Binding GeneralSettings.ShowTransactionShortcut2}" Margin="2,2,2,2">
+        <Button Grid.Row="3" Grid.Column="1" x:Name="TransactionShortcut2" Visibility="{Binding GeneralSettings.ShowTransactionShortcut2,Converter={StaticResource b2v}}" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="16"/>
                 </Grid.RowDefinitions>
-                <materialDesign:PackIcon Kind="FileAccountOutline" Height="50" Width="50" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <materialDesign:PackIcon Kind="FileAccountOutline" Height="50" Width="50" Foreground="DarkOrange" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 <TextBlock Grid.Row="1" Text="{Binding GeneralSettings.TransactionShortcut2.ShortcutName}" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
             </Grid>
         </Button>
 
-        <Button Grid.Row="4" Grid.Column="1" x:Name="TransactionShortcut3" Visibility="{Binding GeneralSettings.ShowTransactionShortcut3}" Margin="2,2,2,2">
+        <Button Grid.Row="4" Grid.Column="1" x:Name="TransactionShortcut3" Visibility="{Binding GeneralSettings.ShowTransactionShortcut3,Converter={StaticResource b2v}}" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="16"/>
                 </Grid.RowDefinitions>
-                <materialDesign:PackIcon Kind="FileAccountOutline" Height="50" Width="50" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <materialDesign:PackIcon Kind="FileAccountOutline" Height="50" Width="50" Foreground="DarkRed" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 <TextBlock Grid.Row="1" Text="{Binding GeneralSettings.TransactionShortcut3.ShortcutName}" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
             </Grid>
         </Button>

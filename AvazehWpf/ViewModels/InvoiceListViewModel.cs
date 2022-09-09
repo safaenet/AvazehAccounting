@@ -28,16 +28,17 @@ namespace AvazehWpf.ViewModels
 {
     public class InvoiceListViewModel : Screen
     {
-        public InvoiceListViewModel(IInvoiceCollectionManager manager, SingletonClass singleton, IAppSettingsManager settingsManager)
+        public InvoiceListViewModel(IInvoiceCollectionManager manager, SingletonClass singleton, IAppSettingsManager settingsManager, SimpleContainer sc)
         {
             ICM = manager;
             ASM = settingsManager;
+            SC = sc;
             _SelectedInvoice = new();
             Singleton = singleton;
             LoadSettings().ConfigureAwait(true);
-            Search().ConfigureAwait(true);
         }
 
+        SimpleContainer SC;
         private IInvoiceCollectionManager _ICM;
         private readonly IAppSettingsManager ASM;
         private InvoiceListModel _SelectedInvoice;
@@ -100,6 +101,8 @@ namespace AvazehWpf.ViewModels
 
             ICM.PageSize = InvoiceSettings.PageSize;
             ICM.QueryOrderType = InvoiceSettings.QueryOrderType;
+
+            await Search();
         }
 
         public async Task PreviousPage()
@@ -125,7 +128,7 @@ namespace AvazehWpf.ViewModels
             if (!GeneralSettings.CanAddNewInvoice) return;
             WindowManager wm = new();
             ICollectionManager<CustomerModel> cManager = new CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>(ICM.ApiProcessor);
-            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, null, ICM, cManager, Search, ASM));
+            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, null, ICM, cManager, Search, ASM, SC));
         }
 
         public async Task Search()
@@ -157,8 +160,9 @@ namespace AvazehWpf.ViewModels
         {
             if (GeneralSettings == null || !GeneralSettings.CanEditInvoices) return;
             if (Invoices == null || Invoices.Count == 0 || SelectedInvoice == null || SelectedInvoice.Id == 0) return;
+            var idm = SC.GetInstance<IInvoiceDetailManager>();
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, new InvoiceDetailManager(ICM.ApiProcessor), ASM, Singleton, SelectedInvoice.Id, RefreshPage));
+            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, idm, ASM, Singleton, SelectedInvoice.Id, RefreshPage, SC));
         }
 
         public async Task DeleteInvoice()
@@ -176,7 +180,7 @@ namespace AvazehWpf.ViewModels
             if (SelectedInvoice is null) return;
             WindowManager wm = new();
             var invoice = await ICM.GetItemById(SelectedInvoice.Id);
-            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(ICM, new InvoiceDetailManager(ICM.ApiProcessor), invoice, SearchSync, true));
+            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(ICM, new InvoiceDetailManager(ICM.ApiProcessor), invoice, SearchSync, SC, true));
         }
 
         public async Task ShowCustomerInvoices()

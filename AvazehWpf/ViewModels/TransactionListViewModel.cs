@@ -19,16 +19,17 @@ namespace AvazehWpf.ViewModels
 {
     public class TransactionListViewModel : Screen
     {
-        public TransactionListViewModel(ITransactionCollectionManager manager, SingletonClass singleton, IAppSettingsManager settingsManager)
+        public TransactionListViewModel(ITransactionCollectionManager manager, SingletonClass singleton, IAppSettingsManager settingsManager, SimpleContainer sc)
         {
             TCM = manager;
             ASM = settingsManager;
+            SC = sc;
             _SelectedTransaction = new();
             Singleton = singleton;
             LoadSettings().ConfigureAwait(true);
-            Search().ConfigureAwait(true);
         }
 
+        SimpleContainer SC;
         private ITransactionCollectionManager _TCM;
         private readonly IAppSettingsManager ASM;
         private TransactionSettingsModel transactionSettings;
@@ -72,12 +73,13 @@ namespace AvazehWpf.ViewModels
             var Settings = await ASM.LoadAllAppSettings();
             if (Settings == null) Settings = new();
             TransactionSettings = Settings.TransactionSettings;
-            //PrintSettings = Settings.TransactionPrintSettings;
             GeneralSettings = Settings.GeneralSettings;
 
             TCM.PageSize = TransactionSettings.PageSize;
             TCM.QueryOrderType = TransactionSettings.QueryOrderType;
+            await Search();
         }
+
         public TransactionSettingsModel TransactionSettings
         {
             get => transactionSettings; set
@@ -94,6 +96,7 @@ namespace AvazehWpf.ViewModels
                 NotifyOfPropertyChange(() => PrintSettings);
             }
         }
+
         public GeneralSettingsModel GeneralSettings
         {
             get => generalSettings; set
@@ -107,7 +110,7 @@ namespace AvazehWpf.ViewModels
         {
             if (!GeneralSettings.CanAddNewTransaction) return;
             WindowManager wm = new();
-            await wm.ShowDialogAsync(new NewTransactionViewModel(Singleton, null, TCM, RefreshPage, ASM));
+            await wm.ShowDialogAsync(new NewTransactionViewModel(Singleton, null, TCM, RefreshPage, ASM, SC));
         }
 
         public async Task PreviousPage()
@@ -150,8 +153,9 @@ namespace AvazehWpf.ViewModels
         {
             if (GeneralSettings == null || !GeneralSettings.CanEditTransactions) return;
             if (Transactions == null || Transactions.Count == 0 || SelectedTransaction == null || SelectedTransaction.Id == 0) return;
+            var tdm = SC.GetInstance<ITransactionDetailManager>();
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new TransactionDetailViewModel(TCM, new TransactionDetailManager(TCM.ApiProcessor), ASM, Singleton, SelectedTransaction.Id, RefreshPage));
+            await wm.ShowWindowAsync(new TransactionDetailViewModel(TCM, tdm, ASM, Singleton, SelectedTransaction.Id, RefreshPage));
         }
 
         public async Task DeleteTransaction()
@@ -168,7 +172,7 @@ namespace AvazehWpf.ViewModels
         {
             if (SelectedTransaction == null) return;
             WindowManager wm = new();
-            await wm.ShowDialogAsync(new NewTransactionViewModel(Singleton, SelectedTransaction.Id, TCM, RefreshPage, ASM));
+            await wm.ShowDialogAsync(new NewTransactionViewModel(Singleton, SelectedTransaction.Id, TCM, RefreshPage, ASM, SC));
         }
 
         public void dg_PreviewKeyDown(object sender, KeyEventArgs e)

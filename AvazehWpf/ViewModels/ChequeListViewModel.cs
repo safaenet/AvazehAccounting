@@ -1,6 +1,7 @@
 ﻿using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
+using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,22 +11,41 @@ namespace AvazehWpf.ViewModels
 {
     public class ChequeListViewModel : Screen
     {
-        public ChequeListViewModel(ICollectionManager<ChequeModel> manager)
+        public ChequeListViewModel(ICollectionManager<ChequeModel> manager, IAppSettingsManager settingsManager)
         {
             CCM = manager;
+            ASM = settingsManager;
             _SelectedCheque = new();
-            Search().ConfigureAwait(true);
+            LoadSettings().ConfigureAwait(true);
         }
 
         private ICollectionManager<ChequeModel> _CCM;
+        private readonly IAppSettingsManager ASM;
         private ChequeModel _SelectedCheque;
+        private ChequeSettingsModel chequeSettings;
+        private GeneralSettingsModel generalSettings;
 
         public ChequeModel SelectedCheque
         {
             get { return _SelectedCheque; }
             set { _SelectedCheque = value; NotifyOfPropertyChange(() => SelectedCheque); }
         }
-
+        public GeneralSettingsModel GeneralSettings
+        {
+            get => generalSettings; set
+            {
+                generalSettings = value;
+                NotifyOfPropertyChange(() => GeneralSettings);
+            }
+        }
+        public ChequeSettingsModel ChequeSettings
+        {
+            get => chequeSettings; set
+            {
+                chequeSettings = value;
+                NotifyOfPropertyChange(() => ChequeSettings);
+            }
+        }
 
         public ICollectionManager<ChequeModel> CCM
         {
@@ -50,6 +70,17 @@ namespace AvazehWpf.ViewModels
         }
 
         public string SearchText { get; set; }
+        private async Task LoadSettings()
+        {
+            var Settings = await ASM.LoadAllAppSettings();
+            if (Settings == null) Settings = new();
+            ChequeSettings = Settings.ChequeSettings;
+            GeneralSettings = Settings.GeneralSettings;
+
+            CCM.PageSize = ChequeSettings.PageSize;
+            CCM.QueryOrderType = ChequeSettings.QueryOrderType;
+            await Search();
+        }
 
         public void AddNewCheque()
         {

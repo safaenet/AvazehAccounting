@@ -29,7 +29,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <viewmodels:BooleanToReverseConverter x:Key="b2r"/>
+        <local:BooleanToReverseConverter x:Key="b2r"/>
         <ContextMenu x:Key="PrintTransactionCM">
             <MenuItem Header="بدون سربرگ" cal:Message.Attach="[Event Click] = [Action PrintTransaction(11)]">
                 <MenuItem.Icon>

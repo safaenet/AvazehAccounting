@@ -7,7 +7,7 @@
         xmlns:cal="http://www.caliburnproject.org"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" d:DataContext="{d:DesignInstance Type=viewmodels:SettingsViewModel}"
         Title="تنظیمات" Height="550" Width="450" MaxWidth="450" MinWidth="450" IsEnabled="{Binding SettingsLoaded}"
-        cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($eventArgs)]">
+        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($eventArgs)]">
     <Window.Resources>
         <local:StringToColorConverter x:Key="StringToColorConverter"/>
         <local:PersianOrderStringToEnglishOrderStringConverter x:Key="PersianOrderStringToEnglishOrderStringConverter"/>
@@ -186,7 +186,7 @@
                                     <xctk:IntegerUpDown Text="{Binding AppSettings.InvoiceSettings.PageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
                                     <Separator Grid.Column="2" Grid.Row="0" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                     <TextBlock Grid.Column="4" Text="نحوه مرتب سازی" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                    <ComboBox Text="{Binding AppSettings.InvoiceSettings.QueryOrderType, Converter={StaticResource PersianOrderStringToEnglishOrderStringConverter},Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="5" SelectedIndex="1" VerticalContentAlignment="Center" Width="70">
+                                    <ComboBox Text="{Binding AppSettings.InvoiceSettings.QueryOrderType, Converter={StaticResource PersianOrderStringToEnglishOrderStringConverter},Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="5" VerticalContentAlignment="Center" Width="70">
                                         <ComboBoxItem Content="صعودی"/>
                                         <ComboBoxItem Content="نزولی"/>
                                     </ComboBox>
@@ -316,7 +316,7 @@
                                     <xctk:IntegerUpDown Text="{Binding AppSettings.TransactionSettings.PageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
                                     <Separator Grid.Column="2" Grid.Row="0" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                     <TextBlock Grid.Column="4" Text="نحوه مرتب سازی" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                    <ComboBox Grid.Column="5" SelectedIndex="1" VerticalContentAlignment="Center" Width="70">
+                                    <ComboBox Text="{Binding AppSettings.TransactionSettings.QueryOrderType, Converter={StaticResource PersianOrderStringToEnglishOrderStringConverter},Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="5" VerticalContentAlignment="Center" Width="70">
                                         <ComboBoxItem Content="صعودی"/>
                                         <ComboBoxItem Content="نزولی"/>
                                     </ComboBox>
@@ -351,7 +351,7 @@
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="چک های جدید" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.ChequeSettings.NewItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="2" Grid.Row="0">
                                         <Grid.ColumnDefinitions>
@@ -360,7 +360,7 @@
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="چک های وصول شده" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.ChequeSettings.CashedItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="0" Grid.Row="1">
                                         <Grid.ColumnDefinitions>
@@ -369,7 +369,7 @@
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="چک های فروخته شده" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.ChequeSettings.SoldItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="2" Grid.Row="1">
                                         <Grid.ColumnDefinitions>
@@ -378,7 +378,7 @@
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="اعلام چک های نزدیک" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.ChequeSettings.NotificationColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="0" Grid.Row="2">
                                         <Grid.ColumnDefinitions>
@@ -387,7 +387,7 @@
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="چک های برگشت خورده" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker Grid.Column="2" Width="50" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.ChequeSettings.NonSufficientFundItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Separator Grid.Column="1" Grid.Row="0" Grid.RowSpan="4" Margin="0,5,0,5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                 </Grid>
@@ -424,7 +424,7 @@
                                 <xctk:IntegerUpDown Text="{Binding AppSettings.ChequeSettings.PageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
                                 <Separator Grid.Column="2" Grid.Row="0" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                 <TextBlock Grid.Column="4" Text="نحوه مرتب سازی" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                <ComboBox Grid.Column="5" SelectedIndex="1" VerticalContentAlignment="Center" Width="70">
+                                <ComboBox Text="{Binding AppSettings.ChequeSettings.QueryOrderType, Converter={StaticResource PersianOrderStringToEnglishOrderStringConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="5" VerticalContentAlignment="Center" Width="70">
                                     <ComboBoxItem Content="صعودی"/>
                                     <ComboBoxItem Content="نزولی"/>
                                 </ComboBox>

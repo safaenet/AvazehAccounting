@@ -393,13 +393,4 @@ namespace AvazehWpf.ViewModels
                     ExtensionsAndStatics.ChangeLanguageToPersian();
         }
     }
-
-    public class BooleanToReverseConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-         => !(bool?)value ?? true;
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-         => !(value as bool?);
-    }
 }

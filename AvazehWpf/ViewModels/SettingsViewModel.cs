@@ -19,17 +19,19 @@ namespace AvazehWpf.ViewModels
 {
     public class SettingsViewModel : ViewAware
     {
-        public SettingsViewModel(SingletonClass singleton, IAppSettingsManager settingsManager)
+        public SettingsViewModel(SingletonClass singleton, IAppSettingsManager settingsManager, Func<Task> callBack)
         {
             Singleton = singleton;
             SettingsManager = settingsManager;
+            CallBackFunc = callBack;
             LoadTransactionNames().ConfigureAwait(true);
             LoadAllSettings().ConfigureAwait(true);
         }
 
         private AppSettingsModel appSettings;
         IAppSettingsManager SettingsManager;
-        SingletonClass Singleton;
+        private readonly SingletonClass Singleton;
+        private readonly Func<Task> CallBackFunc;
         private ObservableCollection<ItemsForComboBox> transactionItemsForComboBox;
         private ItemsForComboBox selectedTransactionItem1;
         private ItemsForComboBox selectedTransactionItem2;
@@ -132,6 +134,11 @@ namespace AvazehWpf.ViewModels
             if (e.Key == Key.Escape) CloseWindow();
         }
 
+        public async Task ClosingWindow()
+        {
+            if (CallBackFunc != null) await CallBackFunc?.Invoke();
+        }
+
         public void SaveSettings()
         {
             if (AppSettings.GeneralSettings.RequireAuthentication)
@@ -150,6 +157,9 @@ namespace AvazehWpf.ViewModels
                 }
                 else AppSettings.GeneralSettings.Password = pass1;
             }
+            if (AppSettings.GeneralSettings.ShowTransactionShortcut1 && AppSettings.GeneralSettings.TransactionShortcut1.TransactionId <= 0) AppSettings.GeneralSettings.ShowTransactionShortcut1 = false;
+            if (AppSettings.GeneralSettings.ShowTransactionShortcut2 && AppSettings.GeneralSettings.TransactionShortcut2.TransactionId <= 0) AppSettings.GeneralSettings.ShowTransactionShortcut2 = false;
+            if (AppSettings.GeneralSettings.ShowTransactionShortcut3 && AppSettings.GeneralSettings.TransactionShortcut3.TransactionId <= 0) AppSettings.GeneralSettings.ShowTransactionShortcut3 = false;
             AppSettings.PrintSettings.UserDescriptions = UserDescriptions.ToList();
             SettingsManager.SaveAllAppSettings(AppSettings);
         }
