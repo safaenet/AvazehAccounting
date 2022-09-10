@@ -45,9 +45,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
 	        [BankName] [nvarchar](50),
 	        [Serial] [nvarchar](25),
 	        [Identifier] [char](20),
-	        [Descriptions] [ntext],
-			[ChequeId] [int],
-			[EventType] [tinyint])
+	        [Descriptions] [ntext])
             {0}
             SELECT * FROM @cheques ORDER BY {1} {2};
             SELECT * FROM ChequeEvents WHERE ChequeId IN (SELECT c.Id FROM @cheques c);";
@@ -64,24 +62,24 @@ namespace DataLibraryCore.DataAccess.SqlServer
             //FromNowOn : WHERE ([EventType] != 4 AND [EventType] !=2) OR ([EventType] = 2 AND c.[DueDate] <= '{CurrentDate}')
             var queryStatusCriteria = listQueryStatus switch
             {
-                ChequeListQueryStatus.NotCashed => " AND [EventType] != 2 AND [EventType] != 4",
-                ChequeListQueryStatus.Cashed => " AND [EventType] = 4",
-                ChequeListQueryStatus.Sold => " AND [EventType] = 2",
-                ChequeListQueryStatus.NonSufficientFund => " AND [EventType] = 3",
-                ChequeListQueryStatus.FromNowOn => $" AND ([EventType] != 4 AND [EventType] !=2) OR ([EventType] = 2 AND c.[DueDate] >= '{ persianDate }')",
+                ChequeListQueryStatus.NotCashed => " AND (ISNULL(ce1.[EventType], 0) != 2 AND ISNULL(ce1.[EventType], 0) != 4)",
+                ChequeListQueryStatus.Cashed => " AND ISNULL(ce1.[EventType], 0) = 4",
+                ChequeListQueryStatus.Sold => " AND ISNULL(ce1.[EventType], 0) = 2",
+                ChequeListQueryStatus.NonSufficientFund => " AND ISNULL(ce1.[EventType], 0) = 3",
+                ChequeListQueryStatus.FromNowOn => $" AND ((ISNULL(ce1.[EventType], 0) != 4 AND ISNULL(ce1.[EventType], 0) !=2) OR (ISNULL(ce1.[EventType], 0) = 2 AND c.[DueDate] >= '{ persianDate }'))",
                 _ => ""
             };
-            return @$"(CAST([Id] AS varchar) LIKE { criteria }
-                      {mode} [Drawer] LIKE { criteria }
-                      {mode} [Orderer] LIKE { criteria }
-                      {mode} CAST([PayAmount] AS varchar) LIKE { criteria }
-                      {mode} [About] LIKE { criteria }
-                      {mode} [IssueDate] LIKE { criteria }
-                      {mode} [DueDate] LIKE { criteria }
-                      {mode} [BankName] LIKE { criteria }
-                      {mode} [Serial] LIKE { criteria }
-                      {mode} [Identifier] LIKE { criteria }
-                      {mode} [Descriptions] LIKE { criteria } ) { queryStatusCriteria }";
+            return @$"(CAST(c.[Id] AS varchar) LIKE { criteria }
+                      {mode} c.[Drawer] LIKE { criteria }
+                      {mode} c.[Orderer] LIKE { criteria }
+                      {mode} CAST(c.[PayAmount] AS varchar) LIKE { criteria }
+                      {mode} c.[About] LIKE { criteria }
+                      {mode} c.[IssueDate] LIKE { criteria }
+                      {mode} c.[DueDate] LIKE { criteria }
+                      {mode} c.[BankName] LIKE { criteria }
+                      {mode} c.[Serial] LIKE { criteria }
+                      {mode} c.[Identifier] LIKE { criteria }
+                      {mode} c.[Descriptions] LIKE { criteria } ) { queryStatusCriteria }";
         }
 
         public ValidationResult ValidateItem(ChequeModel cheque)
@@ -154,15 +152,15 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         public async Task<int> GetTotalQueryCountAsync(string WhereClause)
         {
-            var sqlTemp = $@"SELECT COUNT([Id]) FROM Cheques c LEFT JOIN (SELECT TOP 1 [ChequeId], [EventType] From [ChequeEvents] ORDER BY [EventDate] DESC) e ON c.Id = e.[ChequeId]
-                             { (string.IsNullOrEmpty(WhereClause) ? "" : " WHERE ") } { WhereClause }";
+            var sqlTemp = $@"SELECT COUNT(c.Id) FROM Cheques c LEFT JOIN ChequeEvents ce1 ON (c.Id = ce1.ChequeId) LEFT OUTER JOIN ChequeEvents ce2 ON (c.Id = ce2.ChequeId AND (ce1.Id < ce2.Id)) WHERE ce2.Id IS NULL
+                             { (string.IsNullOrEmpty(WhereClause) ? "" : " AND ") } { WhereClause }";
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
         }
 
         public async Task<ObservableCollection<ChequeModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
         {
-            string sqlTemp = $@"INSERT @cheques SELECT * FROM Cheques c LEFT JOIN (SELECT TOP 1 [ChequeId], [EventType] From [ChequeEvents] ORDER BY [EventDate] DESC) e ON c.Id = e.[ChequeId]
-                                { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") } ORDER BY [{ OrderBy }]
+            string sqlTemp = $@"INSERT @cheques SELECT c.* FROM Cheques c LEFT JOIN ChequeEvents ce1 ON (c.Id = ce1.ChequeId) LEFT OUTER JOIN ChequeEvents ce2 ON (c.Id = ce2.ChequeId AND (ce1.Id < ce2.Id)) WHERE ce2.Id IS NULL
+                                { (string.IsNullOrEmpty(WhereClause) ? "" : $" AND { WhereClause }") } ORDER BY [{ OrderBy }]
                                 OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
             string query = string.Format(SelectChequeQuery, sqlTemp, OrderBy, Order);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());

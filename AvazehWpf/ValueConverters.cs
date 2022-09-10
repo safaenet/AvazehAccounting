@@ -194,6 +194,36 @@ namespace AvazehWpf
         }
     }
 
+    public class EnglishToPersianChequeEventTypeConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value == null) return DependencyProperty.UnsetValue;
+            else if ((string)value == ChequeEventTypes.None.ToString()) return "عادی";
+            else if ((string)value == ChequeEventTypes.Holding.ToString()) return "عادی";
+            else if ((string)value == ChequeEventTypes.Sold.ToString()) return "منتقل شده";
+            else if ((string)value == ChequeEventTypes.NonSufficientFund.ToString()) return "برگشت خورده";
+            else if ((string)value == ChequeEventTypes.Cashed.ToString()) return "وصول شده";
+            else return DependencyProperty.UnsetValue;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
+    }
+
+    public class ChequeEventToColorConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values == null || values.Length != 4 || values[0] == null) return DependencyProperty.UnsetValue;
+            else if ((string)values[0] == ChequeEventTypes.Sold.ToString()) return new SolidColorBrush(((string)values[1]).ToColor());
+            else if ((string)values[0] == ChequeEventTypes.NonSufficientFund.ToString()) return new SolidColorBrush(((string)values[2]).ToColor());
+            else if ((string)values[0] == ChequeEventTypes.Cashed.ToString()) return new SolidColorBrush(((string)values[3]).ToColor());
+            return DependencyProperty.UnsetValue;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
+    }
+
     public class DateToColorConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)

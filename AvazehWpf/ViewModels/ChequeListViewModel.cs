@@ -4,6 +4,7 @@ using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
 using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
@@ -73,6 +74,7 @@ namespace AvazehWpf.ViewModels
 
         public string SearchText { get; set; }
         public int SelectedListQueryStatus { get; set; } = 4;
+
         private async Task LoadSettings()
         {
             var Settings = await ASM.LoadAllAppSettings();
@@ -146,6 +148,29 @@ namespace AvazehWpf.ViewModels
             var output = await CCM.DeleteItemAsync(SelectedCheque.Id);
             if (output) Cheques.Remove(SelectedCheque);
             else MessageBox.Show($"Cheque with ID: {SelectedCheque.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    public static class ChequeListQueryStatusItems //For ComboBoxes
+    {
+        public static Dictionary<int, string> GetChequeListQueryStatusItems()
+        {
+            Dictionary<int, string> choices = new();
+            for (int i = 0; i < Enum.GetNames(typeof(ChequeListQueryStatus)).Length; i++)
+            {
+                if (Enum.GetName(typeof(ChequeListQueryStatus), i) == ChequeListQueryStatus.NotCashed.ToString())
+                    choices.Add((int)ChequeListQueryStatus.NotCashed, "وصول نشده");
+                else if (Enum.GetName(typeof(ChequeListQueryStatus), i) == ChequeListQueryStatus.Cashed.ToString())
+                    choices.Add((int)ChequeListQueryStatus.Cashed, "وصول شده");
+                else if (Enum.GetName(typeof(ChequeListQueryStatus), i) == ChequeListQueryStatus.Sold.ToString())
+                    choices.Add((int)ChequeListQueryStatus.Sold, "منتقل شده");
+                else if (Enum.GetName(typeof(ChequeListQueryStatus), i) == ChequeListQueryStatus.NonSufficientFund.ToString())
+                    choices.Add((int)ChequeListQueryStatus.NonSufficientFund, "برگشت خورده");
+                else if (Enum.GetName(typeof(ChequeListQueryStatus), i) == ChequeListQueryStatus.FromNowOn.ToString())
+                    choices.Add((int)ChequeListQueryStatus.FromNowOn, "امروز به بعد");
+            }
+            choices.Add(Enum.GetNames(typeof(ChequeListQueryStatus)).Length, "همه");
+            return choices;
         }
     }
 }
