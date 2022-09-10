@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public class ChequeCollectionManager : IGeneralCollectionManager<ChequeModel, IGeneralProcessor<ChequeModel>>
+    public class ChequeCollectionManager : IChequeCollectionManager
     {
-        public ChequeCollectionManager(IGeneralProcessor<ChequeModel> processor)
+        public ChequeCollectionManager(IChequeProcessor processor)
         {
             Processor = processor;
         }
@@ -21,7 +21,7 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         public event EventHandler PreviousPageLoading;
         public event EventHandler PreviousPageLoaded;
         public bool Initialized { get; set; }
-        public IGeneralProcessor<ChequeModel> Processor { get; init; }
+        public IChequeProcessor Processor { get; init; }
         public ObservableCollection<ChequeModel> Items { get; set; }
         public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
@@ -47,6 +47,7 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         public string SearchValue { get; private set; }
         private protected string _QueryOrderBy;
         private protected OrderType _OrderType;
+        private protected ChequeListQueryStatus? listQueryStatus;
 
         public string QueryOrderBy
         {
@@ -69,13 +70,25 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             }
         }
 
-        public int GenerateWhereClause(string val, string OrderBy, OrderType orderType, bool run = false, SqlSearchMode mode = SqlSearchMode.OR)
+        public ChequeListQueryStatus? ListQueryStatus
         {
-            if (val == SearchValue && OrderBy == QueryOrderBy && orderType == QueryOrderType) return 0;
+            get => listQueryStatus;
+            private set
+            {
+                if (ListQueryStatus != value)
+                    Initialized = false;
+                listQueryStatus = value;
+            }
+        }
+
+        public int GenerateWhereClause(string val, string OrderBy, OrderType orderType, ChequeListQueryStatus? listQueryStatus = ChequeListQueryStatus.FromNowOn, bool run = false, SqlSearchMode mode = SqlSearchMode.OR)
+        {
+            if (val == SearchValue && OrderBy == QueryOrderBy && orderType == QueryOrderType && listQueryStatus == ListQueryStatus) return 0;
             SearchValue = val;
             QueryOrderBy = OrderBy;
             QueryOrderType = orderType;
-            WhereClause = Processor.GenerateWhereClause(val, mode);
+            ListQueryStatus = listQueryStatus;
+            WhereClause = Processor.GenerateWhereClause(val, listQueryStatus, mode);
             if (run) LoadFirstPageAsync().ConfigureAwait(true);
             return Items == null ? 0 : Items.Count;
         }

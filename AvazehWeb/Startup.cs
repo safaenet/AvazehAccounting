@@ -29,7 +29,7 @@ namespace AvazehWeb
             services
                 .AddScoped<IGeneralProcessor<ProductModel>, SqlProductProcessor<ProductModel, ProductValidator>>()
                 .AddScoped<IGeneralProcessor<CustomerModel>, SqlCustomerProcessor<CustomerModel, PhoneNumberModel, CustomerValidator>>()
-                .AddScoped<IGeneralProcessor<ChequeModel>, SqlChequeProcessor<ChequeModel, ChequeEventModel, ChequeValidator>>()
+                .AddScoped<IChequeProcessor, SqlChequeProcessor>()
                 .AddScoped<IInvoiceProcessor, SqlInvoiceProcessor>()
                 .AddScoped<ITransactionProcessor, SqlTransactionProcessor>()
                 .AddScoped<IAppSettingsManager, AppSettingsManager>()
@@ -37,7 +37,7 @@ namespace AvazehWeb
 
                 .AddScoped(typeof(IGeneralCollectionManager<ProductModel, IGeneralProcessor<ProductModel>>), typeof(ProductCollectionManager))
                 .AddScoped(typeof(IGeneralCollectionManager<CustomerModel, IGeneralProcessor<CustomerModel>>), typeof(CustomerCollectionManager))
-                .AddScoped(typeof(IGeneralCollectionManager<ChequeModel, IGeneralProcessor<ChequeModel>>), typeof(ChequeCollectionManager))
+                .AddScoped(typeof(IChequeCollectionManager), typeof(ChequeCollectionManager))
 
                 .AddScoped<IInvoiceCollectionManager, InvoiceCollectionManager>()
                 .AddScoped<ITransactionCollectionManager, TransactionCollectionManager>()

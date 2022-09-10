@@ -9,11 +9,13 @@ using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
 using SharedLibrary.Validators;
 using System.Threading.Tasks;
+using System.Globalization;
+using DataLibraryCore.Models;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public class SqlChequeProcessor<TModel, TSub, TValidator> : IGeneralProcessor<TModel>
-        where TModel : ChequeModel where TSub : ChequeEventModel where TValidator : ChequeValidator, new()
+    public class SqlChequeProcessor : IChequeProcessor
+        //where TModel : ChequeModel where TSub : ChequeEventModel where TValidator : ChequeValidator, new()
     {
         public SqlChequeProcessor(IDataAccess dataAcess)
         {
@@ -43,15 +45,32 @@ namespace DataLibraryCore.DataAccess.SqlServer
 	        [BankName] [nvarchar](50),
 	        [Serial] [nvarchar](25),
 	        [Identifier] [char](20),
-	        [Descriptions] [ntext])
+	        [Descriptions] [ntext],
+			[ChequeId] [int],
+			[EventType] [tinyint])
             {0}
             SELECT * FROM @cheques ORDER BY {1} {2};
             SELECT * FROM ChequeEvents WHERE ChequeId IN (SELECT c.Id FROM @cheques c);";
-        private readonly string DeleteChequeQuery = @"DELETE FROM Cheques WHERE Id = @id";
+        private readonly string DeleteChequeQuery = @"DELETE FROM Cheques WHERE [Id] = @id";
 
-        public string GenerateWhereClause(string val, SqlSearchMode mode = SqlSearchMode.OR)
+        public string GenerateWhereClause(string val, ChequeListQueryStatus? listQueryStatus, SqlSearchMode mode = SqlSearchMode.OR)
         {
             var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
+            var persianDate = PersianCalendarModel.GetCurrentPersianDate();
+            //NotCashed : WHERE [EventType] != 2 AND [EventType] != 4
+            //Cashed : WHERE [EventType] = 4
+            //Sold : WHERE [EventType] = 2
+            //NonSufficientFund : WHERE [EventType] = 3
+            //FromNowOn : WHERE ([EventType] != 4 AND [EventType] !=2) OR ([EventType] = 2 AND c.[DueDate] <= '{CurrentDate}')
+            var queryStatusCriteria = listQueryStatus switch
+            {
+                ChequeListQueryStatus.NotCashed => " AND [EventType] != 2 AND [EventType] != 4",
+                ChequeListQueryStatus.Cashed => " AND [EventType] = 4",
+                ChequeListQueryStatus.Sold => " AND [EventType] = 2",
+                ChequeListQueryStatus.NonSufficientFund => " AND [EventType] = 3",
+                ChequeListQueryStatus.FromNowOn => $" AND ([EventType] != 4 AND [EventType] !=2) OR ([EventType] = 2 AND c.[DueDate] >= '{ persianDate }')",
+                _ => ""
+            };
             return @$"(CAST([Id] AS varchar) LIKE { criteria }
                       {mode} [Drawer] LIKE { criteria }
                       {mode} [Orderer] LIKE { criteria }
@@ -62,17 +81,17 @@ namespace DataLibraryCore.DataAccess.SqlServer
                       {mode} [BankName] LIKE { criteria }
                       {mode} [Serial] LIKE { criteria }
                       {mode} [Identifier] LIKE { criteria }
-                      {mode} [Descriptions] LIKE { criteria } )";
+                      {mode} [Descriptions] LIKE { criteria } ) { queryStatusCriteria }";
         }
 
-        public ValidationResult ValidateItem(TModel cheque)
+        public ValidationResult ValidateItem(ChequeModel cheque)
         {
-            TValidator validator = new();
+            ChequeValidator validator = new();
             var result = validator.Validate(cheque);
             return result;
         }
 
-        public async Task<int> CreateItemAsync(TModel item)
+        public async Task<int> CreateItemAsync(ChequeModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             var dp = new DynamicParameters();
@@ -97,7 +116,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return OutputId;
         }
 
-        public async Task<int> UpdateItemAsync(TModel item)
+        public async Task<int> UpdateItemAsync(ChequeModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             var AffectedCount = await DataAccess.SaveDataAsync(UpdateChequeQuery, item);
@@ -110,16 +129,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return AffectedCount;
         }
 
-        private async Task<int> InsertChequeEventsToDatabaseAsync(TModel cheque)
+        private async Task<int> InsertChequeEventsToDatabaseAsync(ChequeModel cheque)
         {
             if (cheque == null || cheque.Events == null || cheque.Events.Count == 0) return 0;
-            ObservableCollection<TSub> events = new();
+            ObservableCollection<ChequeEventModel> events = new();
             foreach (var e in cheque.Events)
             {
                 if (true)
                 {
                     e.ChequeId = cheque.Id;
-                    events.Add(e as TSub);
+                    events.Add(e as ChequeEventModel);
                 }
             }
             if (events.Count == 0) return 0;
@@ -135,20 +154,20 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         public async Task<int> GetTotalQueryCountAsync(string WhereClause)
         {
-            var sqlTemp = $@"SELECT COUNT([Id]) FROM Cheques
+            var sqlTemp = $@"SELECT COUNT([Id]) FROM Cheques c LEFT JOIN (SELECT TOP 1 [ChequeId], [EventType] From [ChequeEvents] ORDER BY [EventDate] DESC) e ON c.Id = e.[ChequeId]
                              { (string.IsNullOrEmpty(WhereClause) ? "" : " WHERE ") } { WhereClause }";
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
         }
 
-        public async Task<ObservableCollection<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+        public async Task<ObservableCollection<ChequeModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
         {
-            string sqlTemp = $@"INSERT @cheques SELECT * FROM Cheques
+            string sqlTemp = $@"INSERT @cheques SELECT * FROM Cheques c LEFT JOIN (SELECT TOP 1 [ChequeId], [EventType] From [ChequeEvents] ORDER BY [EventDate] DESC) e ON c.Id = e.[ChequeId]
                                 { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") } ORDER BY [{ OrderBy }]
                                 OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
             string query = string.Format(SelectChequeQuery, sqlTemp, OrderBy, Order);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
             var reader = await conn.QueryMultipleAsync(query, null);
-            var Mapped = reader.MapObservableCollectionOfChequesAsync<TModel, TSub, int>
+            var Mapped = reader.MapObservableCollectionOfChequesAsync<ChequeModel, ChequeEventModel, int>
                       (
                          cheque => cheque.Id,
                          e => e.ChequeId,
@@ -157,7 +176,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return await Mapped;
         }
 
-        public async Task<TModel> LoadSingleItemAsync(int Id)
+        public async Task<ChequeModel> LoadSingleItemAsync(int Id)
         {
             var outPut = await LoadManyItemsAsync(0, 1, $"[Id] = { Id }");
             return outPut.FirstOrDefault();

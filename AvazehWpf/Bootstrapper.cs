@@ -38,7 +38,7 @@ namespace AvazehWpf
             Container
                 .PerRequest<ICollectionManager<ProductModel>, ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>>()
                 .PerRequest<ICollectionManager<CustomerModel>, CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>>()
-                .PerRequest<ICollectionManager<ChequeModel>, ChequeCollectionManagerAsync<ChequeModel, ChequeModel_DTO_Create_Update, ChequeValidator>>()
+                .PerRequest<IChequeCollectionManagerAsync, ChequeCollectionManagerAsync>()
                 .PerRequest<IInvoiceCollectionManager, InvoiceCollectionManagerAsync>()
                 .PerRequest<ITransactionCollectionManager, TransactionCollectionManagerAsync>()
                 .PerRequest<IInvoiceDetailManager, InvoiceDetailManager>()

@@ -98,7 +98,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task ViewCheques()
         {
-            var ccm = SC.GetInstance<ICollectionManager<ChequeModel>>();
+            var ccm = SC.GetInstance<IChequeCollectionManagerAsync>();
             WindowManager wm = new();
             var viewModel = new ChequeListViewModel(ccm, ASM);
             await wm.ShowWindowAsync(viewModel);

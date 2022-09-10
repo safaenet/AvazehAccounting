@@ -1,7 +1,9 @@
 ﻿using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
+using SharedLibrary.Enums;
 using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,7 +13,7 @@ namespace AvazehWpf.ViewModels
 {
     public class ChequeListViewModel : Screen
     {
-        public ChequeListViewModel(ICollectionManager<ChequeModel> manager, IAppSettingsManager settingsManager)
+        public ChequeListViewModel(IChequeCollectionManagerAsync manager, IAppSettingsManager settingsManager)
         {
             CCM = manager;
             ASM = settingsManager;
@@ -19,7 +21,7 @@ namespace AvazehWpf.ViewModels
             LoadSettings().ConfigureAwait(true);
         }
 
-        private ICollectionManager<ChequeModel> _CCM;
+        private IChequeCollectionManagerAsync _CCM;
         private readonly IAppSettingsManager ASM;
         private ChequeModel _SelectedCheque;
         private ChequeSettingsModel chequeSettings;
@@ -47,7 +49,7 @@ namespace AvazehWpf.ViewModels
             }
         }
 
-        public ICollectionManager<ChequeModel> CCM
+        public IChequeCollectionManagerAsync CCM
         {
             get { return _CCM; }
             set
@@ -70,6 +72,7 @@ namespace AvazehWpf.ViewModels
         }
 
         public string SearchText { get; set; }
+        public int SelectedListQueryStatus { get; set; } = 4;
         private async Task LoadSettings()
         {
             var Settings = await ASM.LoadAllAppSettings();
@@ -110,6 +113,8 @@ namespace AvazehWpf.ViewModels
         public async Task Search()
         {
             if (!GeneralSettings.CanViewCheques) return;
+            ChequeListQueryStatus? ListQueryStatus = SelectedListQueryStatus >= Enum.GetNames(typeof(ChequeListQueryStatus)).Length ? null : (ChequeListQueryStatus)SelectedListQueryStatus;
+            CCM.ListQueryStatus = ListQueryStatus;
             CCM.SearchValue = SearchText;
             await CCM.LoadFirstPageAsync();
             NotifyOfPropertyChange(() => Cheques);

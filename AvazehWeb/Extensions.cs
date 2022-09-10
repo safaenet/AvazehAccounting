@@ -67,6 +67,16 @@ namespace AvazehWeb
             };
         }
 
+        internal static ItemsCollection_DTO<ChequeModel> AsDto(this IChequeCollectionManager manager)
+        {
+            return new ItemsCollection_DTO<ChequeModel>()
+            {
+                Items = manager.Items,
+                PagesCount = manager.PagesCount,
+                CurrentPage = manager.CurrentPage
+            };
+        }
+
         internal static ItemsCollection_DTO<TransactionItemModel> AsDto(this ITransactionItemCollectionManager manager)
         {
             return new ItemsCollection_DTO<TransactionItemModel>()

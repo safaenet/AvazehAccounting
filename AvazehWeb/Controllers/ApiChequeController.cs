@@ -12,18 +12,18 @@ namespace AvazehWebAPI.Controllers
     [Route("api/v1/[controller]")]
     public class ChequeController : ControllerBase
     {
-        public ChequeController(IGeneralCollectionManager<ChequeModel, IGeneralProcessor<ChequeModel>> manager)
+        public ChequeController(IChequeCollectionManager manager)
         {
             Manager = manager;
         }
 
-        private readonly IGeneralCollectionManager<ChequeModel, IGeneralProcessor<ChequeModel>> Manager;
+        private readonly IChequeCollectionManager Manager;
 
         //GET /Cheque?Id=1&SearchText=sometext
         [HttpGet]
-        public async Task<ActionResult<ItemsCollection_DTO<ChequeModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "DueDate", OrderType orderType = OrderType.DESC, int PageSize = 50, bool ForceLoad = false)
+        public async Task<ActionResult<ItemsCollection_DTO<ChequeModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "DueDate", OrderType orderType = OrderType.DESC, ChequeListQueryStatus? listQueryStatus = ChequeListQueryStatus.FromNowOn, int PageSize = 50, bool ForceLoad = false)
         {
-            Manager.GenerateWhereClause(SearchText, OrderBy, orderType);
+            Manager.GenerateWhereClause(SearchText, OrderBy, orderType, listQueryStatus);
             Manager.PageSize = PageSize;
             if (ForceLoad) Manager.Initialized = false;
             await Manager.GotoPageAsync(Page);

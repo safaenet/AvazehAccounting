@@ -1,4 +1,6 @@
 ﻿using AvazehApiClient.DataAccess.Interfaces;
+using SharedLibrary.DalModels;
+using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
 using System;
 using System.Net.Http;
@@ -48,6 +50,13 @@ namespace AvazehApiClient.DataAccess
             var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&Page={Page}&SearchText={SearchText}&FinStatus={FinStatus}&PageSize={PageSize}&ForceLoad={ForceLoad}";
             var response = await ApiClient.GetAsync(Url);
             return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+        }
+
+        public async Task<ItemsCollection_DTO<ChequeModel>> GetChequeCollectionAsync(string Key, string OrderBy, OrderType orderType, ChequeListQueryStatus? listQueryStatus = ChequeListQueryStatus.FromNowOn, int Page = 1, string SearchText = "", int PageSize = 50, bool ForceLoad = false)
+        {
+            var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&listQueryStatus={listQueryStatus}&Page={Page}&SearchText={SearchText}&PageSize={PageSize}&ForceLoad={ForceLoad}";
+            var response = await ApiClient.GetAsync(Url);
+            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<ItemsCollection_DTO<ChequeModel>>() : null;
         }
 
         public async Task<T> GetItemAsync<T>(string Key, string Id) where T : class
