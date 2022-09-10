@@ -11,17 +11,20 @@
         NonSufficientFund = 3,
         Cashed = 4
     }
+
     public enum DiscountTypes
     {
         Percent = 0,
         Amount = 1
     }
+
     public enum InvoiceFinancialStatus
     {
         Balanced = 0,
         Deptor = 1,
         Creditor = 2
     }
+
     public enum InvoiceLifeStatus
     {
         Active = 0,
@@ -36,6 +39,7 @@
         Positive = 1,
         Negative = 2
     }
+
     public enum OrderType
     {
         ASC,
