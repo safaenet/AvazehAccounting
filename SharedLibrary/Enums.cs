@@ -12,6 +12,15 @@
         Cashed = 4
     }
 
+    public enum ChequeListQueryStatus
+    {
+        NotCashed = 0,
+        Cashed = 1,
+        Sold = 2,
+        NonSufficientFund = 3,
+        FromNowOn = 4
+    }
+
     public enum DiscountTypes
     {
         Percent = 0,
