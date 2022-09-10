@@ -117,19 +117,19 @@
             </ScrollViewer>
             <Grid Grid.Column="0" Grid.Row="1">
                 <StackPanel Orientation="Vertical">
-                    <Button cal:Message.Attach="[Event Click] = [Action AddNewCheque()]" Height="25" Margin="0,0,0,3">
+                    <Button cal:Message.Attach="[Event Click] = [Action AddNewCheque()]" IsEnabled="{Binding GeneralSettings.CanAddNewCheque}" Height="25" Margin="0,0,0,3">
                         <StackPanel Width="70" Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Plus" Margin="3"/>
                             <TextBlock Text="چک جدید" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action EditCheque()]" Height="25" Margin="0,0,0,3">
+                    <Button cal:Message.Attach="[Event Click] = [Action EditCheque()]" IsEnabled="{Binding GeneralSettings.CanEditCheques}" Height="25" Margin="0,0,0,3">
                         <StackPanel Width="60" Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="EditOutline" Margin="3"/>
                             <TextBlock Text="ویرایش" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action DeleteCheque()]" Height="25">
+                    <Button cal:Message.Attach="[Event Click] = [Action DeleteCheque()]" IsEnabled="{Binding GeneralSettings.CanEditCheques}" Height="25">
                         <StackPanel Width="50" Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="DeleteOutline" Margin="3"/>
                             <TextBlock Text="حذف" VerticalAlignment="Center"/>
@@ -150,7 +150,7 @@
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="Search" Grid.Column="0" Height="25" Margin="3,0,0,0">
+                <Button x:Name="Search" IsEnabled="{Binding GeneralSettings.CanViewCheques}" Grid.Column="0" Height="25" Margin="3,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="3" HorizontalAlignment="Right"/>
                         <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
@@ -165,13 +165,13 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="PreviousPage" Height="25" HorizontalAlignment="Left"  Margin="3,0,0,0">
+                <Button x:Name="PreviousPage" IsEnabled="{Binding GeneralSettings.CanViewCheques}" Height="25" HorizontalAlignment="Left"  Margin="3,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ArrowLeftCircleOutline" Margin="3"/>
                         <TextBlock Text="صفحه قبل" VerticalAlignment="Center" Margin="30,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
+                <Button x:Name="NextPage" IsEnabled="{Binding GeneralSettings.CanViewCheques}" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="صفحه بعد" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="ArrowRightCircleOutline" Margin="3" HorizontalAlignment="Right"/>
@@ -183,12 +183,12 @@
                       AutoGenerateColumns="False" FlowDirection="RightToLeft" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditCheque]">
+                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditCheque]" IsEnabled="{Binding GeneralSettings.CanEditCheques}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="OpenInApp"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteCheque]">
+                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteCheque]" IsEnabled="{Binding GeneralSettings.CanEditCheques}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="DeleteOutline"/>
                             </MenuItem.Icon>
@@ -207,6 +207,5 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-
     </Grid>
 </Window>

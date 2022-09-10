@@ -82,7 +82,7 @@
                 <ComboBox Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Grid.Column="2" BorderThickness="2" BorderBrush="DarkGray" Height="25" VerticalContentAlignment="Center"
                           ItemsSource="{Binding Source={StaticResource FinStatusItems}}" SelectedValuePath="Key" DisplayMemberPath="Value"
                           SelectedValue="{Binding SelectedFinStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action Search]"/>
-                <Button x:Name="Search" Grid.Column="3" Height="25" Margin="0,0,5,0">
+                <Button x:Name="Search" IsEnabled="{Binding GeneralSettings.CanViewTransactions}" Grid.Column="3" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="DatabaseSearchOutline" Margin="3"/>
                         <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
@@ -97,13 +97,13 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="PreviousPage" Grid.Column="0" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
+                <Button x:Name="PreviousPage" IsEnabled="{Binding GeneralSettings.CanViewTransactions}" Grid.Column="0" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ArrowLeftCircleOutline" Margin="3"/>
                         <TextBlock Text="صفحه قبل" VerticalAlignment="Center" Margin="30,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
+                <Button x:Name="NextPage" IsEnabled="{Binding GeneralSettings.CanViewTransactions}" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="صفحه بعد" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="ArrowRightCircleOutline" Margin="3" HorizontalAlignment="Right"/>
@@ -115,17 +115,17 @@
                       HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding TransactionSettings.DataGridFontSize}" CellStyle="{StaticResource Body_Content_DataGrid_Centering}">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditTransaction]">
+                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditTransaction]" IsEnabled="{Binding GeneralSettings.CanViewTransactions}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="OpenInApp"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="تغییر نام" cal:Message.Attach="[Event Click] = [Action RenameTransaction]">
+                        <MenuItem Header="تغییر نام" cal:Message.Attach="[Event Click] = [Action RenameTransaction]" IsEnabled="{Binding GeneralSettings.CanEditTransactions}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="Rename"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteTransaction]">
+                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteTransaction]" IsEnabled="{Binding GeneralSettings.CanEditTransactions}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="DeleteOutline"/>
                             </MenuItem.Icon>

@@ -38,12 +38,7 @@ namespace AvazehWpf.ViewModels
             SC = sc;
             CallBackFunc = callBack;
             Singleton = singleton;
-            LoadSettings().ConfigureAwait(true);
-            if (InvoiceId is not null)
-            {
-                ReloadInvoice(InvoiceId).ConfigureAwait(true);
-            }
-            GetComboboxItems().ConfigureAwait(true);
+            LoadSettings(InvoiceId).ConfigureAwait(true);
         }
 
         private readonly IInvoiceCollectionManager ICM;
@@ -88,13 +83,19 @@ namespace AvazehWpf.ViewModels
             set { phoneNumberText = value; }
         }
 
-        private async Task LoadSettings()
+        private async Task LoadSettings(int? InvoiceId)
         {
             var Settings = await ASM.LoadAllAppSettings();
             if (Settings == null) Settings = new();
             InvoiceSettings = Settings.InvoiceSettings;
             PrintSettings = Settings.PrintSettings;
             GeneralSettings = Settings.GeneralSettings;
+
+            if (InvoiceId is not null)
+            {
+                await ReloadInvoice(InvoiceId);
+            }
+            await GetComboboxItems();
         }
 
         public string WindowTitle
@@ -288,7 +289,6 @@ namespace AvazehWpf.ViewModels
 
         private async Task UpdateItemInDatabase(InvoiceItemModel item)
         {
-            if (!GeneralSettings.CanEditInvoices) return;
             var ResultItem = await IDM.UpdateItemAsync(item);
             var EdittedItem = Invoice.Items.FirstOrDefault(x => x.Id == item.Id);
             if (ResultItem != null) ResultItem.Clone(EdittedItem);
@@ -329,7 +329,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteInvoiceAndClose()
         {
-            if (!GeneralSettings.CanEditInvoices) return;
+            if (!GeneralSettings.CanEditInvoices) CloseWindow();
             if (Invoice == null) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete Invoice for {Invoice.Customer.FullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
@@ -357,6 +357,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task ViewPayments()
         {
+            if (!GeneralSettings.CanEditInvoices) return;
             WindowManager wm = new();
             await wm.ShowWindowAsync(new InvoicePaymentsViewModel(ICM, IDM, Invoice, RefreshAndReloadCustomerTotalBalance, SC, true));
         }

@@ -91,7 +91,7 @@
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام و نام خانوادگی مشتری" Margin="0,2,0,2"/>
                             </StackPanel>
                             <StackPanel Width="197" Orientation="Horizontal" HorizontalAlignment="Left">
-                                <Button x:Name="EditOwner" TabIndex="7" Width="20" Margin="0,0,2,0">
+                                <Button x:Name="EditOwner" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" TabIndex="7" Width="20" Margin="0,0,2,0">
                                     <materialDesign:PackIcon Kind="EditOutline" Width="15" Height="15"/>
                                 </Button>
                                 <TextBox Text="{Binding Invoice.Customer.FullName, Mode=OneWay}" IsReadOnly="True" MaxWidth="200" Width="175" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]"/>
@@ -229,13 +229,13 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <Button x:Name="SaveInvoiceChanges" Grid.Row="3" Margin="0,3,2,0">
+                    <Button x:Name="SaveInvoiceChanges" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" Grid.Row="3" Margin="0,3,2,0">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="ContentSaveOutline" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="ذخیره تغییرات" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="DeleteInvoiceAndClose" Grid.Row="4" Margin="0,3,2,0">
+                    <Button x:Name="DeleteInvoiceAndClose" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" Grid.Row="4" Margin="0,3,2,0">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="DeleteOutline" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="حذف فاکتور" VerticalAlignment="Center"/>
@@ -247,8 +247,8 @@
                             <TextBlock Text="چاپ فاکتور" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    
-                    <Button x:Name="ViewPayments" Grid.Row="6" Margin="0,3,2,0">
+
+                    <Button x:Name="ViewPayments" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" Grid.Row="6" Margin="0,3,2,0">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Payment" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="پرداخت ها" VerticalAlignment="Center"/>
@@ -275,7 +275,7 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="AddOrUpdateItem" IsDefault="True" Grid.Column="0" TabIndex="7" Width="40" Margin="0,0,5,0">
+                <Button x:Name="AddOrUpdateItem" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" IsDefault="True" Grid.Column="0" TabIndex="7" Width="40" Margin="0,0,5,0">
                     <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Width="30" Height="30"/>
                 </Button>
 
@@ -358,7 +358,7 @@
                       IsTabStop="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteItem]">
+                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteItem]" IsEnabled="{Binding GeneralSettings.CanEditInvoices}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="DeleteOutline"/>
                             </MenuItem.Icon>

@@ -41,6 +41,7 @@ namespace AvazehWpf
                 .PerRequest<ICollectionManager<ChequeModel>, ChequeCollectionManagerAsync<ChequeModel, ChequeModel_DTO_Create_Update, ChequeValidator>>()
                 .PerRequest<IInvoiceCollectionManager, InvoiceCollectionManagerAsync>()
                 .PerRequest<ITransactionCollectionManager, TransactionCollectionManagerAsync>()
+                .PerRequest<IInvoiceDetailManager, InvoiceDetailManager>()
                 .PerRequest<ITransactionDetailManager, TransactionDetailManager>()
                 .PerRequest<IAppSettingsManager, AppSettingsManager>()
                 .Singleton<SingletonClass>();

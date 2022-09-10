@@ -87,7 +87,7 @@
                 <ComboBox Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="85" Grid.Column="3" BorderThickness="2" BorderBrush="DarkGray" Height="25" VerticalContentAlignment="Center"
                           ItemsSource="{Binding Source={StaticResource LifeStatusItems}}" SelectedValuePath="Key" DisplayMemberPath="Value"
                           SelectedValue="{Binding SelectedLifeStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action Search]"/>
-                <Button x:Name="Search" Grid.Column="4" Height="25" Margin="0,0,5,0">
+                <Button x:Name="Search" IsEnabled="{Binding GeneralSettings.CanViewInvoices}" Grid.Column="4" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="DatabaseSearchOutline" Margin="3"/>
                         <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
@@ -102,13 +102,13 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="PreviousPage" Grid.Column="0" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
+                <Button x:Name="PreviousPage" IsEnabled="{Binding GeneralSettings.CanViewInvoices}" Grid.Column="0" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ArrowLeftCircleOutline" Margin="3"/>
                         <TextBlock Text="صفحه قبل" VerticalAlignment="Center" Margin="30,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
+                <Button x:Name="NextPage" IsEnabled="{Binding GeneralSettings.CanViewInvoices}" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="صفحه بعد" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="ArrowRightCircleOutline" Margin="3" HorizontalAlignment="Right"/>
@@ -120,12 +120,12 @@
                       SelectedItem="{Binding SelectedInvoice}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditInvoice]">
+                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditInvoice]" IsEnabled="{Binding GeneralSettings.CanViewInvoices}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="OpenInApp"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="چاپ">
+                        <MenuItem Header="چاپ" IsEnabled="{Binding GeneralSettings.CanViewInvoices}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="PrinterOutline"/>
                             </MenuItem.Icon>
@@ -157,7 +157,7 @@
                                 </MenuItem.Icon>
                             </MenuItem>
                         </MenuItem>
-                        <MenuItem Header="نمایش پرداختها" cal:Message.Attach="[Event Click] = [Action ViewPayments]">
+                        <MenuItem Header="نمایش پرداختها" cal:Message.Attach="[Event Click] = [Action ViewPayments]" IsEnabled="{Binding GeneralSettings.CanViewInvoices}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="Payment"/>
                             </MenuItem.Icon>
@@ -172,7 +172,7 @@
                                 <materialDesign:PackIcon Kind="ShowOutline"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteInvoice]">
+                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteInvoice]" IsEnabled="{Binding GeneralSettings.CanEditInvoices}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="DeleteOutline"/>
                             </MenuItem.Icon>

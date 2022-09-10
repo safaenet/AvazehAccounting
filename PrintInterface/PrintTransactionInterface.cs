@@ -22,7 +22,7 @@ namespace PrintInterface
         {
             InitializeComponent();
             var args = Environment.GetCommandLineArgs();
-            //FilePath = args[2]; //Report file path
+            FilePath = args[2]; //Report file path
         }
 
         PrintTransactionModel ptm = new PrintTransactionModel();
@@ -32,21 +32,21 @@ namespace PrintInterface
 
         private void PrintWindow_Load(object sender, EventArgs e)
         {
-            var xmlSerializer = new XmlSerializer(ptm.GetType());
-            string xmlString = File.ReadAllText(@"D:\Users\avazeh1\Downloads\AvazehAccountingClone\AvazehWpf\bin\Debug\net5.0-windows\Temp\637982546060107715.xml");
-            StringReader stringReader = new StringReader(xmlString);
-            ptm = xmlSerializer.Deserialize(stringReader) as PrintTransactionModel;
-
-            //if (!File.Exists(FilePath))
-            //{
-            //    MessageBox.Show("فایل فاکتور یافت نشد\n" + FilePath, "خطای پارامتر ورودی", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    Application.Exit();
-            //}
             //var xmlSerializer = new XmlSerializer(ptm.GetType());
-            //string xmlString = File.ReadAllText(FilePath);
+            //string xmlString = File.ReadAllText(@"D:\Users\avazeh1\Downloads\AvazehAccountingClone\AvazehWpf\bin\Debug\net5.0-windows\Temp\637982546060107715.xml");
             //StringReader stringReader = new StringReader(xmlString);
             //ptm = xmlSerializer.Deserialize(stringReader) as PrintTransactionModel;
-            //File.Delete(FilePath);
+
+            if (!File.Exists(FilePath))
+            {
+                MessageBox.Show("فایل فاکتور یافت نشد\n" + FilePath, "خطای پارامتر ورودی", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }
+            var xmlSerializer = new XmlSerializer(ptm.GetType());
+            string xmlString = File.ReadAllText(FilePath);
+            StringReader stringReader = new StringReader(xmlString);
+            ptm = xmlSerializer.Deserialize(stringReader) as PrintTransactionModel;
+            File.Delete(FilePath);
 
             if (ptm.PrintSettings.UserDescriptions != null && ptm.PrintSettings.UserDescriptions.Count > 0)
             {
