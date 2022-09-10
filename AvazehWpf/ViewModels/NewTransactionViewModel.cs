@@ -5,6 +5,7 @@ using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
+using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -30,6 +31,7 @@ namespace AvazehWpf.ViewModels
             Singleton = singleton;
             TransactionID = TransactionId;
             CallBack = callBack;
+            LoadSettings().ConfigureAwait(true);
             if (TransactionID == null)
             {
                 ButtonTitle = "Add";
@@ -43,14 +45,16 @@ namespace AvazehWpf.ViewModels
         }
         public ITransactionCollectionManager TCM { get; set; }
         private SingletonClass Singleton;
-        SimpleContainer SC;
+        private SimpleContainer SC;
         private IAppSettingsManager ASM;
+        private GeneralSettingsModel generalSettings;
         private readonly int? TransactionID;
         private string transactionName;
         private string buttonTitle;
         private Func<Task> CallBack;
         private string windowTitle;
 
+        public GeneralSettingsModel GeneralSettings { get => generalSettings; private set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); } }
         public string WindowTitle
         {
             get { return windowTitle; }
@@ -68,6 +72,13 @@ namespace AvazehWpf.ViewModels
         {
             get => transactionName;
             set { transactionName = value; NotifyOfPropertyChange(() => TransactionInput); }
+        }
+
+        private async Task LoadSettings()
+        {
+            var Settings = await ASM.LoadAllAppSettings();
+            if (Settings == null) Settings = new();
+            GeneralSettings = Settings.GeneralSettings;
         }
 
         public void CloseWindow()
@@ -119,6 +130,11 @@ namespace AvazehWpf.ViewModels
             WindowTitle = transaction.FileName + " - تغییر نام";
         }
 
+        public void WindowLoaded()
+        {
+            ((GetView() as Window).FindName("NewTransactionInput") as TextBox).Focus();
+        }
+
         public void ClosingWindow()
         {
             CallBack?.Invoke();
@@ -126,16 +142,14 @@ namespace AvazehWpf.ViewModels
 
         public void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Escape)
-                (GetView() as Window).Close();
+            if (e.Key == Key.Escape) (GetView() as Window).Close();
         }
 
-        public async Task TransactionNameBoxKeyDownHandler(ActionExecutionContext context)
+        public void SetKeyboardLayout()
         {
-            if (context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
-            {
-                await AddOrUpdateTransaction();
-            }
+            if (GeneralSettings != null && GeneralSettings.AutoSelectPersianLanguage)
+                if (GeneralSettings.AutoSelectPersianLanguage)
+                    ExtensionsAndStatics.ChangeLanguageToPersian();
         }
     }
 }

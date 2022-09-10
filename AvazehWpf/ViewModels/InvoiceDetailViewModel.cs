@@ -359,7 +359,7 @@ namespace AvazehWpf.ViewModels
         {
             if (!GeneralSettings.CanEditInvoices) return;
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(ICM, IDM, Invoice, RefreshAndReloadCustomerTotalBalance, SC, true));
+            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(ICM, IDM, ASM, Invoice, RefreshAndReloadCustomerTotalBalance, SC, true));
         }
 
         public async Task SaveInvoiceChanges()

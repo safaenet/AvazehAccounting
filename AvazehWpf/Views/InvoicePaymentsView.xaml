@@ -109,7 +109,7 @@
                     <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                     <TextBlock TextAlignment="Center" Text="توضیحات" Margin="0,0,0,0"/>
                 </StackPanel>
-                <TextBox Text="{Binding WorkItem.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="25"/>
+                <TextBox Text="{Binding WorkItem.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="25"/>
             </StackPanel>
 
             <StackPanel Grid.Column="4" Width="130" Orientation="Vertical" Margin="0,0,0,0">

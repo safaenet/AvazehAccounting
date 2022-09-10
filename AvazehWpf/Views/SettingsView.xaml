@@ -212,6 +212,7 @@
                                         <RowDefinition Height="35"/>
                                         <RowDefinition Height="35"/>
                                         <RowDefinition Height="35"/>
+                                        <RowDefinition Height="35"/>
                                     </Grid.RowDefinitions>
                                     <Grid Grid.Column="0" Grid.Row="0">
                                         <Grid.ColumnDefinitions>
@@ -249,7 +250,7 @@
                                         <TextBlock Grid.Column="0" Text="فایل های تراز مثبت" VerticalAlignment="Center" Margin="5"/>
                                         <xctk:ColorPicker SelectedColor="{Binding AppSettings.TransactionSettings.PositiveItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
-                                    <Grid Grid.Column="0" Grid.Row="2">
+                                    <Grid Grid.Column="0" Grid.Row="3">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="auto"/>
                                             <ColumnDefinition Width="*"/>
@@ -258,7 +259,7 @@
                                         <TextBlock Grid.Column="0" Text="اقلام جدید فایل ها" VerticalAlignment="Center" Margin="5"/>
                                         <xctk:ColorPicker SelectedColor="{Binding AppSettings.TransactionSettings.DetailNewItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
-                                    <Grid Grid.Column="2" Grid.Row="2">
+                                    <Grid Grid.Column="0" Grid.Row="2">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="auto"/>
                                             <ColumnDefinition Width="*"/>
@@ -267,7 +268,7 @@
                                         <TextBlock Grid.Column="0" Text="فایل های تراز منفی" VerticalAlignment="Center" Margin="5"/>
                                         <xctk:ColorPicker SelectedColor="{Binding AppSettings.TransactionSettings.NegativeItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
-                                    <Grid Grid.Column="0" Grid.Row="3">
+                                    <Grid Grid.Column="2" Grid.Row="3">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="auto"/>
                                             <ColumnDefinition Width="*"/>
@@ -275,6 +276,24 @@
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="اقلام بروزشده فایل ها" VerticalAlignment="Center" Margin="5"/>
                                         <xctk:ColorPicker SelectedColor="{Binding AppSettings.TransactionSettings.DetailUpdatedItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
+                                    </Grid>
+                                    <Grid Grid.Column="0" Grid.Row="4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="اقلام مثبت" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.TransactionSettings.DetailPositiveItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
+                                    </Grid>
+                                    <Grid Grid.Column="2" Grid.Row="4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="اقلام منفی" VerticalAlignment="Center" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding AppSettings.TransactionSettings.DetailNegativeItemColor, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Separator Grid.Column="1" Grid.Row="0" Grid.RowSpan="4" Margin="0,5,0,5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                 </Grid>

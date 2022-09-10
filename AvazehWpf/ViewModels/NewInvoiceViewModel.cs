@@ -5,6 +5,7 @@ using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
+using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -32,6 +33,7 @@ namespace AvazehWpf.ViewModels
             InvoiceID = InvoiceId;
             GetComboboxItems().ConfigureAwait(true);
             CallBack = callBack;
+            LoadSettings().ConfigureAwait(true);
             if (InvoiceID == null)
             {
                 ButtonTitle = "Add";
@@ -45,7 +47,8 @@ namespace AvazehWpf.ViewModels
         }
         public IInvoiceCollectionManager ICM { get; set; }
         private IAppSettingsManager ASM;
-        SimpleContainer SC;
+        private GeneralSettingsModel generalSettings;
+        private SimpleContainer SC;
         public ICollectionManager<CustomerModel> CCM { get; set; }
         private SingletonClass Singleton;
         private readonly int? InvoiceID;
@@ -57,6 +60,7 @@ namespace AvazehWpf.ViewModels
         private string buttonTitle;
         private Func<Task> CallBack;
         private string windowTitle;
+        public GeneralSettingsModel GeneralSettings { get => generalSettings; private set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); } }
 
         public string WindowTitle
         {
@@ -92,6 +96,13 @@ namespace AvazehWpf.ViewModels
         public void CustomerNames_PreviewTextInput()
         {
             IsCustomerInputDropDownOpen = true;
+        }
+
+        private async Task LoadSettings()
+        {
+            var Settings = await ASM.LoadAllAppSettings();
+            if (Settings == null) Settings = new();
+            GeneralSettings = Settings.GeneralSettings;
         }
 
         public void CloseWindow()
@@ -161,6 +172,11 @@ namespace AvazehWpf.ViewModels
             WindowTitle = invoice.Customer.FullName + " - تغییر نام";
         }
 
+        public void WindowLoaded()
+        {
+            ((GetView() as Window).FindName("NewInvoiceInput") as ComboBox).Focus();
+        }
+
         public void ClosingWindow()
         {
             CallBack?.Invoke();
@@ -172,12 +188,11 @@ namespace AvazehWpf.ViewModels
                 (GetView() as Window).Close();
         }
 
-        public async Task InvoiceInputBoxKeyDownHandler(ActionExecutionContext context)
+        public void SetKeyboardLayout()
         {
-            if (!IsCustomerInputDropDownOpen && context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
-            {
-                await AddOrUpdateInvoice();
-            }
+            if (GeneralSettings != null && GeneralSettings.AutoSelectPersianLanguage)
+                if (GeneralSettings.AutoSelectPersianLanguage)
+                    ExtensionsAndStatics.ChangeLanguageToPersian();
         }
     }
 }

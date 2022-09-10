@@ -14,7 +14,7 @@
         xmlns:dlc2="clr-namespace:SharedLibrary.DtoModels;assembly=SharedLibrary"
         Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1200" Height="650"
-        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $source, $eventArgs)]">
+        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $source, $eventArgs)]; [Event Loaded] = [FocusOnProductsCombobox()]">
     <Window.Resources>
         <local:AppSettings x:Key="AppSettings"/>
         <!--body content datagrid cell vertical centering-->
@@ -30,6 +30,7 @@
             </Setter>
         </Style>
         <local:BooleanToReverseConverter x:Key="b2r"/>
+        <local:AmountToColorConverter x:Key="AmountToColorConverter"/>
         <ContextMenu x:Key="PrintTransactionCM">
             <MenuItem Header="بدون سربرگ" cal:Message.Attach="[Event Click] = [Action PrintTransaction(11)]">
                 <MenuItem.Icon>
@@ -334,7 +335,7 @@
             <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditItem()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
                       Grid.Row="3" ItemsSource="{Binding Transaction.Items}" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}" FlowDirection="RightToLeft" AutoGenerateColumns="False"
                       IsTabStop="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35" CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
-                       HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding TransactionSettings.DetailDataGridFontSize}">
+                      HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding TransactionSettings.DetailDataGridFontSize}">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteItem]">
@@ -352,7 +353,23 @@
                     <DataGridTextColumn Header="عنوان" Binding="{Binding Title, Mode=OneWay}" Width="230"/>
                     <DataGridTextColumn Header="تعداد" Binding="{Binding CountString, Mode=OneWay}" Width="90"/>
                     <DataGridTextColumn Header="مبلغ" Binding="{Binding Amount, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120"/>
-                    <DataGridTextColumn Header="جمع کل" Binding="{Binding TotalValue, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120"/>
+                    <DataGridTextColumn Header="جمع کل" Binding="{Binding TotalValue, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource AmountToColorConverter}">
+                                            <Binding Path="TotalValue"/>
+                                            <Binding Path="Settings.TransactionSettings.BalancedItemColor" Source="null"/>
+                                            <Binding Path="Settings.TransactionSettings.DetailPositiveItemColor" Source="{StaticResource AppSettings}"/>
+                                            <Binding Path="Settings.TransactionSettings.DetailNegativeItemColor" Source="{StaticResource AppSettings}"/>
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding DateCreated, Mode=OneWay}" Width="70">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">

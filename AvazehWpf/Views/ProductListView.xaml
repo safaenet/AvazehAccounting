@@ -15,6 +15,18 @@
         <BooleanToVisibilityConverter x:Key="b2v"/>
         <local:NameToBrushConverterForBackground x:Key="NameToBrushConverterForBackground"/>
         <local:NameToBrushConverterForForeground x:Key="NameToBrushConverterForForeground"/>
+        <!--body content datagrid cell vertical centering-->
+        <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -179,7 +191,9 @@
                     </StackPanel>
                 </Button>
             </Grid>
-            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditProduct()]" Grid.Row="2" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}" AlternatingRowBackground="LightBlue" AutoGenerateColumns="False" Background="Transparent" FlowDirection="RightToLeft" CanUserAddRows="False" CanUserDeleteRows="False">
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditProduct()]" Grid.Row="2" HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" ItemsSource="{Binding Products}"
+                      SelectedItem="{Binding SelectedProduct}" AutoGenerateColumns="False" Background="Transparent" FlowDirection="RightToLeft" CanUserAddRows="False" CanUserDeleteRows="False"
+                       CellStyle="{StaticResource Body_Content_DataGrid_Centering}" RowHeight="25" AlternatingRowBackground="#f7f7f7">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditProduct]">

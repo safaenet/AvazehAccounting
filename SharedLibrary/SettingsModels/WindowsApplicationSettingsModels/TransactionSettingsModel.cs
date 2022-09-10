@@ -23,5 +23,7 @@ namespace SharedLibrary.SettingsModels.WindowsApplicationSettingsModels
         public int DetailDataGridFontSize { get; set; } = 12;
         public string DetailNewItemColor { get; set; } = "#FFF5F533";
         public string DetailUpdatedItemColor { get; set; } = "#FFDEDEDE";
+        public string DetailPositiveItemColor { get; set; } = "#ff7ad3ff";
+        public string DetailNegativeItemColor { get; set; } = "#ffff9c7a";
     }
 }

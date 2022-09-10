@@ -11,18 +11,18 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:NewTransactionViewModel}"
         Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
-        Height="70" Width="430" ResizeMode="NoResize" cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]">
+        Height="70" Width="430" ResizeMode="NoResize" cal:Message.Attach="[Event Loaded] = [Action WindowLoaded()]; [Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="AddOrUpdateTransaction" Grid.Column="0" Height="25" Margin="5,0,0,0">
+        <Button x:Name="AddOrUpdateTransaction" IsDefault="True" Grid.Column="0" Height="25" Margin="5,0,0,0">
             <StackPanel Orientation="Horizontal">
-                <materialDesign:PackIcon Kind="NotePlus" Margin="3"/>
+                <materialDesign:PackIcon Kind="NotePlusOutline" Margin="3"/>
                 <TextBlock Text="{Binding ButtonTitle}" VerticalAlignment="Center" Margin="5,0,30,0"/>
             </StackPanel>
         </Button>
-        <TextBox x:Name="TransactionInput" Grid.Column="1" Height="25" cal:Message.Attach="[Event KeyDown] = [Action TransactionNameBoxKeyDownHandler($executionContext)]" VerticalContentAlignment="Center" Margin="5,0,5,0"/>
+        <TextBox x:Name="NewTransactionInput" Text="{Binding TransactionInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]" Grid.Column="1" Height="25" VerticalContentAlignment="Center" Margin="5,0,5,0"/>
     </Grid>
 </Window>

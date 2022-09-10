@@ -185,7 +185,8 @@ namespace AvazehWpf.ViewModels
             if (SelectedInvoice is null) return;
             WindowManager wm = new();
             var invoice = await ICM.GetItemById(SelectedInvoice.Id);
-            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(ICM, new InvoiceDetailManager(ICM.ApiProcessor), invoice, SearchSync, SC, true));
+            var idm = SC.GetInstance<IInvoiceDetailManager>();
+            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(ICM, idm, ASM, invoice, SearchSync, SC, true));
         }
 
         public async Task ShowCustomerInvoices()
