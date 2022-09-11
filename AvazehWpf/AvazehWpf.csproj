@@ -50,6 +50,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AvazehApiClient\AvazehApiClient.csproj" />
+    <ProjectReference Include="..\AvazehControlLibraryWpf\AvazehUserControlLibraryWpf.csproj" />
   </ItemGroup>
 
   <ItemGroup>
