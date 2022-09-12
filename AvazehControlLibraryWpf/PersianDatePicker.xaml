@@ -5,12 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:AvazehUserControlLibraryWpf"
              mc:Ignorable="d" 
-             d:DesignHeight="35" d:DesignWidth="200">
-    <Grid Margin="0,5,0,5">
+             d:DesignHeight="25" d:DesignWidth="200">
+    <Grid Margin="0,0,0,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="55"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="45"/>
+            <ColumnDefinition Width="41"/>
         </Grid.ColumnDefinitions>
         <ComboBox x:Name="cmbYear" ItemsSource="{Binding Years, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}" SelectedItem="{Binding Year, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="0" Grid.Column="0">
 

@@ -57,7 +57,7 @@
                             <materialDesign:PackIcon Kind="CalendarImport" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ سررسید" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Cheque.DueDate}" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                        <avazehusercontrollibrarywpf:PersianDatePicker PersianDate="{Binding Cheque.DueDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxWidth="200" Height="25" Margin="0"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Vertical">
@@ -99,9 +99,7 @@
                         <materialDesign:PackIcon Kind="CalendarEdit" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ صدور" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <avazehusercontrollibrarywpf:PersianDatePicker PersianDate="{Binding Cheque.IssueDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="pdp" Height="35" Margin="0"/>
-                    <TextBox Text="{Binding PDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
-                    <TextBox Text="{Binding Cheque.IssueDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                    <avazehusercontrollibrarywpf:PersianDatePicker PersianDate="{Binding Cheque.IssueDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxWidth="200" Height="25" Margin="0"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Orientation="Vertical">
@@ -110,6 +108,7 @@
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره سریال" Margin="5,2,0,2"/>
                     </StackPanel>
                     <TextBox Text="{Binding Cheque.Serial}" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                    <!--<avazehusercontrollibrarywpf:PersianDatePicker PersianDate="{Binding EventDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="10" Height="20" Margin="0,3,0,3"/>-->
                 </StackPanel>
 
                 <DockPanel LastChildFill="True"  Grid.Row="3" DockPanel.Dock="Bottom">
@@ -185,6 +184,7 @@
                                             <TextBlock Text="Event Text" TextAlignment="Center" Margin="0,3,5,0"/>
                                             <TextBox Text="{Binding EventText}" Margin="0,3,0,0"/>
                                             <TextBlock Text="Event Date" TextAlignment="Center" Margin="0,3,5,0"/>
+                                            <avazehusercontrollibrarywpf:PersianDatePicker PersianDate="{Binding EventDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="10" Height="20" Margin="0,3,0,3"/>
                                             <TextBox Text="{Binding EventDate}" Margin="0,3,0,3"/>
                                         </StackPanel>
                                     </Border>

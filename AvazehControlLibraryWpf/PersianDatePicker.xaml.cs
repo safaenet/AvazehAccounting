@@ -26,21 +26,17 @@ namespace AvazehUserControlLibraryWpf
         {
             InitializeComponent();
             PC = new();
-            persianDate = PC.GetPersianDate();
             Years = new();
             Months = new();
             Days = new();
             for (int i = 1; i <= 31; i++) Days.Add(i);
             FillYearsAndMonths();
-            //DataContext = this;
         }
 
         private PersianCalendar PC;
-        private string persianDate;
-        public ObservableCollection<int> Years { get; init; }
-        public ObservableCollection<KeyValuePair<int, string>> Months { get; init; }
+        public ObservableCollection<int> Years { get; private set; }
+        public ObservableCollection<KeyValuePair<int, string>> Months { get; private set; }
         public ObservableCollection<int> Days { get; private set; }
-
 
         public string PersianDate
         {
@@ -51,13 +47,13 @@ namespace AvazehUserControlLibraryWpf
             }
         }
 
-        // Using a DependencyProperty as the backing store for PDATE.  This enables animation, styling, binding, etc...
         public static DependencyProperty PersianDateProperty =
             DependencyProperty.Register("PersianDate", typeof(string), typeof(PersianDatePicker), new PropertyMetadata("1395/01/01", OnMainDateChanged));
 
         private static void OnMainDateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var pdp = d as PersianDatePicker;
+            if (e.NewValue is null) return;
             var subs = ((string)e.NewValue).Split('/');
             if (subs.Length != 3) throw new InvalidCastException();
             if (!int.TryParse(subs[2], out var day)) throw new InvalidCastException();
@@ -78,7 +74,6 @@ namespace AvazehUserControlLibraryWpf
             set { SetValue(DayProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for PDATE.  This enables animation, styling, binding, etc...
         public static DependencyProperty DayProperty =
             DependencyProperty.Register("Day", typeof(int), typeof(PersianDatePicker), new PropertyMetadata(1, OnSubDateChanged));
 
@@ -88,7 +83,6 @@ namespace AvazehUserControlLibraryWpf
             set { SetValue(MonthProperty, value); FillDays(); }
         }
 
-        // Using a DependencyProperty as the backing store for PDATE.  This enables animation, styling, binding, etc...
         public static DependencyProperty MonthProperty =
             DependencyProperty.Register("Month", typeof(int), typeof(PersianDatePicker), new PropertyMetadata(1, OnSubDateChanged));
         public int Year
@@ -97,7 +91,6 @@ namespace AvazehUserControlLibraryWpf
             set { SetValue(YearProperty, value); FillDays(); }
         }
 
-        // Using a DependencyProperty as the backing store for PDATE.  This enables animation, styling, binding, etc...
         public static DependencyProperty YearProperty =
             DependencyProperty.Register("Year", typeof(int), typeof(PersianDatePicker), new PropertyMetadata(1390, OnSubDateChanged));
 
@@ -128,14 +121,6 @@ namespace AvazehUserControlLibraryWpf
 
         }
 
-        //private void FillDays()
-        //{
-        //    if (month == 12 && PC.IsLeapYear(year) && !Days.Where(d => d == 30).Any()) Days.Add(30);
-        //    if (month <= 11 && !Days.Where(d => d == 30).Any()) Days.Add(30);
-        //    if (month == 12 && !PC.IsLeapYear(year)) Days.Remove(30);
-        //    if (month >= 7) Days.Remove(31);
-        //    if (month <= 6 && !Days.Where(d => d == 31).Any()) Days.Add(31);
-        //}
         private void FillDays()
         {
             if (Month == 12 && PC.IsLeapYear(Year) && !Days.Where(d => d == 30).Any()) Days.Add(30);

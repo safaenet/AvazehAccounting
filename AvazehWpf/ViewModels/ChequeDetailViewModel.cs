@@ -4,6 +4,7 @@ using AvazehUserControlLibraryWpf;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,24 +25,17 @@ namespace AvazehWpf.ViewModels
             else
             {
                 Cheque = new();
+                Cheque.IssueDate = pCal.GetPersianDate();
+                Cheque.DueDate = pCal.GetPersianDate();
                 WindowTitle = "چک جدید";
             }
-            //PDate = "1401/09/09";
         }
 
         private readonly ICollectionManager<ChequeModel> Manager;
         private ChequeModel _Cheque;
         private Func<Task> CallBackFunc;
         private string windowTitle;
-
-        private string pdate;
-
-        public string PDate
-        {
-            get { return pdate; }
-            set { pdate = value; NotifyOfPropertyChange(() => PDate); }
-        }
-
+        PersianCalendar pCal = new();
 
         public string WindowTitle
         {
