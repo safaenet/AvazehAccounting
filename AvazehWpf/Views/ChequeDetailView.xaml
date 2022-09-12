@@ -153,7 +153,7 @@
                 </StackPanel>
 
                 <ScrollViewer Grid.Row="3">
-                    <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Vertical" Margin="0,3,0,0">
                         <StackPanel Width="165" Orientation="Horizontal" HorizontalAlignment="Center">
                             <materialDesign:PackIcon Kind="CalendarWeekOutline" Margin="15,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="رویدادها" Margin="0,2,0,2"/>
