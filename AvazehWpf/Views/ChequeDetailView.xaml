@@ -99,8 +99,9 @@
                         <materialDesign:PackIcon Kind="CalendarEdit" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ صدور" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <avazehusercontrollibrarywpf:PersianDatePicker x:Name="pdp" Height="35" Margin="0"/>
-                    <TextBox Text="{Binding Cheque.IssueDate}" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                    <avazehusercontrollibrarywpf:PersianDatePicker PersianDate="{Binding Cheque.IssueDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="pdp" Height="35" Margin="0"/>
+                    <TextBox Text="{Binding PDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding Cheque.IssueDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Orientation="Vertical">

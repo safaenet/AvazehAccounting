@@ -1,5 +1,6 @@
 ﻿using AvazehApiClient.DataAccess;
 using AvazehApiClient.DataAccess.Interfaces;
+using AvazehUserControlLibraryWpf;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using System;
@@ -25,12 +26,22 @@ namespace AvazehWpf.ViewModels
                 Cheque = new();
                 WindowTitle = "چک جدید";
             }
+            //PDate = "1401/09/09";
         }
 
         private readonly ICollectionManager<ChequeModel> Manager;
         private ChequeModel _Cheque;
         private Func<Task> CallBackFunc;
         private string windowTitle;
+
+        private string pdate;
+
+        public string PDate
+        {
+            get { return pdate; }
+            set { pdate = value; NotifyOfPropertyChange(() => PDate); }
+        }
+
 
         public string WindowTitle
         {
