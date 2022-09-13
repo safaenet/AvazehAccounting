@@ -79,7 +79,14 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="16"/>
                 </Grid.RowDefinitions>
-                <materialDesign:PackIcon Kind="ChequeBook" Height="50" Width="50" Foreground="DarkKhaki" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Grid Margin="15,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="15"/>
+                    </Grid.ColumnDefinitions>
+                    <materialDesign:PackIcon Kind="ChequeBook" Height="50" Width="50" Foreground="DarkKhaki" Margin="0,0,0,3" HorizontalAlignment="Right" VerticalAlignment="Center" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                    <materialDesign:PackIcon Grid.Column="1" Kind="CalendarAlert" Visibility="{Binding ShowChequeNotification, Converter={StaticResource b2v}}" Height="15" Width="15" Foreground="Red" Margin="0,0,0,3" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Right" VerticalContentAlignment="Top"/>
+                </Grid>
                 <TextBlock Grid.Row="1" Text="چک ها" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
             </Grid>
         </Button>

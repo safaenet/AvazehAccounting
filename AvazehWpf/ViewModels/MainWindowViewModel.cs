@@ -50,6 +50,7 @@ namespace AvazehWpf.ViewModels
 
 
         public GeneralSettingsModel GeneralSettings { get => generalSettings; private set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); } }
+        public bool ShowChequeNotification { get; set; }
 
         private async Task LoadSettings()
         {
