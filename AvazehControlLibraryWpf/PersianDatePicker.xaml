@@ -8,17 +8,21 @@
              d:DesignHeight="25" d:DesignWidth="200">
     <Grid Margin="0,0,0,0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="55"/>
+            <ColumnDefinition Width="{Binding YearWidth, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="41"/>
+            <ColumnDefinition Width="{Binding DayWidth, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}"/>
         </Grid.ColumnDefinitions>
-        <ComboBox x:Name="cmbYear" ItemsSource="{Binding Years, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}" SelectedItem="{Binding Year, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="0" Grid.Column="0">
+        <ComboBox x:Name="cmbYear" ItemsSource="{Binding Years, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}" SelectedItem="{Binding Year, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}"
+                  VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="0" Grid.Column="0">
 
         </ComboBox>
-        <ComboBox x:Name="cmbMonth" ItemsSource="{Binding Months, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding Month, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Margin="2,0,2,0" Grid.Column="1">
+        <ComboBox x:Name="cmbMonth" ItemsSource="{Binding Months, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}" DisplayMemberPath="Value" SelectedValuePath="Key"
+                  SelectedValue="{Binding Month, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}" FontSize="{Binding MonthFontSize, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}"
+                  VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Margin="2,0,2,0" Grid.Column="1">
 
         </ComboBox>
-        <ComboBox x:Name="cmbDay" ItemsSource="{Binding Days, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}" SelectedItem="{Binding Day, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="0" Grid.Column="2">
+        <ComboBox x:Name="cmbDay" ItemsSource="{Binding Days, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}" SelectedItem="{Binding Day, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}"
+                  VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="0" Grid.Column="2">
 
         </ComboBox>
     </Grid>

@@ -99,7 +99,7 @@
                                         <materialDesign:PackIcon Kind="ClockOutline" Margin="0,2,5,2"/>
                                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="ساعت ایجاد" Margin="0,2,0,2"/>
                                     </StackPanel>
-                                    <TextBox Text="{Binding Transaction.TimeCreated, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Center" MaxLength="8" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding Transaction.TimeCreated, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="8" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                                 </StackPanel>
                                 
                                 <StackPanel Grid.Column="1" Orientation="Vertical" Margin="0,0,0,3">
@@ -107,7 +107,7 @@
                                         <materialDesign:PackIcon Kind="CalendarRangeOutline" Margin="0,2,5,2"/>
                                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد" Margin="0,2,0,2"/>
                                     </StackPanel>
-                                    <TextBox Text="{Binding Transaction.DateCreated, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Center" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding Transaction.DateCreated, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                                 </StackPanel>
                             </Grid>
                         </StackPanel>

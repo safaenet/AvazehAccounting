@@ -10,7 +10,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:InvoiceDetailViewModel}"
-        xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary"
+        xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary" xmlns:avazehusercontrollibrarywpf="clr-namespace:AvazehUserControlLibraryWpf;assembly=AvazehUserControlLibraryWpf"
         Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1200" Height="675"
         cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]; [Event Loaded] = [FocusOnProductsCombobox()]">
@@ -111,9 +111,7 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                         </StackPanel>
-                        
-                        <StackPanel Orientation="Horizontal">
-                            <StackPanel Orientation="Vertical" Margin="0,0,3,3">
+                        <StackPanel Orientation="Vertical" Margin="0,0,3,3">
                             <StackPanel Width="100" Orientation="Horizontal" HorizontalAlignment="Center">
                                 <materialDesign:PackIcon Kind="FileOutline" Margin="0,2,5,2"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره فاکتور" Margin="0,2,0,2"/>
@@ -126,24 +124,8 @@
                                 <materialDesign:PackIcon Kind="CalendarRangeOutline" Margin="0,2,5,2"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد" Margin="0,2,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Invoice.DateCreated, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="50" MaxWidth="200" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                            <avazehusercontrollibrarywpf:PersianDatePicker PersianDate="{Binding Invoice.DateCreated, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MonthDisplayType="Letters" Height="25" MaxWidth="200"/>
                         </StackPanel>
-                    </StackPanel>
-                    <!--<StackPanel Orientation="Vertical" Margin="0,0,0,3">
-                            <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="FileOutline" Margin="0,2,5,2"/>
-                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره فاکتور" Margin="0,2,0,2"/>
-                            </StackPanel>
-                            <TextBox Text="{Binding Invoice.Id, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                        </StackPanel>
-
-                        <StackPanel Orientation="Vertical" Margin="0,0,0,3">
-                            <StackPanel Width="90" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="CalendarRangeOutline" Margin="0,2,5,2"/>
-                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد" Margin="0,2,0,2"/>
-                            </StackPanel>
-                            <TextBox Text="{Binding Invoice.DateCreated, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="50" MaxWidth="200" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                        </StackPanel>-->
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,3">
                             <StackPanel Width="70" Orientation="Horizontal" HorizontalAlignment="Center">

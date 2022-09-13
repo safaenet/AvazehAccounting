@@ -86,13 +86,23 @@
                             <TextBox Text="{Binding SelectedCheque.About, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="100" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
-                        <StackPanel Orientation="Vertical" Margin="0,0,0,3">
-                            <StackPanel Width="95" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="DateRange" Margin="0,0,5,0"/>
-                                <TextBlock MaxWidth="200" Height="auto" TextAlignment="Center" Text="تاریخ سررسید" Margin="0,0,0,2"/>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical" Margin="0,0,4,3">
+                                <StackPanel Width="98" Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <materialDesign:PackIcon Kind="DateRange" Margin="0,0,5,0"/>
+                                    <TextBlock MaxWidth="200" Height="auto" TextAlignment="Center" Text="تاریخ سررسید" Margin="0,0,0,2"/>
+                                </StackPanel>
+                                <TextBox Text="{Binding SelectedCheque.DueDate, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="10" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedCheque.DueDate, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="10" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
+                            <StackPanel Orientation="Vertical" Margin="0,0,0,3">
+                                <StackPanel Width="98" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 0 0 0">
+                                    <materialDesign:PackIcon Kind="DateRange" Margin="0,0,5,0"/>
+                                    <TextBlock MaxWidth="200" Height="auto" TextAlignment="Center" Text=" تاریخ صدور" Margin="0,0,0,2"/>
+                                </StackPanel>
+                                <TextBox Text="{Binding SelectedCheque.IssueDate, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="10" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
+                            </StackPanel>
                         </StackPanel>
+
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,3">
                             <StackPanel Width="85" Orientation="Horizontal" HorizontalAlignment="Center">

@@ -92,22 +92,24 @@
                             </StackPanel>
                             <TextBox Text="{Binding SelectedProduct.CountString, Mode=OneWay}" ToolTip="{Binding Path=SelectedProduct.CountValue}" IsReadOnly="True" Height="25" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
                         </StackPanel>
-
-                        <StackPanel Orientation="Vertical" Margin="0,0,0,10">
-                            <StackPanel Width="70" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="CalendarAdd" Margin="0,0,3,0"/>
-                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد" Margin="0,0,0,2"/>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical" Margin="0,0,0,10">
+                                <StackPanel Width="100" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 0 0 0">
+                                    <materialDesign:PackIcon Kind="CalendarAdd" Margin="0,0,3,0"/>
+                                    <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد" Margin="0,0,0,2"/>
+                                </StackPanel>
+                                <TextBox Text="{Binding SelectedProduct.DateCreated, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center" Margin="0,0,1,0"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedProduct.DateCreated, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+
+                            <StackPanel Orientation="Vertical" Margin="0,0,0,10">
+                                <StackPanel Width="100" Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <materialDesign:PackIcon Kind="CalendarCheckOutline" Margin="0,0,3,0"/>
+                                    <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ بروزرسانی" Margin="0,0,0,2"/>
+                                </StackPanel>
+                                <TextBox Text="{Binding SelectedProduct.DateUpdated, Mode=OneWay}" IsReadOnly="True" Height="25" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center" Margin="1,0,0,0"/>
+                            </StackPanel>
                         </StackPanel>
 
-                        <StackPanel Orientation="Vertical" Margin="0,0,0,10">
-                            <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="CalendarCheckOutline" Margin="0,0,3,0"/>
-                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ بروزرسانی" Margin="0,0,0,2"/>
-                            </StackPanel>
-                            <TextBox Text="{Binding SelectedProduct.DateUpdated, Mode=OneWay}" IsReadOnly="True" Height="25" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
-                        </StackPanel>
                     </StackPanel>
 
                     <DockPanel LastChildFill="True" Grid.Row="1" DockPanel.Dock="Bottom" Margin="0,0,0,5">
