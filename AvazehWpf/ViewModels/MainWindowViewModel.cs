@@ -125,6 +125,11 @@ namespace AvazehWpf.ViewModels
         {
             if (GeneralSettings.TransactionShortcut1.TransactionId <= 0) return;
             var tcm = SC.GetInstance<ITransactionCollectionManager>();
+            if (await tcm.GetItemById(GeneralSettings.TransactionShortcut1.TransactionId) == null)
+            {
+                MessageBox.Show("فایل یافت نشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             var tdm = SC.GetInstance<ITransactionDetailManager>();
             var singleton = SC.GetInstance<SingletonClass>();
             WindowManager wm = new();
@@ -136,6 +141,11 @@ namespace AvazehWpf.ViewModels
         {
             if (GeneralSettings.TransactionShortcut2.TransactionId <= 0) return;
             var tcm = SC.GetInstance<ITransactionCollectionManager>();
+            if (await tcm.GetItemById(GeneralSettings.TransactionShortcut2.TransactionId) == null)
+            {
+                MessageBox.Show("فایل یافت نشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             var tdm = SC.GetInstance<ITransactionDetailManager>();
             var singleton = SC.GetInstance<SingletonClass>();
             WindowManager wm = new();
@@ -147,6 +157,11 @@ namespace AvazehWpf.ViewModels
         {
             if (GeneralSettings.TransactionShortcut3.TransactionId <= 0) return;
             var tcm = SC.GetInstance<ITransactionCollectionManager>();
+            if (await tcm.GetItemById(GeneralSettings.TransactionShortcut3.TransactionId) == null)
+            {
+                MessageBox.Show("فایل یافت نشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             var tdm = SC.GetInstance<ITransactionDetailManager>();
             var singleton = SC.GetInstance<SingletonClass>();
             WindowManager wm = new();
