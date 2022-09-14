@@ -209,7 +209,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="نام مشتری" Binding="{Binding Path=CustomerFullName, Mode=OneWay}" Width="170"/>
+                    <DataGridTextColumn Header="نام مشتری" Binding="{Binding Path=CustomerFullName, Mode=OneWay}" Width="*"/>
                     <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="70">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">

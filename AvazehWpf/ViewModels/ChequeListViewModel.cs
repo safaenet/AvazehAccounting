@@ -89,7 +89,7 @@ namespace AvazehWpf.ViewModels
 
         public void AddNewCheque()
         {
-            if (!GeneralSettings.CanAddNewCheque) return;
+            if (GeneralSettings!= null && !GeneralSettings.CanAddNewCheque) return;
             WindowManager wm = new();
             wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, null, RefreshPage));
         }
@@ -134,7 +134,7 @@ namespace AvazehWpf.ViewModels
         public async Task EditCheque()
         {
             if (!GeneralSettings.CanEditCheques) return;
-            if (Cheques == null || Cheques.Count == 0 || SelectedCheque == null) return;
+            if (Cheques == null || Cheques.Count == 0 || SelectedCheque == null || SelectedCheque.Id == 0) return;
             WindowManager wm = new();
             await wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, SelectedCheque, RefreshPage));
         }

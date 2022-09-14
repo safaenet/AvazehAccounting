@@ -273,4 +273,31 @@ namespace AvazehWpf
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
+
+    public class intToValueChequeEventTypeConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null) return DependencyProperty.UnsetValue;
+            var val = (ChequeEventTypes)value;
+            if (val == ChequeEventTypes.None) return (int)ChequeEventTypes.None;
+            else if (val == ChequeEventTypes.Holding) return (int)ChequeEventTypes.Holding;
+            else if (val == ChequeEventTypes.Sold) return (int)ChequeEventTypes.Sold;
+            else if (val == ChequeEventTypes.NonSufficientFund) return (int)ChequeEventTypes.NonSufficientFund;
+            else if (val == ChequeEventTypes.Cashed) return (int)ChequeEventTypes.Cashed;
+            return DependencyProperty.UnsetValue;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if(value == null) return DependencyProperty.UnsetValue;
+            var val = (int)value;
+            if (val == (int)ChequeEventTypes.None) return ChequeEventTypes.None;
+            else if (val == (int)ChequeEventTypes.Holding) return ChequeEventTypes.Holding;
+            else if (val == (int)ChequeEventTypes.Sold) return ChequeEventTypes.Sold;
+            else if (val == (int)ChequeEventTypes.NonSufficientFund) return ChequeEventTypes.NonSufficientFund;
+            else if (val == (int)ChequeEventTypes.Cashed) return ChequeEventTypes.Cashed;
+            return DependencyProperty.UnsetValue;
+        }
+    }
 }
