@@ -142,7 +142,7 @@
                         <materialDesign:PackIcon Kind="AccountDetailsOutline" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="مبلغ" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Cheque.PayAmount, StringFormat='{}{0:#,#.##}'}" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding Cheque.PayAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Orientation="Vertical">
@@ -185,10 +185,7 @@
                                                       SelectedValue="{Binding EventType, Converter={StaticResource intToValueChequeEventTypeConverter}}" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Width="170"/>
                                             <TextBlock Text="توضیحات رویداد" TextAlignment="Center" Margin="0,3,5,0"/>
                                             <TextBox Text="{Binding EventText}" Margin="0,3,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-                                            <StackPanel Orientation="Horizontal" Margin="0,3,5,0">
-                                                <Button Content="T" Width="20"/>
-                                                <TextBlock Text="تاریخ رویداد" TextAlignment="Center" Margin="35,3,5,0"/>
-                                            </StackPanel>
+                                            <TextBlock Text="تاریخ رویداد" TextAlignment="Center" Margin="0,3,5,0"/>
                                             <avazehusercontrollibrarywpf:PersianDatePicker MonthDisplayType="Numbers" PersianDate="{Binding EventDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DayWidth="70" Height="20" Margin="0,3,0,3"/>
                                         </StackPanel>
                                     </Border>

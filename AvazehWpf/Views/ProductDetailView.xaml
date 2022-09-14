@@ -71,7 +71,7 @@
                         <materialDesign:PackIcon Kind="Money" Margin="0,0,3,0"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="قیمت خرید" Margin="0,0,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.BuyPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxWidth="200" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding Product.BuyPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="3" Orientation="Vertical" Margin="0,0,0,0">
@@ -79,7 +79,7 @@
                         <materialDesign:PackIcon Kind="TagOutline" Margin="0,0,3,0"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="قیمت فروش" Margin="0,0,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.SellPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxWidth="200" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding Product.SellPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="4" Orientation="Vertical" Margin="0,0,0,0">

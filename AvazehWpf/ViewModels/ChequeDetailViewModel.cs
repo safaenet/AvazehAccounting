@@ -2,6 +2,7 @@
 using AvazehApiClient.DataAccess.Interfaces;
 using AvazehUserControlLibraryWpf;
 using Caliburn.Micro;
+using Microsoft.VisualStudio.PlatformUI;
 using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
 using System;
