@@ -26,13 +26,15 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private readonly IDataAccess DataAccess;
         private const string QueryOrderBy = "FirstName";
         private const OrderType QueryOrderType = OrderType.ASC;
-        private readonly string CreateCustomerQuery = @"INSERT INTO Customers (FirstName, LastName, CompanyName, EmailAddress, PostAddress, DateJoined, Descriptions)
-            VALUES (@firstName, @lastName, @companyName, @emailAddress, @postAddress, @dateJoined, @descriptions);
-            SELECT @id = @@IDENTITY;";
+        private readonly string CreateCustomerQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Customers]) + 1;
+            INSERT INTO Customers ([Id], FirstName, LastName, CompanyName, EmailAddress, PostAddress, DateJoined, Descriptions)
+            VALUES (@newId, @firstName, @lastName, @companyName, @emailAddress, @postAddress, @dateJoined, @descriptions);
+            SELECT @id = @newId;";
         private readonly string UpdateCustomerQuery = @"UPDATE Customers SET FirstName = @firstName, LastName = @lastName, CompanyName = @companyName,
             EmailAddress = @emailAddress, PostAddress = @postAddress, DateJoined = @dateJoined, Descriptions = @descriptions
             WHERE Id = @id";
-        private readonly string InsertPhonesQuery = @"INSERT INTO PhoneNumbers (CustomerId, PhoneNumber) VALUES (@CustomerId, @PhoneNumber)";
+        private readonly string InsertPhonesQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [PhoneNumbers]) + 1;
+            INSERT INTO PhoneNumbers ([Id], CustomerId, PhoneNumber) VALUES (@newId, @CustomerId, @PhoneNumber)";
         private readonly string SelectCustomersQuery = @"SET NOCOUNT ON
             DECLARE @customers TABLE(
 	        [Id] [int],

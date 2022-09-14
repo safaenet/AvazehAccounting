@@ -23,9 +23,10 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private readonly IDataAccess DataAccess;
         private const string QueryOrderBy = "ProductName";
         private const OrderType QueryOrderType = OrderType.ASC;
-        private readonly string CreateProductQuery = @"INSERT INTO Products (ProductName, BuyPrice, SellPrice, Barcode, CountString, DateCreated, TimeCreated, Descriptions)
-            VALUES (@productName, @buyPrice, @sellPrice, @barcode, @countString, @dateCreated, @timeCreated, @descriptions);
-            SELECT @id = @@IDENTITY;";
+        private readonly string CreateProductQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Products]) + 1;
+            INSERT INTO Products ([Id], ProductName, BuyPrice, SellPrice, Barcode, CountString, DateCreated, TimeCreated, Descriptions)
+            VALUES (@newId, @productName, @buyPrice, @sellPrice, @barcode, @countString, @dateCreated, @timeCreated, @descriptions);
+            SELECT @id = @newId;";
         private readonly string UpdateProductQuery = @"UPDATE Products SET ProductName = @productName, BuyPrice = @buyPrice, SellPrice = @sellPrice, Barcode = @barcode,
             CountString = @countString, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, Descriptions = @descriptions
             WHERE Id = @id";

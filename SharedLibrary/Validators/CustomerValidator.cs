@@ -25,7 +25,7 @@ namespace SharedLibrary.Validators
             {
                 p.RuleFor(x => x.PhoneNumber).MaximumLength(15).WithMessage("{PropertyName} cannot be more than 15 characters ({TotalLength})");
                 //p.RuleFor(x => x.PhoneNumber).Matches(@"/(0[0-9]{10}$)|(\+[0-9]{12}$)|(00[0-9]{1,3}[0-9]{10}$)/gm").WithMessage("{PropertyName} is not valid");
-                p.RuleFor(x => x.CustomerId).NotEqual(0).WithMessage("{PropertyName} of Phone Number cannot be Zero");
+                //p.RuleFor(x => x.CustomerId).NotEqual(0).WithMessage("{PropertyName} of Phone Number cannot be Zero");
             });
         }
     }

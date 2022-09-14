@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[PhoneNumbers]
 (
-	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
+	[Id] INT NOT NULL PRIMARY KEY,
 	[CustomerId] INT NOT NULL,
     [PhoneNumber] NVARCHAR(16) NOT NULL,
 

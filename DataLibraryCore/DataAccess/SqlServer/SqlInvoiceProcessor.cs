@@ -38,22 +38,27 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private readonly IDataAccess DataAccess;
         private const string QueryOrderBy = "Id";
         private const OrderType QueryOrderType = OrderType.DESC;
-        private readonly string CreateInvoiceQuery = @"INSERT INTO Invoices (CustomerId, DateCreated, TimeCreated, DiscountType, DiscountValue, Descriptions, LifeStatus)
-            VALUES (@customerId, @dateCreated, @timeCreated, @discountType, @discountValue, @descriptions, @lifeStatus); SELECT @id = @@IDENTITY;";
+        private readonly string CreateInvoiceQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Invoices]) + 1;
+            INSERT INTO Invoices ([Id], CustomerId, DateCreated, TimeCreated, DiscountType, DiscountValue, Descriptions, LifeStatus)
+            VALUES (@newId, @customerId, @dateCreated, @timeCreated, @discountType, @discountValue, @descriptions, @lifeStatus);
+            SELECT @id = @newId;";
         private readonly string UpdateInvoiceQuery = @"UPDATE Invoices SET CustomerId = @customerId, DateCreated = @dateCreated, TimeCreated = @timeCreated,
             DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, DiscountType = @discountType,
             DiscountValue = @discountValue, Descriptions = @descriptions, LifeStatus = @lifeStatus WHERE Id = @id";
-        private readonly string InsertInvoiceItemQuery = @"INSERT INTO InvoiceItems (InvoiceId, ProductId, BuyPrice, SellPrice, CountString, CountValue, ProductUnitId, DateCreated,
+        private readonly string InsertInvoiceItemQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [InvoiceItems]) + 1;
+            INSERT INTO InvoiceItems ([Id], InvoiceId, ProductId, BuyPrice, SellPrice, CountString, CountValue, ProductUnitId, DateCreated,
             TimeCreated, Delivered, Descriptions)
-            VALUES (@invoiceId, @productId, @buyPrice, @sellPrice, @countString, @countValue, @productUnitId, @dateCreated, @timeCreated, @delivered, @descriptions);
-            SELECT @id = @@IDENTITY;";
+            VALUES (@newId, @invoiceId, @productId, @buyPrice, @sellPrice, @countString, @countValue, @productUnitId, @dateCreated, @timeCreated, @delivered, @descriptions);
+            SELECT @id = @newId;";
         private readonly string UpdateInvoiceItemQuery = @$"UPDATE InvoiceItems SET ProductId = @productId, BuyPrice = @buyPrice, SellPrice = @sellPrice,
             CountString = @countString, CountValue = @countValue, ProductUnitId = @productUnitId, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
             Delivered = @delivered, Descriptions = @descriptions WHERE [Id] = @id";
         private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Invoices SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated WHERE [Id] = @id";
         private readonly string DeleteInvoiceItemQuery = @$"DELETE FROM InvoiceItems WHERE [Id] = @id";
-        private readonly string InsertInvoicePaymentQuery = @$"INSERT INTO InvoicePayments (InvoiceId, DateCreated, TimeCreated, PayAmount, Descriptions)
-            VALUES (@invoiceId, @dateCreated, @timeCreated, @payAmount, @descriptions); SELECT @id = @@IDENTITY;";
+        private readonly string InsertInvoicePaymentQuery = @$"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [InvoicePayments]) + 1;
+            INSERT INTO InvoicePayments ([Id], InvoiceId, DateCreated, TimeCreated, PayAmount, Descriptions)
+            VALUES (@newId, @invoiceId, @dateCreated, @timeCreated, @payAmount, @descriptions);
+            SELECT @id = @newId;";
         private readonly string UpdateInvoicePaymentQuery = @$"UPDATE InvoicePayments SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
             PayAmount = @payAmount, Descriptions = @descriptions WHERE [Id] = @id";
         private readonly string DeleteInvoicePaymentQuery = @$"DELETE FROM InvoicePayments WHERE [Id] = @id";

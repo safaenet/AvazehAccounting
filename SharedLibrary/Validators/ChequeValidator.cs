@@ -53,8 +53,8 @@ namespace SharedLibrary.Validators
 
             RuleForEach(c => c.Events).Cascade(CascadeMode.Stop).ChildRules(p =>
             {
-                p.RuleFor(x => x.ChequeId).NotEmpty().WithMessage("{PropertyName} cannot be empty")
-                    .NotEqual(0).WithMessage("{PropertyName} of Event cannot be Zero");
+                //p.RuleFor(x => x.ChequeId).NotEmpty().WithMessage("{PropertyName} cannot be empty")
+                //    .NotEqual(0).WithMessage("{PropertyName} of Event cannot be Zero");
 
                 p.RuleFor(x => x.EventDate).NotEmpty().WithMessage("{PropertyName} cannot be empty")
                     .Matches(@"([12]\d{3}\/(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01]))$").WithMessage("{PropertyName} is not valid")

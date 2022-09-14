@@ -25,14 +25,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private readonly IDataAccess DataAccess;
         private const string QueryOrderBy = "DueDate";
         private const OrderType QueryOrderType = OrderType.DESC;
-        private readonly string CreateChequeQuery = @"INSERT INTO Cheques (Drawer, Orderer, PayAmount, About, IssueDate, DueDate, BankName, Serial, Identifier, Descriptions)
-            VALUES (@drawer, @orderer, @payAmount, @about, @issueDate, @dueDate, @bankName, @serial, @identifier, @descriptions);
-            SELECT @id = @@IDENTITY;";
+        private readonly string CreateChequeQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Cheques]) + 1;
+            INSERT INTO Cheques ([Id], Drawer, Orderer, PayAmount, About, IssueDate, DueDate, BankName, Serial, Identifier, Descriptions)
+            VALUES (@newId, @drawer, @orderer, @payAmount, @about, @issueDate, @dueDate, @bankName, @serial, @identifier, @descriptions);
+            SELECT @id = @newId;";
         private readonly string UpdateChequeQuery = @"UPDATE Cheques SET Drawer = @drawer, Orderer = @orderer, PayAmount = @payAmount, About = @about, IssueDate = @issueDate,
             DueDate = @dueDate, BankName = @bankName, Serial = @serial, Identifier = @identifier, Descriptions = @descriptions
             WHERE Id = @id";
-        private readonly string InsertEventsQuery = @$"INSERT INTO ChequeEvents (ChequeId, EventDate, EventType, EventText)
-                                 VALUES (@ChequeId, @EventDate, @EventType, @EventText)";
+        private readonly string InsertEventsQuery = @$"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [ChequeEvents]) + 1;
+            INSERT INTO ChequeEvents ([Id], ChequeId, EventDate, EventType, EventText)
+            VALUES (@newId, @ChequeId, @EventDate, @EventType, @EventText)";
         private readonly string SelectChequeQuery = @"SET NOCOUNT ON
             DECLARE @cheques TABLE(
 	        [Id] [int],

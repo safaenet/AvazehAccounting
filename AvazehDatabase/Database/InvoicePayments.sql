@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[InvoicePayments]
 (
-    [Id] INT NOT NULL IDENTITY(1, 1),
+    [Id] INT NOT NULL,
     [InvoiceId] INT NOT NULL,
     [DateCreated] CHAR (10) NOT NULL,
     [TimeCreated] CHAR (8) NOT NULL,

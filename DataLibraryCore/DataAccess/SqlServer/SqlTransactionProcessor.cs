@@ -25,14 +25,18 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private readonly IDataAccess DataAccess;
         private const string QueryOrderBy = "Id";
         private const OrderType QueryOrderType = OrderType.ASC;
-        private readonly string CreateTransactionQuery = @"INSERT INTO Transactions (FileName, DateCreated, TimeCreated, Descriptions)
-            VALUES (@fileName, @dateCreated, @timeCreated, @descriptions); SELECT @id = @@IDENTITY;";
+        private readonly string CreateTransactionQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Transactions]) + 1;
+            INSERT INTO Transactions ([Id], FileName, DateCreated, TimeCreated, Descriptions)
+            VALUES (@newId, @fileName, @dateCreated, @timeCreated, @descriptions);
+            SELECT @id = @newId;";
         private readonly string UpdateTransactionQuery = @"UPDATE Transactions SET FileName = @fileName, DateCreated = @dateCreated, TimeCreated = @timeCreated, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
             Descriptions = @descriptions WHERE Id = @id";
         private readonly string DeleteTransactionQuery = @"DELETE FROM Transactions WHERE Id = @id";
         private readonly string GetSingleTransactionItemQuery = "SELECT * FROM TransactionItems WHERE [Id] = {0}";
-        private readonly string InsertTransactionItemQuery = @"INSERT INTO TransactionItems (TransactionId, Title, Amount, CountString, CountValue, DateCreated, TimeCreated, Descriptions)
-            VALUES (@transactionId, @title, @amount, @countString, @countValue, @dateCreated, @timeCreated, @descriptions); SELECT @id = @@IDENTITY;";
+        private readonly string InsertTransactionItemQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [TransactionItems]) + 1;
+            INSERT INTO TransactionItems ([Id], TransactionId, Title, Amount, CountString, CountValue, DateCreated, TimeCreated, Descriptions)
+            VALUES (@newId, @transactionId, @title, @amount, @countString, @countValue, @dateCreated, @timeCreated, @descriptions);
+            SELECT @id = @newId;";
         private readonly string UpdateTransactionItemQuery = @"UPDATE TransactionItems SET Title = @title, Amount = @amount,
             CountString = @countString, CountValue = @countValue, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, Descriptions = @descriptions WHERE [Id] = @id";
         private readonly string DeleteTransactionItemQuery = @$"DELETE FROM TransactionItems WHERE [Id] = @id";

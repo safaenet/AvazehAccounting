@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[Invoices]
 (
-	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1), 
+	[Id] INT NOT NULL PRIMARY KEY, 
     [CustomerId] INT NOT NULL, 
     [DateCreated] CHAR(10) NOT NULL, 
     [TimeCreated] CHAR(8) NOT NULL, 

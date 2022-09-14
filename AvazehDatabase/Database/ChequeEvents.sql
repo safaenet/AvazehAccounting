@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[ChequeEvents]
 (
-	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1, 1), 
+	[Id] INT NOT NULL PRIMARY KEY, 
     [ChequeId] INT NOT NULL,
     [EventDate] CHAR(10) NOT NULL,
     [EventType] TINYINT NOT NULL,
