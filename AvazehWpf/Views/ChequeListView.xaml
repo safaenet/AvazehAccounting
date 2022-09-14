@@ -107,7 +107,7 @@
                         <StackPanel Orientation="Vertical" Margin="0,0,0,3">
                             <StackPanel Width="85" Orientation="Horizontal" HorizontalAlignment="Center">
                                 <materialDesign:PackIcon Kind="Number0BoxOutline" Margin="0,0,5,0"/>
-                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="شناسه چک" Margin="0,0,0,2"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="شناسه صیاد" Margin="0,0,0,2"/>
                             </StackPanel>
                             <TextBox Text="{Binding SelectedCheque.Identifier, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="20" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
                         </StackPanel>
@@ -243,7 +243,7 @@
                     <DataGridTextColumn Header="مبلغ" Binding="{Binding PayAmount, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120"/>
                     <DataGridTextColumn Header="بابت" Binding="{Binding About, Mode=OneWay}" Width="150"/>
                     <DataGridTextColumn Header="تاریخ سررسید" Binding="{Binding DueDate, Mode=OneWay}" Width="80"/>
-                    <DataGridTextColumn Header="شناسه چک" Binding="{Binding Identifier, Mode=OneWay}" Width="130"/>
+                    <DataGridTextColumn Header="شناسه صیاد" Binding="{Binding Identifier, Mode=OneWay}" Width="120"/>
                     <DataGridTextColumn Header="آخرین وضعیت" Binding="{Binding LastEventString, Converter={StaticResource EnglishToPersianChequeEventTypeConverter}, Mode=OneWay}" Width="120">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
