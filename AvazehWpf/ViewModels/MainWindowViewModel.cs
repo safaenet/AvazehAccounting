@@ -25,6 +25,7 @@ using System.Diagnostics;
 using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using SharedLibrary.SettingsModels;
 using System.Globalization;
+using System.Net.Http;
 
 namespace AvazehWpf.ViewModels
 {
@@ -35,6 +36,7 @@ namespace AvazehWpf.ViewModels
             ASM = settingsManager;
             SC = sc;
             LoadSettings().ConfigureAwait(true);
+            LoadKnowledgeOfTheDayAsync().ConfigureAwait(true);
         }
 
         private readonly IAppSettingsManager ASM;
@@ -46,6 +48,41 @@ namespace AvazehWpf.ViewModels
         {
             get { return settingsLoaded; }
             set { settingsLoaded = value; NotifyOfPropertyChange(() => SettingsLoaded); }
+        }
+
+        private HttpClient httpClient { get; set; }
+        private readonly string knowlegeUri = @"https://one-api.ir/danestani/?token=649611:6321a450ea46f3.88748501";
+        private bool kodAvailable;
+        private KnowledgeModel knowledgeOfTheDay;
+        
+        public bool KodAvailable
+        {
+            get { return kodAvailable; }
+            set { kodAvailable = value; NotifyOfPropertyChange(() => KodAvailable); }
+        }
+
+        public KnowledgeModel KnowledgeOfTheDay
+        {
+            get { return knowledgeOfTheDay; }
+            set { knowledgeOfTheDay = value; NotifyOfPropertyChange(() => KnowledgeOfTheDay); }
+        }
+
+        private async Task LoadKnowledgeOfTheDayAsync()
+        {
+            httpClient = new();
+            httpClient.DefaultRequestHeaders.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            var kod = await httpClient.GetAsync(knowlegeUri);
+            if (kod.IsSuccessStatusCode)
+            {
+                KnowledgeOfTheDay = await kod.Content.ReadAsAsync<KnowledgeModel>();
+                if (KnowledgeOfTheDay.status == 200)
+                {
+                    KnowledgeOfTheDay.result.Content = KnowledgeOfTheDay.result.Content.Replace('\n', ' ');
+                    KodAvailable = KnowledgeOfTheDay.status == 200 ? true : false;
+                }
+            }
+            else KodAvailable = false;
         }
 
 
@@ -177,4 +214,16 @@ namespace AvazehWpf.ViewModels
             await wm.ShowWindowAsync(viewModel);
         }
     }
+
+    public class KnowledgeModel
+    {
+        public int status { get; set; }
+        public Result result { get; set; }
+    }
+
+    public class Result
+    {
+        public string Content { get; set; }
+    }
+
 }

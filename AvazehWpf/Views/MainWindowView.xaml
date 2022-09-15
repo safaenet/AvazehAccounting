@@ -11,12 +11,13 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
         xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary"
-        Title="{Binding GeneralSettings.CompanyName}" FontFamily="Tahoma" Height="450" Width="250">
+        Title="{Binding GeneralSettings.CompanyName}" FontFamily="Tahoma" Height="520" Width="350">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="b2v"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -156,5 +157,6 @@
                 <TextBlock Grid.Row="1" Text="تنظیمات" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
             </Grid>
         </Button>
+        <TextBox Grid.Row="6" Grid.ColumnSpan="2" Text="{Binding KnowledgeOfTheDay.result.Content}" Visibility="{Binding KodAvailable, Converter={StaticResource b2v}}" Height="55" HorizontalContentAlignment="Right" TextWrapping="Wrap" Background="LightGray"/>
     </Grid>
 </Window>
