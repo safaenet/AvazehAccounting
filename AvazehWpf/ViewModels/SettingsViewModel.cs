@@ -24,7 +24,6 @@ namespace AvazehWpf.ViewModels
             Singleton = singleton;
             SettingsManager = settingsManager;
             CallBackFunc = callBack;
-            LoadTransactionNames().ConfigureAwait(true);
             LoadAllSettings().ConfigureAwait(true);
         }
 
@@ -73,19 +72,19 @@ namespace AvazehWpf.ViewModels
         public ItemsForComboBox SelectedTransactionItem1
         {
             get => selectedTransactionItem1;
-            set { selectedTransactionItem1 = value; AppSettings.GeneralSettings.TransactionShortcut1.TransactionId = selectedTransactionItem1.Id; NotifyOfPropertyChange(() => SelectedTransactionItem1); }
+            set { selectedTransactionItem1 = value; AppSettings.GeneralSettings.TransactionShortcut1.TransactionId = selectedTransactionItem1 == null ? 0 : selectedTransactionItem1.Id; NotifyOfPropertyChange(() => SelectedTransactionItem1); }
         }
 
         public ItemsForComboBox SelectedTransactionItem2
         {
             get => selectedTransactionItem2;
-            set { selectedTransactionItem2 = value; AppSettings.GeneralSettings.TransactionShortcut2.TransactionId = selectedTransactionItem2.Id; NotifyOfPropertyChange(() => SelectedTransactionItem2); }
+            set { selectedTransactionItem2 = value; AppSettings.GeneralSettings.TransactionShortcut2.TransactionId = selectedTransactionItem2 == null ? 0 : selectedTransactionItem2.Id; NotifyOfPropertyChange(() => SelectedTransactionItem2); }
         }
 
         public ItemsForComboBox SelectedTransactionItem3
         {
             get => selectedTransactionItem3;
-            set { selectedTransactionItem3 = value; AppSettings.GeneralSettings.TransactionShortcut3.TransactionId = selectedTransactionItem3.Id; NotifyOfPropertyChange(() => SelectedTransactionItem3); }
+            set { selectedTransactionItem3 = value; AppSettings.GeneralSettings.TransactionShortcut3.TransactionId = selectedTransactionItem3 == null ? 0 : selectedTransactionItem3.Id; NotifyOfPropertyChange(() => SelectedTransactionItem3); }
         }
 
         public UserDescriptionModel SelectedUserDescriptionModel
@@ -106,10 +105,17 @@ namespace AvazehWpf.ViewModels
 
         private async Task LoadAllSettings()
         {
+            await LoadTransactionNames();
             AppSettings = new();
             var s = await SettingsManager.LoadAllAppSettings();
             if (s != null) AppSettings = s;
             UserDescriptions = new(AppSettings.PrintSettings.UserDescriptions);
+            if (AppSettings != null && AppSettings.GeneralSettings != null)
+            {
+                if (AppSettings.GeneralSettings.ShowTransactionShortcut1) SelectedTransactionItem1 = TransactionItemsForComboBox.Where(x => x.Id == AppSettings.GeneralSettings.TransactionShortcut1.TransactionId).SingleOrDefault();
+                if (AppSettings.GeneralSettings.ShowTransactionShortcut2) SelectedTransactionItem2 = TransactionItemsForComboBox.Where(x => x.Id == AppSettings.GeneralSettings.TransactionShortcut2.TransactionId).SingleOrDefault();
+                if (AppSettings.GeneralSettings.ShowTransactionShortcut3) SelectedTransactionItem3 = TransactionItemsForComboBox.Where(x => x.Id == AppSettings.GeneralSettings.TransactionShortcut3.TransactionId).SingleOrDefault();
+            }
             SettingsLoaded = true;
         }
 
