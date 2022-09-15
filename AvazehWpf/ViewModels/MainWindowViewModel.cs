@@ -50,8 +50,6 @@ namespace AvazehWpf.ViewModels
             set { settingsLoaded = value; NotifyOfPropertyChange(() => SettingsLoaded); }
         }
 
-        private HttpClient httpClient { get; set; }
-        private readonly string knowlegeUri = @"https://one-api.ir/danestani/?token=649611:6321a450ea46f3.88748501";
         private bool kodAvailable;
         private KnowledgeModel knowledgeOfTheDay;
         
@@ -69,7 +67,8 @@ namespace AvazehWpf.ViewModels
 
         private async Task LoadKnowledgeOfTheDayAsync()
         {
-            httpClient = new();
+            HttpClient httpClient = new();
+            string knowlegeUri = @"https://one-api.ir/danestani/?token=649611:6321a450ea46f3.88748501";
             httpClient.DefaultRequestHeaders.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             var kod = await httpClient.GetAsync(knowlegeUri);

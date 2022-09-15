@@ -157,6 +157,6 @@
                 <TextBlock Grid.Row="1" Text="تنظیمات" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
             </Grid>
         </Button>
-        <TextBox Grid.Row="6" Grid.ColumnSpan="2" Text="{Binding KnowledgeOfTheDay.result.Content}" Visibility="{Binding KodAvailable, Converter={StaticResource b2v}}" Height="55" HorizontalContentAlignment="Right" TextWrapping="Wrap" Background="LightGray"/>
+        <TextBox Grid.Row="6" Grid.ColumnSpan="2" Text="{Binding KnowledgeOfTheDay.result.Content}" Visibility="{Binding KodAvailable, Converter={StaticResource b2v}}" IsReadOnly="True" Height="55" HorizontalContentAlignment="Right" TextWrapping="Wrap" Background="LightGray"/>
     </Grid>
 </Window>
