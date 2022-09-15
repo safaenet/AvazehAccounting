@@ -234,6 +234,7 @@ namespace AvazehWpf.ViewModels
                                 if (addedItem is not null)
                                     Invoice.Items.Insert(0, addedItem);
                             }
+                            else MessageBox.Show("خطا هنگام اضافه کردن کالای جدید", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                     else MessageBox.Show("نام کالای وارد شده موجود نیست", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
