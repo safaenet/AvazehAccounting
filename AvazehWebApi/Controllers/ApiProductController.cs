@@ -1,5 +1,6 @@
 ﻿using AvazehWeb;
 using DataLibraryCore.DataAccess.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
