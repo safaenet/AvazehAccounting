@@ -2,14 +2,31 @@ using DataLibraryCore.DataAccess;
 using DataLibraryCore.DataAccess.CollectionManagers;
 using DataLibraryCore.DataAccess.Interfaces;
 using DataLibraryCore.DataAccess.SqlServer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SharedLibrary.DalModels;
 using SharedLibrary.Validators;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSwaggerGen();
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new()
+    {
+        ValidateActor = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
 // Add services to the container.
 builder.Services
                 .AddScoped<IGeneralProcessor<ProductModel>, SqlProductProcessor<ProductModel, ProductValidator>>()
@@ -31,7 +48,6 @@ builder.Services
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -45,6 +61,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
 
