@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\css\mdi.css" />
+    <Content Remove="wwwroot\font\MaterialIcons-Regular.ttf" />
+    <Content Remove="wwwroot\font\MaterialIconsOutlined-Regular.otf" />
+    <Content Remove="wwwroot\font\MaterialIconsRound-Regular.otf" />
+    <Content Remove="wwwroot\font\MaterialIconsSharp-Regular.otf" />
+    <Content Remove="wwwroot\font\MaterialIconsTwoTone-Regular.otf" />
+    <Content Remove="wwwroot\font\README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\mdi.css" />
+    <None Include="wwwroot\font\MaterialIcons-Regular.ttf" />
+    <None Include="wwwroot\font\MaterialIconsOutlined-Regular.otf" />
+    <None Include="wwwroot\font\MaterialIconsRound-Regular.otf" />
+    <None Include="wwwroot\font\MaterialIconsSharp-Regular.otf" />
+    <None Include="wwwroot\font\MaterialIconsTwoTone-Regular.otf" />
+    <None Include="wwwroot\font\README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.8" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DataLibraryCore\DataLibraryCore.csproj" />
+  </ItemGroup>
+
+</Project>
