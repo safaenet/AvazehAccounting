@@ -14,7 +14,7 @@
         xmlns:dlc2="clr-namespace:SharedLibrary.DtoModels;assembly=SharedLibrary"
         Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1200" Height="650"
-        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $source, $eventArgs)]; [Event Loaded] = [FocusOnProductsCombobox()]">
+        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]; [Event Loaded] = [FocusOnProductsCombobox()]">
     <Window.Resources>
         <local:AppSettings x:Key="AppSettings"/>
         <!--body content datagrid cell vertical centering-->

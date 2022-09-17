@@ -11,7 +11,7 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:ProductDetailViewModel}"
         Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="460" Height="363" ResizeMode="NoResize"
-        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]">
+        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
     <Grid>
         <Grid.Resources>
             <Style TargetType="TextBox">

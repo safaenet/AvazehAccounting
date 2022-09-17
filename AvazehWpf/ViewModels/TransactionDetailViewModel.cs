@@ -348,7 +348,7 @@ namespace AvazehWpf.ViewModels
             combo.IsDropDownOpen = true;
         }
 
-        public async Task Window_PreviewKeyDown(object window, object sender, KeyEventArgs e)
+        public async Task Window_PreviewKeyDown(object window, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
             {

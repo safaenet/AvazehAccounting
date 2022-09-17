@@ -13,6 +13,10 @@ namespace AvazehWebAPI.Controllers
     [Route("api/v1/[controller]")]
     public class LoginController : Controller
     {
-        
+        //[HttpPost]
+        //public async Task<string> Login()
+        //{
+
+        //}
     }
 }

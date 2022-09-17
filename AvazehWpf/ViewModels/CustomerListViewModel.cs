@@ -106,5 +106,10 @@ namespace AvazehWpf.ViewModels
             if (output) Customers.Remove(SelectedCustomer);
             else MessageBox.Show($"Customer with ID: {SelectedCustomer.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+        public void Window_PreviewKeyDown(object window, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape) (GetView() as Window).Close();
+        }
     }
 }

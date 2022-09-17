@@ -107,5 +107,10 @@ namespace AvazehWpf.ViewModels
             if (output) Products.Remove(SelectedProduct);
             else MessageBox.Show($"Product with ID: {SelectedProduct.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+        public void Window_PreviewKeyDown(object window, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape) (GetView() as Window).Close();
+        }
     }
 }

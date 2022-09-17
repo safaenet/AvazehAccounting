@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace AvazehWpf.ViewModels
 {
@@ -130,6 +131,11 @@ namespace AvazehWpf.ViewModels
         public async Task ClosingWindow()
         {
             await CallBackFunc?.Invoke();
+        }
+
+        public void Window_PreviewKeyDown(object window, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape) (GetView() as Window).Close();
         }
     }
 }

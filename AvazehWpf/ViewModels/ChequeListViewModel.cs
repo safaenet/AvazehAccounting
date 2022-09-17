@@ -149,6 +149,11 @@ namespace AvazehWpf.ViewModels
             if (output) Cheques.Remove(SelectedCheque);
             else MessageBox.Show($"Cheque with ID: {SelectedCheque.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+        public void Window_PreviewKeyDown(object window, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape) (GetView() as Window).Close();
+        }
     }
 
     public static class ChequeListQueryStatusItems //For ComboBoxes

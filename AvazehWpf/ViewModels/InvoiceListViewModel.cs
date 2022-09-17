@@ -248,6 +248,11 @@ namespace AvazehWpf.ViewModels
             if (GeneralSettings.AutoSelectPersianLanguage)
                 ExtensionsAndStatics.ChangeLanguageToPersian();
         }
+
+        public void Window_PreviewKeyDown(object window, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape) (GetView() as Window).Close();
+        }
     }
 
     public static class InvoiceFinStatusAndLifeStatusItems //For ComboBoxes

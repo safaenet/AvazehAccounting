@@ -11,7 +11,8 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:TransactionListViewModel}"
         Title="فایل ها" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
-        Width="1030" Height="650">
+        Width="1030" Height="650"
+        cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
     <Window.Resources>
         <local:AppSettings x:Key="AppSettings"/>
         <!--body content datagrid cell vertical centering-->

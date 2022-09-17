@@ -11,7 +11,7 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:CustomerDetailViewModel}"
         Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="460" MaxWidth="460" MinHeight="395" Height="500"
-        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]">
+        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="3"/>

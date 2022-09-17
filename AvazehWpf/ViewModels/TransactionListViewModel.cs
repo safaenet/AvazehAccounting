@@ -189,6 +189,11 @@ namespace AvazehWpf.ViewModels
                 e.Handled = true;
             }
         }
+
+        public void Window_PreviewKeyDown(object window, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape) (GetView() as Window).Close();
+        }
     }
 
     public static class TransactionFinStatusItems //For ComboBoxes

@@ -10,7 +10,8 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:CustomerListViewModel}"
         Title="مشتری ها" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
-        Width="1350" Height="650">
+        Width="1350" Height="650"
+        cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
     <Window.Resources>
         <local:NameToBrushConverterForBackground x:Key="NameToBrushConverterForBackground"/>
         <local:NameToBrushConverterForForeground x:Key="NameToBrushConverterForForeground"/>
