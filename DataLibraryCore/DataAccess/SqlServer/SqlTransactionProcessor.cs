@@ -40,7 +40,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private readonly string UpdateTransactionItemQuery = @"UPDATE TransactionItems SET Title = @title, Amount = @amount,
             CountString = @countString, CountValue = @countValue, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, Descriptions = @descriptions WHERE [Id] = @id";
         private readonly string DeleteTransactionItemQuery = @$"DELETE FROM TransactionItems WHERE [Id] = @id";
-        private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] AS ItemName FROM Products {0} UNION SELECT [Id], [Title] AS ItemName FROM TransactionItems WHERE 1=1 {1} {2}";
+        private readonly string GetProductItemsQuery = "SELECT [ProductName] AS ItemName FROM Products {0} UNION SELECT [Title] AS ItemName FROM TransactionItems WHERE 1=1 {1} {2} ORDER BY ItemName";
         private readonly string GetTransactionNamesQuery = "SELECT [Id], [FileName] AS ItemName FROM Transactions {0}";
         private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Transactions SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated WHERE [Id] = @id";
         private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON SELECT * FROM Transactions t WHERE t.[Id] = {0} ORDER BY t.[Id] DESC";
