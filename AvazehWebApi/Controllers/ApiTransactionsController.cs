@@ -39,10 +39,10 @@ namespace AvazehWebAPI.Controllers
             return model is null ? NotFound("Couldn't find specific Item") : model;
         }
 
-        [HttpGet("ProductItems")]
-        public async Task<ActionResult<List<ItemsForComboBox>>> GetProductItemsAsync(string SearchText)
+        [HttpGet("ProductItems/{Id}")]
+        public async Task<ActionResult<List<ItemsForComboBox>>> GetProductItemsAsync(int Id)
         {
-            var items = await Manager.Processor.GetProductItemsAsync(SearchText);
+            var items = await Manager.Processor.GetProductItemsAsync(null, Id);
             return items is null ? NotFound("Couldn't find any match") : items;
         }
 

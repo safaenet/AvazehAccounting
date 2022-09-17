@@ -40,7 +40,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private readonly string UpdateTransactionItemQuery = @"UPDATE TransactionItems SET Title = @title, Amount = @amount,
             CountString = @countString, CountValue = @countValue, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, Descriptions = @descriptions WHERE [Id] = @id";
         private readonly string DeleteTransactionItemQuery = @$"DELETE FROM TransactionItems WHERE [Id] = @id";
-        private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] AS ItemName FROM Products {0}";
+        private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] AS ItemName FROM Products {0} UNION SELECT [Id], [Title] AS ItemName FROM TransactionItems WHERE 1=1 {1} {2}";
         private readonly string GetTransactionNamesQuery = "SELECT [Id], [FileName] AS ItemName FROM Transactions {0}";
         private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Transactions SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated WHERE [Id] = @id";
         private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON SELECT * FROM Transactions t WHERE t.[Id] = {0} ORDER BY t.[Id] DESC";
@@ -121,10 +121,12 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return result;
         }
 
-        public async Task<List<ItemsForComboBox>> GetProductItemsAsync(string SearchText = null)
+        public async Task<List<ItemsForComboBox>> GetProductItemsAsync(string SearchText = null, int TransactionId = 0)
         {
-            var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [ProductName] LIKE '%{ SearchText }%'";
-            var sql = string.Format(GetProductItemsQuery, where);
+            var where1 = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [ProductName] LIKE '%{ SearchText }%'";
+            var where2 = string.IsNullOrEmpty(SearchText) ? "" : $" AND [Title] LIKE '%{ SearchText }%'";
+            var where3 = TransactionId == 0 ? "" : $" AND [TransactionId] = { TransactionId }";
+            var sql = string.Format(GetProductItemsQuery, where1, where2, where3);
             var items = await DataAccess.LoadDataAsync<ItemsForComboBox, DynamicParameters>(sql, null);
             return items?.ToList();
         }

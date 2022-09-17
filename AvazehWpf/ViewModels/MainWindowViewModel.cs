@@ -159,7 +159,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task TransactionShortcut1()
         {
-            if (GeneralSettings.TransactionShortcut1.TransactionId <= 0) return;
+            if (GeneralSettings != null && GeneralSettings.TransactionShortcut1.TransactionId <= 0) return;
             var tcm = SC.GetInstance<ITransactionCollectionManager>();
             if (await tcm.GetItemById(GeneralSettings.TransactionShortcut1.TransactionId) == null)
             {
@@ -175,7 +175,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task TransactionShortcut2()
         {
-            if (GeneralSettings.TransactionShortcut2.TransactionId <= 0) return;
+            if (GeneralSettings != null && GeneralSettings.TransactionShortcut2.TransactionId <= 0) return;
             var tcm = SC.GetInstance<ITransactionCollectionManager>();
             if (await tcm.GetItemById(GeneralSettings.TransactionShortcut2.TransactionId) == null)
             {
@@ -191,7 +191,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task TransactionShortcut3()
         {
-            if (GeneralSettings.TransactionShortcut3.TransactionId <= 0) return;
+            if (GeneralSettings != null && GeneralSettings.TransactionShortcut3.TransactionId <= 0) return;
             var tcm = SC.GetInstance<ITransactionCollectionManager>();
             if (await tcm.GetItemById(GeneralSettings.TransactionShortcut3.TransactionId) == null)
             {

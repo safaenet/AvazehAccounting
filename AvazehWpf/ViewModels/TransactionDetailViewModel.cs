@@ -41,7 +41,7 @@ namespace AvazehWpf.ViewModels
                 TDM.TransactionId = (int)TransactionId;
                 ReloadTransaction(TransactionId).ConfigureAwait(true);
             }
-            GetComboboxItems().ConfigureAwait(true);
+            else GetComboboxItems().ConfigureAwait(true);
         }
         private readonly ITransactionCollectionManager TCM;
         private readonly ITransactionDetailManager TDM;
@@ -106,6 +106,7 @@ namespace AvazehWpf.ViewModels
             if (TransactionId is null || (int)TransactionId == 0) return;
             Transaction = await TCM.GetItemById((int)TransactionId);
             WindowTitle = Transaction.FileName + " - فایل";
+            await GetComboboxItems();
             await Search();
         }
 
@@ -381,7 +382,7 @@ namespace AvazehWpf.ViewModels
 
         private async Task GetComboboxItems()
         {
-            ProductItemsForComboBox = await Singleton.ReloadProductNames();
+            ProductItemsForComboBox = await Singleton.ReloadProductNamesAndTransactionItems(Transaction == null ? 0 : Transaction.Id);
             TransactionsForComboBox = await Singleton.ReloadTransactionNames(TDM == null ? 0 : TDM.TransactionId);
         }
 
