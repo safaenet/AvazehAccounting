@@ -179,9 +179,6 @@
             // 
             this.cmbUserDescriptions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbUserDescriptions.FormattingEnabled = true;
-            this.cmbUserDescriptions.Items.AddRange(new object[] {
-            "عمودی",
-            "افقی"});
             this.cmbUserDescriptions.Location = new System.Drawing.Point(12, 333);
             this.cmbUserDescriptions.Name = "cmbUserDescriptions";
             this.cmbUserDescriptions.Size = new System.Drawing.Size(196, 21);
