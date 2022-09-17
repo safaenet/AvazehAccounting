@@ -289,7 +289,7 @@ namespace AvazehWpf.ViewModels
             Directory.CreateDirectory(TempFolderName);
             var FilePath = AppDomain.CurrentDomain.BaseDirectory + TempFolderName + @"\" + UniqueFileName;
             File.WriteAllText(FilePath, stringWriter.ToString());
-            var PrintInterfacePath = AppDomain.CurrentDomain.BaseDirectory + "PrintInterface.exe";
+            var PrintInterfacePath = AppDomain.CurrentDomain.BaseDirectory + @"Print\PrintInterface.exe";
             var arguments = "transaction \"" + FilePath + "\"";
             Process p = new Process
             {

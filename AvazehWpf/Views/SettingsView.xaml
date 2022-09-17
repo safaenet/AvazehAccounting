@@ -453,7 +453,7 @@
                 </TabControl>
                 
             </TabItem>
-            <TabItem Header="امنیت" IsEnabled="True">
+            <TabItem Header="امنیت" IsEnabled="False">
                 <Grid Background="#FFE5E5E5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="35"/>
@@ -711,7 +711,7 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <TextBox Text="{Binding AppSettings.PrintSettings.RightHeaderImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Margin="0,5,5,5" VerticalContentAlignment="Center" FlowDirection="RightToLeft"/>
+                                            <TextBox Text="{Binding AppSettings.PrintSettings.RightHeaderImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Margin="0,5,5,5" VerticalContentAlignment="Center"/>
                                             <TextBlock Grid.Column="1" Text="آدرس عکس سمت راست" VerticalAlignment="Center" Margin="5"/>
                                         </Grid>
 
@@ -720,7 +720,7 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <TextBox Text="{Binding AppSettings.PrintSettings.LeftHeaderImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Margin="0,5,5,5" VerticalContentAlignment="Center" FlowDirection="RightToLeft"/>
+                                            <TextBox Text="{Binding AppSettings.PrintSettings.LeftHeaderImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Margin="0,5,5,5" VerticalContentAlignment="Center"/>
                                             <TextBlock Grid.Column="1" Text="آدرس عکس سمت چپ" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                         </Grid>
                                     </Grid>

@@ -38,7 +38,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private readonly IDataAccess DataAccess;
         private const string QueryOrderBy = "Id";
         private const OrderType QueryOrderType = OrderType.DESC;
-        private readonly string CreateInvoiceQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Invoices]) + 1;
+        private readonly string CreateInvoiceQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 1) FROM [Invoices]) + 1;
             INSERT INTO Invoices ([Id], CustomerId, DateCreated, TimeCreated, DiscountType, DiscountValue, Descriptions, LifeStatus)
             VALUES (@newId, @customerId, @dateCreated, @timeCreated, @discountType, @discountValue, @descriptions, @lifeStatus);
             SELECT @id = @newId;";

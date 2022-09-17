@@ -104,8 +104,8 @@ namespace PrintInterface
             rd.SetParameterValue(nameof(ptm.PrintSettings.DetailsFontSize), ptm.PrintSettings.DetailsFontSize);
             rd.SetParameterValue(nameof(ptm.PrintSettings.PageFooterFontSize), ptm.PrintSettings.PageFooterFontSize);
             rd.SetParameterValue(nameof(ptm.PrintSettings.DescriptionFontSize), ptm.PrintSettings.DescriptionFontSize);
-            rd.SetParameterValue(nameof(ptm.PrintSettings.LeftHeaderImage), ptm.PrintSettings.LeftHeaderImage);
-            rd.SetParameterValue(nameof(ptm.PrintSettings.RightHeaderImage), ptm.PrintSettings.RightHeaderImage);
+            rd.SetParameterValue(nameof(ptm.PrintSettings.LeftHeaderImage), Application.StartupPath + ptm.PrintSettings.LeftHeaderImage);
+            rd.SetParameterValue(nameof(ptm.PrintSettings.RightHeaderImage), Application.StartupPath + ptm.PrintSettings.RightHeaderImage);
             rd.SetParameterValue(nameof(ptm.PrintSettings.MainHeaderText), ptm.PrintSettings.MainHeaderText);
             rd.SetParameterValue(nameof(ptm.PrintSettings.HeaderDescription1), ptm.PrintSettings.HeaderDescription1);
             rd.SetParameterValue(nameof(ptm.PrintSettings.HeaderDescription2), ptm.PrintSettings.HeaderDescription2);
