@@ -200,7 +200,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="نام و نام خانوادگی" Binding="{Binding Path=FullName, Mode=OneWay}" Width="200"/>
+                    <DataGridTextColumn Header="نام و نام خانوادگی" Binding="{Binding Path=FullName, Mode=OneWay}" Width="0.9*"/>
                     <DataGridTextColumn Header="نام شرکت" Binding="{Binding Path=CompanyName, Mode=OneWay}" Width="120"/>
                     <DataGridTemplateColumn Header="شماره تلفن ها" Width="110">
                         <DataGridTemplateColumn.CellTemplate>
@@ -221,7 +221,7 @@
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="ایمیل" Binding="{Binding Path=EmailAddress, Mode=OneWay}" Width="190"/>
-                    <DataGridTextColumn Header="آدرس" Binding="{Binding Path=PostAddress, Mode=OneWay}" Width="170"/>
+                    <DataGridTextColumn Header="آدرس" Binding="{Binding Path=PostAddress, Mode=OneWay}" Width="0.8*"/>
                     <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding Path=DateJoined, Mode=OneWay}" Width="70"/>
                     <DataGridTextColumn Header="توضیحات" Binding="{Binding Path=Descriptions, Mode=OneWay}" Width="*"/>
                 </DataGrid.Columns>

@@ -11,10 +11,10 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:TransactionListViewModel}"
         Title="فایل ها" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
-        Width="1030" Height="650"
-        cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
+        Width="1030" Height="650" cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
     <Window.Resources>
         <local:AppSettings x:Key="AppSettings"/>
+        <BooleanToVisibilityConverter x:Key="b2v"/>
         <!--body content datagrid cell vertical centering-->
         <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
             <Setter Property="Template">
@@ -198,9 +198,9 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="ساعت بروزرسانی" Binding="{Binding Path=TimeUpdated, Mode=OneWay}" Width="100"/>
-                    <DataGridTextColumn Header="مبلغ مثبت" Binding="{Binding Path=TotalPositiveItemsSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="130"/>
-                    <DataGridTextColumn Header="مبلغ منفی" Binding="{Binding Path=TotalNegativeItemsSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="130"/>
-                    <DataGridTextColumn Header="تراز کل" Binding="{Binding Path=TotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="150"/>
+                    <DataGridTextColumn Header="مبلغ مثبت" Binding="{Binding Path=TotalPositiveItemsSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.5*"/>
+                    <DataGridTextColumn Header="مبلغ منفی" Binding="{Binding Path=TotalNegativeItemsSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.5*"/>
+                    <DataGridTextColumn Header="تراز کل" Binding="{Binding Path=TotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.6*"/>
                     <DataGridTextColumn Header="وضعیت مالی" Binding="{Binding Path=TransactionFinancialStatus, Converter={StaticResource EnglishToPersianTransactionFinStatusConverter}, Mode=OneWay}" Width="75">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">

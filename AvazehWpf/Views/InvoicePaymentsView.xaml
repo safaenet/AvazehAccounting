@@ -125,7 +125,7 @@
             ItemsSource="{Binding Invoice.Payments}" SelectedItem="{Binding SelectedPaymentItem, Mode=TwoWay}" Grid.Row="3" Margin="0,3,0,0"
             FlowDirection="RightToLeft" AutoGenerateColumns="False" IsTabStop="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="مبلغ" Binding="{Binding PayAmount, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120">
+                <DataGridTextColumn Header="مبلغ" Binding="{Binding PayAmount, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.5*">
                     <DataGridTextColumn.CellStyle>
                         <Style TargetType="DataGridCell">
                             <Setter Property="ToolTip" Value="{Binding Id}"/>

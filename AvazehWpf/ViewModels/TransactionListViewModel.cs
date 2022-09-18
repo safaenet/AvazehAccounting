@@ -38,6 +38,7 @@ namespace AvazehWpf.ViewModels
         private TransactionListModel _SelectedTransaction;
         private SingletonClass Singleton;
 
+
         public TransactionListModel SelectedTransaction
         {
             get { return _SelectedTransaction; }

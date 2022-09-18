@@ -220,9 +220,9 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="نام کالا" Binding="{Binding Path=ProductName, Mode=OneWay}" Width="200"/>
-                    <DataGridTextColumn Header="قیمت خرید" Binding="{Binding Path=BuyPrice, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Visibility="{Binding Source={x:Reference ShowBuyPrice}, Path=IsChecked, Converter={StaticResource b2v}}" Width="120"/>
-                    <DataGridTextColumn Header="قیمت فروش" Binding="{Binding Path=SellPrice, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Visibility="{Binding Source={x:Reference ShowSellPrice}, Path=IsChecked, Converter={StaticResource b2v}}" Width="120"/>
+                    <DataGridTextColumn Header="نام کالا" Binding="{Binding Path=ProductName, Mode=OneWay}" Width="0.8*"/>
+                    <DataGridTextColumn Header="قیمت خرید" Binding="{Binding Path=BuyPrice, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Visibility="{Binding Source={x:Reference ShowBuyPrice}, Path=IsChecked, Converter={StaticResource b2v}}" Width="0.4*"/>
+                    <DataGridTextColumn Header="قیمت فروش" Binding="{Binding Path=SellPrice, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Visibility="{Binding Source={x:Reference ShowSellPrice}, Path=IsChecked, Converter={StaticResource b2v}}" Width="0.4*"/>
                     <DataGridTextColumn Header="بارکد" Binding="{Binding Path=Barcode, Mode=OneWay}" Width="110"/>
                     <DataGridTextColumn Header="تعداد" Binding="{Binding Path=CountString, Mode=OneWay}" Width="100">
                         <DataGridTextColumn.CellStyle>

@@ -77,7 +77,7 @@ namespace AvazehWpf.ViewModels
                 KnowledgeOfTheDay = await kod.Content.ReadAsAsync<KnowledgeModel>();
                 if (KnowledgeOfTheDay.status == 200)
                 {
-                    KnowledgeOfTheDay.result.Content = KnowledgeOfTheDay.result.Content.Replace('\n', ' ');
+                    if (KnowledgeOfTheDay.result.Content != null) KnowledgeOfTheDay.result.Content = KnowledgeOfTheDay.result.Content.Replace('\n', ' ');
                     KodAvailable = KnowledgeOfTheDay.status == 200 ? true : false;
                 }
             }

@@ -253,10 +253,10 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
                 <Button x:Name="AddOrUpdateItem" Grid.Column="0" TabIndex="7" Width="40" Margin="0,0,5,3">
                     <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Width="30" Height="30"/>
@@ -293,7 +293,7 @@
                     <TextBox Text="{Binding WorkItem.TotalValue, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" IsTabStop="False" IsReadOnly="True" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="3" Width="180" Orientation="Vertical" Margin="0,0,3,0">
+                <StackPanel Grid.Column="3" Orientation="Vertical" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="CommentOutline" Margin="0,0,5,0"/>
                         <TextBlock TextAlignment="Center" Text="توضیحات" Margin="0,0,0,0"/>
@@ -350,7 +350,7 @@
                     <local:AmountToColorConverter x:Key="AmountToColorConverter"/>
                 </DataGrid.Resources>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="عنوان" Binding="{Binding Title, Mode=OneWay}" Width="230"/>
+                    <DataGridTextColumn Header="عنوان" Binding="{Binding Title, Mode=OneWay}" Width="1*"/>
                     <DataGridTextColumn Header="تعداد" Binding="{Binding CountString, Mode=OneWay}" Width="90"/>
                     <DataGridTextColumn Header="مبلغ" Binding="{Binding Amount, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120"/>
                     <DataGridTextColumn Header="جمع کل" Binding="{Binding TotalValue, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="120">
