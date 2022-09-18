@@ -9,6 +9,6 @@
     [DueDate] CHAR(10) NOT NULL, 
     [BankName] NVARCHAR(50) NOT NULL, 
     [Serial] NVARCHAR(25) NULL, 
-    [Identifier] VARCHAR(20) NULL, 
+    [Identifier] NVARCHAR(20) NULL, 
     [Descriptions] NTEXT NULL
 )
