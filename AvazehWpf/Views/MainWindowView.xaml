@@ -11,7 +11,8 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
         xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary"
-        Title="{Binding GeneralSettings.CompanyName}" FontFamily="Tahoma" Height="520" Width="350">
+        Title="{Binding GeneralSettings.CompanyName}" FontFamily="Tahoma" Height="520" Width="350"
+        cal:Message.Attach="[Event Closed] = [Window_Closed()]">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="b2v"/>
     </Window.Resources>

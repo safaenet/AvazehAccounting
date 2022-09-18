@@ -212,6 +212,11 @@ namespace AvazehWpf.ViewModels
             var viewModel = new SettingsViewModel(singleton, ASM, LoadSettings);
             await wm.ShowWindowAsync(viewModel);
         }
+
+        public void Window_Closed()
+        {
+            Application.Current.Shutdown();
+        }
     }
 
     public class KnowledgeModel
