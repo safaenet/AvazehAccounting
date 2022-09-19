@@ -156,7 +156,7 @@
                             <materialDesign:PackIcon Kind="CommentAccountOutline" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="توضیحات" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Invoice.Descriptions, Mode=TwoWay}" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]" TextWrapping="Wrap" MinHeight="50" Height="auto" HorizontalContentAlignment="Right" VerticalContentAlignment="Top"/>
+                        <TextBox Text="{Binding Invoice.Descriptions, Mode=TwoWay}" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]" TextWrapping="Wrap" AcceptsReturn="True" MinHeight="50" Height="auto" HorizontalContentAlignment="Right" VerticalContentAlignment="Top"/>
                     </DockPanel>
 
                     <StackPanel Grid.Row="2" Orientation="Vertical">

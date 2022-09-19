@@ -58,7 +58,7 @@
 
   <ItemGroup>
     <None Update="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Print\Images\LeftImage.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

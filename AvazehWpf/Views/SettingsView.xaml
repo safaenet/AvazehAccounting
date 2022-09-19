@@ -731,7 +731,7 @@
                                             <RowDefinition Height="35"/>
                                             <RowDefinition Height="35"/>
                                             <RowDefinition Height="35"/>
-                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition Height="*"/>
                                         </Grid.RowDefinitions>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
@@ -774,8 +774,8 @@
                                             </Button>
                                             <TextBlock Grid.Column="5" Text="لیست توضیحات کاربر" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                         </Grid>
-                                        <TextBox Text="{Binding SelectedUserDescriptionModel.DescriptionTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="30" Grid.Row="2" Margin="5" TextWrapping="Wrap" HorizontalContentAlignment="Right" VerticalContentAlignment="Top"/>
-                                        <TextBox Text="{Binding SelectedUserDescriptionModel.DescriptionText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Margin="5" TextWrapping="Wrap" MinHeight="50" Height="auto" HorizontalContentAlignment="Right" VerticalContentAlignment="Top"/>
+                                        <TextBox Text="{Binding SelectedUserDescriptionModel.DescriptionTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="30" Grid.Row="2" Margin="5" TextWrapping="Wrap" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                                        <TextBox Text="{Binding SelectedUserDescriptionModel.DescriptionText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" TextWrapping="Wrap" AcceptsReturn="True" MinHeight="50" Height="auto" Margin="5" HorizontalContentAlignment="Right" VerticalContentAlignment="Top"/>
                                     </Grid>
                                 </TabItem>
                                 <TabItem Header="پاورقی">

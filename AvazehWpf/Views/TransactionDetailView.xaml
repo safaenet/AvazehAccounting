@@ -144,8 +144,8 @@
                             <materialDesign:PackIcon Kind="CommentOutline" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="توضیحات" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Transaction.Descriptions, Mode=TwoWay}"
-                                 cal:Message.Attach="[Event TextChanged]=[Action FileDescriptions_TextChanged]; [Event GotFocus] = [Action SetKeyboardLayout]" TextWrapping="Wrap" HorizontalContentAlignment="Right" MinHeight="50" Height="auto" VerticalContentAlignment="Top"/>
+                        <TextBox Text="{Binding Transaction.Descriptions, Mode=TwoWay}" cal:Message.Attach="[Event TextChanged]=[Action FileDescriptions_TextChanged]; [Event GotFocus] = [Action SetKeyboardLayout]"
+                                 TextWrapping="Wrap" AcceptsReturn="True" HorizontalContentAlignment="Right" MinHeight="50" Height="auto" VerticalContentAlignment="Top"/>
                     </DockPanel>
 
                     <StackPanel Grid.Row="2" Orientation="Vertical">
@@ -248,7 +248,7 @@
                 <TextBox x:Name="SearchText" Grid.Column="5" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]" VerticalContentAlignment="Center" Margin="0,0,3,0"/>
             </Grid>
             <Separator Grid.Row="1" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="2" cal:Message.Attach="[Event PreviewKeyDown] = [InputArea_PreviewKeyDown($view, $eventArgs)]">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>

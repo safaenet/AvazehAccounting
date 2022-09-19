@@ -360,7 +360,11 @@ namespace AvazehWpf.ViewModels
                     WorkItem = new();
                 }
             }
-            else if (e.Key == Key.Enter)
+        }
+
+        public async Task InputArea_PreviewKeyDown(object window, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
             {
                 if (((window as Window).FindName("SearchText") as TextBox).IsFocused)
                 {
