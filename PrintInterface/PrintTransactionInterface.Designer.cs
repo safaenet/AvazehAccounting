@@ -88,6 +88,7 @@
             // 
             // txtTransactionDescription
             // 
+            this.txtTransactionDescription.AcceptsReturn = true;
             this.txtTransactionDescription.Location = new System.Drawing.Point(14, 66);
             this.txtTransactionDescription.Multiline = true;
             this.txtTransactionDescription.Name = "txtTransactionDescription";
@@ -95,16 +96,21 @@
             this.txtTransactionDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtTransactionDescription.Size = new System.Drawing.Size(248, 53);
             this.txtTransactionDescription.TabIndex = 3;
+            this.txtTransactionDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtTransactionDescription.WordWrap = false;
             this.txtTransactionDescription.TextChanged += new System.EventHandler(this.txtUserDescription_TextChanged);
             // 
             // txtUserDescription
             // 
+            this.txtUserDescription.AcceptsReturn = true;
             this.txtUserDescription.Location = new System.Drawing.Point(14, 175);
             this.txtUserDescription.Multiline = true;
             this.txtUserDescription.Name = "txtUserDescription";
             this.txtUserDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtUserDescription.Size = new System.Drawing.Size(248, 126);
             this.txtUserDescription.TabIndex = 3;
+            this.txtUserDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtUserDescription.WordWrap = false;
             this.txtUserDescription.TextChanged += new System.EventHandler(this.txtUserDescription_TextChanged);
             // 
             // label6
