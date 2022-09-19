@@ -354,17 +354,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         public async Task<ObservableCollection<InvoiceListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
         {
-            string sql = $@"--CREATE FUNCTION dbo.GetDiscountedInvoiceSum(@disType tinyint, @disVal float, @amountVal float)
-                            --RETURNS FLOAT
-                            --AS
-                            --BEGIN
-                            --RETURN  CASE
-                            --		WHEN @disType = 0 THEN @amountVal - (@disVal / 100 * @amountVal)
-                            --		WHEN @disType = 1 THEN @amountVal - @disVal
-                            --		END
-                            --END
-
-                            SET NOCOUNT ON
+            string sql = $@"SET NOCOUNT ON
                             SELECT i.Id, i.CustomerId, ISNULL(c.FirstName, '') + ' ' + ISNULL(c.LastName, '') CustomerFullName, i.DateCreated, i.TimeCreated, i.DateUpdated, i.TimeUpdated,
 		                            dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) AS TotalInvoiceSum,
 		                            pays.TotalPayments, i.LifeStatus
@@ -393,7 +383,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
         {
             var InvoiceClause = InvoiceId == 0 ? "" : $"AND i.[Id] <> { InvoiceId }";
             var sqlQuery = @$"SET NOCOUNT ON
-                              SELECT SUM(ISNULL(dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue), 0) - ISNULL(pays.TotalPayments, 0))
+                              SELECT SUM(dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) - ISNULL(pays.TotalPayments, 0))
                               FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id
                               
                               LEFT JOIN (SELECT SUM(ii.[CountValue] * ii.[SellPrice]) AS TotalSellValue, ii.[InvoiceId]

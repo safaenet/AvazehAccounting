@@ -15,6 +15,7 @@
         cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
     <Window.Resources>
         <local:AppSettings x:Key="AppSettings"/>
+        <local:EnglishInvoiceStatusToPersianConverter x:Key="EnglishInvoiceStatusToPersianConverter"/>
         <!--body content datagrid cell vertical centering-->
         <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
             <Setter Property="Template">
@@ -246,7 +247,7 @@
                     <DataGridTextColumn Header="ساعت بروزرسانی" Binding="{Binding Path=TimeUpdated, Mode=OneWay}" Width="100"/>
                     <DataGridTextColumn Header="جمع فاکتور" Binding="{Binding Path=TotalInvoiceSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.6*"/>
                     <DataGridTextColumn Header="جمع پرداخت ها" Binding="{Binding Path=TotalPayments, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.6*"/>
-                    <DataGridTextColumn Header="نوع فاکتور" Binding="{Binding Path=LifeStatus, Mode=OneWay}" Width="57"/>
+                    <DataGridTextColumn Header="نوع فاکتور" Binding="{Binding Path=LifeStatus, Converter={StaticResource EnglishInvoiceStatusToPersianConverter}, Mode=OneWay}" Width="57"/>
                     <DataGridTextColumn Header="تراز کل" Binding="{Binding Path=TotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.6*"/>
                     <DataGridTextColumn Header="وضعیت مالی" Binding="{Binding Path=InvoiceFinancialStatus, Converter={StaticResource EnglishToPersianInvoiceFinStatusConverter}, Mode=OneWay}" Width="80">
                         <DataGridTextColumn.ElementStyle>

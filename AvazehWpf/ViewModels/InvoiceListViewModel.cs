@@ -283,7 +283,7 @@ namespace AvazehWpf.ViewModels
                 else if (Enum.GetName(typeof(InvoiceLifeStatus), i) == InvoiceLifeStatus.Inactive.ToString())
                     choices.Add((int)InvoiceLifeStatus.Inactive, "غیرفعال");
                 else if (Enum.GetName(typeof(InvoiceLifeStatus), i) == InvoiceLifeStatus.Archive.ToString())
-                    choices.Add((int)InvoiceLifeStatus.Archive, "آرشیو شده");
+                    choices.Add((int)InvoiceLifeStatus.Archive, "بایگانی");
                 else if (Enum.GetName(typeof(InvoiceLifeStatus), i) == InvoiceLifeStatus.Deleted.ToString())
                     choices.Add((int)InvoiceLifeStatus.Deleted, "حذف شده");
             }

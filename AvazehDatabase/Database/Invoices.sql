@@ -6,8 +6,8 @@
     [TimeCreated] CHAR(8) NOT NULL, 
     [DateUpdated] CHAR(10) NULL, 
     [TimeUpdated] CHAR(8) NULL, 
-    [DiscountType] TINYINT NULL, 
-    [DiscountValue] FLOAT NULL, 
+    [DiscountType] TINYINT NULL DEFAULT 0, 
+    [DiscountValue] FLOAT NULL DEFAULT 0, 
     [Descriptions] NTEXT NULL, 
     [LifeStatus] TINYINT NOT NULL 
 )

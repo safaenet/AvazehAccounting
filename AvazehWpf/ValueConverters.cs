@@ -300,4 +300,26 @@ namespace AvazehWpf
             return DependencyProperty.UnsetValue;
         }
     }
+
+    public class EnglishInvoiceStatusToPersianConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if(value == null) return DependencyProperty.UnsetValue;
+            var status = (InvoiceLifeStatus)value;
+            return status switch
+            {
+                InvoiceLifeStatus.Active => "فعال",
+                InvoiceLifeStatus.Inactive => "غیرفعال",
+                InvoiceLifeStatus.Archive => "بایگانی",
+                InvoiceLifeStatus.Deleted => "حذف شده",
+                _ => throw new NotImplementedException(),
+            };
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

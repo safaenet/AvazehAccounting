@@ -24,7 +24,7 @@ namespace AvazehWpf
         {
             if (InputLanguageManager.Current.AvailableInputLanguages.Cast<CultureInfo>().Where(x => x.Name == "fa-IR").Any())
                 InputLanguageManager.Current.CurrentInputLanguage = new CultureInfo("fa-IR");
-            else MessageBox.Show("زبان ورودی فارسی نصب نشده است. یا آن را نصب کنید یا از قسمت تنظیمات گزینه انتخاب خودکار زبان فارسی رو غیرفعال کنید.", "زبان فارسی", MessageBoxButton.OK, MessageBoxImage.Information);
+            else MessageBox.Show("زبان ورودی فارسی نصب نشده است. یا آن را نصب کنید یا از قسمت تنظیمات گزینه انتخاب خودکار زبان فارسی رو غیرفعال نمایید.", "زبان فارسی", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }
