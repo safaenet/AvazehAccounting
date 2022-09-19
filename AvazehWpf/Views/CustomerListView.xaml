@@ -188,7 +188,7 @@
                     </StackPanel>
                     </Button>
             </Grid>
-            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditCustomer()]" Grid.Row="2" ItemsSource="{Binding Customers}" CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditCustomer()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" ItemsSource="{Binding Customers}" CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
                       SelectedItem="{Binding SelectedCustomer}" AutoGenerateColumns="False" Background="Transparent" FlowDirection="RightToLeft" CanUserAddRows="False" CanUserDeleteRows="False"
                       HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" RowHeight="25" AlternatingRowBackground="#f7f7f7">
                 <DataGrid.Columns>

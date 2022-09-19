@@ -111,5 +111,14 @@ namespace AvazehWpf.ViewModels
         {
             if (e.Key == Key.Escape) (GetView() as Window).Close();
         }
+
+        public void dg_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (Key.Delete == e.Key)
+            {
+                DeleteCustomer().ConfigureAwait(true);
+                e.Handled = true;
+            }
+        }
     }
 }

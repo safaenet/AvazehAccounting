@@ -17,16 +17,16 @@
             <ColumnDefinition Width="120"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="AddOrUpdateInvoice" IsDefault="True" Grid.Column="0" Height="25" Margin="5,0,0,0">
+        <Button x:Name="AddOrUpdateInvoice" IsDefault="True"  Grid.Column="0" Height="25" Margin="5,0,0,0">
             <StackPanel Orientation="Horizontal">
                 <materialDesign:PackIcon Kind="NotePlusOutline" Margin="3"/>
                 <TextBlock Text="{Binding ButtonTitle}" VerticalAlignment="Center" Margin="5,0,30,0"/>
             </StackPanel>
         </Button>
         <ComboBox Grid.Column="1" x:Name="NewInvoiceInput" IsTextSearchEnabled="True" IsEditable="True" VerticalContentAlignment="Center" Height="25" Margin="5,0,5,0"
-                  cal:Message.Attach="[Event PreviewTextInput]=[Action CustomerNames_PreviewTextInput()]; [Event GotFocus] = [Action SetKeyboardLayout]"
-                  ItemsSource="{Binding CustomerNamesForComboBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsDropDownOpen="{Binding IsCustomerInputDropDownOpen, Mode=TwoWay}"
-                  SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}" TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ItemName"
+                  cal:Message.Attach="[Event KeyUp]=[Action CustomerNames_KeyUp($eventArgs)]; [Event GotFocus] = [Action SetKeyboardLayout]"
+                  ItemsSource="{Binding CustomerNamesForComboBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsDropDownOpen="{Binding IsCustomerInputDropDownOpen}"
+                  SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}" TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ItemName" KeyboardNavigation.AcceptsReturn="False"
                   Text="{Binding CustomerInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <ComboBox.ItemContainerStyle>
                 <Style TargetType="ComboBoxItem">

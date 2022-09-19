@@ -93,9 +93,13 @@ namespace AvazehWpf.ViewModels
             CustomerNamesForComboBox = await Singleton.ReloadCustomerNames();
         }
 
-        public void CustomerNames_PreviewTextInput()
+        public void CustomerNames_KeyUp(KeyEventArgs e)
         {
-            IsCustomerInputDropDownOpen = true;
+             //
+            if (CustomerNamesForComboBox == null || CustomerInput == null || CustomerNamesForComboBox.ToList().Find(x => x.ItemName.StartsWith(CustomerInput)) == null) IsCustomerInputDropDownOpen = false;
+            else IsCustomerInputDropDownOpen = true;
+            if (e.Key == Key.Enter) IsCustomerInputDropDownOpen = false;
+            //e.Handled = true;
         }
 
         private async Task LoadSettings()
@@ -175,6 +179,7 @@ namespace AvazehWpf.ViewModels
         public void WindowLoaded()
         {
             ((GetView() as Window).FindName("NewInvoiceInput") as ComboBox).Focus();
+            IsCustomerInputDropDownOpen = true;
         }
 
         public void ClosingWindow()

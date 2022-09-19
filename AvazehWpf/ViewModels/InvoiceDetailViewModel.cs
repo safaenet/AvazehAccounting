@@ -330,7 +330,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteInvoiceAndClose()
         {
-            if (!GeneralSettings.CanEditInvoices) CloseWindow();
+            if (!GeneralSettings.CanEditInvoices) return;
             if (Invoice == null) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete Invoice for {Invoice.Customer.FullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
