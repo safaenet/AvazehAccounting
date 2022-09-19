@@ -98,6 +98,7 @@
             // 
             // txtCustomerPostAddress
             // 
+            this.txtCustomerPostAddress.AcceptsReturn = true;
             this.txtCustomerPostAddress.Location = new System.Drawing.Point(13, 89);
             this.txtCustomerPostAddress.Multiline = true;
             this.txtCustomerPostAddress.Name = "txtCustomerPostAddress";
@@ -105,10 +106,13 @@
             this.txtCustomerPostAddress.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtCustomerPostAddress.Size = new System.Drawing.Size(248, 53);
             this.txtCustomerPostAddress.TabIndex = 3;
+            this.txtCustomerPostAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtCustomerPostAddress.WordWrap = false;
             this.txtCustomerPostAddress.TextChanged += new System.EventHandler(this.txtUserDescription_TextChanged);
             // 
             // txtCustomerDescription
             // 
+            this.txtCustomerDescription.AcceptsReturn = true;
             this.txtCustomerDescription.Location = new System.Drawing.Point(13, 170);
             this.txtCustomerDescription.Multiline = true;
             this.txtCustomerDescription.Name = "txtCustomerDescription";
@@ -116,10 +120,13 @@
             this.txtCustomerDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtCustomerDescription.Size = new System.Drawing.Size(248, 53);
             this.txtCustomerDescription.TabIndex = 3;
+            this.txtCustomerDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtCustomerDescription.WordWrap = false;
             this.txtCustomerDescription.TextChanged += new System.EventHandler(this.txtUserDescription_TextChanged);
             // 
             // txtInvoiceDescription
             // 
+            this.txtInvoiceDescription.AcceptsReturn = true;
             this.txtInvoiceDescription.Location = new System.Drawing.Point(12, 251);
             this.txtInvoiceDescription.Multiline = true;
             this.txtInvoiceDescription.Name = "txtInvoiceDescription";
@@ -127,16 +134,21 @@
             this.txtInvoiceDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtInvoiceDescription.Size = new System.Drawing.Size(248, 53);
             this.txtInvoiceDescription.TabIndex = 3;
+            this.txtInvoiceDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtInvoiceDescription.WordWrap = false;
             this.txtInvoiceDescription.TextChanged += new System.EventHandler(this.txtUserDescription_TextChanged);
             // 
             // txtUserDescription
             // 
+            this.txtUserDescription.AcceptsReturn = true;
             this.txtUserDescription.Location = new System.Drawing.Point(12, 360);
             this.txtUserDescription.Multiline = true;
             this.txtUserDescription.Name = "txtUserDescription";
             this.txtUserDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtUserDescription.Size = new System.Drawing.Size(248, 126);
             this.txtUserDescription.TabIndex = 3;
+            this.txtUserDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtUserDescription.WordWrap = false;
             this.txtUserDescription.TextChanged += new System.EventHandler(this.txtUserDescription_TextChanged);
             // 
             // label6

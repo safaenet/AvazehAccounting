@@ -27,8 +27,8 @@ namespace DataLibraryCore.DataAccess
         private readonly string SettingsFileName = AppDomain.CurrentDomain.BaseDirectory + "appsettings.xml";
         private readonly IDataAccess DataAccess;
         private readonly string GetUserDescriptionsQuery = "SELECT [Id], [DescriptionTitle], [DescriptionText] From UserDescriptions";
-        private readonly string DeleteUserDescriptionsQuery = "DELETE FROM UserDescriptions";
-        private readonly string InsertUserDescriptionsQuery = "INSERT INTO UserDescriptions (DescriptionTitle, DescriptionText) VALUES (@descriptionTitle, @descriptionText)";
+        private readonly string InsertUserDescriptionsQuery = @"DELETE FROM UserDescriptions; DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [PhoneNumbers]) + 1;
+            INSERT INTO UserDescriptions ([Id], DescriptionTitle, DescriptionText) VALUES (@newId, @descriptionTitle, @descriptionText)";
 
         private async Task CheckSettingsFile()
         {
@@ -104,7 +104,6 @@ namespace DataLibraryCore.DataAccess
 
         private async Task<int> InsertUserDescriptionsToDatabaseAsync(List<UserDescriptionModel> descriptions)
         {
-            await DataAccess.SaveDataAsync<DynamicParameters>(DeleteUserDescriptionsQuery, null);
             if (descriptions != null && descriptions.Count != 0) return await DataAccess.SaveDataAsync(InsertUserDescriptionsQuery, descriptions);
             return 0;
         }
