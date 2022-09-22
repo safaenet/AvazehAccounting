@@ -119,8 +119,8 @@ namespace PrintInterface
             rd.SetParameterValue("DetailsFontSize", pim.PrintSettings.DetailsFontSize);
             rd.SetParameterValue("PageFooterFontSize", pim.PrintSettings.PageFooterFontSize);
             rd.SetParameterValue("DescriptionFontSize", pim.PrintSettings.DescriptionFontSize);
-            rd.SetParameterValue("LeftHeaderImage", pim.PrintSettings.LeftHeaderImage);
-            rd.SetParameterValue("RightHeaderImage", pim.PrintSettings.RightHeaderImage);
+            rd.SetParameterValue("LeftHeaderImage", Application.StartupPath + pim.PrintSettings.LeftHeaderImage);
+            rd.SetParameterValue("RightHeaderImage", Application.StartupPath + pim.PrintSettings.RightHeaderImage);
             rd.SetParameterValue("MainHeaderText", pim.PrintSettings.MainHeaderText);
             rd.SetParameterValue("HeaderDescription1", pim.PrintSettings.HeaderDescription1);
             rd.SetParameterValue("HeaderDescription2", pim.PrintSettings.HeaderDescription2);
