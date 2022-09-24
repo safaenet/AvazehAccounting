@@ -7,6 +7,7 @@ using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,10 +18,12 @@ namespace AvazehWpf.ViewModels
 {
     public class ChequeDetailViewModel : ViewAware
     {
-        public ChequeDetailViewModel(ICollectionManager<ChequeModel> manager, ChequeModel cheque, Func<Task> callBack)
+        public ChequeDetailViewModel(ICollectionManager<ChequeModel> manager, ChequeModel cheque, SingletonClass singleton, Func<Task> callBack)
         {
             Manager = manager;
             CallBackFunc = callBack;
+            Singleton = singleton;
+            LoadBankNamesForComboboxAsync().ConfigureAwait(true);
             if (cheque is not null)
             {
                 Cheque = cheque;
@@ -35,11 +38,25 @@ namespace AvazehWpf.ViewModels
             }
         }
 
+        private async Task LoadBankNamesForComboboxAsync()
+        {
+            BankNamesForComboBox = await Singleton.ReloadBankNames();
+        }
+
         private readonly ICollectionManager<ChequeModel> Manager;
         private ChequeModel _Cheque;
         private Func<Task> CallBackFunc;
         private string windowTitle;
+        private SingletonClass Singleton;
         PersianCalendar pCal = new();
+        private ObservableCollection<string> bankNamesForComboBox;
+
+        public ObservableCollection<string> BankNamesForComboBox
+        {
+            get { return bankNamesForComboBox; }
+            set { bankNamesForComboBox = value; NotifyOfPropertyChange(() => BankNamesForComboBox); }
+        }
+
 
         public string WindowTitle
         {
@@ -91,7 +108,7 @@ namespace AvazehWpf.ViewModels
             if (await SaveToDatabase() == false) return;
             var newCheque = new ChequeModel();
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new ChequeDetailViewModel(Manager, newCheque, CallBackFunc));
+            await wm.ShowWindowAsync(new ChequeDetailViewModel(Manager, newCheque, Singleton, CallBackFunc));
             CloseWindow();
         }
 

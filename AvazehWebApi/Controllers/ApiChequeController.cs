@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace AvazehWebAPI.Controllers
@@ -37,6 +39,13 @@ namespace AvazehWebAPI.Controllers
             var item = await Manager.Processor.LoadSingleItemAsync(Id);
             if (item is null) return NotFound("Couldn't find specific Item");
             return item;
+        }
+
+        [HttpGet("Banknames")]
+        public async Task<ActionResult<List<string>>> GetBanknamesAsync()
+        {
+            var items = await Manager.Processor.GetBanknames();
+            return items is null ? NotFound("Couldn't find any match") : items;
         }
 
         [HttpPost]

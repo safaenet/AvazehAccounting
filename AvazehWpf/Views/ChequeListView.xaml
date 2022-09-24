@@ -231,7 +231,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="صاحب چک" Binding="{Binding Drawer, Mode=OneWay}" Width="*"/>
+                    <DataGridTextColumn Header="صادر کننده" Binding="{Binding Drawer, Mode=OneWay}" Width="*"/>
                     <DataGridTextColumn Header="در وجه" Binding="{Binding Orderer, Mode=OneWay}" Width="*"/>
                     <DataGridTextColumn Header="مبلغ" Binding="{Binding PayAmount, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.5*"/>
                     <DataGridTextColumn Header="بابت" Binding="{Binding About, Mode=OneWay}" Width="0.7*"/>

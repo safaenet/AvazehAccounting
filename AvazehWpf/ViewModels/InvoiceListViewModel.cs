@@ -97,7 +97,6 @@ namespace AvazehWpf.ViewModels
             InvoiceSettings = Settings.InvoiceSettings;
             PrintSettings = Settings.PrintSettings;
             GeneralSettings = Settings.GeneralSettings;
-            PrintSettings.UserDescriptions = await ICM.GetUserDescriptions();
 
             ICM.PageSize = InvoiceSettings.PageSize;
             ICM.QueryOrderType = InvoiceSettings.QueryOrderType;
@@ -213,6 +212,13 @@ namespace AvazehWpf.ViewModels
 
         public async Task PrintInvoice(int t)
         {
+            //var idm = SC.GetInstance<IInvoiceDetailManager>();
+            //InvoiceDetailViewModel idvm = new(ICM, idm, ASM, Singleton, SelectedInvoice.Id, RefreshPage, SC);
+            //WindowManager wm = new();
+            //wm.ShowWindowAsync(idvm);
+
+            //idvm.PrintInvoice(t);
+            //idvm.CloseWindow();
             if (!GeneralSettings.CanViewInvoices) return;
             if (Invoices == null || Invoices.Count == 0 || SelectedInvoice == null || SelectedInvoice.Id == 0) return;
             var Invoice = await ICM.GetItemById(SelectedInvoice.Id);

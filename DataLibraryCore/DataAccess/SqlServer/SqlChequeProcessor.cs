@@ -11,6 +11,7 @@ using SharedLibrary.Validators;
 using System.Threading.Tasks;
 using System.Globalization;
 using DataLibraryCore.Models;
+using System.Collections.Generic;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
@@ -52,6 +53,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             SELECT * FROM @cheques ORDER BY {1} {2};
             SELECT * FROM ChequeEvents WHERE ChequeId IN (SELECT c.Id FROM @cheques c);";
         private readonly string DeleteChequeQuery = @"DELETE FROM Cheques WHERE [Id] = @id";
+        private readonly string LoadBanknamesQuery = "SELECT DISTINCT [BankName] FROM [Cheques]";
 
         public string GenerateWhereClause(string val, ChequeListQueryStatus? listQueryStatus, SqlSearchMode mode = SqlSearchMode.OR)
         {
@@ -150,6 +152,12 @@ namespace DataLibraryCore.DataAccess.SqlServer
             var dp = new DynamicParameters();
             dp.Add("@id", Id);
             return await DataAccess.SaveDataAsync(DeleteChequeQuery, dp);
+        }
+
+        public async Task<List<string>> GetBanknames()
+        {
+            var result = await DataAccess.LoadDataAsync<string, DynamicParameters>(LoadBanknamesQuery, null);
+            return result.ToList();
         }
 
         public async Task<int> GetTotalQueryCountAsync(string WhereClause)

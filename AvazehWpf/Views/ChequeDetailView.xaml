@@ -50,7 +50,7 @@
                             <materialDesign:PackIcon Kind="AccountEditOutline" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="در وجه" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Cheque.Drawer}" TabIndex="1" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                        <TextBox Text="{Binding Cheque.Orderer}" TabIndex="1" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Vertical" VerticalAlignment="Top">
@@ -66,7 +66,7 @@
                             <materialDesign:PackIcon Kind="Numeric" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="شناسه صیاد" Margin="5,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Cheque.Identifier}" TabIndex="7" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                        <TextBox Text="{Binding Cheque.Identifier}" TabIndex="7" MaxLength="20" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                     </StackPanel>
 
                     <DockPanel Grid.Column="0" Grid.Row="3" LastChildFill="True" DockPanel.Dock="Bottom">
@@ -74,7 +74,7 @@
                             <materialDesign:PackIcon Kind="InformationOutline" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Center" Text="بابت" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Cheque.About}" TabIndex="9" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" MinHeight="30" Height="auto" VerticalContentAlignment="Top" MaxWidth="200"/>
+                        <TextBox Text="{Binding Cheque.About}" TabIndex="9" MaxLength="100" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" MinHeight="30" Height="auto" VerticalContentAlignment="Top" MaxWidth="200"/>
                     </DockPanel>
                 </Grid>
             </Grid>
@@ -90,9 +90,9 @@
                 <StackPanel Grid.Row="0" Orientation="Vertical">
                     <StackPanel Width="95" Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="AccountDetailsOutline" Margin="0,2,5,2"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام صادر کننده" Margin="0,2,0,2"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="صادر کننده" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Cheque.Orderer}" TabIndex="0" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding Cheque.Drawer}" TabIndex="0" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Orientation="Vertical">
@@ -108,7 +108,7 @@
                         <materialDesign:PackIcon Kind="Numeric" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره سریال" Margin="5,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Cheque.Serial}" TabIndex="6" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding Cheque.Serial}" TabIndex="6" MaxLength="25" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <DockPanel LastChildFill="True"  Grid.Row="3" DockPanel.Dock="Bottom">
@@ -141,7 +141,7 @@
                         <materialDesign:PackIcon Kind="AccountDetailsOutline" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="مبلغ" Margin="0,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Cheque.PayAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" TabIndex="2" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding Cheque.PayAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" TabIndex="2" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Orientation="Vertical">
@@ -149,7 +149,7 @@
                         <materialDesign:PackIcon Kind="BankOutline" Margin="0,2,5,2"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام بانک" Margin="5,2,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Cheque.BankName}" TabIndex="5" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                    <ComboBox ItemsSource="{Binding BankNamesForComboBox}" Text="{Binding Cheque.BankName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TabIndex="5" IsEditable="True" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <ScrollViewer Grid.Row="3">
@@ -183,7 +183,7 @@
                                             <ComboBox ItemsSource="{Binding Source={StaticResource ChequeEventItems}}" SelectedValuePath="Key" DisplayMemberPath="Value" TabIndex="12" BorderThickness="1" BorderBrush="Black" Margin="0,5,0,0"
                                                       SelectedValue="{Binding EventType, Converter={StaticResource intToValueChequeEventTypeConverter}}" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Width="170"/>
                                             <TextBlock Text="توضیحات رویداد" TextAlignment="Center" Margin="0,3,5,0"/>
-                                            <TextBox Text="{Binding EventText}" TabIndex="13" Margin="0,3,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                                            <TextBox Text="{Binding EventText}" TabIndex="13" MaxLength="50" Margin="0,3,0,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
                                             <TextBlock Text="تاریخ رویداد" TextAlignment="Center" Margin="0,3,5,0"/>
                                             <avazehusercontrollibrarywpf:PersianDatePicker MonthDisplayType="Numbers" PersianDate="{Binding EventDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TabIndex="15" DayWidth="70" Height="20" Margin="0,3,0,3"/>
                                         </StackPanel>

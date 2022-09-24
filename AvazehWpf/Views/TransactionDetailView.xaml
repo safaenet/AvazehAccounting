@@ -298,7 +298,7 @@
                         <materialDesign:PackIcon Kind="CommentOutline" Margin="0,0,5,0"/>
                         <TextBlock TextAlignment="Center" Text="توضیحات" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <TextBox Text="{Binding WorkItem.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="50" TabIndex="5" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]" VerticalContentAlignment="Center" Height="25"/>
+                    <TextBox Text="{Binding WorkItem.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="50" TabIndex="5" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="25"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="4" Width="120" Orientation="Vertical" Margin="0,0,3,0">

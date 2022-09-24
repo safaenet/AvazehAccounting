@@ -1,4 +1,5 @@
-﻿using AvazehApiClient.DataAccess.Interfaces;
+﻿using AvazehApiClient.DataAccess;
+using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
@@ -14,10 +15,11 @@ namespace AvazehWpf.ViewModels
 {
     public class ChequeListViewModel : Screen
     {
-        public ChequeListViewModel(IChequeCollectionManagerAsync manager, IAppSettingsManager settingsManager)
+        public ChequeListViewModel(IChequeCollectionManagerAsync manager, IAppSettingsManager settingsManager, SingletonClass singelton)
         {
             CCM = manager;
             ASM = settingsManager;
+            Singleton = singelton;
             _SelectedCheque = new();
             LoadSettings().ConfigureAwait(true);
         }
@@ -27,6 +29,7 @@ namespace AvazehWpf.ViewModels
         private ChequeModel _SelectedCheque;
         private ChequeSettingsModel chequeSettings;
         private GeneralSettingsModel generalSettings;
+        private SingletonClass Singleton;
 
         public ChequeModel SelectedCheque
         {
@@ -91,7 +94,7 @@ namespace AvazehWpf.ViewModels
         {
             if (GeneralSettings!= null && !GeneralSettings.CanAddNewCheque) return;
             WindowManager wm = new();
-            wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, null, RefreshPage));
+            wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, null, Singleton, RefreshPage));
         }
 
         public async Task PreviousPage()
@@ -136,7 +139,7 @@ namespace AvazehWpf.ViewModels
             if (!GeneralSettings.CanEditCheques) return;
             if (Cheques == null || Cheques.Count == 0 || SelectedCheque == null || SelectedCheque.Id == 0) return;
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, SelectedCheque, RefreshPage));
+            await wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, SelectedCheque, Singleton, RefreshPage));
         }
 
         public async Task DeleteCheque()
