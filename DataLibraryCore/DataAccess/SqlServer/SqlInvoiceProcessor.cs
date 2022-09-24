@@ -148,15 +148,15 @@ namespace DataLibraryCore.DataAccess.SqlServer
                       {mode} i.[DateUpdated] LIKE { criteria }
                       {mode} i.[TimeUpdated] LIKE { criteria }
                       {mode} CAST(i.[DiscountValue] AS VARCHAR) LIKE { criteria }
-                      {mode} i.[Descriptions] LIKE { criteria }
+                      {mode} i.[Descriptions] LIKE N{ criteria }
 
                       {mode} CAST(c.[Id] AS VARCHAR) LIKE { criteria }
-                      {mode} ISNULL(c.FirstName, '') + ' ' + ISNULL(c.LastName, '') LIKE { criteria }
-                      {mode} c.[CompanyName] LIKE { criteria }
-                      {mode} c.[EmailAddress] LIKE { criteria }
-                      {mode} c.[PostAddress] LIKE { criteria }
+                      {mode} ISNULL(c.FirstName, '') + ' ' + ISNULL(c.LastName, '') LIKE N{ criteria }
+                      {mode} c.[CompanyName] LIKE N{ criteria }
+                      {mode} c.[EmailAddress] LIKE N{ criteria }
+                      {mode} c.[PostAddress] LIKE N{ criteria }
                       {mode} c.[DateJoined] LIKE { criteria }
-                      {mode} c.[Descriptions] LIKE { criteria }
+                      {mode} c.[Descriptions] LIKE N{ criteria }
 
                       {mode} CAST(sp.[TotalSellValue] AS varchar) LIKE { criteria }
                       {mode} CAST(pays.[TotalPayments] AS varchar) LIKE { criteria }

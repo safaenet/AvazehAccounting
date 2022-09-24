@@ -36,16 +36,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
         {
             var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
             return @$"(CAST([Id] AS varchar) LIKE {criteria}
-                      {mode} [ProductName] LIKE {criteria}
+                      {mode} [ProductName] LIKE N{criteria}
                       {mode} CAST([BuyPrice] AS varchar) LIKE {criteria}
                       {mode} CAST([SellPrice] AS varchar) LIKE {criteria}
                       {mode} [Barcode] LIKE {criteria}
-                      {mode} [CountString] LIKE {criteria}
+                      {mode} [CountString] LIKE N{criteria}
                       {mode} [DateCreated] LIKE {criteria}
                       {mode} [TimeCreated] LIKE {criteria}
                       {mode} [DateUpdated] LIKE {criteria}
                       {mode} [TimeUpdated] LIKE {criteria}
-                      {mode} [Descriptions] LIKE {criteria} )";
+                      {mode} [Descriptions] LIKE N{criteria} )";
         }
 
         public ValidationResult ValidateItem(TModel product)

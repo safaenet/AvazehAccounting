@@ -70,12 +70,12 @@ namespace DataLibraryCore.DataAccess.SqlServer
             }
             var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
             return @$"(CAST(t.[Id] AS VARCHAR) LIKE {criteria}
-                      {mode} t.[FileName] LIKE {criteria}
+                      {mode} t.[FileName] LIKE N{criteria}
                       {mode} t.[DateCreated] LIKE {criteria}
                       {mode} t.[TimeCreated] LIKE {criteria}
                       {mode} t.[DateUpdated] LIKE {criteria}
                       {mode} t.[TimeUpdated] LIKE {criteria}
-                      {mode} t.[Descriptions] LIKE {criteria}
+                      {mode} t.[Descriptions] LIKE N{criteria}
                       {mode} CAST(pos.TotalVal AS VARCHAR) LIKE {criteria}
 					  {mode} CAST(neg.TotalVal AS VARCHAR) LIKE {criteria} )
                       { (FinStatus == null ? "" : $" AND ISNULL(pos.TotalVal, 0) + ISNULL(neg.TotalVal, 0) { finStatusOperand } 0 ")}

@@ -74,16 +74,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 _ => ""
             };
             return @$"(CAST(c.[Id] AS varchar) LIKE { criteria }
-                      {mode} c.[Drawer] LIKE { criteria }
-                      {mode} c.[Orderer] LIKE { criteria }
+                      {mode} c.[Drawer] LIKE N{ criteria }
+                      {mode} c.[Orderer] LIKE N{ criteria }
                       {mode} CAST(c.[PayAmount] AS varchar) LIKE { criteria }
-                      {mode} c.[About] LIKE { criteria }
+                      {mode} c.[About] LIKE N{ criteria }
                       {mode} c.[IssueDate] LIKE { criteria }
                       {mode} c.[DueDate] LIKE { criteria }
-                      {mode} c.[BankName] LIKE { criteria }
+                      {mode} c.[BankName] LIKE N{ criteria }
                       {mode} c.[Serial] LIKE { criteria }
                       {mode} c.[Identifier] LIKE { criteria }
-                      {mode} c.[Descriptions] LIKE { criteria } ) { queryStatusCriteria }";
+                      {mode} c.[Descriptions] LIKE N{ criteria } ) { queryStatusCriteria }";
         }
 
         public ValidationResult ValidateItem(ChequeModel cheque)

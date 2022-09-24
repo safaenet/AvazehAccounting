@@ -54,13 +54,13 @@ namespace DataLibraryCore.DataAccess.SqlServer
         {
             var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
             return @$"(CAST([Id] AS varchar) LIKE { criteria } 
-                             {mode} [FirstName] LIKE { criteria } 
-                             {mode} [LastName] LIKE { criteria } 
-                             {mode} [CompanyName] LIKE { criteria } 
-                             {mode} [EmailAddress] LIKE { criteria } 
-                             {mode} [PostAddress] LIKE { criteria } 
+                             {mode} [FirstName] LIKE N{ criteria } 
+                             {mode} [LastName] LIKE N{ criteria } 
+                             {mode} [CompanyName] LIKE N{ criteria } 
+                             {mode} [EmailAddress] LIKE N{ criteria } 
+                             {mode} [PostAddress] LIKE N{ criteria } 
                              {mode} [DateJoined] LIKE { criteria }  
-                             {mode} [Descriptions] LIKE { criteria } )";
+                             {mode} [Descriptions] LIKE N{ criteria } )";
         }
 
         public ValidationResult ValidateItem(TModel customer)
