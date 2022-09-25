@@ -194,20 +194,22 @@ namespace AvazehWpf
         }
     }
 
-    public class EnglishToPersianChequeEventTypeConverter : IValueConverter
+    public class EnglishToPersianChequeEventTypeConverter : IMultiValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null) return DependencyProperty.UnsetValue;
-            else if ((string)value == ChequeEventTypes.None.ToString()) return "عادی";
-            else if ((string)value == ChequeEventTypes.Holding.ToString()) return "عادی";
-            else if ((string)value == ChequeEventTypes.Sold.ToString()) return "منتقل شده";
-            else if ((string)value == ChequeEventTypes.NonSufficientFund.ToString()) return "برگشت خورده";
-            else if ((string)value == ChequeEventTypes.Cashed.ToString()) return "وصول شده";
+            if (values == null || values[0] == DependencyProperty.UnsetValue || values[0] == null) return DependencyProperty.UnsetValue;
+            var eventText = (values[1] == DependencyProperty.UnsetValue || string.IsNullOrEmpty((string)values[1])) ? string.Empty : (string)values[1];
+            eventText = string.IsNullOrEmpty(eventText) ? string.Empty : $" - {eventText}";
+            if ((string)values[0] == ChequeEventTypes.None.ToString()) return $"عادی{eventText}";
+            else if ((string)values[0] == ChequeEventTypes.Holding.ToString()) return $"عادی{eventText}";
+            else if ((string)values[0] == ChequeEventTypes.Sold.ToString()) return $"منتقل شده{eventText}";
+            else if ((string)values[0] == ChequeEventTypes.NonSufficientFund.ToString()) return $"برگشت خورده{eventText}";
+            else if ((string)values[0] == ChequeEventTypes.Cashed.ToString()) return $"وصول شده{eventText}";
             else return DependencyProperty.UnsetValue;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
     }
 
     public class ChequeEventToColorConverter : IMultiValueConverter

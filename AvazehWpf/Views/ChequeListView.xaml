@@ -60,7 +60,7 @@
                                 <materialDesign:PackIcon Kind="Draw" Margin="0,0,5,0"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="صاحب چک" Margin="0,0,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedCheque.Drawer, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding SelectedCheque.Drawer, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,3">
@@ -68,7 +68,7 @@
                                 <materialDesign:PackIcon Kind="PersonAlertOutline" Margin="0,0,5,0"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="در وجه" Margin="0,0,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedCheque.Orderer, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="50" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding SelectedCheque.Orderer, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,3">
@@ -84,7 +84,7 @@
                                 <materialDesign:PackIcon Kind="ServiceToolbox" Margin="0,0,5,0"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="بابت" Margin="0,0,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedCheque.About, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="100" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding SelectedCheque.About, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
@@ -93,14 +93,14 @@
                                     <materialDesign:PackIcon Kind="DateRange" Margin="0,0,5,0"/>
                                     <TextBlock MaxWidth="200" Height="auto" TextAlignment="Center" Text="تاریخ سررسید" Margin="0,0,0,2"/>
                                 </StackPanel>
-                                <TextBox Text="{Binding SelectedCheque.DueDate, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="10" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
+                                <TextBox Text="{Binding SelectedCheque.DueDate, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
                             </StackPanel>
                             <StackPanel Orientation="Vertical" Margin="0,0,0,3">
                                 <StackPanel Width="98" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 0 0 0">
                                     <materialDesign:PackIcon Kind="DateRange" Margin="0,0,5,0"/>
                                     <TextBlock MaxWidth="200" Height="auto" TextAlignment="Center" Text=" تاریخ صدور" Margin="0,0,0,2"/>
                                 </StackPanel>
-                                <TextBox Text="{Binding SelectedCheque.IssueDate, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="10" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
+                                <TextBox Text="{Binding SelectedCheque.IssueDate, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
                             </StackPanel>
                         </StackPanel>
 
@@ -110,7 +110,16 @@
                                 <materialDesign:PackIcon Kind="Number0BoxOutline" Margin="0,0,5,0"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="شناسه صیاد" Margin="0,0,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedCheque.Identifier, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="20" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding SelectedCheque.Identifier, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
+                        </StackPanel>
+
+
+                        <StackPanel Orientation="Vertical" Margin="0,0,0,3">
+                            <StackPanel Width="60" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <materialDesign:PackIcon Kind="BankOutline" Margin="0,0,5,0"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام بانک" Margin="0,0,0,2"/>
+                            </StackPanel>
+                            <TextBox Text="{Binding SelectedCheque.BankName, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,3">
@@ -118,7 +127,14 @@
                                 <materialDesign:PackIcon Kind="EventCheckOutline" Margin="0,0,5,0"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="آخرین وضعیت" Margin="0,0,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedCheque.LastEventString, Converter={StaticResource EnglishToPersianChequeEventTypeConverter}, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
+                            <TextBox IsReadOnly="True" HorizontalContentAlignment="Center" Height="25" MaxWidth="200" VerticalContentAlignment="Center">
+                                <TextBox.Text>
+                                    <MultiBinding Converter="{StaticResource EnglishToPersianChequeEventTypeConverter}">
+                                        <Binding Path="SelectedCheque.LastEventString" Mode="OneWay"/>
+                                        <Binding Path="SelectedCheque.LastEvent.EventText" Mode="OneWay"/>
+                                    </MultiBinding>
+                                </TextBox.Text>
+                            </TextBox>
                         </StackPanel>
                     </StackPanel>
 
@@ -198,8 +214,8 @@
                 </Button>
             </Grid>
             <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditCheque()]" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Grid.Row="2" ItemsSource="{Binding Cheques}"
-                      HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding ChequeSettings.DataGridFontSize}" SelectedItem="{Binding SelectedCheque}"
-                      AutoGenerateColumns="False" FlowDirection="RightToLeft" Background="Transparent" RowHeight="25" CanUserAddRows="False" CanUserDeleteRows="False">
+                      HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding ChequeSettings.DataGridFontSize}" SelectedItem="{Binding SelectedCheque}" Margin="3,0,0,0"
+                      AutoGenerateColumns="False" FlowDirection="RightToLeft" Background="Transparent" RowHeight="25" CanUserAddRows="False" CanUserDeleteRows="False" viewmodels:DataGridBehavior.DisplayRowNumber="True">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditCheque]" IsEnabled="{Binding GeneralSettings.CanEditCheques}">
@@ -254,9 +270,17 @@
                         </DataGridTextColumn.ElementStyle>-->
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="شناسه صیاد" Binding="{Binding Identifier, Mode=OneWay}" Width="120"/>
-                    <DataGridTextColumn Header="آخرین وضعیت" Binding="{Binding LastEventString, Converter={StaticResource EnglishToPersianChequeEventTypeConverter}, Mode=OneWay}" Width="120">
+                    <DataGridTextColumn Header="آخرین وضعیت" Width="120">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Text">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource EnglishToPersianChequeEventTypeConverter}">
+                                            <Binding Path="LastEventString"/>
+                                            <Binding Path="LastEvent.EventText"/>
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
                                 <Setter Property="Background">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource ChequeEventToColorConverter}">
