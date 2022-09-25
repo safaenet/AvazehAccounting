@@ -5,18 +5,21 @@ using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
+using SharedLibrary.SecurityAndSettings;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
+using System.Text;
 
 namespace AvazehWebAPI.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class LoginController : Controller
+    public class AuthController : Controller
     {
-        //[HttpPost]
-        //public async Task<string> Login()
-        //{
-
-        //}
+        [HttpPost("Register")]
+        public async Task<ActionResult<UserInfo>> Register(User_DTO_CreateUpdate user)
+        {
+            
+        }
     }
 }

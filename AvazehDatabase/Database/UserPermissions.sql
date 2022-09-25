@@ -32,8 +32,9 @@
     [CanPrintInvoice] BIT NOT NULL DEFAULT 1, 
     [CanPrintTransaction] BIT NOT NULL DEFAULT 1, 
     [CanChangeItsSettings] BIT NOT NULL DEFAULT 1, 
-    [CanChangePassword] BIT NOT NULL DEFAULT 1, 
+    [CanChangeItsPassword] BIT NOT NULL DEFAULT 1, 
     [CanAddUser] BIT NOT NULL DEFAULT 0, 
-    [CanEditUsers] BIT NOT NULL DEFAULT 0, 
+    [CanEditOtherUsersPermission] BIT NOT NULL DEFAULT 0, 
+    [CanEditOtherUsersSettings] BIT NOT NULL DEFAULT 0, 
     CONSTRAINT [PK_UserPermissions] PRIMARY KEY ([Username]), 
 )

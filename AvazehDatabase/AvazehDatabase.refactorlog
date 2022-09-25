@@ -238,4 +238,32 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="CanViewNetProfits" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="a0232a82-5f7d-4222-acea-397a08dd1ba7" ChangeDateTime="09/25/2022 17:56:15">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanChangePassword]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanChangeItsPassword" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="502d06bc-c8d7-44ac-9868-81b12e51057a" ChangeDateTime="09/25/2022 18:26:31">
+    <Property Name="ElementName" Value="[dbo].[UserSettings].[ColorChequeSoldItemColor]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserSettings]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ColorSoldItemColor" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a6d87f64-106a-4651-97d6-ea90561d38f0" ChangeDateTime="09/25/2022 18:26:36">
+    <Property Name="ElementName" Value="[dbo].[UserSettings].[ColorChequeNonSufficientFundItem]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserSettings]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ColorNonSufficientFundItem" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="76dcdcc3-7b34-4685-8b1e-9fe0b7e9bb8e" ChangeDateTime="09/25/2022 18:26:39">
+    <Property Name="ElementName" Value="[dbo].[UserSettings].[ColorChequeCashedItem]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserSettings]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ColorCashedItem" />
+  </Operation>
 </Operations>

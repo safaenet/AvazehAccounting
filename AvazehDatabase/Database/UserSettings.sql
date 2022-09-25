@@ -2,9 +2,9 @@
 (
 	[Username] NVARCHAR(50) NOT NULL, 
     [ColorNewItem] NVARCHAR(10) NOT NULL DEFAULT '#FFF5F533', 
-    [ColorChequeSoldItemColor] NVARCHAR(10) NOT NULL DEFAULT '#ff66e6ff', 
-    [ColorChequeNonSufficientFundItem] NVARCHAR(10) NOT NULL DEFAULT '#ffff9c7a', 
-    [ColorChequeCashedItem] NVARCHAR(10) NOT NULL DEFAULT '#ff94ffb6', 
+    [ColorSoldItemColor] NVARCHAR(10) NOT NULL DEFAULT '#ff66e6ff', 
+    [ColorNonSufficientFundItem] NVARCHAR(10) NOT NULL DEFAULT '#ffff9c7a', 
+    [ColorCashedItem] NVARCHAR(10) NOT NULL DEFAULT '#ff94ffb6', 
     [ColorChequeNotification] NVARCHAR(10) NOT NULL DEFAULT '#fff4ff8c', 
     [ColorUpdatedItem] NVARCHAR(5) NOT NULL DEFAULT '#FFDEDEDE', 
     [ColorBalancedItem] NVARCHAR(5) NOT NULL DEFAULT '#ff94ffb6', 

@@ -6,15 +6,12 @@ using System.Threading.Tasks;
 
 namespace SharedLibrary.SecurityAndSettings
 {
-    public class UserInfo
+    public class User_DTO_CreateUpdate
     {
         public string Username { get; set; }
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
+        public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string DateCreated { get; set; }
-        public string LastLoginDate { get; set; }
         public UserPermissions Permissions { get; set; }
         public UserSettings Settings { get; set; }
     }

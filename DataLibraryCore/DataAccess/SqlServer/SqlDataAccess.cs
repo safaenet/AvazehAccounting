@@ -29,5 +29,11 @@ namespace DataLibraryCore.DataAccess.SqlServer
             using IDbConnection conn = new SqlConnection(GetConnectionString());
             return await conn.ExecuteScalarAsync<T>(sql, param);
         }
+
+        public async Task<T> QuerySingleOrDefaultAsync<T, U>(string sql, U param)
+        {
+            using IDbConnection conn = new SqlConnection(GetConnectionString());
+            return await conn.QuerySingleOrDefaultAsync<T>(sql, param);
+        }
     }
 }

@@ -35,8 +35,9 @@ namespace SharedLibrary.SecurityAndSettings
         public bool CanPrintInvoice { get; set; }
         public bool CanPrintTransaction { get; set; }
         public bool CanChangeItsSettings { get; set; }
-        public bool CanChangePassword { get; set; }
+        public bool CanChangeItsPassword { get; set; }
         public bool CanAddUser { get; set; }
-        public bool CanEditUsers { get; set; }
+        public bool CanEditOtherUsersPermission { get; set; }
+        public bool CanEditOtherUsersSettings { get; set; }
     }
 }

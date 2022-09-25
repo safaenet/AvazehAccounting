@@ -10,9 +10,9 @@ namespace SharedLibrary.SecurityAndSettings
     public class UserSettings
     {
         public string ColorNewItem { get; set; }
-        public string ColorChequeSoldItemColor { get; set; }
-        public string ColorChequeNonSufficientFundItem { get; set; }
-        public string ColorChequeCashedItem { get; set; }
+        public string ColorSoldItemColor { get; set; }
+        public string ColorNonSufficientFundItem { get; set; }
+        public string ColorCashedItem { get; set; }
         public string ColorChequeNotification { get; set; }
         public string ColorUpdatedItem { get; set; }
         public string ColorBalancedItem { get; set; }
