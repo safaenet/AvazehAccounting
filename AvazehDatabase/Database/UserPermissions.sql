@@ -21,13 +21,19 @@
     [CanEditTransactions] BIT NOT NULL DEFAULT 1, 
     [CanEditCheques] BIT NOT NULL DEFAULT 1, 
 
+    [CanDeleteCustomer] BIT NOT NULL DEFAULT 1, 
+    [CanDeleteProduct] BIT NOT NULL DEFAULT 1, 
+    [CanDeleteInvoice] BIT NOT NULL DEFAULT 1, 
+    [CanDeleteInvoiceItem] BIT NOT NULL DEFAULT 1, 
+    [CanDeleteTransaction] BIT NOT NULL DEFAULT 1, 
+    [CanDeleteTransactionItem] BIT NOT NULL DEFAULT 1, 
+    [CanDeleteCheque] BIT NOT NULL DEFAULT 1, 
+
     [CanPrintInvoice] BIT NOT NULL DEFAULT 1, 
     [CanPrintTransaction] BIT NOT NULL DEFAULT 1, 
     [CanChangeItsSettings] BIT NOT NULL DEFAULT 1, 
     [CanChangePassword] BIT NOT NULL DEFAULT 1, 
     [CanAddUser] BIT NOT NULL DEFAULT 0, 
     [CanEditUsers] BIT NOT NULL DEFAULT 0, 
-    [CanViewNetProfits] BIT NOT NULL DEFAULT 0, 
-    [CanUseBarcodeReader] BIT NOT NULL DEFAULT 1, 
     CONSTRAINT [PK_UserPermissions] PRIMARY KEY ([Username]), 
 )

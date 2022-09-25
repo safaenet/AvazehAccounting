@@ -35,6 +35,8 @@
     [TransactionShortcut2Name] NVARCHAR(50) NULL DEFAULT 'میانبر دو', 
     [TransactionShortcut3Name] NVARCHAR(50) NULL DEFAULT 'میانبر سه', 
     [AskToAddNotExistingProduct] BIT NOT NULL DEFAULT 1, 
+    [CanViewNetProfits] BIT NOT NULL DEFAULT 0, 
+    [CanUseBarcodeReader] BIT NOT NULL DEFAULT 1, 
     CONSTRAINT [PK_UserSettings] PRIMARY KEY ([Username]), 
 )
 GO
