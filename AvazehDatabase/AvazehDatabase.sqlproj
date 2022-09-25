@@ -73,6 +73,9 @@
     <Build Include="Database\TransactionItems.sql" />
     <Build Include="Database\UserDescriptions.sql" />
     <Build Include="GetDiscountedInvoiceSum.sql" />
+    <Build Include="Database\UserInfo.sql" />
+    <Build Include="Database\UserPermissions.sql" />
+    <Build Include="Database\UserSettings.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="AvazehDatabase.refactorlog" />
