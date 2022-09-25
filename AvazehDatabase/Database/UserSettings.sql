@@ -27,5 +27,22 @@
     [TransactionPageSize] INT NOT NULL DEFAULT 50, 
     [TransactionListQueryOrderType] NVARCHAR(5) NOT NULL DEFAULT 'DESC', 
 
+    [AutoSelectPersianLanguage] BIT NOT NULL DEFAULT 0, 
+    [TransactionShortcut1Id] INT NOT NULL DEFAULT 0, 
+    [TransactionShortcut2Id] INT NOT NULL DEFAULT 0, 
+    [TransactionShortcut3Id] INT NOT NULL DEFAULT 0, 
+    [TransactionShortcut1Name] NVARCHAR(50) NULL DEFAULT 'میانبر یک', 
+    [TransactionShortcut2Name] NVARCHAR(50) NULL DEFAULT 'میانبر دو', 
+    [TransactionShortcut3Name] NVARCHAR(50) NULL DEFAULT 'میانبر سه', 
+    [AskToAddNotExistingProduct] BIT NOT NULL DEFAULT 1, 
     CONSTRAINT [PK_UserSettings] PRIMARY KEY ([Username]), 
 )
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'When product doesn''t exist when adding to invoice list, ask for adding new one.',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'UserSettings',
+    @level2type = N'COLUMN',
+    @level2name = N'AskToAddNotExistingProduct'
