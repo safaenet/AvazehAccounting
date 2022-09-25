@@ -190,7 +190,7 @@
             </Grid>
             <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditCustomer()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" ItemsSource="{Binding Customers}" CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
                       SelectedItem="{Binding SelectedCustomer}" AutoGenerateColumns="False" Background="Transparent" FlowDirection="RightToLeft" CanUserAddRows="False" CanUserDeleteRows="False"
-                      HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" RowHeight="25" AlternatingRowBackground="#f7f7f7">
+                      HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" RowHeight="25" AlternatingRowBackground="#f7f7f7" viewmodels:DataGridBehavior.DisplayRowNumber="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="شماره" Binding="{Binding Path=Id, Mode=OneWay}" Width="50">
                         <DataGridTextColumn.ElementStyle>

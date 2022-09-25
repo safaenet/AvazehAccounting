@@ -117,9 +117,10 @@
                     </StackPanel>
                 </Button>
             </Grid>
-            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditInvoice]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditInvoice]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
                       Grid.Row="2" HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding InvoiceSettings.DataGridFontSize}" ItemsSource="{Binding Invoices}" RowHeight="25"
-                      SelectedItem="{Binding SelectedInvoice}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False">
+                      SelectedItem="{Binding SelectedInvoice}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False"
+                      CellStyle="{StaticResource Body_Content_DataGrid_Centering}">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditInvoice]" IsEnabled="{Binding GeneralSettings.CanViewInvoices}">

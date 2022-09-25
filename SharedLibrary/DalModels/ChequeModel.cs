@@ -20,5 +20,6 @@ namespace SharedLibrary.DalModels
         public string PayAmountInPersian { get; }
         public ChequeEventModel LastEvent => Events == null || Events.Count == 0 ? null : Events[^1];
         public string LastEventString => Events == null || Events.Count == 0 ? ChequeEventTypes.None.ToString() : LastEvent.EventTypeString;
+        public string LastEventText => LastEvent == null ? string.Empty : LastEvent.EventText;
     }
 }

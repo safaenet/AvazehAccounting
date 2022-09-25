@@ -166,7 +166,7 @@
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="Search" Grid.Column="0" Height="25" Margin="0,0,0,0" >
+                <Button x:Name="Search" Grid.Column="0" Height="25" Margin="3,0,0,0" >
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="3" HorizontalAlignment="Right"/>
                         <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
@@ -181,7 +181,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="PreviousPage" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
+                <Button x:Name="PreviousPage" Height="25" HorizontalAlignment="Left" Margin="3,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ArrowLeftCircleOutline" Margin="3"/>
                         <TextBlock Text="صفحه قبل" VerticalAlignment="Center" Margin="30,0,30,0"/>
@@ -194,9 +194,9 @@
                     </StackPanel>
                 </Button>
             </Grid>
-            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditProduct()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" ItemsSource="{Binding Products}"
-                      SelectedItem="{Binding SelectedProduct}" AutoGenerateColumns="False" Background="Transparent" FlowDirection="RightToLeft" CanUserAddRows="False" CanUserDeleteRows="False"
-                       CellStyle="{StaticResource Body_Content_DataGrid_Centering}" RowHeight="25" AlternatingRowBackground="#f7f7f7">
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditProduct()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver"                      
+                      SelectedItem="{Binding SelectedProduct}" AutoGenerateColumns="False" Background="Transparent" FlowDirection="RightToLeft" CanUserAddRows="False" CanUserDeleteRows="False" ItemsSource="{Binding Products}"
+                      CellStyle="{StaticResource Body_Content_DataGrid_Centering}" RowHeight="25" AlternatingRowBackground="#f7f7f7" viewmodels:DataGridBehavior.DisplayRowNumber="True" Margin="3,0,0,0">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditProduct]">
