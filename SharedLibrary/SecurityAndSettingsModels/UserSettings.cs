@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedLibrary.SecurityAndSettings
+namespace SharedLibrary.SecurityAndSettingsModels
 {
     public class UserSettings
     {

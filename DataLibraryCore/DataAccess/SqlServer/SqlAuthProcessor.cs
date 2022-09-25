@@ -12,7 +12,7 @@ using DataLibraryCore.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using SharedLibrary.DtoModels;
-using SharedLibrary.SecurityAndSettings;
+using SharedLibrary.SecurityAndSettingsModels;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -102,17 +102,24 @@ namespace DataLibraryCore.DataAccess.SqlServer
             if (AffectedCount > 0) return newUser; else return null;
         }
 
+        public async Task<bool> VerifyUser(UserLogin_DTO user)
+        {
+            if (string.IsNullOrEmpty(user.Username)) return false;
+            DynamicParameters dp = new();
+            dp.Add("@username", user.Username);
+            var PasswordHash = await DataAccess.QuerySingleOrDefaultAsync<string, DynamicParameters>(GetPasswordHash, dp);
+            var PasswordSalt = await DataAccess.QuerySingleOrDefaultAsync<string, DynamicParameters>(GetPasswordSalt, dp);
+            if (string.IsNullOrEmpty(PasswordHash) || string.IsNullOrEmpty(PasswordSalt)) return false;
+            if (!VerifyPasswordHash(user.Password, Encoding.UTF8.GetBytes(PasswordHash), Encoding.UTF8.GetBytes(PasswordSalt))) return false;
+            return true;
+        }
+
         public async Task<LoggedInUser_DTO> GetUserByCredencials(UserLogin_DTO user)
         {
             if (string.IsNullOrEmpty(user.Username)) return null;
             DynamicParameters dp = new();
             dp.Add("@username", user.Username);
-            var PasswordHash = await DataAccess.QuerySingleOrDefaultAsync<string, DynamicParameters>(GetPasswordHash, dp);
-            var PasswordSalt = await DataAccess.QuerySingleOrDefaultAsync<string, DynamicParameters>(GetPasswordSalt, dp);
-            if (string.IsNullOrEmpty(PasswordHash) || string.IsNullOrEmpty(PasswordSalt)) return null;
-            if (!VerifyPasswordHash(user.Password, Encoding.UTF8.GetBytes(PasswordHash), Encoding.UTF8.GetBytes(PasswordSalt))) return null;
-            LoggedInUser_DTO loggedUser = new();
-            loggedUser = await DataAccess.QuerySingleOrDefaultAsync<LoggedInUser_DTO, DynamicParameters>(SelectUserInfo, dp);
+            LoggedInUser_DTO loggedUser = await DataAccess.QuerySingleOrDefaultAsync<LoggedInUser_DTO, DynamicParameters>(SelectUserInfo, dp);
             if (loggedUser == null) return null;
             loggedUser.Permissions = await DataAccess.QuerySingleOrDefaultAsync<UserPermissions, DynamicParameters>(SelectUserPermissions, dp);
             if (loggedUser.Permissions == null) return null;
@@ -121,17 +128,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return loggedUser;
         }
 
-        public async Task<UserInfo> UpdateUser(User_DTO_CreateUpdate user, bool RunAsAdmin = false)
+        public async Task<UserInfo> UpdateUser(User_DTO_CreateUpdate user)
         {
             if (user == null || user.Permissions == null || user.Settings == null) return null;
-            if (!RunAsAdmin)
-            {
-                DynamicParameters dp1 = new();
-                dp1.Add("@username", user.Username);
-                var OldPasswordHash = await DataAccess.QuerySingleOrDefaultAsync<string, DynamicParameters>(GetPasswordHash, dp1);
-                var OldPasswordSalt = await DataAccess.QuerySingleOrDefaultAsync<string, DynamicParameters>(GetPasswordSalt, dp1);
-                if (!VerifyPasswordHash(user.Password, Encoding.UTF8.GetBytes(OldPasswordHash), Encoding.UTF8.GetBytes(OldPasswordSalt))) return null;
-            }
             CreatePasswordHash(user.Password, out byte[] PasswordHash, out byte[] PasswordSalt);
             UserInfo newUser = new()
             {

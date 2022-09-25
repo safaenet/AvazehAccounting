@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
-using SharedLibrary.SecurityAndSettings;
+using SharedLibrary.SecurityAndSettingsModels;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Text;
@@ -17,7 +17,7 @@ namespace AvazehWebAPI.Controllers
     public class AuthController : Controller
     {
         [HttpPost("Register")]
-        public async Task<ActionResult<UserInfo>> Register(User_DTO_CreateUpdate user)
+        public async Task<ActionResult<bool>> Register(User_DTO_CreateUpdate user)
         {
             
         }

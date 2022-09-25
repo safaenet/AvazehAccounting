@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedLibrary.SecurityAndSettings
+namespace SharedLibrary.SecurityAndSettingsModels
 {
-    public class UserInfo
+    public class LoggedInUser_DTO
     {
         public string Username { get; set; }
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
+        public string Token { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string DateCreated { get; set; }
