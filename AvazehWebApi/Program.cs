@@ -30,6 +30,7 @@ builder.Services.AddSwaggerGen();
 
 // Add services to the container.
 builder.Services
+                .AddScoped<IAuthProcessor, SqlAuthProcessor>()
                 .AddScoped<IGeneralProcessor<ProductModel>, SqlProductProcessor<ProductModel, ProductValidator>>()
                 .AddScoped<IGeneralProcessor<CustomerModel>, SqlCustomerProcessor<CustomerModel, PhoneNumberModel, CustomerValidator>>()
                 .AddScoped<IChequeProcessor, SqlChequeProcessor>()

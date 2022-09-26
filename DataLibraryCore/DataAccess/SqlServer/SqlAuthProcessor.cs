@@ -1,24 +1,18 @@
 ﻿using Dapper;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Collections.ObjectModel;
-using FluentValidation.Results;
 using DataLibraryCore.DataAccess.Interfaces;
-using SharedLibrary.DalModels;
-using SharedLibrary.Validators;
-using SharedLibrary.Enums;
 using DataLibraryCore.Models;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using SharedLibrary.DtoModels;
 using SharedLibrary.SecurityAndSettingsModels;
 using System.Security.Cryptography;
 using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public class SqlAuthProcessor
+    public class SqlAuthProcessor : IAuthProcessor
     {
         public SqlAuthProcessor(IDataAccess dataAccess)
         {
@@ -71,7 +65,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             TransactionShortcut1Id = @transactionShortcut1Id, TransactionShortcut2Id = @transactionShortcut2Id, TransactionShortcut3Id = transactionShortcut3Id,
             TransactionShortcut1Name = @transactionShortcut1Name, TransactionShortcut2Name = @transactionShortcut2Name, TransactionShortcut3Name = @transactionShortcut3Name,
             AskToAddNotExistingProduct = @askToAddNotExistingProduct, CanViewNetProfits = @canViewNetProfits, CanUseBarcodeReader = @canUseBarcodeReader WHERE Username = @username;";
-        private readonly string SelectUserInfo = @"SELECT FirstName, LastName, DateCreated, LastLoginDate FROM UserInfo WHERE Username = @username";
+        private readonly string SelectUserInfoBase = @"SELECT FirstName, LastName, DateCreated, LastLoginDate FROM UserInfo WHERE Username = @username";
         private readonly string SelectUserPermissions = @"SELECT * FROM UserPermissions WHERE Username = @username";
         private readonly string SelectUserSettings = @"SELECT * FROM UserSettings WHERE Username = @username";
         private readonly string GetPasswordHash = @"SELECT PasswordHash FROM UserInfo WHERE Username = @username";
@@ -119,14 +113,74 @@ namespace DataLibraryCore.DataAccess.SqlServer
             if (string.IsNullOrEmpty(user.Username)) return null;
             DynamicParameters dp = new();
             dp.Add("@username", user.Username);
-            LoggedInUser_DTO loggedUser = await DataAccess.QuerySingleOrDefaultAsync<LoggedInUser_DTO, DynamicParameters>(SelectUserInfo, dp);
-            if (loggedUser == null) return null;
-            loggedUser.Permissions = await DataAccess.QuerySingleOrDefaultAsync<UserPermissions, DynamicParameters>(SelectUserPermissions, dp);
-            if (loggedUser.Permissions == null) return null;
-            loggedUser.Settings = await DataAccess.QuerySingleOrDefaultAsync<UserSettings, DynamicParameters>(SelectUserSettings, dp);
-            if (loggedUser.Settings == null) return null;
+            var userInfoBase = await DataAccess.QuerySingleOrDefaultAsync<UserInfoBase, DynamicParameters>(SelectUserInfoBase, dp);
+            if (userInfoBase == null) return null;
+            var Permissions = await DataAccess.QuerySingleOrDefaultAsync<UserPermissions, DynamicParameters>(SelectUserPermissions, dp);
+            if (Permissions == null) return null;
+            var Settings = await DataAccess.QuerySingleOrDefaultAsync<UserSettings, DynamicParameters>(SelectUserSettings, dp);
+            if (Settings == null) return null;
+            LoggedInUser_DTO loggedUser = new();
+            loggedUser.Settings = Settings;
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Username),
+                new Claim(ClaimTypes.GivenName, userInfoBase.FirstName),
+                new Claim(ClaimTypes.Surname, userInfoBase.LastName),
+                new Claim(ClaimTypes.Expiration, DateTime.Now.AddDays(1).ToString()),
+                new Claim(nameof(UserInfoBase.DateCreated), userInfoBase.DateCreated),
+                new Claim(nameof(UserInfoBase.LastLoginDate), userInfoBase.LastLoginDate),
+                
+                new Claim(nameof(UserPermissions.CanViewCustomers), Permissions.CanViewCustomers.ToString()),
+                new Claim(nameof(UserPermissions.CanViewProducts), Permissions.CanViewProducts.ToString()),
+                new Claim(nameof(UserPermissions.CanViewInvoicesList), Permissions.CanViewInvoicesList.ToString()),
+                new Claim(nameof(UserPermissions.CanViewInvoiceDetails), Permissions.CanViewInvoiceDetails.ToString()),
+                new Claim(nameof(UserPermissions.CanViewTransactionsList), Permissions.CanViewTransactionsList.ToString()),
+                new Claim(nameof(UserPermissions.CanViewTransactionDetails), Permissions.CanViewTransactionDetails.ToString()),
+                new Claim(nameof(UserPermissions.CanViewCheques), Permissions.CanViewCheques.ToString()),
+                new Claim(nameof(UserPermissions.CanAddNewCustomer), Permissions.CanAddNewCustomer.ToString()),
+                new Claim(nameof(UserPermissions.CanAddNewProduct), Permissions.CanAddNewProduct.ToString()),
+                new Claim(nameof(UserPermissions.CanAddNewInvoice), Permissions.CanAddNewInvoice.ToString()),
+                new Claim(nameof(UserPermissions.CanAddNewTransaction), Permissions.CanAddNewTransaction.ToString()),
+                new Claim(nameof(UserPermissions.CanAddNewCheque), Permissions.CanAddNewCheque.ToString()),
+                new Claim(nameof(UserPermissions.CanEditCustomers), Permissions.CanEditCustomers.ToString()),
+                new Claim(nameof(UserPermissions.CanEditProducts), Permissions.CanEditProducts.ToString()),
+                new Claim(nameof(UserPermissions.CanEditInvoices), Permissions.CanEditInvoices.ToString()),
+                new Claim(nameof(UserPermissions.CanEditTransactions), Permissions.CanEditTransactions.ToString()),
+                new Claim(nameof(UserPermissions.CanEditCheques), Permissions.CanEditCheques.ToString()),
+                new Claim(nameof(UserPermissions.CanDeleteCustomer), Permissions.CanDeleteCustomer.ToString()),
+                new Claim(nameof(UserPermissions.CanDeleteProduct), Permissions.CanDeleteProduct.ToString()),
+                new Claim(nameof(UserPermissions.CanDeleteInvoice), Permissions.CanDeleteInvoice.ToString()),
+                new Claim(nameof(UserPermissions.CanDeleteInvoiceItem), Permissions.CanDeleteInvoiceItem.ToString()),
+                new Claim(nameof(UserPermissions.CanDeleteTransaction), Permissions.CanDeleteTransaction.ToString()),
+                new Claim(nameof(UserPermissions.CanDeleteTransactionItem), Permissions.CanDeleteTransactionItem.ToString()),
+                new Claim(nameof(UserPermissions.CanDeleteCheque), Permissions.CanDeleteCheque.ToString()),
+                new Claim(nameof(UserPermissions.CanPrintInvoice), Permissions.CanPrintInvoice.ToString()),
+                new Claim(nameof(UserPermissions.CanPrintTransaction), Permissions.CanPrintTransaction.ToString()),
+                new Claim(nameof(UserPermissions.CanChangeItsSettings), Permissions.CanChangeItsSettings.ToString()),
+                new Claim(nameof(UserPermissions.CanChangeItsPassword), Permissions.CanChangeItsPassword.ToString()),
+                new Claim(nameof(UserPermissions.CanAddUser), Permissions.CanAddUser.ToString()),
+                new Claim(nameof(UserPermissions.CanEditOtherUsersPermission), Permissions.CanEditOtherUsersPermission.ToString()),
+                new Claim(nameof(UserPermissions.CanEditOtherUsersSettings), Permissions.CanEditOtherUsersSettings.ToString())
+            });
+            
             return loggedUser;
         }
+
+        //public async Task<LoggedInUser_DTO> GetUserByCredencials(UserLogin_DTO user)
+        //{
+        //    if (string.IsNullOrEmpty(user.Username)) return null;
+        //    DynamicParameters dp = new();
+        //    dp.Add("@username", user.Username);
+        //    LoggedInUser_DTO loggedUser = await DataAccess.QuerySingleOrDefaultAsync<LoggedInUser_DTO, DynamicParameters>(SelectUserInfo, dp);
+        //    if (loggedUser == null) return null;
+        //    loggedUser.Permissions = await DataAccess.QuerySingleOrDefaultAsync<UserPermissions, DynamicParameters>(SelectUserPermissions, dp);
+        //    if (loggedUser.Permissions == null) return null;
+        //    loggedUser.Settings = await DataAccess.QuerySingleOrDefaultAsync<UserSettings, DynamicParameters>(SelectUserSettings, dp);
+        //    if (loggedUser.Settings == null) return null;
+        //    return loggedUser;
+        //}
 
         public async Task<UserInfo> UpdateUser(User_DTO_CreateUpdate user)
         {
@@ -250,7 +304,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@askToAddNotExistingProduct", user.Settings.AskToAddNotExistingProduct);
             dp.Add("@canViewNetProfits", user.Settings.CanViewNetProfits);
             dp.Add("@canUseBarcodeReader", user.Settings.CanUseBarcodeReader);
-            
+
             return dp;
         }
     }
