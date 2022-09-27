@@ -33,9 +33,10 @@ namespace AvazehWebAPI.Controllers
         [HttpPost("Login")]
         public async Task<ActionResult<string>> Login(UserLogin_DTO user)
         {
-            var IsVerified = await AuthProcessor.VerifyUser(user);
-            if (!IsVerified) return BadRequest("نام کاربری یا رمز عبور اشتباه است");
-
+            //var IsVerified = await AuthProcessor.VerifyUser(user);
+            //if (!IsVerified) return BadRequest("نام کاربری یا رمز عبور اشتباه است");
+            var t= await AuthProcessor.GetUserByCredencials(user);
+            return t;
         }
     }
 }

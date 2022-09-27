@@ -7,7 +7,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
     {
         Task<UserInfo> CreateUser(User_DTO_CreateUpdate user);
         Task<int> DeleteUser(string username);
-        Task<LoggedInUser_DTO> GetUserByCredencials(UserLogin_DTO user);
+        Task<string> GetUserByCredencials(UserLogin_DTO user);
         Task<UserInfo> UpdateUser(User_DTO_CreateUpdate user);
         Task<bool> VerifyUser(UserLogin_DTO user);
     }

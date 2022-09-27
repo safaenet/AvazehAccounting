@@ -9,6 +9,8 @@ using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System;
+using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
@@ -108,27 +110,29 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return true;
         }
 
-        public async Task<LoggedInUser_DTO> GetUserByCredencials(UserLogin_DTO user)
+        public async Task<string> GetUserByCredencials(UserLogin_DTO user)
         {
-            if (string.IsNullOrEmpty(user.Username)) return null;
-            DynamicParameters dp = new();
-            dp.Add("@username", user.Username);
-            var userInfoBase = await DataAccess.QuerySingleOrDefaultAsync<UserInfoBase, DynamicParameters>(SelectUserInfoBase, dp);
-            if (userInfoBase == null) return null;
-            var Permissions = await DataAccess.QuerySingleOrDefaultAsync<UserPermissions, DynamicParameters>(SelectUserPermissions, dp);
-            if (Permissions == null) return null;
-            var Settings = await DataAccess.QuerySingleOrDefaultAsync<UserSettings, DynamicParameters>(SelectUserSettings, dp);
-            if (Settings == null) return null;
-            LoggedInUser_DTO loggedUser = new();
-            loggedUser.Settings = Settings;
+            //if (string.IsNullOrEmpty(user.Username)) return null;
+            //DynamicParameters dp = new();
+            //dp.Add("@username", user.Username);
+            //var userInfoBase = await DataAccess.QuerySingleOrDefaultAsync<UserInfoBase, DynamicParameters>(SelectUserInfoBase, dp);
+            //if (userInfoBase == null) return null;
+            //var Permissions = await DataAccess.QuerySingleOrDefaultAsync<UserPermissions, DynamicParameters>(SelectUserPermissions, dp);
+            //if (Permissions == null) return null;
+            //var Settings = await DataAccess.QuerySingleOrDefaultAsync<UserSettings, DynamicParameters>(SelectUserSettings, dp);
+            //if (Settings == null) return null;
+            //LoggedInUser_DTO loggedUser = new();
+            //loggedUser.Settings = Settings;
+
+            var userInfoBase = new UserInfoBase();
+            var Permissions = new UserPermissions();
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(new[]
+            List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Username),
                 new Claim(ClaimTypes.GivenName, userInfoBase.FirstName),
                 new Claim(ClaimTypes.Surname, userInfoBase.LastName),
-                new Claim(ClaimTypes.Expiration, DateTime.Now.AddDays(1).ToString()),
                 new Claim(nameof(UserInfoBase.DateCreated), userInfoBase.DateCreated),
                 new Claim(nameof(UserInfoBase.LastLoginDate), userInfoBase.LastLoginDate),
                 
@@ -163,9 +167,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 new Claim(nameof(UserPermissions.CanAddUser), Permissions.CanAddUser.ToString()),
                 new Claim(nameof(UserPermissions.CanEditOtherUsersPermission), Permissions.CanEditOtherUsersPermission.ToString()),
                 new Claim(nameof(UserPermissions.CanEditOtherUsersSettings), Permissions.CanEditOtherUsersSettings.ToString())
-            });
-            
-            return loggedUser;
+            };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SettingsDataAccess.AppConfiguration().GetSection("Jwt:Key").Value));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.UtcNow.AddDays(2),
+                signingCredentials: creds);
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            //loggedUser.Token = jwt;
+            return jwt;
         }
 
         //public async Task<LoggedInUser_DTO> GetUserByCredencials(UserLogin_DTO user)
