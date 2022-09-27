@@ -266,4 +266,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="ColorCashedItem" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="9b5a2008-bf53-4a61-b27f-af2e9ef7dec7" ChangeDateTime="09/26/2022 17:01:56">
+    <Property Name="ElementName" Value="[dbo].[Products].[IsActive]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Products]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="IsDisabled" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2a5ba19e-8231-428f-bc7a-792cd7875847" ChangeDateTime="09/26/2022 17:02:23">
+    <Property Name="ElementName" Value="[dbo].[Products].[IsDisabled]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Products]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="IsActive" />
+  </Operation>
 </Operations>
