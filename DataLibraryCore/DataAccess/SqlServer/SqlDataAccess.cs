@@ -11,6 +11,28 @@ namespace DataLibraryCore.DataAccess.SqlServer
     {
         public string GetConnectionString(string DB = "default") => SettingsDataAccess.AppConfiguration().GetConnectionString(DB);
 
+        private bool TestConnection()
+        {
+            using IDbConnection conn = new SqlConnection(GetConnectionString());
+            System.Data.Common.DbConnectionStringBuilder csb = new();
+            try
+            {
+                csb.ConnectionString = GetConnectionString();
+                conn.Open();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> TestConnectionAsync()
+        {
+            var task = Task.Run(() => TestConnection());
+            return await task;
+        }
+
         public async Task<ObservableCollection<T>> LoadDataAsync<T, U>(string sql, U param)
         {
             using IDbConnection conn = new SqlConnection(GetConnectionString());

@@ -5,6 +5,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
 {
     public interface IDataAccess
     {
+        Task<bool> TestConnectionAsync();
         string GetConnectionString(string DB = "default");
         Task<ObservableCollection<T>> LoadDataAsync<T, U>(string sql, U param);
         Task<int> SaveDataAsync<T>(string sql, T data);

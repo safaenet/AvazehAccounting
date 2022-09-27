@@ -288,7 +288,7 @@
                         <TextBlock TextAlignment="Center" Text="قیمت فروش" Margin="0,0,0,0"/>
                     </StackPanel>
                     <ComboBox ItemsSource="{Binding RecentSellPrices}" SelectedValuePath="SellPrice" DisplayMemberPath="SellPrice" Text="{Binding WorkItem.SellPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}"
-                              cal:Message.Attach="[Event GotFocus] = [Action SellPrice_GotFocus()]; [Event KeyUp] = [Action CalculateTotalAmountOfWorkItem($source, $eventArgs)]"
+                              cal:Message.Attach="[Event GotFocus] = [Action SellPrice_GotFocus()]; [Event KeyUp] = [Action CalculateTotalAmountOfWorkItem($source, $eventArgs)]" BorderThickness="2" BorderBrush="Red"
                               IsDropDownOpen="{Binding IsSellPriceDropDownOpen, Mode=TwoWay}" IsEditable="True" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TabIndex="4"/>
                 </StackPanel>
 
