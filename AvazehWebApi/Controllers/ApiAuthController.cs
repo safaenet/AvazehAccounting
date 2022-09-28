@@ -25,7 +25,6 @@ namespace AvazehWebAPI.Controllers
 
         private readonly IUserProcessor UserProcessor;
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("Register")]
         public async Task<ActionResult<bool>> Register(User_DTO_CreateUpdate user)
         {
@@ -115,11 +114,13 @@ namespace AvazehWebAPI.Controllers
             if (Permissions.CanEditOtherUsersPermission) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditOtherUsersPermission)));
             if (Permissions.CanEditOtherUsersSettings) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditOtherUsersSettings)));
 
+            var validHours = SettingsDataAccess.AppConfiguration().GetSection("Jwt:ValidHours").Value;
+            double.TryParse(validHours, out var addHours);
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SettingsDataAccess.AppConfiguration().GetSection("Jwt:Key").Value));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.Now.AddHours(addHours),
                 signingCredentials: creds);
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
             return jwt;

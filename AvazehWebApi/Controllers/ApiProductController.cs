@@ -1,10 +1,12 @@
 ﻿using AvazehWeb;
 using DataLibraryCore.DataAccess.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
+using SharedLibrary.SecurityAndSettingsModels;
 using System.Threading.Tasks;
 
 namespace AvazehWebAPI.Controllers
@@ -21,7 +23,7 @@ namespace AvazehWebAPI.Controllers
         private readonly IGeneralCollectionManager<ProductModel, IGeneralProcessor<ProductModel>> Manager;
 
         //GET /Product?Id=1&SearchText=sometext
-        [HttpGet]
+        [HttpGet, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewProducts))]
         public async Task<ActionResult<ItemsCollection_DTO<ProductModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "ProductName", OrderType orderType = OrderType.ASC, int PageSize = 50, bool ForceLoad = false)
         {
             Manager.GenerateWhereClause(SearchText, OrderBy, orderType);
