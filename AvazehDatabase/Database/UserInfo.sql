@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [dbo].[UserInfo]
 (
     [Username] NVARCHAR(50) NOT NULL, 
-    [PasswordHash] NVARCHAR(512) NOT NULL, 
-    [PasswordSalt] NVARCHAR(512) NOT NULL, 
+    [PasswordHash] NVARCHAR(520) NOT NULL, 
+    [PasswordSalt] NVARCHAR(520) NOT NULL, 
     [FirstName] NVARCHAR(50) NOT NULL, 
     [LastName] NVARCHAR(50) NULL, 
     [DateCreated] CHAR(10) NOT NULL, 

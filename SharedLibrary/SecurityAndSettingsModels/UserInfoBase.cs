@@ -12,5 +12,6 @@ namespace SharedLibrary.SecurityAndSettingsModels
         public string LastName { get; set; }
         public string DateCreated { get; set; }
         public string LastLoginDate { get; set; }
+        public string FullName => FirstName + " " + LastName;
     }
 }

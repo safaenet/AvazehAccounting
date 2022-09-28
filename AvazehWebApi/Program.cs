@@ -18,10 +18,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 {
     options.TokenValidationParameters = new()
     {
+        ValidateLifetime = true,
         //ValidateActor = false,
         //ValidateAudience = false,
         //ValidateLifetime = true,
-        //ValidateIssuerSigningKey = true,
+        ValidateIssuerSigningKey = true,
         //ValidIssuer = builder.Configuration["Jwt:Issuer"],
         //ValidAudience = builder.Configuration["Jwt:Audience"],
         //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
@@ -30,7 +31,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 // Add services to the container.
 builder.Services
-                .AddScoped<IAuthProcessor, SqlAuthProcessor>()
+                .AddScoped<IUserProcessor, SqlUserProcessor>()
                 .AddScoped<IGeneralProcessor<ProductModel>, SqlProductProcessor<ProductModel, ProductValidator>>()
                 .AddScoped<IGeneralProcessor<CustomerModel>, SqlCustomerProcessor<CustomerModel, PhoneNumberModel, CustomerValidator>>()
                 .AddScoped<IChequeProcessor, SqlChequeProcessor>()
@@ -63,7 +64,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-//app.UseAuthentication();
+app.UseAuthentication();
 
 app.MapControllers();
 

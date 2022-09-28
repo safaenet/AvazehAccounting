@@ -9,6 +9,8 @@ namespace SharedLibrary.SecurityAndSettingsModels
     public class LoggedInUser_DTO
     {
         public string Token { get; set; }
+        public string DateCreated { get; set; }
+        public string LastLoginDate { get; set; }
         public UserSettings Settings { get; set; }
     }
 

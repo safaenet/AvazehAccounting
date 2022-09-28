@@ -14,17 +14,15 @@ using System.Collections.Generic;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public class SqlAuthProcessor : IAuthProcessor
+    public class SqlUserProcessor : IUserProcessor
     {
-        public SqlAuthProcessor(IDataAccess dataAccess)
+        public SqlUserProcessor(IDataAccess dataAccess)
         {
             DataAccess = dataAccess;
         }
 
         private readonly IDataAccess DataAccess;
-        private readonly string CreateUserQuery = @"INSERT INTO UserInfo (Username, PasswordHash, PasswordSalt, FirstName, LastName, DateCreated)
-            VALUES (@username, @passwordHash, @passwordSalt, @firstName, @lastName, @dateCreated);
-            
+        private readonly string CreateUserQuery = @"            
             INSERT INTO UserPermissions (Username, CanViewCustomers, CanViewProducts, CanViewInvoicesList, CanViewInvoiceDetails, CanViewTransactionsList, CanViewTransactionDetails,
             CanViewCheques, CanAddNewCustomer, CanAddNewProduct, CanAddNewInvoice, CanAddNewTransaction, CanAddNewCheque, CanEditCustomers, CanEditProducts, CanEditInvoices,
             CanEditTransactions, CanEditCheques, CanDeleteCustomer, CanDeleteProduct, CanDeleteInvoice, CanDeleteInvoiceItem, CanDeleteTransaction, CanDeleteTransactionItem,
@@ -34,7 +32,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             @canViewCheques, @canAddNewCustomer, @canAddNewProduct, @canAddNewInvoice, @canAddNewTransaction, @canAddNewCheque, @canEditCustomers, @canEditProducts, @canEditInvoices,
             @canEditTransactions, @canEditCheques, @canDeleteCustomer, @canDeleteProduct, @canDeleteInvoice, @canDeleteInvoiceItem, @canDeleteTransaction, @canDeleteTransactionItem,
             @canDeleteCheque, @canPrintInvoice, @canPrintTransaction, @canChangeItsSettings, @canChangeItsPassword, @canAddUser, @canEditOtherUsersPermission, @canEditOtherUsersSettings);
-            
+
             INSERT INTO UserSettings (Username, ColorNewItem, ColorSoldItemColor, ColorNonSufficientFundItem, ColorCashedItem, ColorChequeNotification, ColorUpdatedItem,
             ColorBalancedItem, ColorDeptorItem, ColorCreditorItem, ColorInactiveItem, ColorArchiveItem, ColorDeletedItem, ColorNegativeProfit, ColorPositiveItem, ColorNegativeItem,
             DataGridFontSize, ChequeListPageSize, ChequeListQueryOrderType, ChequeNotifyDays, ChequeNotify, InvoicePageSize, InvoiceListQueryOrderType, InvoiceDetailQueryOrderType,
@@ -45,7 +43,10 @@ namespace DataLibraryCore.DataAccess.SqlServer
             @colorBalancedItem, @colorDeptorItem, @colorCreditorItem, @colorInactiveItem, @colorArchiveItem, @colorDeletedItem, @colorNegativeProfit, @colorPositiveItem, @colorNegativeItem,
             @dataGridFontSize, @chequeListPageSize, @chequeListQueryOrderType, @chequeNotifyDays, @chequeNotify, @invoicePageSize, @invoiceListQueryOrderType, @invoiceDetailQueryOrderType,
             @transactionPageSize, @transactionListQueryOrderType, @autoSelectPersianLanguage, @transactionShortcut1Id, @transactionShortcut2Id, @transactionShortcut3Id,
-            @transactionShortcut1Name, @transactionShortcut2Name, @transactionShortcut3Name, @askToAddNotExistingProduct, @canViewNetProfits, @canUseBarcodeReader);";
+            @transactionShortcut1Name, @transactionShortcut2Name, @transactionShortcut3Name, @askToAddNotExistingProduct, @canViewNetProfits, @canUseBarcodeReader);
+            
+            INSERT INTO UserInfo (Username, PasswordHash, PasswordSalt, FirstName, LastName, DateCreated)
+            VALUES (@username, @passwordHash, @passwordSalt, @firstName, @lastName, @dateCreated);";
         private readonly string UpdateUserQuery = @"UPDATE UserInfo SET PasswordHash = @passwordHash, PasswordSalt = @passwordSalt, FirstName = @firstName, LastName = @lastName WHERE Username = @username;
             UPDATE UserPermissions SET CanViewCustomers = @canViewCustomers, CanViewProducts = @canViewProducts, CanViewInvoicesList = @canViewInvoicesList,
             CanViewInvoiceDetails = @canViewInvoiceDetails, CanViewTransactionsList = @canViewTransactionsList, CanViewTransactionDetails = @canViewTransactionDetails,
@@ -90,8 +91,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 PasswordSalt = PasswordSalt
             };
             var dp = FillParameters(user);
-            dp.Add("@passwordHash", newUser.PasswordHash);
-            dp.Add("@passwordSalt", newUser.PasswordSalt);
+            dp.Add("@passwordHash", Convert.ToBase64String(newUser.PasswordHash));
+            dp.Add("@passwordSalt", Convert.ToBase64String(newUser.PasswordSalt));
             dp.Add("@dateCreated", newUser.DateCreated);
 
             var AffectedCount = await DataAccess.SaveDataAsync(CreateUserQuery, dp);
@@ -110,88 +111,43 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return true;
         }
 
-        public async Task<string> GetUserByCredencials(UserLogin_DTO user)
+        private bool VerifyPasswordHash(string password, byte[] oldPasswordHash, byte[] oldPasswordSalt)
         {
-            //if (string.IsNullOrEmpty(user.Username)) return null;
-            //DynamicParameters dp = new();
-            //dp.Add("@username", user.Username);
-            //var userInfoBase = await DataAccess.QuerySingleOrDefaultAsync<UserInfoBase, DynamicParameters>(SelectUserInfoBase, dp);
-            //if (userInfoBase == null) return null;
-            //var Permissions = await DataAccess.QuerySingleOrDefaultAsync<UserPermissions, DynamicParameters>(SelectUserPermissions, dp);
-            //if (Permissions == null) return null;
-            //var Settings = await DataAccess.QuerySingleOrDefaultAsync<UserSettings, DynamicParameters>(SelectUserSettings, dp);
-            //if (Settings == null) return null;
-            //LoggedInUser_DTO loggedUser = new();
-            //loggedUser.Settings = Settings;
-
-            var userInfoBase = new UserInfoBase();
-            var Permissions = new UserPermissions();
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            List<Claim> claims = new List<Claim>
+            using (var hmac = new HMACSHA512(oldPasswordSalt))
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Username),
-                new Claim(ClaimTypes.GivenName, userInfoBase.FirstName),
-                new Claim(ClaimTypes.Surname, userInfoBase.LastName),
-                new Claim(nameof(UserInfoBase.DateCreated), userInfoBase.DateCreated),
-                new Claim(nameof(UserInfoBase.LastLoginDate), userInfoBase.LastLoginDate),
-                
-                new Claim(nameof(UserPermissions.CanViewCustomers), Permissions.CanViewCustomers.ToString()),
-                new Claim(nameof(UserPermissions.CanViewProducts), Permissions.CanViewProducts.ToString()),
-                new Claim(nameof(UserPermissions.CanViewInvoicesList), Permissions.CanViewInvoicesList.ToString()),
-                new Claim(nameof(UserPermissions.CanViewInvoiceDetails), Permissions.CanViewInvoiceDetails.ToString()),
-                new Claim(nameof(UserPermissions.CanViewTransactionsList), Permissions.CanViewTransactionsList.ToString()),
-                new Claim(nameof(UserPermissions.CanViewTransactionDetails), Permissions.CanViewTransactionDetails.ToString()),
-                new Claim(nameof(UserPermissions.CanViewCheques), Permissions.CanViewCheques.ToString()),
-                new Claim(nameof(UserPermissions.CanAddNewCustomer), Permissions.CanAddNewCustomer.ToString()),
-                new Claim(nameof(UserPermissions.CanAddNewProduct), Permissions.CanAddNewProduct.ToString()),
-                new Claim(nameof(UserPermissions.CanAddNewInvoice), Permissions.CanAddNewInvoice.ToString()),
-                new Claim(nameof(UserPermissions.CanAddNewTransaction), Permissions.CanAddNewTransaction.ToString()),
-                new Claim(nameof(UserPermissions.CanAddNewCheque), Permissions.CanAddNewCheque.ToString()),
-                new Claim(nameof(UserPermissions.CanEditCustomers), Permissions.CanEditCustomers.ToString()),
-                new Claim(nameof(UserPermissions.CanEditProducts), Permissions.CanEditProducts.ToString()),
-                new Claim(nameof(UserPermissions.CanEditInvoices), Permissions.CanEditInvoices.ToString()),
-                new Claim(nameof(UserPermissions.CanEditTransactions), Permissions.CanEditTransactions.ToString()),
-                new Claim(nameof(UserPermissions.CanEditCheques), Permissions.CanEditCheques.ToString()),
-                new Claim(nameof(UserPermissions.CanDeleteCustomer), Permissions.CanDeleteCustomer.ToString()),
-                new Claim(nameof(UserPermissions.CanDeleteProduct), Permissions.CanDeleteProduct.ToString()),
-                new Claim(nameof(UserPermissions.CanDeleteInvoice), Permissions.CanDeleteInvoice.ToString()),
-                new Claim(nameof(UserPermissions.CanDeleteInvoiceItem), Permissions.CanDeleteInvoiceItem.ToString()),
-                new Claim(nameof(UserPermissions.CanDeleteTransaction), Permissions.CanDeleteTransaction.ToString()),
-                new Claim(nameof(UserPermissions.CanDeleteTransactionItem), Permissions.CanDeleteTransactionItem.ToString()),
-                new Claim(nameof(UserPermissions.CanDeleteCheque), Permissions.CanDeleteCheque.ToString()),
-                new Claim(nameof(UserPermissions.CanPrintInvoice), Permissions.CanPrintInvoice.ToString()),
-                new Claim(nameof(UserPermissions.CanPrintTransaction), Permissions.CanPrintTransaction.ToString()),
-                new Claim(nameof(UserPermissions.CanChangeItsSettings), Permissions.CanChangeItsSettings.ToString()),
-                new Claim(nameof(UserPermissions.CanChangeItsPassword), Permissions.CanChangeItsPassword.ToString()),
-                new Claim(nameof(UserPermissions.CanAddUser), Permissions.CanAddUser.ToString()),
-                new Claim(nameof(UserPermissions.CanEditOtherUsersPermission), Permissions.CanEditOtherUsersPermission.ToString()),
-                new Claim(nameof(UserPermissions.CanEditOtherUsersSettings), Permissions.CanEditOtherUsersSettings.ToString())
-            };
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SettingsDataAccess.AppConfiguration().GetSection("Jwt:Key").Value));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.UtcNow.AddDays(2),
-                signingCredentials: creds);
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-            //loggedUser.Token = jwt;
-            return jwt;
+                var ComputedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                var oldHash = Convert.ToBase64String(oldPasswordHash);
+                var newHash = Convert.ToBase64String(ComputedHash);
+                return ComputedHash.SequenceEqual(oldPasswordHash);
+            }
         }
 
-        //public async Task<LoggedInUser_DTO> GetUserByCredencials(UserLogin_DTO user)
-        //{
-        //    if (string.IsNullOrEmpty(user.Username)) return null;
-        //    DynamicParameters dp = new();
-        //    dp.Add("@username", user.Username);
-        //    LoggedInUser_DTO loggedUser = await DataAccess.QuerySingleOrDefaultAsync<LoggedInUser_DTO, DynamicParameters>(SelectUserInfo, dp);
-        //    if (loggedUser == null) return null;
-        //    loggedUser.Permissions = await DataAccess.QuerySingleOrDefaultAsync<UserPermissions, DynamicParameters>(SelectUserPermissions, dp);
-        //    if (loggedUser.Permissions == null) return null;
-        //    loggedUser.Settings = await DataAccess.QuerySingleOrDefaultAsync<UserSettings, DynamicParameters>(SelectUserSettings, dp);
-        //    if (loggedUser.Settings == null) return null;
-        //    return loggedUser;
-        //}
+        public async Task<UserInfoBase> GetUserInfoBase(UserLogin_DTO user)
+        {
+            if (string.IsNullOrEmpty(user.Username)) return null;
+            DynamicParameters dp = new();
+            dp.Add("@username", user.Username);
+            var userInfoBase = await DataAccess.QuerySingleOrDefaultAsync<UserInfoBase, DynamicParameters>(SelectUserInfoBase, dp);
+            return userInfoBase;
+        }
+
+        public async Task<UserPermissions> GetUserPermissions(UserLogin_DTO user)
+        {
+            if (string.IsNullOrEmpty(user.Username)) return null;
+            DynamicParameters dp = new();
+            dp.Add("@username", user.Username);
+            var Permissions = await DataAccess.QuerySingleOrDefaultAsync<UserPermissions, DynamicParameters>(SelectUserPermissions, dp);
+            return Permissions;
+        }
+
+        public async Task<UserSettings> GetUserSettings(UserLogin_DTO user)
+        {
+            if (string.IsNullOrEmpty(user.Username)) return null;
+            DynamicParameters dp = new();
+            dp.Add("@username", user.Username);
+            var Settings = await DataAccess.QuerySingleOrDefaultAsync<UserSettings, DynamicParameters>(SelectUserSettings, dp);
+            return Settings;
+        }
 
         public async Task<UserInfo> UpdateUser(User_DTO_CreateUpdate user)
         {
@@ -229,15 +185,6 @@ namespace DataLibraryCore.DataAccess.SqlServer
             {
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            }
-        }
-
-        private bool VerifyPasswordHash(string password, byte[] oldPasswordHash, byte[] oldPasswordSalt)
-        {
-            using (var hmac = new HMACSHA512(oldPasswordSalt))
-            {
-                var ComputedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return ComputedHash.SequenceEqual(oldPasswordHash);
             }
         }
 
