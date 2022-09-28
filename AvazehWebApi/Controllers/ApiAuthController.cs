@@ -25,14 +25,16 @@ namespace AvazehWebAPI.Controllers
 
         private readonly IUserProcessor UserProcessor;
 
-        [HttpPost("Register")]
+        [HttpPost("Register"), AllowAnonymous]
         public async Task<ActionResult<bool>> Register(User_DTO_CreateUpdate user)
         {
+            var adminsCount = await UserProcessor.GetCountOfAdminUsers();
+            if (adminsCount > 0 && !User.IsInRole(nameof(UserPermissions.CanManageOthers))) return BadRequest("اجازه صادر نشد");
             var newUser = await UserProcessor.CreateUser(user);
             if (newUser == null) return false; else return true;
         }
 
-        [HttpPost("Login")]
+        [HttpPost("Login"), AllowAnonymous]
         public async Task<ActionResult<LoggedInUser_DTO>> Login(UserLogin_DTO user)
         {
             var IsVerified = await UserProcessor.VerifyUser(user);
@@ -52,33 +54,40 @@ namespace AvazehWebAPI.Controllers
             //UserSettings Settings = new();
 
             LoggedInUser_DTO loggedUser = new();
-            loggedUser.Token = GenerateToken(user.Username, userInfoBase, Permissions);
+            loggedUser.Token = GenerateToken(userInfoBase, Permissions);
             loggedUser.Settings = Settings;
             loggedUser.DateCreated = userInfoBase.DateCreated;
             loggedUser.LastLoginDate = userInfoBase.LastLoginDate;
+            await UserProcessor.UpdateUserLastLoginDate(user.Username);
             return loggedUser;
         }
 
-        [HttpPut("Update")]
+        [HttpPut("Update"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{nameof(UserPermissions.CanManageItself)}, {nameof(UserPermissions.CanManageOthers)}")]
         public async Task<ActionResult<bool>> UpdateUser(User_DTO_CreateUpdate user)
         {
+            var ActorUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (ActorUser == user.Username && !User.IsInRole(nameof(UserPermissions.CanManageItself))) return BadRequest("اجازه صادر نشد");
+            if (ActorUser != user.Username && !User.IsInRole(nameof(UserPermissions.CanManageOthers))) return BadRequest("اجازه صادر نشد");
             var updatedUser = await UserProcessor.UpdateUser(user);
             if (updatedUser == null) return false; else return true;
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{nameof(UserPermissions.CanManageItself)}, {nameof(UserPermissions.CanManageOthers)}")]
         public async Task<ActionResult<bool>> DeleteUser(string Username)
         {
+            var ActorUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (ActorUser == Username) return BadRequest("اجازه حذف خودتان را ندارید!");
+            if (ActorUser != Username && !User.IsInRole(nameof(UserPermissions.CanManageOthers))) return BadRequest("اجازه صادر نشد");
             var result = await UserProcessor.DeleteUser(Username);
             if(result > 0) return true;
             return false;
         }
 
-        private string GenerateToken(string Username, UserInfoBase userInfoBase, UserPermissions Permissions)
+        private string GenerateToken(UserInfoBase userInfoBase, UserPermissions Permissions)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, Username),
+                new Claim(ClaimTypes.NameIdentifier, userInfoBase.Username),
                 new Claim(ClaimTypes.Name, userInfoBase.FullName)
             };
 
@@ -111,11 +120,8 @@ namespace AvazehWebAPI.Controllers
             if (Permissions.CanDeleteCheque) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteCheque)));
             if (Permissions.CanPrintInvoice) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanPrintInvoice)));
             if (Permissions.CanPrintTransaction) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanPrintTransaction)));
-            if (Permissions.CanChangeItsSettings) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanChangeItsSettings)));
-            if (Permissions.CanChangeItsPassword) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanChangeItsPassword)));
-            if (Permissions.CanAddUser) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanAddUser)));
-            if (Permissions.CanEditOtherUsersPermission) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditOtherUsersPermission)));
-            if (Permissions.CanEditOtherUsersSettings) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditOtherUsersSettings)));
+            if (Permissions.CanManageItself) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanManageItself)));
+            if (Permissions.CanManageOthers) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanManageOthers)));
 
             var validHours = SettingsDataAccess.AppConfiguration().GetSection("Jwt:ValidHours").Value;
             double.TryParse(validHours, out var addHours);

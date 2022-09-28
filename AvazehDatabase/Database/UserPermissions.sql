@@ -1,13 +1,16 @@
 ﻿CREATE TABLE [dbo].[UserPermissions]
 (
 	[Username] NVARCHAR(50) NOT NULL, 
-    [CanViewCustomers] BIT NOT NULL DEFAULT 1, 
-    [CanViewProducts] BIT NOT NULL DEFAULT 1, 
+    [CanViewCustomersList] BIT NOT NULL DEFAULT 1, 
+    [CanViewCustomerDetails] BIT NOT NULL DEFAULT 1, 
+    [CanViewProductsList] BIT NOT NULL DEFAULT 1, 
+    [CanViewProductDetails] BIT NOT NULL DEFAULT 1, 
     [CanViewInvoicesList] BIT NOT NULL DEFAULT 1, 
     [CanViewInvoiceDetails] BIT NOT NULL DEFAULT 1, 
     [CanViewTransactionsList] BIT NOT NULL DEFAULT 1, 
     [CanViewTransactionDetails] BIT NOT NULL DEFAULT 1, 
-    [CanViewCheques] BIT NOT NULL DEFAULT 1, 
+    [CanViewChequesList] BIT NOT NULL DEFAULT 1, 
+    [CanViewChequeDetails] BIT NOT NULL DEFAULT 1, 
 
     [CanAddNewCustomer] BIT NOT NULL DEFAULT 1, 
     [CanAddNewProduct] BIT NOT NULL DEFAULT 1, 
@@ -15,11 +18,11 @@
     [CanAddNewTransaction] BIT NOT NULL DEFAULT 1, 
     [CanAddNewCheque] BIT NOT NULL DEFAULT 1, 
 
-    [CanEditCustomers] BIT NOT NULL DEFAULT 1, 
-    [CanEditProducts] BIT NOT NULL DEFAULT 1, 
-    [CanEditInvoices] BIT NOT NULL DEFAULT 1, 
-    [CanEditTransactions] BIT NOT NULL DEFAULT 1, 
-    [CanEditCheques] BIT NOT NULL DEFAULT 1, 
+    [CanEditCustomer] BIT NOT NULL DEFAULT 1, 
+    [CanEditProduct] BIT NOT NULL DEFAULT 1, 
+    [CanEditInvoice] BIT NOT NULL DEFAULT 1, 
+    [CanEditTransaction] BIT NOT NULL DEFAULT 1, 
+    [CanEditCheque] BIT NOT NULL DEFAULT 1, 
 
     [CanDeleteCustomer] BIT NOT NULL DEFAULT 1, 
     [CanDeleteProduct] BIT NOT NULL DEFAULT 1, 
@@ -31,10 +34,7 @@
 
     [CanPrintInvoice] BIT NOT NULL DEFAULT 1, 
     [CanPrintTransaction] BIT NOT NULL DEFAULT 1, 
-    [CanChangeItsSettings] BIT NOT NULL DEFAULT 1, 
-    [CanChangeItsPassword] BIT NOT NULL DEFAULT 1, 
-    [CanAddUser] BIT NOT NULL DEFAULT 0, 
-    [CanEditOtherUsersPermission] BIT NOT NULL DEFAULT 0, 
-    [CanEditOtherUsersSettings] BIT NOT NULL DEFAULT 0, 
+    [CanManageItself] BIT NOT NULL DEFAULT 1, 
+    [CanManageOthers] BIT NOT NULL DEFAULT 1, 
     CONSTRAINT [PK_UserPermissions] PRIMARY KEY ([Username]), 
 )

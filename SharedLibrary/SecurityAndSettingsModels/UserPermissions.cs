@@ -37,10 +37,8 @@ namespace SharedLibrary.SecurityAndSettingsModels
         public bool CanDeleteCheque { get; set; }
         public bool CanPrintInvoice { get; set; }
         public bool CanPrintTransaction { get; set; }
-        public bool CanChangeItsSettings { get; set; }
-        public bool CanChangeItsPassword { get; set; }
-        public bool CanAddUser { get; set; }
-        public bool CanEditOtherUsersPermission { get; set; }
-        public bool CanEditOtherUsersSettings { get; set; }
+
+        public bool CanManageItself { get; set; }
+        public bool CanManageOthers { get; set; }
     }
 }

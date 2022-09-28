@@ -7,7 +7,6 @@ using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
 using SharedLibrary.SecurityAndSettingsModels;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AvazehWebAPI.Controllers

@@ -23,15 +23,15 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         private readonly IDataAccess DataAccess;
         private readonly string CreateUserQuery = @"            
-            INSERT INTO UserPermissions (Username, CanViewCustomers, CanViewProducts, CanViewInvoicesList, CanViewInvoiceDetails, CanViewTransactionsList, CanViewTransactionDetails,
-            CanViewCheques, CanAddNewCustomer, CanAddNewProduct, CanAddNewInvoice, CanAddNewTransaction, CanAddNewCheque, CanEditCustomers, CanEditProducts, CanEditInvoices,
-            CanEditTransactions, CanEditCheques, CanDeleteCustomer, CanDeleteProduct, CanDeleteInvoice, CanDeleteInvoiceItem, CanDeleteTransaction, CanDeleteTransactionItem,
-            CanDeleteCheque, CanPrintInvoice, CanPrintTransaction, CanChangeItsSettings, CanChangeItsPassword, CanAddUser, CanEditOtherUsersPermission, CanEditOtherUsersSettings)
+            INSERT INTO UserPermissions (Username, CanViewCustomersList, CanViewCustomerDetails, CanViewProductsList, CanViewProductDetails, CanViewInvoicesList, CanViewInvoiceDetails, CanViewTransactionsList, CanViewTransactionDetails,
+            CanViewChequesList, CanViewChequeDetails, CanAddNewCustomer, CanAddNewProduct, CanAddNewInvoice, CanAddNewTransaction, CanAddNewCheque, CanEditCustomer, CanEditProduct, CanEditInvoice,
+            CanEditTransaction, CanEditCheque, CanDeleteCustomer, CanDeleteProduct, CanDeleteInvoice, CanDeleteInvoiceItem, CanDeleteTransaction, CanDeleteTransactionItem,
+            CanDeleteCheque, CanPrintInvoice, CanPrintTransaction, CanManageItself, CanManageOthers)
             
-            VALUES (@username, @canViewCustomers, @canViewProducts, @canViewInvoicesList, @canViewInvoiceDetails, @canViewTransactionsList, @canViewTransactionDetails,
-            @canViewCheques, @canAddNewCustomer, @canAddNewProduct, @canAddNewInvoice, @canAddNewTransaction, @canAddNewCheque, @canEditCustomers, @canEditProducts, @canEditInvoices,
-            @canEditTransactions, @canEditCheques, @canDeleteCustomer, @canDeleteProduct, @canDeleteInvoice, @canDeleteInvoiceItem, @canDeleteTransaction, @canDeleteTransactionItem,
-            @canDeleteCheque, @canPrintInvoice, @canPrintTransaction, @canChangeItsSettings, @canChangeItsPassword, @canAddUser, @canEditOtherUsersPermission, @canEditOtherUsersSettings);
+            VALUES (@username, @canViewCustomersList, @canViewCustomerDetails, @canViewProductsList, @canViewProductDetails, @canViewInvoicesList, @canViewInvoiceDetails, @canViewTransactionsList, @canViewTransactionDetails,
+            @canViewChequesList, @canViewChequeDetails, @canAddNewCustomer, @canAddNewProduct, @canAddNewInvoice, @canAddNewTransaction, @canAddNewCheque, @canEditCustomer, @canEditProduct, @canEditInvoice,
+            @canEditTransaction, @canEditCheque, @canDeleteCustomer, @canDeleteProduct, @canDeleteInvoice, @canDeleteInvoiceItem, @canDeleteTransaction, @canDeleteTransactionItem,
+            @canDeleteCheque, @canPrintInvoice, @canPrintTransaction, @canManageItself, @canManageOthers);
 
             INSERT INTO UserSettings (Username, ColorNewItem, ColorSoldItemColor, ColorNonSufficientFundItem, ColorCashedItem, ColorChequeNotification, ColorUpdatedItem,
             ColorBalancedItem, ColorDeptorItem, ColorCreditorItem, ColorInactiveItem, ColorArchiveItem, ColorDeletedItem, ColorNegativeProfit, ColorPositiveItem, ColorNegativeItem,
@@ -47,16 +47,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             
             INSERT INTO UserInfo (Username, PasswordHash, PasswordSalt, FirstName, LastName, DateCreated)
             VALUES (@username, @passwordHash, @passwordSalt, @firstName, @lastName, @dateCreated);";
+
         private readonly string UpdateUserQuery = @"UPDATE UserInfo SET PasswordHash = @passwordHash, PasswordSalt = @passwordSalt, FirstName = @firstName, LastName = @lastName WHERE Username = @username;
-            UPDATE UserPermissions SET CanViewCustomers = @canViewCustomers, CanViewProducts = @canViewProducts, CanViewInvoicesList = @canViewInvoicesList,
-            CanViewInvoiceDetails = @canViewInvoiceDetails, CanViewTransactionsList = @canViewTransactionsList, CanViewTransactionDetails = @canViewTransactionDetails,
-            CanViewCheques = @canViewCheques, CanAddNewCustomer = @canAddNewCustomer, CanAddNewProduct = @canAddNewProduct, CanAddNewInvoice = @canAddNewInvoice,
-            CanAddNewTransaction = @canAddNewTransaction, CanAddNewCheque = @canAddNewCheque, CanEditCustomers = @canEditCustomers, CanEditProducts = @canEditProducts,
-            CanEditInvoices = @canEditInvoices, CanEditTransactions = @canEditTransactions, CanEditCheques = @canEditCheques, CanDeleteCustomer = @canDeleteCustomer,
+            UPDATE UserPermissions SET CanViewCustomersList = @canViewCustomersList, CanViewCustomerDetails = @canViewCustomerDetails, CanViewProductsList = @canViewProductsList, CanViewProductDetails = @canViewProductDetails,
+            CanViewInvoicesList = @canViewInvoicesList, CanViewInvoiceDetails = @canViewInvoiceDetails, CanViewTransactionsList = @canViewTransactionsList, CanViewTransactionDetails = @canViewTransactionDetails,
+            CanViewChequesList = @canViewChequesList, CanViewChequeDetails = @canViewChequeDetails, CanAddNewCustomer = @canAddNewCustomer, CanAddNewProduct = @canAddNewProduct, CanAddNewInvoice = @canAddNewInvoice,
+            CanAddNewTransaction = @canAddNewTransaction, CanAddNewCheque = @canAddNewCheque, CanEditCustomer = @canEditCustomer, CanEditProduct = @canEditProduct,
+            CanEditInvoice = @canEditInvoice, CanEditTransaction = @canEditTransaction, CanEditCheque = @canEditCheque, CanDeleteCustomer = @canDeleteCustomer,
             CanDeleteProduct = @canDeleteProduct, CanDeleteInvoice = @canDeleteInvoice, CanDeleteInvoiceItem = @canDeleteInvoiceItem, CanDeleteTransaction = @canDeleteTransaction,
             CanDeleteTransactionItem = @canDeleteTransactionItem, CanDeleteCheque = @canDeleteCheque, CanPrintInvoice = @canPrintInvoice, CanPrintTransaction = @canPrintTransaction,
-            CanChangeItsSettings = @canChangeItsSettings, CanChangeItsPassword = @canChangeItsPassword, CanAddUser = @canAddUser, CanEditOtherUsersPermission = @canEditOtherUsersPermission,
-            CanEditOtherUsersSettings = @canEditOtherUsersSettings WHERE Username = @username;
+            CanManageItself = @canManageItself, CanManageOthers = @canManageOthers WHERE Username = @username;
             
             UPDATE UserSettings SET Username = @username, ColorNewItem = @colorNewItem, ColorSoldItemColor = @colorSoldItemColor, ColorNonSufficientFundItem = @colorNonSufficientFundItem,
             ColorCashedItem = @colorCashedItem, ColorChequeNotification = @colorChequeNotification, ColorUpdatedItem = @colorUpdatedItem, ColorBalancedItem = @colorBalancedItem,
@@ -68,12 +68,27 @@ namespace DataLibraryCore.DataAccess.SqlServer
             TransactionShortcut1Id = @transactionShortcut1Id, TransactionShortcut2Id = @transactionShortcut2Id, TransactionShortcut3Id = transactionShortcut3Id,
             TransactionShortcut1Name = @transactionShortcut1Name, TransactionShortcut2Name = @transactionShortcut2Name, TransactionShortcut3Name = @transactionShortcut3Name,
             AskToAddNotExistingProduct = @askToAddNotExistingProduct, CanViewNetProfits = @canViewNetProfits, CanUseBarcodeReader = @canUseBarcodeReader WHERE Username = @username;";
-        private readonly string SelectUserInfoBase = @"SELECT FirstName, LastName, DateCreated, LastLoginDate FROM UserInfo WHERE Username = @username";
+        private readonly string SelectUserInfoBase = @"SELECT Username, FirstName, LastName, DateCreated, LastLoginDate, LastLoginTime FROM UserInfo WHERE Username = @username";
         private readonly string SelectUserPermissions = @"SELECT * FROM UserPermissions WHERE Username = @username";
         private readonly string SelectUserSettings = @"SELECT * FROM UserSettings WHERE Username = @username";
         private readonly string GetPasswordHash = @"SELECT PasswordHash FROM UserInfo WHERE Username = @username";
         private readonly string GetPasswordSalt = @"SELECT PasswordSalt FROM UserInfo WHERE Username = @username";
         private readonly string DeleteUserFromDB = @"DELETE FROM UserInfo WHERE Username = @username; DELETE FROM UserPermissions WHERE Username = @username; DELETE FROM UserSettings WHERE Username = @username";
+        private readonly string GetUsersListQuery = @"SELECT Username, FirstName, LastName, DateCreated, LastLoginDate, LastLoginTime FROM UserInfo";
+        private readonly string GetCountOfAdminUsersQuery = @"SELECT COUNT(u.Username) FROM UserInfo u LEFT JOIN UserPermissions p ON u.Username = p.Username WHERE p.CanManageOthers = 1";
+        private readonly string UpdateUserLastLoginDateQuery = @"UPDATE UserInfo SET LastLoginDate = @lastLoginDate, LastLoginTime = @lastLoginTime WHERE Username = @username";
+
+        public async Task<List<UserInfoBase>> GetUsersList()
+        {
+            var list =  await DataAccess.LoadDataAsync<UserInfoBase, DynamicParameters>(GetUsersListQuery, null);
+            return list.ToList();
+        }
+
+        public async Task<int> GetCountOfAdminUsers()
+        {
+            var count =  await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(GetCountOfAdminUsersQuery, null);
+            return count;
+        }
 
         public async Task<UserInfo> CreateUser(User_DTO_CreateUpdate user)
         {
@@ -176,6 +191,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return await DataAccess.SaveDataAsync(DeleteUserFromDB, dp);
         }
 
+        public async Task UpdateUserLastLoginDate(string username)
+        {
+            if (string.IsNullOrEmpty(username)) return;
+            DynamicParameters dp = new();
+            dp.Add("@username", username);
+            dp.Add("@lastLoginDate", PersianCalendarModel.GetCurrentPersianDate());
+            dp.Add("@lastLoginTime", PersianCalendarModel.GetCurrentTime());
+            await DataAccess.SaveDataAsync(UpdateUserLastLoginDateQuery, dp);
+        }
+
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new HMACSHA512())
@@ -192,23 +217,26 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@firstName", user.FirstName);
             dp.Add("@lastName", user.LastName);
 
-            dp.Add("@canViewCustomers", user.Permissions.CanViewCustomerDetails);
-            dp.Add("@canViewProducts", user.Permissions.CanViewProductDetails);
+            dp.Add("@canViewCustomersList", user.Permissions.CanViewCustomersList);
+            dp.Add("@canViewCustomerDetails", user.Permissions.CanViewCustomerDetails);
+            dp.Add("@canViewProductsList", user.Permissions.CanViewProductsList);
+            dp.Add("@canViewProductDetails", user.Permissions.CanViewProductDetails);
             dp.Add("@canViewInvoicesList", user.Permissions.CanViewInvoicesList);
             dp.Add("@canViewInvoiceDetails", user.Permissions.CanViewInvoiceDetails);
             dp.Add("@canViewTransactionsList", user.Permissions.CanViewTransactionsList);
             dp.Add("@canViewTransactionDetails", user.Permissions.CanViewTransactionDetails);
-            dp.Add("@canViewCheques", user.Permissions.CanViewChequeDetails);
+            dp.Add("@canViewChequesList", user.Permissions.CanViewChequesList);
+            dp.Add("@canViewChequeDetails", user.Permissions.CanViewChequeDetails);
             dp.Add("@canAddNewCustomer", user.Permissions.CanAddNewCustomer);
             dp.Add("@canAddNewProduct", user.Permissions.CanAddNewProduct);
             dp.Add("@canAddNewInvoice", user.Permissions.CanAddNewInvoice);
             dp.Add("@canAddNewTransaction", user.Permissions.CanAddNewTransaction);
             dp.Add("@canAddNewCheque", user.Permissions.CanAddNewCheque);
-            dp.Add("@canEditCustomers", user.Permissions.CanEditCustomer);
-            dp.Add("@canEditProducts", user.Permissions.CanEditProduct);
-            dp.Add("@canEditInvoices", user.Permissions.CanEditInvoice);
-            dp.Add("@canEditTransactions", user.Permissions.CanEditTransaction);
-            dp.Add("@canEditCheques", user.Permissions.CanEditCheque);
+            dp.Add("@canEditCustomer", user.Permissions.CanEditCustomer);
+            dp.Add("@canEditProduct", user.Permissions.CanEditProduct);
+            dp.Add("@canEditInvoice", user.Permissions.CanEditInvoice);
+            dp.Add("@canEditTransaction", user.Permissions.CanEditTransaction);
+            dp.Add("@canEditCheque", user.Permissions.CanEditCheque);
             dp.Add("@canDeleteCustomer", user.Permissions.CanDeleteCustomer);
             dp.Add("@canDeleteProduct", user.Permissions.CanDeleteProduct);
             dp.Add("@canDeleteInvoice", user.Permissions.CanDeleteInvoice);
@@ -218,11 +246,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@canDeleteCheque", user.Permissions.CanDeleteCheque);
             dp.Add("@canPrintInvoice", user.Permissions.CanPrintInvoice);
             dp.Add("@canPrintTransaction", user.Permissions.CanPrintTransaction);
-            dp.Add("@canChangeItsSettings", user.Permissions.CanChangeItsSettings);
-            dp.Add("@canChangeItsPassword", user.Permissions.CanChangeItsPassword);
-            dp.Add("@canAddUser", user.Permissions.CanAddUser);
-            dp.Add("@canEditOtherUsersPermission", user.Permissions.CanEditOtherUsersPermission);
-            dp.Add("@canEditOtherUsersSettings", user.Permissions.CanEditOtherUsersSettings);
+            dp.Add("@canManageItself", user.Permissions.CanManageItself);
+            dp.Add("@canManageOthers", user.Permissions.CanManageOthers);
 
             dp.Add("@colorNewItem", user.Settings.ColorNewItem);
             dp.Add("@colorSoldItemColor", user.Settings.ColorSoldItemColor);
