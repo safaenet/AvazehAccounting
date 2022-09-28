@@ -91,8 +91,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 PasswordSalt = PasswordSalt
             };
             var dp = FillParameters(user);
-            dp.Add("@passwordHash", Convert.ToBase64String(newUser.PasswordHash));
-            dp.Add("@passwordSalt", Convert.ToBase64String(newUser.PasswordSalt));
+            dp.Add("@passwordHash", newUser.PasswordHash, System.Data.DbType.Binary);
+            dp.Add("@passwordSalt", newUser.PasswordSalt, System.Data.DbType.Binary);
             dp.Add("@dateCreated", newUser.DateCreated);
 
             var AffectedCount = await DataAccess.SaveDataAsync(CreateUserQuery, dp);
@@ -104,11 +104,10 @@ namespace DataLibraryCore.DataAccess.SqlServer
             if (string.IsNullOrEmpty(user.Username)) return false;
             DynamicParameters dp = new();
             dp.Add("@username", user.Username);
-            var PasswordHash = await DataAccess.QuerySingleOrDefaultAsync<string, DynamicParameters>(GetPasswordHash, dp);
-            var PasswordSalt = await DataAccess.QuerySingleOrDefaultAsync<string, DynamicParameters>(GetPasswordSalt, dp);
-            if (string.IsNullOrEmpty(PasswordHash) || string.IsNullOrEmpty(PasswordSalt)) return false;
-            if (!VerifyPasswordHash(user.Password, Encoding.UTF8.GetBytes(PasswordHash), Encoding.UTF8.GetBytes(PasswordSalt))) return false;
-            return true;
+            var PasswordHash = await DataAccess.QuerySingleOrDefaultAsync<byte[], DynamicParameters>(GetPasswordHash, dp);
+            var PasswordSalt = await DataAccess.QuerySingleOrDefaultAsync<byte[], DynamicParameters>(GetPasswordSalt, dp);
+            if (PasswordHash == null || PasswordSalt == null) return false;
+            return VerifyPasswordHash(user.Password, PasswordHash, PasswordSalt);
         }
 
         private bool VerifyPasswordHash(string password, byte[] oldPasswordHash, byte[] oldPasswordSalt)
@@ -116,8 +115,6 @@ namespace DataLibraryCore.DataAccess.SqlServer
             using (var hmac = new HMACSHA512(oldPasswordSalt))
             {
                 var ComputedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-                var oldHash = Convert.ToBase64String(oldPasswordHash);
-                var newHash = Convert.ToBase64String(ComputedHash);
                 return ComputedHash.SequenceEqual(oldPasswordHash);
             }
         }
