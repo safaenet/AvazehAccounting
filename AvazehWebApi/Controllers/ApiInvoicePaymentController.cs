@@ -1,8 +1,11 @@
 ﻿using AvazehWeb;
 using DataLibraryCore.DataAccess.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
+using SharedLibrary.SecurityAndSettingsModels;
 using System.Threading.Tasks;
 
 namespace AvazehWebAPI.Controllers
@@ -18,7 +21,7 @@ namespace AvazehWebAPI.Controllers
 
         private readonly IInvoiceProcessor Processor;
 
-        [HttpGet("{Id}")]
+        [HttpGet("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewInvoiceDetails))]
         public async Task<ActionResult<InvoicePaymentModel>> GetItemAsync(int Id)
         {
             var item = await Processor.GetInvoicePaymentFromDatabaseAsync(Id);
@@ -26,7 +29,7 @@ namespace AvazehWebAPI.Controllers
             return item;
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanEditInvoice))]
         public async Task<ActionResult<InvoicePaymentModel>> CreateItemAsync(InvoicePaymentModel_DTO_Create_Update model)
         {
             var newItem = model.AsDaL();
@@ -35,7 +38,7 @@ namespace AvazehWebAPI.Controllers
             return newItem;
         }
 
-        [HttpPut("{Id}")]
+        [HttpPut("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanEditInvoice))]
         public async Task<ActionResult<InvoicePaymentModel>> UpdateItemAsync(int Id, InvoicePaymentModel_DTO_Create_Update model)
         {
             if (model is null) return BadRequest("Model is not valid");
@@ -46,7 +49,7 @@ namespace AvazehWebAPI.Controllers
             return updatedModel;
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanEditInvoice))]
         public async Task<ActionResult> DeleteItemAsync(int Id)
         {
             if (await Processor.DeleteInvoicePaymentFromDatabaseAsync(Id) > 0) return Ok("Successfully deleted the item");

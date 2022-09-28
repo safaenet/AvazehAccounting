@@ -44,7 +44,7 @@ namespace AvazehWebAPI.Controllers
             return item;
         }
 
-        [HttpGet("Banknames"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewChequeDetails))]
+        [HttpGet("Banknames"), Authorize]
         public async Task<ActionResult<List<string>>> GetBanknamesAsync()
         {
             var items = await Manager.Processor.GetBanknames();

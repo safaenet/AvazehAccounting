@@ -1,9 +1,12 @@
 ﻿using AvazehWeb;
 using DataLibraryCore.DataAccess.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
+using SharedLibrary.SecurityAndSettingsModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -21,7 +24,7 @@ namespace AvazehWebAPI.Controllers
         private readonly IInvoiceCollectionManager Manager;
 
         //GET /Customer?Id=1&SearchText=sometext
-        [HttpGet]
+        [HttpGet, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewInvoicesList))]
         public async Task<ActionResult<ItemsCollection_DTO<InvoiceListModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "Id", OrderType orderType = OrderType.DESC, InvoiceLifeStatus? LifeStatus = InvoiceLifeStatus.Active, InvoiceFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false)
         {
             Manager.GenerateWhereClause(SearchText, OrderBy, orderType, LifeStatus, FinStatus);
@@ -32,42 +35,42 @@ namespace AvazehWebAPI.Controllers
             return Manager.AsDto();
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewInvoiceDetails))]
         public async Task<ActionResult<InvoiceModel>> GetItemAsync(int Id)
         {
             InvoiceModel model = await Manager.Processor.LoadSingleItemAsync(Id);
             return model is null ? NotFound("Couldn't find specific Item") : model;
         }
 
-        [HttpGet("ProductItems")]
+        [HttpGet("ProductItems"), Authorize]
         public async Task<ActionResult<List<ItemsForComboBox>>> GetProductItemsAsync(string SearchText)
         {
             var items = await Manager.Processor.GetProductItemsAsync(SearchText);
             return items is null ? NotFound("Couldn't find any match") : items;
         }
 
-        [HttpGet("ProductUnits")]
+        [HttpGet("ProductUnits"), Authorize]
         public async Task<ActionResult<List<ProductUnitModel>>> GetProductUnitsAsync(string SearchText)
         {
             var items = await Manager.Processor.GetProductUnitsAsync();
             return items is null ? NotFound("List is Empty") : items;
         }
 
-        [HttpGet("CustomerNames")]
+        [HttpGet("CustomerNames"), Authorize]
         public async Task<ActionResult<List<ItemsForComboBox>>> GetCustomerNamesAsync(string SearchText)
         {
             var items = await Manager.Processor.GetCustomerNamesAsync(SearchText);
             return items is null ? NotFound("Couldn't find any match") : items;
         }
 
-        [HttpGet("CustomerBalance/{CustomerId}/{InvoiceId}")]
+        [HttpGet("CustomerBalance/{CustomerId}/{InvoiceId}"), Authorize]
         public async Task<ActionResult<double>> GetCustomerBalanceAsync(int CustomerId, int InvoiceId = 0)
         {
             var result = await Manager.Processor.GetTotalOrRestTotalBalanceOfCustomerAsync(CustomerId, InvoiceId);
             return result;
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanAddNewInvoice))]
         public async Task<ActionResult<InvoiceModel>> CreateItemAsync(InvoiceModel_DTO_Create_Update model)
         {
             var newItem = model.AsDaL();
@@ -76,7 +79,7 @@ namespace AvazehWebAPI.Controllers
             return newItem;
         }
 
-        [HttpPut("{Id}")]
+        [HttpPut("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanEditInvoice))]
         public async Task<ActionResult<InvoiceModel>> UpdateItemAsync(int Id, InvoiceModel_DTO_Create_Update model)
         {
             if (model is null) return BadRequest("Model is not valid");
@@ -87,7 +90,7 @@ namespace AvazehWebAPI.Controllers
             return updatedModel;
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanDeleteInvoice))]
         public async Task<ActionResult> DeleteItemAsync(int Id)
         {
             if (await Manager.Processor.DeleteItemByIdAsync(Id) > 0) return Ok("Successfully deleted the item");
