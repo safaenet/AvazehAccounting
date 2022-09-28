@@ -24,8 +24,10 @@
     [InvoicePageSize] INT NOT NULL DEFAULT 50, 
     [InvoiceListQueryOrderType] NVARCHAR(5) NOT NULL DEFAULT 'DESC', 
     [InvoiceDetailQueryOrderType] NVARCHAR(5) NOT NULL DEFAULT 'DESC', 
-    [TransactionPageSize] INT NOT NULL DEFAULT 50, 
+    [TransactionListPageSize] INT NOT NULL DEFAULT 50, 
+    [TransactionDetailPageSize] INT NOT NULL DEFAULT 50, 
     [TransactionListQueryOrderType] NVARCHAR(5) NOT NULL DEFAULT 'DESC', 
+    [TransactionDetailQueryOrderType] NVARCHAR(5) NOT NULL DEFAULT 'DESC', 
 
     [AutoSelectPersianLanguage] BIT NOT NULL DEFAULT 0, 
     [TransactionShortcut1Id] INT NOT NULL DEFAULT 0, 
@@ -35,8 +37,6 @@
     [TransactionShortcut2Name] NVARCHAR(50) NULL DEFAULT 'میانبر دو', 
     [TransactionShortcut3Name] NVARCHAR(50) NULL DEFAULT 'میانبر سه', 
     [AskToAddNotExistingProduct] BIT NOT NULL DEFAULT 1, 
-    [CanViewNetProfits] BIT NOT NULL DEFAULT 0, 
-    [CanUseBarcodeReader] BIT NOT NULL DEFAULT 1, 
     CONSTRAINT [PK_UserSettings] PRIMARY KEY ([Username]), 
 )
 GO

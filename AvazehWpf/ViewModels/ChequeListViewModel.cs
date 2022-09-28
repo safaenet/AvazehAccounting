@@ -3,6 +3,7 @@ using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
+using SharedLibrary.SecurityAndSettingsModels;
 using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using System;
 using System.Collections.Generic;
@@ -15,42 +16,24 @@ namespace AvazehWpf.ViewModels
 {
     public class ChequeListViewModel : Screen
     {
-        public ChequeListViewModel(IChequeCollectionManagerAsync manager, IAppSettingsManager settingsManager, SingletonClass singelton)
+        public ChequeListViewModel(IChequeCollectionManagerAsync manager, LoggedInUser_DTO user, SingletonClass singelton)
         {
             CCM = manager;
-            ASM = settingsManager;
+            User = user;
             Singleton = singelton;
             _SelectedCheque = new();
             LoadSettings().ConfigureAwait(true);
         }
 
         private IChequeCollectionManagerAsync _CCM;
-        private readonly IAppSettingsManager ASM;
+        private readonly LoggedInUser_DTO User;
         private ChequeModel _SelectedCheque;
-        private ChequeSettingsModel chequeSettings;
-        private GeneralSettingsModel generalSettings;
         private SingletonClass Singleton;
 
         public ChequeModel SelectedCheque
         {
             get { return _SelectedCheque; }
             set { _SelectedCheque = value; NotifyOfPropertyChange(() => SelectedCheque); }
-        }
-        public GeneralSettingsModel GeneralSettings
-        {
-            get => generalSettings; set
-            {
-                generalSettings = value;
-                NotifyOfPropertyChange(() => GeneralSettings);
-            }
-        }
-        public ChequeSettingsModel ChequeSettings
-        {
-            get => chequeSettings; set
-            {
-                chequeSettings = value;
-                NotifyOfPropertyChange(() => ChequeSettings);
-            }
         }
 
         public IChequeCollectionManagerAsync CCM
@@ -80,19 +63,14 @@ namespace AvazehWpf.ViewModels
 
         private async Task LoadSettings()
         {
-            var Settings = await ASM.LoadAllAppSettings();
-            if (Settings == null) Settings = new();
-            ChequeSettings = Settings.ChequeSettings;
-            GeneralSettings = Settings.GeneralSettings;
-
-            CCM.PageSize = ChequeSettings.PageSize;
-            CCM.QueryOrderType = ChequeSettings.QueryOrderType;
+            CCM.PageSize = User.Settings.ChequeListPageSize;
+            CCM.QueryOrderType = User.Settings.ChequeListQueryOrderType;
             await Search();
         }
 
         public void AddNewCheque()
         {
-            if (GeneralSettings!= null && !GeneralSettings.CanAddNewCheque) return;
+            //if (GeneralSettings!= null && !GeneralSettings.CanAddNewCheque) return;
             WindowManager wm = new();
             wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, null, Singleton, RefreshPage));
         }
@@ -117,7 +95,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task Search()
         {
-            if (!GeneralSettings.CanViewCheques) return;
+            //if (!GeneralSettings.CanViewCheques) return;
             ChequeListQueryStatus? ListQueryStatus = SelectedListQueryStatus >= Enum.GetNames(typeof(ChequeListQueryStatus)).Length ? null : (ChequeListQueryStatus)SelectedListQueryStatus;
             CCM.ListQueryStatus = ListQueryStatus;
             CCM.SearchValue = SearchText;
@@ -136,7 +114,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditCheque()
         {
-            if (!GeneralSettings.CanEditCheques) return;
+            //if (!GeneralSettings.CanEditCheques) return;
             if (Cheques == null || Cheques.Count == 0 || SelectedCheque == null || SelectedCheque.Id == 0) return;
             WindowManager wm = new();
             await wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, SelectedCheque, Singleton, RefreshPage));
@@ -144,7 +122,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteCheque()
         {
-            if (!GeneralSettings.CanEditCheques) return;
+            //if (!GeneralSettings.CanEditCheques) return;
             if (Cheques == null || Cheques.Count == 0 || SelectedCheque == null || SelectedCheque.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete cheque from {SelectedCheque.Drawer}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;

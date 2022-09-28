@@ -34,6 +34,8 @@
 
     [CanPrintInvoice] BIT NOT NULL DEFAULT 1, 
     [CanPrintTransaction] BIT NOT NULL DEFAULT 1, 
+    [CanViewNetProfits] BIT NOT NULL DEFAULT 1, 
+    [CanUseBarcodeReader] BIT NOT NULL DEFAULT 1, 
     [CanManageItself] BIT NOT NULL DEFAULT 1, 
     [CanManageOthers] BIT NOT NULL DEFAULT 1, 
     CONSTRAINT [PK_UserPermissions] PRIMARY KEY ([Username]), 

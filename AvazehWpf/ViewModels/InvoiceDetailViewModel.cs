@@ -25,38 +25,33 @@ using System.Diagnostics;
 using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using SharedLibrary.SettingsModels;
 using System.Globalization;
+using SharedLibrary.SecurityAndSettingsModels;
 
 namespace AvazehWpf.ViewModels
 {
     public class InvoiceDetailViewModel : ViewAware
     {
-        public InvoiceDetailViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, IAppSettingsManager settingsManager, SingletonClass singleton, int? InvoiceId, Func<Task> callBack, SimpleContainer sc)
+        public InvoiceDetailViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, LoggedInUser_DTO user, SingletonClass singleton, int? InvoiceId, Func<Task> callBack, SimpleContainer sc)
         {
             ICM = iManager;
             IDM = dManager;
-            ASM = settingsManager;
+            User = user;
             SC = sc;
             CallBackFunc = callBack;
             Singleton = singleton;
-            LoadSettings(InvoiceId).ConfigureAwait(true);
+            LoadInvoice(InvoiceId).ConfigureAwait(true);
         }
 
         private readonly IInvoiceCollectionManager ICM;
         private readonly IInvoiceDetailManager IDM;
-        private readonly IAppSettingsManager ASM;
+        private readonly LoggedInUser_DTO User;
         SimpleContainer SC;
         private readonly SingletonClass Singleton;
         private InvoiceModel _Invoice;
         private readonly Func<Task> CallBackFunc;
-        private InvoiceSettingsModel invoiceSettings;
-        private PrintSettingsModel printSettings;
-        private GeneralSettingsModel generalSettings;
         private ObservableCollection<ItemsForComboBox> productItems;
         private ObservableCollection<ProductUnitModel> productUnits;
         private ObservableCollection<RecentSellPriceModel> recentSellPrices;
-        public InvoiceSettingsModel InvoiceSettings { get => invoiceSettings; private set { invoiceSettings = value; NotifyOfPropertyChange(() => InvoiceSettings); } }
-        public PrintSettingsModel PrintSettings { get => printSettings; private set { printSettings = value; NotifyOfPropertyChange(() => PrintSettings); } }
-        public GeneralSettingsModel GeneralSettings { get => generalSettings; private set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); } }
         private InvoiceItemModel _workItem = new();
         private bool CanUpdateRowFromDB = true; //False when user DoubleClicks on a row.
         private bool EdittingItem = false;
@@ -83,14 +78,8 @@ namespace AvazehWpf.ViewModels
             set { phoneNumberText = value; }
         }
 
-        private async Task LoadSettings(int? InvoiceId)
+        private async Task LoadInvoice(int? InvoiceId)
         {
-            var Settings = await ASM.LoadAllAppSettings();
-            if (Settings == null) Settings = new();
-            InvoiceSettings = Settings.InvoiceSettings;
-            PrintSettings = Settings.PrintSettings;
-            GeneralSettings = Settings.GeneralSettings;
-
             if (InvoiceId is not null)
             {
                 await ReloadInvoice(InvoiceId);
@@ -139,7 +128,7 @@ namespace AvazehWpf.ViewModels
 
         private async Task ReloadInvoice(int? InvoiceId)
         {
-            if (!GeneralSettings.CanViewInvoices) return;
+            //if (!GeneralSettings.CanViewInvoices) return;
             if (InvoiceId is null || (int)InvoiceId == 0) return;
             Invoice = await ICM.GetItemById((int)InvoiceId);
             WindowTitle = Invoice.Customer.FullName + " - فاکتور";
@@ -161,7 +150,7 @@ namespace AvazehWpf.ViewModels
 
         public void EditItem() //DataGrid doubleClick event
         {
-            if(!GeneralSettings.CanEditInvoices) return;
+            //if(!GeneralSettings.CanEditInvoices) return;
             if (Invoice == null || SelectedItem == null) return;
             CanUpdateRowFromDB = false;
             EdittingItem = true;
@@ -176,12 +165,12 @@ namespace AvazehWpf.ViewModels
 
         public async Task AddOrUpdateItem()
         {
-            if (!GeneralSettings.CanEditInvoices) return;
+            //if (!GeneralSettings.CanEditInvoices) return;
             if (Invoice == null) return;
             var pcm = SC.GetInstance<ICollectionManager<ProductModel>>();
             if (SelectedProductItem == null && ProductInput != null && ProductInput.Length > 0 && EdittingItem == false) //Search by Entered text
             {
-                if (InvoiceSettings.EnableBarcodeReader) //Search Barcode
+                //if (InvoiceSettings.EnableBarcodeReader) //Search Barcode
                 {
                     var product = await pcm.GetItemByBarCodeAsync(ProductInput);
                     if (product != null) //Found by barcode.
@@ -298,7 +287,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteItem()
         {
-            if (!GeneralSettings.CanEditInvoices) return;
+            //if (!GeneralSettings.CanEditInvoices) return;
             if (Invoice == null || Invoice.Items == null || !Invoice.Items.Any() || SelectedItem == null) return;
             var result = MessageBox.Show("Are you sure you want to delete this row ?", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
@@ -330,7 +319,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteInvoiceAndClose()
         {
-            if (!GeneralSettings.CanEditInvoices) return;
+            //if (!GeneralSettings.CanEditInvoices) return;
             if (Invoice == null) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete Invoice for {Invoice.Customer.FullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
@@ -358,14 +347,14 @@ namespace AvazehWpf.ViewModels
 
         public async Task ViewPayments()
         {
-            if (!GeneralSettings.CanEditInvoices) return;
+            //if (!GeneralSettings.CanEditInvoices) return;
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(ICM, IDM, ASM, Invoice, RefreshAndReloadCustomerTotalBalance, SC, true));
+            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(ICM, IDM, User, Invoice, RefreshAndReloadCustomerTotalBalance, SC, true));
         }
 
         public async Task SaveInvoiceChanges()
         {
-            if (!GeneralSettings.CanEditInvoices) return;
+            //if (!GeneralSettings.CanEditInvoices) return;
             var result = await ICM.UpdateItemAsync(Invoice);
             if (result == null)
             {
@@ -428,7 +417,7 @@ namespace AvazehWpf.ViewModels
             if (Invoice is null) return;
             WindowManager wm = new();
             var ccm = SC.GetInstance<ICollectionManager<CustomerModel>>();
-            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, Invoice.Id, ICM, ccm, RefreshAndReloadCustomerTotalBalanceAsync, ASM, SC));
+            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, Invoice.Id, ICM, ccm, RefreshAndReloadCustomerTotalBalanceAsync, User, SC));
         }
 
         public void CloseWindow()
@@ -514,9 +503,8 @@ namespace AvazehWpf.ViewModels
 
         public void SetKeyboardLayout()
         {
-            if (GeneralSettings != null && GeneralSettings.AutoSelectPersianLanguage)
-                if (GeneralSettings.AutoSelectPersianLanguage)
-                    ExtensionsAndStatics.ChangeLanguageToPersian();
+            if (User.Settings.AutoSelectPersianLanguage)
+                ExtensionsAndStatics.ChangeLanguageToPersian();
         }
     }
 

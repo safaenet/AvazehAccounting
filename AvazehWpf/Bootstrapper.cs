@@ -34,8 +34,7 @@ namespace AvazehWpf
                     ViewModelType, ViewModelType.ToString(), ViewModelType));
 
             Container
-                .Singleton<IApiProcessor, ApiProcessor>();
-            Container
+                .Singleton<IApiProcessor, ApiProcessor>()
                 .PerRequest<ICollectionManager<ProductModel>, ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>>()
                 .PerRequest<ICollectionManager<CustomerModel>, CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>>()
                 .PerRequest<IChequeCollectionManagerAsync, ChequeCollectionManagerAsync>()
@@ -63,7 +62,7 @@ namespace AvazehWpf
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
-            DisplayRootViewForAsync<MainWindowViewModel>();
+            _ = DisplayRootViewForAsync<LoginViewModel>();
         }
         
     }

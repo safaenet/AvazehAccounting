@@ -32,8 +32,10 @@ namespace SharedLibrary.SecurityAndSettingsModels
         public int InvoicePageSize { get; set; }
         public OrderType InvoiceListQueryOrderType { get; set; }
         public OrderType InvoiceDetailQueryOrderType { get; set; }
-        public int TransactionPageSize { get; set; }
+        public int TransactionListPageSize { get; set; }
+        public int TransactionDetailPageSize { get; set; }
         public OrderType TransactionListQueryOrderType { get; set; }
+        public OrderType TransactionDetailQueryOrderType { get; set; }
         public bool AutoSelectPersianLanguage { get; set; }
         public int TransactionShortcut1Id { get; set; }
         public int TransactionShortcut2Id { get; set; }
@@ -42,7 +44,5 @@ namespace SharedLibrary.SecurityAndSettingsModels
         public string TransactionShortcut2Name { get; set; }
         public string TransactionShortcut3Name { get; set; }
         public bool AskToAddNotExistingProduct { get; set; }
-        public bool CanViewNetProfits { get; set; }
-        public bool CanUseBarcodeReader { get; set; }
     }
 }

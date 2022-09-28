@@ -23,19 +23,19 @@ using SharedLibrary.SettingsModels;
 using System.Xml.Serialization;
 using System.IO;
 using System.Diagnostics;
+using SharedLibrary.SecurityAndSettingsModels;
 
 namespace AvazehWpf.ViewModels
 {
     public class TransactionDetailViewModel : ViewAware
     {
-        public TransactionDetailViewModel(ITransactionCollectionManager iManager, ITransactionDetailManager dManager, IAppSettingsManager settingsManager, SingletonClass singleton, int? TransactionId, Func<Task> callBack)
+        public TransactionDetailViewModel(ITransactionCollectionManager iManager, ITransactionDetailManager dManager, LoggedInUser_DTO user, SingletonClass singleton, int? TransactionId, Func<Task> callBack)
         {
             TCM = iManager;
             TDM = dManager;
-            ASM = settingsManager;
+            User = user;
             CallBackFunc = callBack;
             Singleton = singleton;
-            LoadSettings().ConfigureAwait(true);
             if (TransactionId is not null)
             {
                 TDM.TransactionId = (int)TransactionId;
@@ -45,16 +45,10 @@ namespace AvazehWpf.ViewModels
         }
         private readonly ITransactionCollectionManager TCM;
         private readonly ITransactionDetailManager TDM;
-        private readonly IAppSettingsManager ASM;
+        private readonly LoggedInUser_DTO User;
         private SingletonClass Singleton;
         private TransactionModel _Transaction;
         private readonly Func<Task> CallBackFunc;
-        private TransactionSettingsModel transactionSettings;
-        private GeneralSettingsModel generalSettings;
-        private PrintSettingsModel printSettings;
-        public TransactionSettingsModel TransactionSettings { get => transactionSettings; private set { transactionSettings = value; NotifyOfPropertyChange(() => TransactionSettings); } }
-        public GeneralSettingsModel GeneralSettings { get => generalSettings; private set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); } }
-        public PrintSettingsModel PrintSettings { get => printSettings; private set { printSettings = value; NotifyOfPropertyChange(() => PrintSettings); } }
         private ObservableCollection<ItemsForComboBox> productItems;
         private ObservableCollection<ItemsForComboBox> transactionsForComboBox;
         private TransactionItemModel _workItem = new();
@@ -90,15 +84,6 @@ namespace AvazehWpf.ViewModels
         {
             get => _Transaction;
             set { _Transaction = value; NotifyOfPropertyChange(() => Transaction); }
-        }
-
-        private async Task LoadSettings()
-        {
-            var Settings = await ASM.LoadAllAppSettings();
-            if (Settings == null) Settings = new();
-            TransactionSettings = Settings.TransactionSettings;
-            GeneralSettings = Settings.GeneralSettings;
-            PrintSettings = Settings.PrintSettings;
         }
 
         private async Task ReloadTransaction(int? TransactionId)
@@ -402,9 +387,8 @@ namespace AvazehWpf.ViewModels
 
         public void SetKeyboardLayout()
         {
-            if (GeneralSettings != null && GeneralSettings.AutoSelectPersianLanguage)
-                if (GeneralSettings.AutoSelectPersianLanguage)
-                    ExtensionsAndStatics.ChangeLanguageToPersian();
+            if (User.Settings.AutoSelectPersianLanguage)
+                ExtensionsAndStatics.ChangeLanguageToPersian();
         }
     }
 }

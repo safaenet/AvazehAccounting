@@ -4,6 +4,7 @@ using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace AvazehApiClient.DataAccess
@@ -14,8 +15,21 @@ namespace AvazehApiClient.DataAccess
         {
             ApiClient = new();
             ApiClient.BaseAddress = new Uri(SettingsDataAccess.AppConfiguration().GetSection("BaseUrl").Value);
+            ApiClient.DefaultRequestHeaders.Accept.Clear();
+            ApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
         private HttpClient ApiClient { get; set; }
+        private string token;
+        public string Token
+        {
+            get => token;
+            set
+            {
+                token = value;
+                ApiClient.DefaultRequestHeaders.Clear();
+                ApiClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            }
+        }
 
         public async Task<T> GetCollectionAsync<T>(string Key, string OrderBy, OrderType orderType, int Page = 1, string SearchText = "", int PageSize = 50, bool ForceLoad = false) where T : class
         {
@@ -43,6 +57,13 @@ namespace AvazehApiClient.DataAccess
             var Url = $"{Key}/{Id1}/{Id2}/{Id3}";
             var response = await ApiClient.GetAsync(Url);
             return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+        }
+
+        public async Task<bool> GetBooleanAsync(string Key)
+        {
+            var Url = $"{Key}";
+            var response = await ApiClient.GetAsync(Url);
+            return await response.Content.ReadAsAsync<bool>();
         }
 
         public async Task<T> GetInvoiceCollectionAsync<T>(string Key, string OrderBy, OrderType orderType, int Page = 1, string SearchText = "", InvoiceLifeStatus? LifeStatus = null, InvoiceFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false) where T : class

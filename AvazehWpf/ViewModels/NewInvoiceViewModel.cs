@@ -5,6 +5,7 @@ using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
+using SharedLibrary.SecurityAndSettingsModels;
 using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using System;
 using System.Collections.Generic;
@@ -23,17 +24,16 @@ namespace AvazehWpf.ViewModels
 {
     public class NewInvoiceViewModel : ViewAware
     {
-        public NewInvoiceViewModel(SingletonClass singleton, int? InvoiceId, IInvoiceCollectionManager icManager, ICollectionManager<CustomerModel> ccManager, Func<Task> callBack, IAppSettingsManager settingsManager, SimpleContainer sc)
+        public NewInvoiceViewModel(SingletonClass singleton, int? InvoiceId, IInvoiceCollectionManager icManager, ICollectionManager<CustomerModel> ccManager, Func<Task> callBack, LoggedInUser_DTO user, SimpleContainer sc)
         {
             ICM = icManager;
             CCM = ccManager;
-            ASM = settingsManager;
+            User = user;
             SC = sc;
             Singleton = singleton;
             InvoiceID = InvoiceId;
             GetComboboxItems().ConfigureAwait(true);
             CallBack = callBack;
-            LoadSettings().ConfigureAwait(true);
             if (InvoiceID == null)
             {
                 ButtonTitle = "Add";
@@ -46,8 +46,7 @@ namespace AvazehWpf.ViewModels
             }
         }
         public IInvoiceCollectionManager ICM { get; set; }
-        private IAppSettingsManager ASM;
-        private GeneralSettingsModel generalSettings;
+        private LoggedInUser_DTO User;
         private SimpleContainer SC;
         public ICollectionManager<CustomerModel> CCM { get; set; }
         private SingletonClass Singleton;
@@ -60,7 +59,6 @@ namespace AvazehWpf.ViewModels
         private string buttonTitle;
         private Func<Task> CallBack;
         private string windowTitle;
-        public GeneralSettingsModel GeneralSettings { get => generalSettings; private set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); } }
 
         public string WindowTitle
         {
@@ -102,13 +100,6 @@ namespace AvazehWpf.ViewModels
             //e.Handled = true;
         }
 
-        private async Task LoadSettings()
-        {
-            var Settings = await ASM.LoadAllAppSettings();
-            if (Settings == null) Settings = new();
-            GeneralSettings = Settings.GeneralSettings;
-        }
-
         public void CloseWindow()
         {
             (GetView() as Window).Close();
@@ -132,7 +123,7 @@ namespace AvazehWpf.ViewModels
                 {
                     WindowManager wm = new();
                     var idm = SC.GetInstance<IInvoiceDetailManager>();
-                    await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, idm, ASM, Singleton, newInvoice.Id, null, SC));
+                    await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, idm, User, Singleton, newInvoice.Id, null, SC));
                     CloseWindow();
                 }
                 else MessageBox.Show("خطا هنگام ایجاد فاکتور جدید", CustomerInput, MessageBoxButton.OK, MessageBoxImage.Error);
@@ -195,9 +186,8 @@ namespace AvazehWpf.ViewModels
 
         public void SetKeyboardLayout()
         {
-            if (GeneralSettings != null && GeneralSettings.AutoSelectPersianLanguage)
-                if (GeneralSettings.AutoSelectPersianLanguage)
-                    ExtensionsAndStatics.ChangeLanguageToPersian();
+            if (User.Settings.AutoSelectPersianLanguage)
+                ExtensionsAndStatics.ChangeLanguageToPersian();
         }
     }
 }

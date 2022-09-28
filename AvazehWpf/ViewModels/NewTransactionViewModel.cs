@@ -5,6 +5,7 @@ using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
+using SharedLibrary.SecurityAndSettingsModels;
 using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using System;
 using System.Collections.Generic;
@@ -23,15 +24,14 @@ namespace AvazehWpf.ViewModels
 {
     public class NewTransactionViewModel : ViewAware
     {
-        public NewTransactionViewModel(SingletonClass singleton, int? TransactionId, ITransactionCollectionManager icManager, Func<Task> callBack, IAppSettingsManager settingsManager, SimpleContainer sc)
+        public NewTransactionViewModel(SingletonClass singleton, int? TransactionId, ITransactionCollectionManager icManager, Func<Task> callBack, LoggedInUser_DTO user, SimpleContainer sc)
         {
             TCM = icManager;
-            ASM = settingsManager;
+            User = user;
             SC = sc;
             Singleton = singleton;
             TransactionID = TransactionId;
             CallBack = callBack;
-            LoadSettings().ConfigureAwait(true);
             if (TransactionID == null)
             {
                 ButtonTitle = "Add";
@@ -46,15 +46,13 @@ namespace AvazehWpf.ViewModels
         public ITransactionCollectionManager TCM { get; set; }
         private SingletonClass Singleton;
         private SimpleContainer SC;
-        private IAppSettingsManager ASM;
-        private GeneralSettingsModel generalSettings;
+        private LoggedInUser_DTO User;
         private readonly int? TransactionID;
         private string transactionName;
         private string buttonTitle;
         private Func<Task> CallBack;
         private string windowTitle;
 
-        public GeneralSettingsModel GeneralSettings { get => generalSettings; private set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); } }
         public string WindowTitle
         {
             get { return windowTitle; }
@@ -72,13 +70,6 @@ namespace AvazehWpf.ViewModels
         {
             get => transactionName;
             set { transactionName = value; NotifyOfPropertyChange(() => TransactionInput); }
-        }
-
-        private async Task LoadSettings()
-        {
-            var Settings = await ASM.LoadAllAppSettings();
-            if (Settings == null) Settings = new();
-            GeneralSettings = Settings.GeneralSettings;
         }
 
         public void CloseWindow()
@@ -102,7 +93,7 @@ namespace AvazehWpf.ViewModels
                 {
                     WindowManager wm = new();
                     var tdm = SC.GetInstance<ITransactionDetailManager>();
-                    await wm.ShowWindowAsync(new TransactionDetailViewModel(TCM, tdm, ASM, Singleton, newTransaction.Id, null));
+                    await wm.ShowWindowAsync(new TransactionDetailViewModel(TCM, tdm, User, Singleton, newTransaction.Id, null));
                     CloseWindow();
                 }
                 else MessageBox.Show("خطا هنگام ایجاد فایل جدید", TransactionInput, MessageBoxButton.OK, MessageBoxImage.Error);
@@ -147,9 +138,8 @@ namespace AvazehWpf.ViewModels
 
         public void SetKeyboardLayout()
         {
-            if (GeneralSettings != null && GeneralSettings.AutoSelectPersianLanguage)
-                if (GeneralSettings.AutoSelectPersianLanguage)
-                    ExtensionsAndStatics.ChangeLanguageToPersian();
+            if (User.Settings.AutoSelectPersianLanguage)
+                ExtensionsAndStatics.ChangeLanguageToPersian();
         }
     }
 }

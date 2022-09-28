@@ -350,4 +350,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="CanManageOthers" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="35b7bad9-07a0-4039-8ea6-8d5ed750f9e0" ChangeDateTime="09/28/2022 22:27:54">
+    <Property Name="ElementName" Value="[dbo].[UserSettings].[TransactionPageSize]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserSettings]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="TransactionListPageSize" />
+  </Operation>
 </Operations>

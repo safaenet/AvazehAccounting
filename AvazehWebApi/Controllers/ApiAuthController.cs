@@ -26,12 +26,12 @@ namespace AvazehWebAPI.Controllers
         private readonly IUserProcessor UserProcessor;
 
         [HttpPost("Register"), AllowAnonymous]
-        public async Task<ActionResult<bool>> Register(User_DTO_CreateUpdate user)
+        public async Task<ActionResult<UserInfo>> Register(User_DTO_CreateUpdate user)
         {
             var adminsCount = await UserProcessor.GetCountOfAdminUsers();
             if (adminsCount > 0 && !User.IsInRole(nameof(UserPermissions.CanManageOthers))) return BadRequest("اجازه صادر نشد");
             var newUser = await UserProcessor.CreateUser(user);
-            if (newUser == null) return false; else return true;
+            return newUser;
         }
 
         [HttpPost("Login"), AllowAnonymous]
@@ -60,6 +60,13 @@ namespace AvazehWebAPI.Controllers
             loggedUser.LastLoginDate = userInfoBase.LastLoginDate;
             await UserProcessor.UpdateUserLastLoginDate(user.Username);
             return loggedUser;
+        }
+
+        [HttpGet("AdminExists"), AllowAnonymous]
+        public async Task<ActionResult<bool>> AdminExists()
+        {
+            var adminsCount = await UserProcessor.GetCountOfAdminUsers();
+            return adminsCount > 0;
         }
 
         [HttpPut("Update"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{nameof(UserPermissions.CanManageItself)}, {nameof(UserPermissions.CanManageOthers)}")]
@@ -120,6 +127,8 @@ namespace AvazehWebAPI.Controllers
             if (Permissions.CanDeleteCheque) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteCheque)));
             if (Permissions.CanPrintInvoice) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanPrintInvoice)));
             if (Permissions.CanPrintTransaction) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanPrintTransaction)));
+            if (Permissions.CanViewNetProfits) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewNetProfits)));
+            if (Permissions.CanUseBarcodeReader) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanUseBarcodeReader)));
             if (Permissions.CanManageItself) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanManageItself)));
             if (Permissions.CanManageOthers) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanManageOthers)));
 

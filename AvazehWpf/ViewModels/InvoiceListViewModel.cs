@@ -5,6 +5,7 @@ using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
+using SharedLibrary.SecurityAndSettingsModels;
 using SharedLibrary.SettingsModels;
 using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using SharedLibrary.Validators;
@@ -28,10 +29,10 @@ namespace AvazehWpf.ViewModels
 {
     public class InvoiceListViewModel : Screen
     {
-        public InvoiceListViewModel(IInvoiceCollectionManager manager, SingletonClass singleton, IAppSettingsManager settingsManager, SimpleContainer sc)
+        public InvoiceListViewModel(IInvoiceCollectionManager manager, SingletonClass singleton, LoggedInUser_DTO user, SimpleContainer sc)
         {
             ICM = manager;
-            ASM = settingsManager;
+            User = user;
             SC = sc;
             _SelectedInvoice = new();
             Singleton = singleton;
@@ -40,16 +41,10 @@ namespace AvazehWpf.ViewModels
 
         SimpleContainer SC;
         private IInvoiceCollectionManager _ICM;
-        private readonly IAppSettingsManager ASM;
+        private readonly LoggedInUser_DTO User;
         private InvoiceListModel _SelectedInvoice;
-        private InvoiceSettingsModel invoiceSettings;
-        private PrintSettingsModel printSettings;
-        private GeneralSettingsModel generalSettings;
         private string searchText;
         private readonly SingletonClass Singleton;
-        public InvoiceSettingsModel InvoiceSettings { get => invoiceSettings; private set { invoiceSettings = value; NotifyOfPropertyChange(() => InvoiceSettings); } }
-        public PrintSettingsModel PrintSettings { get => printSettings; private set { printSettings = value; NotifyOfPropertyChange(() => PrintSettings); } }
-        public GeneralSettingsModel GeneralSettings { get => generalSettings; private set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); } }
 
         public InvoiceListModel SelectedInvoice
         {
@@ -92,14 +87,9 @@ namespace AvazehWpf.ViewModels
 
         private async Task LoadSettings()
         {
-            var Settings = await ASM.LoadAllAppSettings();
-            if (Settings == null) Settings = new();
-            InvoiceSettings = Settings.InvoiceSettings;
-            PrintSettings = Settings.PrintSettings;
-            GeneralSettings = Settings.GeneralSettings;
 
-            ICM.PageSize = InvoiceSettings.PageSize;
-            ICM.QueryOrderType = InvoiceSettings.QueryOrderType;
+            ICM.PageSize = User.Settings.InvoicePageSize;
+            ICM.QueryOrderType = User.Settings.InvoiceListQueryOrderType;
 
             await Search();
         }
@@ -130,7 +120,7 @@ namespace AvazehWpf.ViewModels
             if (!GeneralSettings.CanAddNewInvoice) return;
             WindowManager wm = new();
             ICollectionManager<CustomerModel> cManager = new CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>(ICM.ApiProcessor);
-            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, null, ICM, cManager, Search, ASM, SC));
+            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, null, ICM, cManager, Search, User, SC));
         }
 
         public async Task Search()
@@ -164,7 +154,7 @@ namespace AvazehWpf.ViewModels
             if (Invoices == null || Invoices.Count == 0 || SelectedInvoice == null || SelectedInvoice.Id == 0) return;
             var idm = SC.GetInstance<IInvoiceDetailManager>();
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, idm, ASM, Singleton, SelectedInvoice.Id, RefreshPage, SC));
+            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, idm, User, Singleton, SelectedInvoice.Id, RefreshPage, SC));
         }
 
         public async Task DeleteInvoice()
@@ -185,7 +175,7 @@ namespace AvazehWpf.ViewModels
             WindowManager wm = new();
             var invoice = await ICM.GetItemById(SelectedInvoice.Id);
             var idm = SC.GetInstance<IInvoiceDetailManager>();
-            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(ICM, idm, ASM, invoice, SearchSync, SC, true));
+            await wm.ShowWindowAsync(new InvoicePaymentsViewModel(ICM, idm, User, invoice, SearchSync, SC, true));
         }
 
         public async Task ShowCustomerInvoices()
@@ -251,7 +241,7 @@ namespace AvazehWpf.ViewModels
 
         public void SetKeyboardLayout()
         {
-            if (GeneralSettings.AutoSelectPersianLanguage)
+            if (User.Settings.AutoSelectPersianLanguage)
                 ExtensionsAndStatics.ChangeLanguageToPersian();
         }
 

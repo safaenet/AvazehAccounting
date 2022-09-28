@@ -4,6 +4,7 @@ using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
+using SharedLibrary.SecurityAndSettingsModels;
 using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using SharedLibrary.Validators;
 using System;
@@ -18,14 +19,13 @@ namespace AvazehWpf.ViewModels
 {
     public class InvoicePaymentsViewModel : ViewAware
     {
-        public InvoicePaymentsViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, IAppSettingsManager settingsManager, InvoiceModel invoice, System.Action callBack, SimpleContainer sc, bool ReloadInvoiceNeeded = false)
+        public InvoicePaymentsViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, LoggedInUser_DTO user, InvoiceModel invoice, System.Action callBack, SimpleContainer sc, bool ReloadInvoiceNeeded = false)
         {
             Invoice = invoice;
             InvoiceCollectionManager = iManager;
             InvoiceDetailManager = dManager;
-            ASM = settingsManager;
+            User = user;
             SC = sc;
-            LoadSettings().ConfigureAwait(true);
             CallBackAction = callBack;
             if (ReloadInvoiceNeeded && Invoice != null)  ReloadInvoice(Invoice.Id).ConfigureAwait(true);
             ReloadCustomerBalance().ConfigureAwait(true);
@@ -34,15 +34,13 @@ namespace AvazehWpf.ViewModels
         public double CustomerTotalBalance { get => customerTotalBalance; private set { customerTotalBalance = value; NotifyOfPropertyChange(() => CustomerTotalBalance); } }
         private readonly IInvoiceCollectionManager InvoiceCollectionManager;
         private readonly IInvoiceDetailManager InvoiceDetailManager;
-        private readonly IAppSettingsManager ASM;
-        private GeneralSettingsModel generalSettings;
+        private readonly LoggedInUser_DTO User;
         SimpleContainer SC;
         private readonly System.Action CallBackAction;
         private bool EdittingItem = false;
         private InvoicePaymentModel _workItem = new();
         private InvoicePaymentModel selectedPaymentItem;
         private double customerTotalBalance;
-        public GeneralSettingsModel GeneralSettings { get => generalSettings; private set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); } }
 
         public InvoicePaymentModel SelectedPaymentItem
         {
@@ -56,13 +54,6 @@ namespace AvazehWpf.ViewModels
         {
             get { return _invoice; }
             set { _invoice = value; NotifyOfPropertyChange(() => Invoice); }
-        }
-
-        private async Task LoadSettings()
-        {
-            var Settings = await ASM.LoadAllAppSettings();
-            if (Settings == null) Settings = new();
-            GeneralSettings = Settings.GeneralSettings;
         }
 
         public void EditItem() //DataGrid doubleClick event
@@ -201,9 +192,8 @@ namespace AvazehWpf.ViewModels
 
         public void SetKeyboardLayout()
         {
-            if (GeneralSettings != null && GeneralSettings.AutoSelectPersianLanguage)
-                if (GeneralSettings.AutoSelectPersianLanguage)
-                    ExtensionsAndStatics.ChangeLanguageToPersian();
+            if (User.Settings.AutoSelectPersianLanguage)
+                ExtensionsAndStatics.ChangeLanguageToPersian();
         }
     }
 }
