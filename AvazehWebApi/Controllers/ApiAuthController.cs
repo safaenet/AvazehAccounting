@@ -25,7 +25,7 @@ namespace AvazehWebAPI.Controllers
 
         private readonly IUserProcessor UserProcessor;
 
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("Register")]
         public async Task<ActionResult<bool>> Register(User_DTO_CreateUpdate user)
         {
@@ -80,45 +80,46 @@ namespace AvazehWebAPI.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, Username),
-                new Claim(ClaimTypes.Name, userInfoBase.FullName),
-
-                new Claim(nameof(UserPermissions.CanViewCustomers), Permissions.CanViewCustomers.ToString()),
-                new Claim(nameof(UserPermissions.CanViewProducts), Permissions.CanViewProducts.ToString()),
-                new Claim(nameof(UserPermissions.CanViewInvoicesList), Permissions.CanViewInvoicesList.ToString()),
-                new Claim(nameof(UserPermissions.CanViewInvoiceDetails), Permissions.CanViewInvoiceDetails.ToString()),
-                new Claim(nameof(UserPermissions.CanViewTransactionsList), Permissions.CanViewTransactionsList.ToString()),
-                new Claim(nameof(UserPermissions.CanViewTransactionDetails), Permissions.CanViewTransactionDetails.ToString()),
-                new Claim(nameof(UserPermissions.CanViewCheques), Permissions.CanViewCheques.ToString()),
-                new Claim(nameof(UserPermissions.CanAddNewCustomer), Permissions.CanAddNewCustomer.ToString()),
-                new Claim(nameof(UserPermissions.CanAddNewProduct), Permissions.CanAddNewProduct.ToString()),
-                new Claim(nameof(UserPermissions.CanAddNewInvoice), Permissions.CanAddNewInvoice.ToString()),
-                new Claim(nameof(UserPermissions.CanAddNewTransaction), Permissions.CanAddNewTransaction.ToString()),
-                new Claim(nameof(UserPermissions.CanAddNewCheque), Permissions.CanAddNewCheque.ToString()),
-                new Claim(nameof(UserPermissions.CanEditCustomers), Permissions.CanEditCustomers.ToString()),
-                new Claim(nameof(UserPermissions.CanEditProducts), Permissions.CanEditProducts.ToString()),
-                new Claim(nameof(UserPermissions.CanEditInvoices), Permissions.CanEditInvoices.ToString()),
-                new Claim(nameof(UserPermissions.CanEditTransactions), Permissions.CanEditTransactions.ToString()),
-                new Claim(nameof(UserPermissions.CanEditCheques), Permissions.CanEditCheques.ToString()),
-                new Claim(nameof(UserPermissions.CanDeleteCustomer), Permissions.CanDeleteCustomer.ToString()),
-                new Claim(nameof(UserPermissions.CanDeleteProduct), Permissions.CanDeleteProduct.ToString()),
-                new Claim(nameof(UserPermissions.CanDeleteInvoice), Permissions.CanDeleteInvoice.ToString()),
-                new Claim(nameof(UserPermissions.CanDeleteInvoiceItem), Permissions.CanDeleteInvoiceItem.ToString()),
-                new Claim(nameof(UserPermissions.CanDeleteTransaction), Permissions.CanDeleteTransaction.ToString()),
-                new Claim(nameof(UserPermissions.CanDeleteTransactionItem), Permissions.CanDeleteTransactionItem.ToString()),
-                new Claim(nameof(UserPermissions.CanDeleteCheque), Permissions.CanDeleteCheque.ToString()),
-                new Claim(nameof(UserPermissions.CanPrintInvoice), Permissions.CanPrintInvoice.ToString()),
-                new Claim(nameof(UserPermissions.CanPrintTransaction), Permissions.CanPrintTransaction.ToString()),
-                new Claim(nameof(UserPermissions.CanChangeItsSettings), Permissions.CanChangeItsSettings.ToString()),
-                new Claim(nameof(UserPermissions.CanChangeItsPassword), Permissions.CanChangeItsPassword.ToString()),
-                new Claim(nameof(UserPermissions.CanAddUser), Permissions.CanAddUser.ToString()),
-                new Claim(nameof(UserPermissions.CanEditOtherUsersPermission), Permissions.CanEditOtherUsersPermission.ToString()),
-                new Claim(nameof(UserPermissions.CanEditOtherUsersSettings), Permissions.CanEditOtherUsersSettings.ToString())
+                new Claim(ClaimTypes.Name, userInfoBase.FullName)
             };
+
+            if (Permissions.CanViewCustomers) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewCustomers)));
+            if (Permissions.CanViewProducts) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewProducts)));
+            if (Permissions.CanViewInvoicesList) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewInvoicesList)));
+            if (Permissions.CanViewInvoiceDetails) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewInvoiceDetails)));
+            if (Permissions.CanViewTransactionsList) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewTransactionsList)));
+            if (Permissions.CanViewTransactionDetails) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewTransactionDetails)));
+            if (Permissions.CanViewCheques) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewCheques)));
+            if (Permissions.CanAddNewCustomer) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanAddNewCustomer)));
+            if (Permissions.CanAddNewProduct) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanAddNewProduct)));
+            if (Permissions.CanAddNewInvoice) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanAddNewInvoice)));
+            if (Permissions.CanAddNewTransaction) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanAddNewTransaction)));
+            if (Permissions.CanAddNewCheque) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanAddNewCheque)));
+            if (Permissions.CanEditCustomers) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditCustomers)));
+            if (Permissions.CanEditProducts) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditProducts)));
+            if (Permissions.CanEditInvoices) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditInvoices)));
+            if (Permissions.CanEditTransactions) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditTransactions)));
+            if (Permissions.CanEditCheques) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditCheques)));
+            if (Permissions.CanDeleteCustomer) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteCustomer)));
+            if (Permissions.CanDeleteProduct) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteProduct)));
+            if (Permissions.CanDeleteInvoice) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteInvoice)));
+            if (Permissions.CanDeleteInvoiceItem) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteInvoiceItem)));
+            if (Permissions.CanDeleteTransaction) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteTransaction)));
+            if (Permissions.CanDeleteTransactionItem) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteTransactionItem)));
+            if (Permissions.CanDeleteCheque) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteCheque)));
+            if (Permissions.CanPrintInvoice) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanPrintInvoice)));
+            if (Permissions.CanPrintTransaction) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanPrintTransaction)));
+            if (Permissions.CanChangeItsSettings) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanChangeItsSettings)));
+            if (Permissions.CanChangeItsPassword) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanChangeItsPassword)));
+            if (Permissions.CanAddUser) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanAddUser)));
+            if (Permissions.CanEditOtherUsersPermission) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditOtherUsersPermission)));
+            if (Permissions.CanEditOtherUsersSettings) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditOtherUsersSettings)));
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SettingsDataAccess.AppConfiguration().GetSection("Jwt:Key").Value));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(2),
+                expires: DateTime.Now.AddDays(1),
                 signingCredentials: creds);
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
             return jwt;
