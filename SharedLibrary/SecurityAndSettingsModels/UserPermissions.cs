@@ -8,23 +8,26 @@ namespace SharedLibrary.SecurityAndSettingsModels
 {
     public class UserPermissions
     {
-        public bool CanViewCustomers { get; set; }
-        public bool CanViewProducts { get; set; }
+        public bool CanViewCustomersList { get; set; }
+        public bool CanViewCustomerDetails { get; set; }
+        public bool CanViewProductsList { get; set; }
+        public bool CanViewProductDetails { get; set; }
         public bool CanViewInvoicesList { get; set; }
         public bool CanViewInvoiceDetails { get; set; }
         public bool CanViewTransactionsList { get; set; }
         public bool CanViewTransactionDetails { get; set; }
-        public bool CanViewCheques { get; set; }
+        public bool CanViewChequesList { get; set; }
+        public bool CanViewChequeDetails { get; set; }
         public bool CanAddNewCustomer { get; set; }
         public bool CanAddNewProduct { get; set; }
         public bool CanAddNewInvoice { get; set; }
         public bool CanAddNewTransaction { get; set; }
         public bool CanAddNewCheque { get; set; }
-        public bool CanEditCustomers { get; set; }
-        public bool CanEditProducts { get; set; }
-        public bool CanEditInvoices { get; set; }
-        public bool CanEditTransactions { get; set; }
-        public bool CanEditCheques { get; set; }
+        public bool CanEditCustomer { get; set; }
+        public bool CanEditProduct { get; set; }
+        public bool CanEditInvoice { get; set; }
+        public bool CanEditTransaction { get; set; }
+        public bool CanEditCheque { get; set; }
         public bool CanDeleteCustomer { get; set; }
         public bool CanDeleteProduct { get; set; }
         public bool CanDeleteInvoice { get; set; }

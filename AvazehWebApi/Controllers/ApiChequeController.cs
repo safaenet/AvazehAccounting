@@ -1,9 +1,12 @@
 ﻿using AvazehWeb;
 using DataLibraryCore.DataAccess.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
+using SharedLibrary.SecurityAndSettingsModels;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -22,7 +25,7 @@ namespace AvazehWebAPI.Controllers
         private readonly IChequeCollectionManager Manager;
 
         //GET /Cheque?Id=1&SearchText=sometext
-        [HttpGet]
+        [HttpGet, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewChequesList))]
         public async Task<ActionResult<ItemsCollection_DTO<ChequeModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "DueDate", OrderType orderType = OrderType.DESC, ChequeListQueryStatus? listQueryStatus = ChequeListQueryStatus.FromNowOn, int PageSize = 50, bool ForceLoad = false)
         {
             Manager.GenerateWhereClause(SearchText, OrderBy, orderType, listQueryStatus);
@@ -33,7 +36,7 @@ namespace AvazehWebAPI.Controllers
             return Manager.AsDto();
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewChequeDetails))]
         public async Task<ActionResult<ChequeModel>> GetItemAsync(int Id)
         {
             var item = await Manager.Processor.LoadSingleItemAsync(Id);
@@ -41,14 +44,14 @@ namespace AvazehWebAPI.Controllers
             return item;
         }
 
-        [HttpGet("Banknames")]
+        [HttpGet("Banknames"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewChequeDetails))]
         public async Task<ActionResult<List<string>>> GetBanknamesAsync()
         {
             var items = await Manager.Processor.GetBanknames();
             return items is null ? NotFound("Couldn't find any match") : items;
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanAddNewCheque))]
         public async Task<ActionResult<ChequeModel>> CreateItemAsync(ChequeModel_DTO_Create_Update model)
         {
             var newItem = model.AsDaL();
@@ -57,7 +60,7 @@ namespace AvazehWebAPI.Controllers
             return newItem as ChequeModel;
         }
 
-        [HttpPut("{Id}")]
+        [HttpPut("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanEditCheque))]
         public async Task<ActionResult<ChequeModel>> UpdateItemAsync(int Id, ChequeModel_DTO_Create_Update model)
         {
             if (model is null) return BadRequest("Model is not valid");
@@ -68,7 +71,7 @@ namespace AvazehWebAPI.Controllers
             return updatedModel as ChequeModel;
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanDeleteCheque))]
         public async Task<ActionResult> DeleteItemAsync(int Id)
         {
             if (await Manager.Processor.DeleteItemByIdAsync(Id) > 0) return Ok("Successfully deleted the item");

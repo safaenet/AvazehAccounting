@@ -82,23 +82,26 @@ namespace AvazehWebAPI.Controllers
                 new Claim(ClaimTypes.Name, userInfoBase.FullName)
             };
 
-            if (Permissions.CanViewCustomers) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewCustomers)));
-            if (Permissions.CanViewProducts) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewProducts)));
+            if (Permissions.CanViewCustomersList) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewCustomersList)));
+            if (Permissions.CanViewCustomerDetails) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewCustomerDetails)));
+            if (Permissions.CanViewProductsList) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewProductsList)));
+            if (Permissions.CanViewProductDetails) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewProductDetails)));
             if (Permissions.CanViewInvoicesList) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewInvoicesList)));
             if (Permissions.CanViewInvoiceDetails) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewInvoiceDetails)));
             if (Permissions.CanViewTransactionsList) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewTransactionsList)));
             if (Permissions.CanViewTransactionDetails) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewTransactionDetails)));
-            if (Permissions.CanViewCheques) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewCheques)));
+            if (Permissions.CanViewChequesList) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewChequesList)));
+            if (Permissions.CanViewChequeDetails) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewChequeDetails)));
             if (Permissions.CanAddNewCustomer) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanAddNewCustomer)));
             if (Permissions.CanAddNewProduct) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanAddNewProduct)));
             if (Permissions.CanAddNewInvoice) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanAddNewInvoice)));
             if (Permissions.CanAddNewTransaction) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanAddNewTransaction)));
             if (Permissions.CanAddNewCheque) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanAddNewCheque)));
-            if (Permissions.CanEditCustomers) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditCustomers)));
-            if (Permissions.CanEditProducts) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditProducts)));
-            if (Permissions.CanEditInvoices) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditInvoices)));
-            if (Permissions.CanEditTransactions) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditTransactions)));
-            if (Permissions.CanEditCheques) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditCheques)));
+            if (Permissions.CanEditCustomer) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditCustomer)));
+            if (Permissions.CanEditProduct) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditProduct)));
+            if (Permissions.CanEditInvoice) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditInvoice)));
+            if (Permissions.CanEditTransaction) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditTransaction)));
+            if (Permissions.CanEditCheque) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditCheque)));
             if (Permissions.CanDeleteCustomer) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteCustomer)));
             if (Permissions.CanDeleteProduct) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteProduct)));
             if (Permissions.CanDeleteInvoice) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteInvoice)));

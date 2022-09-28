@@ -1,9 +1,12 @@
 ﻿using AvazehWeb;
 using DataLibraryCore.DataAccess.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
+using SharedLibrary.SecurityAndSettingsModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -21,7 +24,7 @@ namespace AvazehWebAPI.Controllers
         private readonly ITransactionCollectionManager Manager;
 
         //GET /Customer?Id=1&SearchText=sometext
-        [HttpGet]
+        [HttpGet, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewTransactionsList))]
         public async Task<ActionResult<ItemsCollection_DTO<TransactionListModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "Id", OrderType orderType = OrderType.DESC, TransactionFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false)
         {
             Manager.GenerateWhereClause(SearchText, OrderBy, orderType, FinStatus);
@@ -32,28 +35,28 @@ namespace AvazehWebAPI.Controllers
             return Manager.AsDto();
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewTransactionDetails))]
         public async Task<ActionResult<TransactionModel>> GetItemAsync(int Id)
         {
             TransactionModel model = await Manager.Processor.LoadSingleItemAsync(Id);
             return model is null ? NotFound("Couldn't find specific Item") : model;
         }
 
-        [HttpGet("ProductItems/{Id}")]
+        [HttpGet("ProductItems/{Id}"), Authorize]
         public async Task<ActionResult<List<ItemsForComboBox>>> GetProductItemsAsync(int Id)
         {
             var items = await Manager.Processor.GetProductItemsAsync(null, Id);
             return items is null ? NotFound("Couldn't find any match") : items;
         }
 
-        [HttpGet("TransactionNames")]
+        [HttpGet("TransactionNames"), Authorize]
         public async Task<ActionResult<List<ItemsForComboBox>>> GetTransactionNamesAsync(string SearchText)
         {
             var items = await Manager.Processor.GetTransactionNamesAsync(SearchText);
             return items is null ? NotFound("Couldn't find any match") : items;
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanAddNewTransaction))]
         public async Task<ActionResult<TransactionModel>> CreateItemAsync(TransactionModel_DTO_Create_Update model)
         {
             var newItem = model.AsDaL();
@@ -62,7 +65,7 @@ namespace AvazehWebAPI.Controllers
             return newItem;
         }
 
-        [HttpPut("{Id}")]
+        [HttpPut("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanEditTransaction))]
         public async Task<ActionResult<TransactionModel>> UpdateItemAsync(int Id, TransactionModel_DTO_Create_Update model)
         {
             if (model is null) return BadRequest("Model is not valid");
@@ -73,7 +76,7 @@ namespace AvazehWebAPI.Controllers
             return updatedModel;
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanDeleteTransaction))]
         public async Task<ActionResult> DeleteItemAsync(int Id)
         {
             if (await Manager.Processor.DeleteItemByIdAsync(Id) > 0) return Ok("Successfully deleted the item");

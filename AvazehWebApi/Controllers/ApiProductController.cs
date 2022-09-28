@@ -23,7 +23,7 @@ namespace AvazehWebAPI.Controllers
         private readonly IGeneralCollectionManager<ProductModel, IGeneralProcessor<ProductModel>> Manager;
 
         //GET /Product?Id=1&SearchText=sometext
-        [HttpGet, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewProducts))]
+        [HttpGet, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewProductsList))]
         public async Task<ActionResult<ItemsCollection_DTO<ProductModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "ProductName", OrderType orderType = OrderType.ASC, int PageSize = 50, bool ForceLoad = false)
         {
             Manager.GenerateWhereClause(SearchText, OrderBy, orderType);
@@ -34,7 +34,7 @@ namespace AvazehWebAPI.Controllers
             return Manager.AsDto();
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewProductDetails))]
         public async Task<ActionResult<ProductModel>> GetItemAsync(int Id)
         {
             var item = await Manager.Processor.LoadSingleItemAsync(Id);
@@ -42,7 +42,7 @@ namespace AvazehWebAPI.Controllers
             return item;
         }
 
-        [HttpGet("BarCode/{Id}")]
+        [HttpGet("BarCode/{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewProductDetails))]
         public async Task<ActionResult<ProductModel>> GetItemAsync(string Id)
         {
             var item = await Manager.Processor.LoadSingleItemByBarcodeAsync(Id);
@@ -50,7 +50,7 @@ namespace AvazehWebAPI.Controllers
             return item;
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanAddNewProduct))]
         public async Task<ActionResult<ProductModel>> CreateItemAsync(ProductModel_DTO_Create_Update model)
         {
             var newItem = model.AsDaL();
@@ -59,7 +59,7 @@ namespace AvazehWebAPI.Controllers
             return newItem;
         }
 
-        [HttpPut("{Id}")]
+        [HttpPut("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanEditProduct))]
         public async Task<ActionResult<ProductModel>> UpdateItemAsync(int Id, ProductModel_DTO_Create_Update model)
         {
             if (model is null) return BadRequest("Model is not valid");
@@ -70,7 +70,7 @@ namespace AvazehWebAPI.Controllers
             return updatedModel;
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanDeleteProduct))]
         public async Task<ActionResult> DeleteItemAsync(int Id)
         {
             if (await Manager.Processor.DeleteItemByIdAsync(Id) > 0) return Ok("Successfully deleted the item");

@@ -24,7 +24,7 @@ namespace AvazehWebAPI.Controllers
         private readonly IGeneralCollectionManager<CustomerModel, IGeneralProcessor<CustomerModel>> Manager;
 
         //GET /Customer?Id=1&SearchText=sometext
-        [HttpGet, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewCustomers))]
+        [HttpGet, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewCustomersList))]
         public async Task<ActionResult<ItemsCollection_DTO<CustomerModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "FirstName", OrderType orderType = OrderType.ASC, int PageSize = 50, bool ForceLoad = false)
         {
             Manager.GenerateWhereClause(SearchText, OrderBy, orderType);
@@ -35,7 +35,7 @@ namespace AvazehWebAPI.Controllers
             return Manager.AsDto();
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewCustomerDetails))]
         public async Task<ActionResult<CustomerModel>> GetItemAsync(int Id)
         {
             var item = await Manager.Processor.LoadSingleItemAsync(Id);
@@ -43,7 +43,7 @@ namespace AvazehWebAPI.Controllers
             return item;
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanAddNewCustomer))]
         public async Task<ActionResult<CustomerModel>> CreateItemAsync(CustomerModel_DTO_Create_Update model)
         {
             var newItem = model.AsDaL();
@@ -52,7 +52,7 @@ namespace AvazehWebAPI.Controllers
             return newItem;
         }
 
-        [HttpPut("{Id}")]
+        [HttpPut("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanEditCustomer))]
         public async Task<ActionResult<CustomerModel>> UpdateItemAsync(int Id, CustomerModel_DTO_Create_Update model)
         {
             if (model is null) return BadRequest("Model is not valid");
@@ -63,7 +63,7 @@ namespace AvazehWebAPI.Controllers
             return updatedModel as CustomerModel;
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanDeleteCustomer))]
         public async Task<ActionResult> DeleteItemAsync(int Id)
         {
             if (await Manager.Processor.DeleteItemByIdAsync(Id) > 0) return Ok("Successfully deleted the item");
