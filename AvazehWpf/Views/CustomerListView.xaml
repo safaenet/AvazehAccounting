@@ -126,19 +126,19 @@
             </ScrollViewer>
             <Grid Grid.Column="0" Grid.Row="1">
                 <StackPanel Orientation="Vertical">
-                    <Button cal:Message.Attach="[Event Click] = [Action AddNewCustomer()]" Height="25" Margin="0,0,3,3">
+                    <Button cal:Message.Attach="[Event Click] = [Action AddNewCustomerAsync()]" Height="25" Margin="0,0,3,3">
                         <StackPanel Width="90" Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="PersonPlusOutline" Margin="3"/>
                             <TextBlock Text="مشتری جدید" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action EditCustomer()]" Height="25" Margin="0,0,3,3">
+                    <Button cal:Message.Attach="[Event Click] = [Action EditCustomerAsync()]" Height="25" Margin="0,0,3,3">
                         <StackPanel Width="70" Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="EditOutline" Margin="3"/>
                             <TextBlock Text="ویرایش" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action DeleteCustomer()]" Height="25" Margin="0,0,3,0">
+                    <Button cal:Message.Attach="[Event Click] = [Action DeleteCustomerAsync()]" Height="25" Margin="0,0,3,0">
                         <StackPanel Width="70" Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="DeleteOutline" Margin="3"/>
                             <TextBlock Text="حذف" VerticalAlignment="Center"/>
@@ -159,14 +159,14 @@
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="Search" Grid.Column="0" Height="25" Margin="0,0,0,0">
+                <Button x:Name="SearchAsync" Grid.Column="0" Height="25" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="3" HorizontalAlignment="Right"/>
                         <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="Search" Margin="3"/>
                     </StackPanel>
                 </Button>
-                <TextBox x:Name="SearchText" Grid.Column="1" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]" VerticalContentAlignment="Center" Margin="3,0,3,0">
+                <TextBox x:Name="SearchText" Grid.Column="1" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandlerAsync($executionContext)]" VerticalContentAlignment="Center" Margin="3,0,3,0">
                 </TextBox>
             </Grid>
             <Grid Grid.Row="1">
@@ -175,20 +175,20 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="PreviousPage" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
+                <Button x:Name="PreviousPageAsync" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
                         <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ArrowLeftCircleOutline" Margin="3"/>
                         <TextBlock Text="صفحه قبل" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
+                <Button x:Name="NextPageAsync" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
                         <StackPanel Orientation="Horizontal">
                         <TextBlock Text="صفحه بعد" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="ArrowRightCircleOutline" Margin="3" HorizontalAlignment="Right"/>
                     </StackPanel>
                     </Button>
             </Grid>
-            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditCustomer()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" ItemsSource="{Binding Customers}" CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditCustomerAsync()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" ItemsSource="{Binding Customers}" CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
                       SelectedItem="{Binding SelectedCustomer}" AutoGenerateColumns="False" Background="Transparent" FlowDirection="RightToLeft" CanUserAddRows="False" CanUserDeleteRows="False"
                       HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" RowHeight="25" AlternatingRowBackground="#f7f7f7" viewmodels:DataGridBehavior.DisplayRowNumber="True">
                 <DataGrid.Columns>

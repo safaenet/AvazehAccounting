@@ -64,7 +64,7 @@ namespace AvazehWpf.ViewModels
             Customer.PhoneNumbers.RemoveAt(Customer.PhoneNumbers.Count - 1);
         }
 
-        public async Task DeleteAndClose()
+        public async Task DeleteAndCloseAsync()
         {
             if (Customer == null || Customer.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete {Customer.FullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
@@ -78,9 +78,9 @@ namespace AvazehWpf.ViewModels
             (GetView() as Window).Close();
         }
 
-        public async Task SaveAndNew()
+        public async Task SaveAndNewAsync()
         {
-            if (await SaveToDatabase() == false) return;
+            if (await SaveToDatabaseAsync() == false) return;
             var newCustomer = new CustomerModel();
             WindowManager wm = new();
             await wm.ShowWindowAsync(new CustomerDetailViewModel(Manager, newCustomer, CallBackFunc));
@@ -92,13 +92,13 @@ namespace AvazehWpf.ViewModels
             CloseWindow();
         }
 
-        public async Task SaveAndClose()
+        public async Task SaveAndCloseAsync()
         {
-            if (await SaveToDatabase() == false) return;
+            if (await SaveToDatabaseAsync() == false) return;
             CloseWindow();
         }
 
-        private async Task<bool> SaveToDatabase()
+        private async Task<bool> SaveToDatabaseAsync()
         {
             var validate = Manager.ValidateItem(Customer);
             if (validate.IsValid)
@@ -128,7 +128,7 @@ namespace AvazehWpf.ViewModels
             }
         }
 
-        public async Task ClosingWindow()
+        public async Task ClosingWindowAsync()
         {
             await CallBackFunc?.Invoke();
         }

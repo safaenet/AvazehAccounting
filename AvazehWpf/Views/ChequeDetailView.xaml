@@ -15,7 +15,7 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:ChequeDetailViewModel}"
         Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="640" MinHeight="350" MaxHeight="550" Height="auto"
-        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
+        cal:Message.Attach="[Event Closing] = [Action ClosingWindowAsync]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="3"/>
@@ -208,19 +208,19 @@
                     <TextBlock Text="انصراف" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="DeleteAndClose" Grid.Column="1" Margin="0,5,5,0" TabIndex="18">
+            <Button x:Name="DeleteAndCloseAsync" Grid.Column="1" Margin="0,5,5,0" TabIndex="18">
                 <StackPanel Width="95" Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="DeleteOutline" Margin="3"/>
                     <TextBlock Text="حذف و بستن" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="SaveAndNew" Grid.Column="2" Margin="0,5,5,0" TabIndex="17">
+            <Button x:Name="SaveAndNewAsync" Grid.Column="2" Margin="0,5,5,0" TabIndex="17">
                 <StackPanel Width="95" Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="ContentDuplicate" Margin="3"/>
                     <TextBlock Text="ذخیره و جدید" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="SaveAndClose" Grid.Column="3" Margin="0,5,5,0" TabIndex="16">
+            <Button x:Name="SaveAndCloseAsync" Grid.Column="3" Margin="0,5,5,0" TabIndex="16">
                 <StackPanel Width="95" Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="ContentSaveOffOutline" Margin="3"/>
                     <TextBlock Text="ذخیره و بستن" VerticalAlignment="Center"/>

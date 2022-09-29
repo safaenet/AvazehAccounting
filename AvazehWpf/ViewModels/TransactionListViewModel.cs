@@ -1,19 +1,14 @@
 ﻿using AvazehApiClient.DataAccess;
-using AvazehApiClient.DataAccess.CollectionManagers;
 using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
 using SharedLibrary.SecurityAndSettingsModels;
-using SharedLibrary.SettingsModels;
-using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace AvazehWpf.ViewModels
@@ -27,14 +22,14 @@ namespace AvazehWpf.ViewModels
             SC = sc;
             _SelectedTransaction = new();
             Singleton = singleton;
-            LoadSettings().ConfigureAwait(true);
+            _ = LoadSettingsAsync().ConfigureAwait(true);
         }
 
         SimpleContainer SC;
         private ITransactionCollectionManager _TCM;
         private readonly LoggedInUser_DTO User;
         private TransactionListModel _SelectedTransaction;
-        private SingletonClass Singleton;
+        private readonly SingletonClass Singleton;
 
 
         public TransactionListModel SelectedTransaction
@@ -67,45 +62,39 @@ namespace AvazehWpf.ViewModels
 
         public string SearchText { get; set; }
         public int SelectedFinStatus { get; set; } = 3;
-        private async Task LoadSettings()
+        private async Task LoadSettingsAsync()
         {
             TCM.PageSize = User.Settings.TransactionListPageSize;
             TCM.QueryOrderType = User.Settings.TransactionListQueryOrderType;
-            await Search();
+            await SearchAsync();
         }
 
-        public async Task AddNewTransaction()
+        public async Task AddNewTransactionAsync()
         {
-            if (!GeneralSettings.CanAddNewTransaction) return;
             WindowManager wm = new();
-            await wm.ShowDialogAsync(new NewTransactionViewModel(Singleton, null, TCM, RefreshPage, User, SC));
+            await wm.ShowDialogAsync(new NewTransactionViewModel(Singleton, null, TCM, RefreshPageAsync, User, SC));
         }
 
-        public async Task PreviousPage()
+        public async Task PreviousPageAsync()
         {
-            if (!GeneralSettings.CanViewTransactions) return;
             await TCM.LoadPreviousPageAsync();
             NotifyOfPropertyChange(() => Transactions);
         }
 
-        public async Task NextPage()
+        public async Task NextPageAsync()
         {
-            if (!GeneralSettings.CanViewTransactions) return;
             await TCM.LoadNextPageAsync();
             NotifyOfPropertyChange(() => Transactions);
         }
 
-        public async Task RefreshPage()
+        public async Task RefreshPageAsync()
         {
-            if (!GeneralSettings.CanViewTransactions) return;
             await TCM.RefreshPage();
             NotifyOfPropertyChange(() => Transactions);
         }
 
-        public async Task Search()
+        public async Task SearchAsync()
         {
-            if (!GeneralSettings.CanViewTransactions) return;
-            if (GeneralSettings != null && !GeneralSettings.CanViewTransactions) return;
             TransactionFinancialStatus? FinStatus = SelectedFinStatus >= Enum.GetNames(typeof(TransactionFinancialStatus)).Length ? null : (TransactionFinancialStatus)SelectedFinStatus;
             TCM.SearchValue = SearchText;
             TCM.FinStatus = FinStatus;
@@ -113,26 +102,24 @@ namespace AvazehWpf.ViewModels
             NotifyOfPropertyChange(() => Transactions);
         }
 
-        public async Task SearchBoxKeyDownHandler(ActionExecutionContext context)
+        public async Task SearchBoxKeyDownHandlerAsync(ActionExecutionContext context)
         {
             if (context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
             {
-                await Search();
+                await SearchAsync();
             }
         }
 
-        public async Task EditTransaction()
+        public async Task EditTransactionAsync()
         {
-            if (GeneralSettings == null || !GeneralSettings.CanViewTransactions) return;
             if (Transactions == null || Transactions.Count == 0 || SelectedTransaction == null || SelectedTransaction.Id == 0) return;
             var tdm = SC.GetInstance<ITransactionDetailManager>();
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new TransactionDetailViewModel(TCM, tdm, User, Singleton, SelectedTransaction.Id, RefreshPage));
+            await wm.ShowWindowAsync(new TransactionDetailViewModel(TCM, tdm, User, Singleton, SelectedTransaction.Id, RefreshPageAsync));
         }
 
-        public async Task DeleteTransaction()
+        public async Task DeleteTransactionAsync()
         {
-            if (!GeneralSettings.CanEditTransactions) return;
             if (Transactions == null || Transactions.Count == 0 || SelectedTransaction == null || SelectedTransaction.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete Transaction file {SelectedTransaction.FileName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
@@ -141,19 +128,18 @@ namespace AvazehWpf.ViewModels
             else MessageBox.Show($"Transaction with ID: {SelectedTransaction.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        public async Task RenameTransaction()
+        public async Task RenameTransactionAsync()
         {
-            if (!GeneralSettings.CanEditTransactions) return;
             if (SelectedTransaction == null) return;
             WindowManager wm = new();
-            await wm.ShowDialogAsync(new NewTransactionViewModel(Singleton, SelectedTransaction.Id, TCM, RefreshPage, User, SC));
+            await wm.ShowDialogAsync(new NewTransactionViewModel(Singleton, SelectedTransaction.Id, TCM, RefreshPageAsync, User, SC));
         }
 
         public void dg_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (Key.Delete == e.Key)
             {
-                DeleteTransaction().ConfigureAwait(true);
+                _ = DeleteTransactionAsync().ConfigureAwait(true);
                 e.Handled = true;
             }
         }

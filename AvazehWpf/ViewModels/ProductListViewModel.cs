@@ -14,7 +14,7 @@ namespace AvazehWpf.ViewModels
         {
             PCM = manager;
             _SelectedProduct = new();
-            Search().ConfigureAwait(true);
+            _ = SearchAsync().ConfigureAwait(true);
         }
 
         private ICollectionManager<ProductModel> _PCM;
@@ -50,55 +50,53 @@ namespace AvazehWpf.ViewModels
 
         public string SearchText { get; set; }
 
-        public void AddNewProduct()
+        public async Task AddNewProductAsync()
         {
             WindowManager wm = new();
-            wm.ShowWindowAsync(new ProductDetailViewModel(PCM, null, RefreshPage));
+            await wm.ShowWindowAsync(new ProductDetailViewModel(PCM, null, RefreshPageAsync));
         }
 
-        public async Task PreviousPage()
+        public async Task PreviousPageAsync()
         {
             await PCM.LoadPreviousPageAsync();
             NotifyOfPropertyChange(() => Products);
         }
 
-        public async Task NextPage()
+        public async Task NextPageAsync()
         {
             await PCM.LoadNextPageAsync();
             NotifyOfPropertyChange(() => Products);
         }
 
-        public async Task RefreshPage()
+        public async Task RefreshPageAsync()
         {
             await PCM.RefreshPage();
             NotifyOfPropertyChange(() => Products);
         }
 
-        public async Task Search()
+        public async Task SearchAsync()
         {
             PCM.SearchValue = SearchText;
             await PCM.LoadFirstPageAsync();
             NotifyOfPropertyChange(() => Products);
         }
 
-        public async Task SearchBoxKeyDownHandler(ActionExecutionContext context)
+        public async Task SearchBoxKeyDownHandlerAsync(ActionExecutionContext context)
         {
-            var keyArgs = context.EventArgs as KeyEventArgs;
-
-            if (keyArgs != null && keyArgs.Key == Key.Enter)
+            if (context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
             {
-                await Search();
+                await SearchAsync();
             }
         }
 
-        public async Task EditProduct()
+        public async Task EditProductAsync()
         {
             if (Products == null || Products.Count == 0 || SelectedProduct == null || SelectedProduct.Id == 0) return;
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new ProductDetailViewModel(PCM, SelectedProduct, RefreshPage));
+            await wm.ShowWindowAsync(new ProductDetailViewModel(PCM, SelectedProduct, RefreshPageAsync));
         }
 
-        public async Task DeleteProduct()
+        public async Task DeleteProductAsync()
         {
             if (Products == null || Products.Count == 0 || SelectedProduct == null || SelectedProduct.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete {SelectedProduct.ProductName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
@@ -117,7 +115,7 @@ namespace AvazehWpf.ViewModels
         {
             if (Key.Delete == e.Key)
             {
-                DeleteProduct().ConfigureAwait(true);
+                _ = DeleteProductAsync().ConfigureAwait(true);
                 e.Handled = true;
             }
         }

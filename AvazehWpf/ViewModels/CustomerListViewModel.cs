@@ -14,7 +14,7 @@ namespace AvazehWpf.ViewModels
         {
             CCM = manager;
             _SelectedCustomer = new();
-            Search().ConfigureAwait(true);
+            _ = SearchAsync().ConfigureAwait(true);
         }
 
         private ICollectionManager<CustomerModel> _CCM;
@@ -50,54 +50,53 @@ namespace AvazehWpf.ViewModels
 
         public string SearchText { get; set; }
 
-        public void AddNewCustomer()
+        public async Task AddNewCustomerAsync()
         {
             WindowManager wm = new();
-            wm.ShowWindowAsync(new CustomerDetailViewModel(CCM, null, RefreshPage));
+            await wm.ShowWindowAsync(new CustomerDetailViewModel(CCM, null, RefreshPageAsync));
         }
 
-        public async Task PreviousPage()
+        public async Task PreviousPageAsync()
         {
             await CCM.LoadPreviousPageAsync();
             NotifyOfPropertyChange(() => Customers);
         }
 
-        public async Task NextPage()
+        public async Task NextPageAsync()
         {
             await CCM.LoadNextPageAsync();
             NotifyOfPropertyChange(() => Customers);
         }
 
-        public async Task RefreshPage()
+        public async Task RefreshPageAsync()
         {
             await CCM.RefreshPage();
             NotifyOfPropertyChange(() => Customers);
         }
 
-        public async Task Search()
+        public async Task SearchAsync()
         {
             CCM.SearchValue = SearchText;
             await CCM.LoadFirstPageAsync();
             NotifyOfPropertyChange(() => Customers);
         }
 
-        public async Task SearchBoxKeyDownHandler(ActionExecutionContext context)
+        public async Task SearchBoxKeyDownHandlerAsync(ActionExecutionContext context)
         {
-            var keyArgs = context.EventArgs as KeyEventArgs;
-            if (keyArgs != null && keyArgs.Key == Key.Enter)
+            if (context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
             {
-                await Search();
+                await SearchAsync();
             }
         }
 
-        public async Task EditCustomer()
+        public async Task EditCustomerAsync()
         {
             if (Customers == null || Customers.Count == 0 || SelectedCustomer == null || SelectedCustomer.Id == 0) return;
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new CustomerDetailViewModel(CCM, SelectedCustomer, RefreshPage));
+            await wm.ShowWindowAsync(new CustomerDetailViewModel(CCM, SelectedCustomer, RefreshPageAsync));
         }
 
-        public async Task DeleteCustomer()
+        public async Task DeleteCustomerAsync()
         {
             if (Customers == null || Customers.Count == 0 || SelectedCustomer == null || SelectedCustomer.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete {SelectedCustomer.FullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
@@ -116,7 +115,7 @@ namespace AvazehWpf.ViewModels
         {
             if (Key.Delete == e.Key)
             {
-                DeleteCustomer().ConfigureAwait(true);
+                _ = DeleteCustomerAsync().ConfigureAwait(true);
                 e.Handled = true;
             }
         }

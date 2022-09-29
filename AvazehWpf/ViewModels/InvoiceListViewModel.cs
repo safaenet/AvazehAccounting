@@ -6,23 +6,15 @@ using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
 using SharedLibrary.SecurityAndSettingsModels;
-using SharedLibrary.SettingsModels;
-using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using SharedLibrary.Validators;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Threading;
 using System.Xml.Serialization;
 
 namespace AvazehWpf.ViewModels
@@ -36,7 +28,11 @@ namespace AvazehWpf.ViewModels
             SC = sc;
             _SelectedInvoice = new();
             Singleton = singleton;
-            LoadSettings().ConfigureAwait(true);
+
+            ICM.PageSize = User.Settings.InvoicePageSize;
+            ICM.QueryOrderType = User.Settings.InvoiceListQueryOrderType;
+
+            _ = SearchAsync().ConfigureAwait(true);
         }
 
         SimpleContainer SC;
@@ -85,47 +81,33 @@ namespace AvazehWpf.ViewModels
         public int SelectedFinStatus { get; set; } = 1;
         public int SelectedLifeStatus { get; set; }
 
-        private async Task LoadSettings()
+        public async Task PreviousPageAsync()
         {
-
-            ICM.PageSize = User.Settings.InvoicePageSize;
-            ICM.QueryOrderType = User.Settings.InvoiceListQueryOrderType;
-
-            await Search();
-        }
-
-        public async Task PreviousPage()
-        {
-            if (!GeneralSettings.CanViewInvoices) return;
             await ICM.LoadPreviousPageAsync();
             NotifyOfPropertyChange(() => Invoices);
         }
 
-        public async Task NextPage()
+        public async Task NextPageAsync()
         {
-            if (!GeneralSettings.CanViewInvoices) return;
             await ICM.LoadNextPageAsync();
             NotifyOfPropertyChange(() => Invoices);
         }
 
-        public async Task RefreshPage()
+        public async Task RefreshPageAsync()
         {
-            if (!GeneralSettings.CanViewInvoices) return;
             await ICM.RefreshPage();
             NotifyOfPropertyChange(() => Invoices);
         }
 
-        public async Task AddNewInvoice()
+        public async Task AddNewInvoiceAsync()
         {
-            if (!GeneralSettings.CanAddNewInvoice) return;
             WindowManager wm = new();
             ICollectionManager<CustomerModel> cManager = new CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>(ICM.ApiProcessor);
-            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, null, ICM, cManager, Search, User, SC));
+            await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, null, ICM, cManager, SearchAsync, User, SC));
         }
 
-        public async Task Search()
+        public async Task SearchAsync()
         {
-            if (GeneralSettings != null && !GeneralSettings.CanViewInvoices) return;
             InvoiceFinancialStatus? FinStatus = SelectedFinStatus >= Enum.GetNames(typeof(InvoiceFinancialStatus)).Length ? null : (InvoiceFinancialStatus)SelectedFinStatus;
             InvoiceLifeStatus? LifeStatus = SelectedLifeStatus >= Enum.GetNames(typeof(InvoiceLifeStatus)).Length ? null : (InvoiceLifeStatus)SelectedLifeStatus;
             ICM.SearchValue = SearchText;
@@ -137,29 +119,27 @@ namespace AvazehWpf.ViewModels
 
         public void SearchSync()
         {
-            Task.Run(Search);
+            Task.Run(SearchAsync);
         }
 
-        public async Task SearchBoxKeyDownHandler(ActionExecutionContext context)
+        public async Task SearchBoxKeyDownHandlerAsync(ActionExecutionContext context)
         {
             if (context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
             {
-                await Search();
+                await SearchAsync();
             }
         }
 
-        public async Task EditInvoice()
+        public async Task EditInvoiceAsync()
         {
-            if (GeneralSettings == null || !GeneralSettings.CanViewInvoices) return;
             if (Invoices == null || Invoices.Count == 0 || SelectedInvoice == null || SelectedInvoice.Id == 0) return;
             var idm = SC.GetInstance<IInvoiceDetailManager>();
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, idm, User, Singleton, SelectedInvoice.Id, RefreshPage, SC));
+            await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, idm, User, Singleton, SelectedInvoice.Id, RefreshPageAsync, SC));
         }
 
-        public async Task DeleteInvoice()
+        public async Task DeleteInvoiceAsync()
         {
-            if (!GeneralSettings.CanEditInvoices) return;
             if (Invoices == null || Invoices.Count == 0 || SelectedInvoice == null || SelectedInvoice.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete invoice of {SelectedInvoice.CustomerFullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
@@ -168,9 +148,8 @@ namespace AvazehWpf.ViewModels
             else MessageBox.Show($"Invoice with ID: {SelectedInvoice.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        public async Task ViewPayments()
+        public async Task ViewPaymentsAsync()
         {
-            if (!GeneralSettings.CanViewInvoices || !GeneralSettings.CanEditInvoices) return;
             if (SelectedInvoice is null) return;
             WindowManager wm = new();
             var invoice = await ICM.GetItemById(SelectedInvoice.Id);
@@ -178,38 +157,30 @@ namespace AvazehWpf.ViewModels
             await wm.ShowWindowAsync(new InvoicePaymentsViewModel(ICM, idm, User, invoice, SearchSync, SC, true));
         }
 
-        public async Task ShowCustomerInvoices()
+        public async Task ShowCustomerInvoicesAsync()
         {
             if (SelectedInvoice is null) return;
             SearchText = SelectedInvoice.CustomerFullName;
-            await Search();
+            await SearchAsync();
         }
 
-        public async Task ShowAllInvoices()
+        public async Task ShowAllInvoicesAsync()
         {
             SearchText = "";
-            await Search();
+            await SearchAsync();
         }
 
         public void dg_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (Key.Delete == e.Key)
             {
-                DeleteInvoice().ConfigureAwait(true);
+                _ = DeleteInvoiceAsync().ConfigureAwait(true);
                 e.Handled = true;
             }
         }
 
-        public async Task PrintInvoice(int t)
+        public async Task PrintInvoiceAsync(int t)
         {
-            //var idm = SC.GetInstance<IInvoiceDetailManager>();
-            //InvoiceDetailViewModel idvm = new(ICM, idm, ASM, Singleton, SelectedInvoice.Id, RefreshPage, SC);
-            //WindowManager wm = new();
-            //wm.ShowWindowAsync(idvm);
-
-            //idvm.PrintInvoice(t);
-            //idvm.CloseWindow();
-            if (!GeneralSettings.CanViewInvoices) return;
             if (Invoices == null || Invoices.Count == 0 || SelectedInvoice == null || SelectedInvoice.Id == 0) return;
             var Invoice = await ICM.GetItemById(SelectedInvoice.Id);
             if (Invoice == null) return;

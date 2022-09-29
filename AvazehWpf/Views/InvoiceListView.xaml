@@ -71,13 +71,13 @@
                     <ObjectDataProvider x:Key="FinStatusItems" MethodName="GetInvoiceFinStatusItems" ObjectType="{x:Type viewmodels:InvoiceFinStatusAndLifeStatusItems}"/>
                     <ObjectDataProvider x:Key="LifeStatusItems" MethodName="GetInvoiceLifeStatusItems" ObjectType="{x:Type viewmodels:InvoiceFinStatusAndLifeStatusItems}"/>
                 </Grid.Resources>
-                <Button x:Name="PrintList" Grid.Column="0" Height="25" Margin="0,0,5,0" IsEnabled="False">
+                <Button x:Name="PrintListAsync" Grid.Column="0" Height="25" Margin="0,0,5,0" IsEnabled="False">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="PrinterOutline" Margin="3"/>
                         <TextBlock Text="چاپ لیست" VerticalAlignment="Center" Margin="5,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="AddNewInvoice" IsEnabled="{Binding GeneralSettings.CanAddNewInvoice}" Grid.Column="1" Height="25" Margin="0,0,5,0">
+                <Button x:Name="AddNewInvoiceAsync" IsEnabled="{Binding GeneralSettings.CanAddNewInvoice}" Grid.Column="1" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="NotePlusOutline" Margin="3"/>
                         <TextBlock Text="فاکتور جدید" VerticalAlignment="Center" Margin="5,0,30,0"/>
@@ -89,14 +89,14 @@
                 <ComboBox Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="85" Grid.Column="3" BorderThickness="2" BorderBrush="DarkGray" Height="25" VerticalContentAlignment="Center"
                           ItemsSource="{Binding Source={StaticResource LifeStatusItems}}" SelectedValuePath="Key" DisplayMemberPath="Value"
                           SelectedValue="{Binding SelectedLifeStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action Search]"/>
-                <Button x:Name="Search" IsEnabled="{Binding GeneralSettings.CanViewInvoices}" Grid.Column="4" Height="25" Margin="0,0,5,0">
+                <Button x:Name="SearchAsync" IsEnabled="{Binding GeneralSettings.CanViewInvoices}" Grid.Column="4" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="DatabaseSearchOutline" Margin="3"/>
                         <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="3" HorizontalAlignment="Right"/>
                     </StackPanel>
                 </Button>
-                <TextBox x:Name="SearchText" Grid.Column="5" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]; [Event GotFocus] = [Action SetKeyboardLayout]" VerticalContentAlignment="Center" Margin="0,0,3,0"/>
+                <TextBox x:Name="SearchText" Grid.Column="5" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandlerAsync($executionContext)]; [Event GotFocus] = [Action SetKeyboardLayout]" VerticalContentAlignment="Center" Margin="0,0,3,0"/>
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -104,26 +104,26 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="PreviousPage" IsEnabled="{Binding GeneralSettings.CanViewInvoices}" Grid.Column="0" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
+                <Button x:Name="PreviousPageAsync" IsEnabled="{Binding GeneralSettings.CanViewInvoices}" Grid.Column="0" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ArrowLeftCircleOutline" Margin="3"/>
                         <TextBlock Text="صفحه قبل" VerticalAlignment="Center" Margin="30,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="NextPage" IsEnabled="{Binding GeneralSettings.CanViewInvoices}" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
+                <Button x:Name="NextPageAsync" IsEnabled="{Binding GeneralSettings.CanViewInvoices}" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="صفحه بعد" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="ArrowRightCircleOutline" Margin="3" HorizontalAlignment="Right"/>
                     </StackPanel>
                 </Button>
             </Grid>
-            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditInvoice]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditInvoiceAsync]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
                       Grid.Row="2" HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding InvoiceSettings.DataGridFontSize}" ItemsSource="{Binding Invoices}" RowHeight="25"
                       SelectedItem="{Binding SelectedInvoice}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False"
                       CellStyle="{StaticResource Body_Content_DataGrid_Centering}">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditInvoice]" IsEnabled="{Binding GeneralSettings.CanViewInvoices}">
+                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditInvoiceAsync]" IsEnabled="{Binding GeneralSettings.CanViewInvoices}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="OpenInApp"/>
                             </MenuItem.Icon>
@@ -132,50 +132,50 @@
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="PrinterOutline"/>
                             </MenuItem.Icon>
-                            <MenuItem Header="فاکتور فروش بدون سربرگ" cal:Message.Attach="[Event Click] = [Action PrintInvoice(11)]">
+                            <MenuItem Header="فاکتور فروش بدون سربرگ" cal:Message.Attach="[Event Click] = [Action PrintInvoiceAsync(11)]">
                                 <MenuItem.Icon>
                                     <materialDesign:PackIcon Kind="ReceiptOutline"/>
                                 </MenuItem.Icon>
                             </MenuItem>
                             <Separator />
-                            <MenuItem Header="فاکتور فروش بدون سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoice(12)]">
+                            <MenuItem Header="فاکتور فروش بدون سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoiceAsync(12)]">
                                 <MenuItem.Icon>
                                     <materialDesign:PackIcon Kind="ReceiptOutline"/>
                                 </MenuItem.Icon>
                             </MenuItem>
-                            <MenuItem Header="فاکتور فروش با سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoice(13)]">
+                            <MenuItem Header="فاکتور فروش با سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoiceAsync(13)]">
                                 <MenuItem.Icon>
                                     <materialDesign:PackIcon Kind="ReceiptOutline"/>
                                 </MenuItem.Icon>
                             </MenuItem>
                             <Separator />
-                            <MenuItem Header="پیش فاکتور بدون سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoice(21)]">
+                            <MenuItem Header="پیش فاکتور بدون سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoiceAsync(21)]">
                                 <MenuItem.Icon>
                                     <materialDesign:PackIcon Kind="InvoiceOutline"/>
                                 </MenuItem.Icon>
                             </MenuItem>
-                            <MenuItem Header="پیش فاکتور با سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoice(22)]">
+                            <MenuItem Header="پیش فاکتور با سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoiceAsync(22)]">
                                 <MenuItem.Icon>
                                     <materialDesign:PackIcon Kind="InvoiceOutline"/>
                                 </MenuItem.Icon>
                             </MenuItem>
                         </MenuItem>
-                        <MenuItem Header="نمایش پرداختها" cal:Message.Attach="[Event Click] = [Action ViewPayments]" IsEnabled="{Binding GeneralSettings.CanViewInvoices}">
+                        <MenuItem Header="نمایش پرداختها" cal:Message.Attach="[Event Click] = [Action ViewPaymentsAsync]" IsEnabled="{Binding GeneralSettings.CanViewInvoices}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="Payment"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="نمایش همه فاکتورها با این نام" cal:Message.Attach="[Event Click] = [Action ShowCustomerInvoices]">
+                        <MenuItem Header="نمایش همه فاکتورها با این نام" cal:Message.Attach="[Event Click] = [Action ShowCustomerInvoicesAsync]">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="SearchPlusOutline"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="نمایش همه" cal:Message.Attach="[Event Click] = [Action ShowAllInvoices]">
+                        <MenuItem Header="نمایش همه" cal:Message.Attach="[Event Click] = [Action ShowAllInvoicesAsync]">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="ShowOutline"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteInvoice]" IsEnabled="{Binding GeneralSettings.CanEditInvoices}">
+                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteInvoiceAsync]" IsEnabled="{Binding GeneralSettings.CanEditInvoices}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="DeleteOutline"/>
                             </MenuItem.Icon>

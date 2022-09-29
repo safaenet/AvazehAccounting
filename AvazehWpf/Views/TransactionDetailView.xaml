@@ -14,7 +14,7 @@
         xmlns:dlc2="clr-namespace:SharedLibrary.DtoModels;assembly=SharedLibrary"
         Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1200" Height="650"
-        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]; [Event Loaded] = [FocusOnProductsCombobox()]">
+        cal:Message.Attach="[Event Closing] = [Action ClosingWindowAsync]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]; [Event Loaded] = [FocusOnProductsCombobox()]">
     <Window.Resources>
         <local:AppSettings x:Key="AppSettings"/>
         <!--body content datagrid cell vertical centering-->
@@ -32,12 +32,12 @@
         <local:BooleanToReverseConverter x:Key="b2r"/>
         <local:AmountToColorConverter x:Key="AmountToColorConverter"/>
         <ContextMenu x:Key="PrintTransactionCM">
-            <MenuItem Header="بدون سربرگ" cal:Message.Attach="[Event Click] = [Action PrintTransaction(11)]">
+            <MenuItem Header="بدون سربرگ" cal:Message.Attach="[Event Click] = [Action PrintTransactionAsync(11)]">
                 <MenuItem.Icon>
                     <materialDesign:PackIcon Kind="ReceiptOutline"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="با سربرگ" cal:Message.Attach="[Event Click] = [Action PrintTransaction(13)]">
+            <MenuItem Header="با سربرگ" cal:Message.Attach="[Event Click] = [Action PrintTransactionAsync(13)]">
                 <MenuItem.Icon>
                     <materialDesign:PackIcon Kind="ReceiptOutline"/>
                 </MenuItem.Icon>
@@ -180,14 +180,14 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <Button x:Name="SaveTransactionChanges" Height="30" Margin="0,2,3,0" Grid.Row="3">
+                    <Button x:Name="SaveTransactionChangesAsync" Height="30" Margin="0,2,3,0" Grid.Row="3">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="ContentSaveOutline" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="ذخیره توضیحات" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
-                    <Button x:Name="DeleteTransactionAndClose" Height="30" Margin="0,3,3,0" Grid.Row="4">
+                    <Button x:Name="DeleteTransactionAndCloseAsync" Height="30" Margin="0,3,3,0" Grid.Row="4">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="DeleteOutline" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="حذف فایل" VerticalAlignment="Center"/>
@@ -222,13 +222,13 @@
                 <Grid.Resources>
                     <ObjectDataProvider x:Key="FinStatusItems" MethodName="GetTransactionFinStatusItems" ObjectType="{x:Type viewmodels:TransactionFinStatusItems}"/>
                 </Grid.Resources>
-                <Button x:Name="PreviousPage" Width="100" Height="25" HorizontalAlignment="Left" Margin="0,0,3,0" Grid.Column="0">
+                <Button x:Name="PreviousPageAsync" Width="100" Height="25" HorizontalAlignment="Left" Margin="0,0,3,0" Grid.Column="0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ArrowLeftCircleOutline" Margin="3"/>
                         <TextBlock Text="صفحه قبل" VerticalAlignment="Center" Margin="5,0,0,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="NextPage" Grid.Column="1" Width="100" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
+                <Button x:Name="NextPageAsync" Grid.Column="1" Width="100" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="صفحه بعد" VerticalAlignment="Center" Margin="5,0,5,0"/>
                         <materialDesign:PackIcon Kind="ArrowRightCircleOutline" Margin="3" HorizontalAlignment="Right"/>
@@ -237,8 +237,8 @@
                 <Separator Grid.Column="2" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                 <ComboBox Margin="3,0,3,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Grid.Column="3" BorderThickness="2" BorderBrush="DarkGray" Height="25" VerticalContentAlignment="Center"
                           ItemsSource="{Binding Source={StaticResource FinStatusItems}}" SelectedValuePath="Key" DisplayMemberPath="Value"
-                          SelectedValue="{Binding SelectedFinStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action Search]"/>
-                <Button x:Name="Search" Grid.Column="4" Width="150" Height="25" Margin="0,0,3,0" >
+                          SelectedValue="{Binding SelectedFinStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action SearchAsync]"/>
+                <Button x:Name="SearchAsync" Grid.Column="4" Width="150" Height="25" Margin="0,0,3,0" >
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="DatabaseSearchOutline" Margin="0"/>
                         <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
@@ -258,7 +258,7 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="AddOrUpdateItem" Grid.Column="0" TabIndex="7" Width="40" Margin="0,0,5,3">
+                <Button x:Name="AddOrUpdateItemAsync" Grid.Column="0" TabIndex="7" Width="40" Margin="0,0,5,3">
                     <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Width="30" Height="30"/>
                 </Button>
 
@@ -338,7 +338,7 @@
                       HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding TransactionSettings.DetailDataGridFontSize}">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteItem]">
+                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteItemAsync]">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="DeleteOutline"/>
                             </MenuItem.Icon>

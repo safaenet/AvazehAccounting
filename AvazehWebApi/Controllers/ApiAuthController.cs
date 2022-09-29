@@ -54,6 +54,7 @@ namespace AvazehWebAPI.Controllers
             //UserSettings Settings = new();
 
             LoggedInUser_DTO loggedUser = new();
+            loggedUser.Username = user.Username;
             loggedUser.Token = GenerateToken(userInfoBase, Permissions);
             loggedUser.Settings = Settings;
             loggedUser.DateCreated = userInfoBase.DateCreated;

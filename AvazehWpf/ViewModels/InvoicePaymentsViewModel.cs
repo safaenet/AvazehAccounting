@@ -1,16 +1,9 @@
 ﻿using AvazehApiClient.DataAccess;
-using AvazehApiClient.DataAccess.CollectionManagers;
 using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
-using SharedLibrary.DtoModels;
 using SharedLibrary.SecurityAndSettingsModels;
-using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
-using SharedLibrary.Validators;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -27,15 +20,15 @@ namespace AvazehWpf.ViewModels
             User = user;
             SC = sc;
             CallBackAction = callBack;
-            if (ReloadInvoiceNeeded && Invoice != null)  ReloadInvoice(Invoice.Id).ConfigureAwait(true);
-            ReloadCustomerBalance().ConfigureAwait(true);
+            if (ReloadInvoiceNeeded && Invoice != null)  _ = ReloadInvoiceAsync(Invoice.Id).ConfigureAwait(true);
+            _ = ReloadCustomerBalanceAsync().ConfigureAwait(true);
         }
         private InvoiceModel _invoice;
         public double CustomerTotalBalance { get => customerTotalBalance; private set { customerTotalBalance = value; NotifyOfPropertyChange(() => CustomerTotalBalance); } }
         private readonly IInvoiceCollectionManager InvoiceCollectionManager;
         private readonly IInvoiceDetailManager InvoiceDetailManager;
         private readonly LoggedInUser_DTO User;
-        SimpleContainer SC;
+        readonly SimpleContainer SC;
         private readonly System.Action CallBackAction;
         private bool EdittingItem = false;
         private InvoicePaymentModel _workItem = new();
@@ -64,7 +57,7 @@ namespace AvazehWpf.ViewModels
             NotifyOfPropertyChange(() => WorkItem);
         }
 
-        public async Task AddOrUpdateItem()
+        public async Task AddOrUpdateItemAsync()
         {
             if (Invoice == null) return;
             if (WorkItem == null) return;
@@ -87,7 +80,7 @@ namespace AvazehWpf.ViewModels
             }
             else //Edit Item
             {
-                await UpdateItemInDatabase(WorkItem);
+                await UpdateItemInDatabaseAsync(WorkItem);
                 EdittingItem = false;
             }
             WorkItem = new();
@@ -96,7 +89,7 @@ namespace AvazehWpf.ViewModels
             NotifyOfPropertyChange(() => Invoice);
         }
 
-        private async Task UpdateItemInDatabase(InvoicePaymentModel item)
+        private async Task UpdateItemInDatabaseAsync(InvoicePaymentModel item)
         {
             var ResultItem = await InvoiceDetailManager.UpdatePaymentAsync(item);
             var EdittedItem = Invoice.Payments.FirstOrDefault(x => x.Id == item.Id);
@@ -104,7 +97,7 @@ namespace AvazehWpf.ViewModels
             RefreshDataGrid();
         }
 
-        public async Task DeleteItem()
+        public async Task DeleteItemAsync()
         {
             if (Invoice == null || Invoice.Payments == null || !Invoice.Payments.Any() || SelectedPaymentItem == null) return;
             var result = MessageBox.Show("Are you sure you want to delete this row ?", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
@@ -120,7 +113,7 @@ namespace AvazehWpf.ViewModels
         {
             if (Key.Delete == e.Key)
             {
-                DeleteItem().ConfigureAwait(true);
+                _ = DeleteItemAsync().ConfigureAwait(true);
                 e.Handled = true;
             }
         }
@@ -138,12 +131,12 @@ namespace AvazehWpf.ViewModels
             (GetView() as Window).Close();
         }
 
-        private async Task ReloadInvoice(int InvoiceId)
+        private async Task ReloadInvoiceAsync(int InvoiceId)
         {
             Invoice = await InvoiceCollectionManager.GetItemById(InvoiceId);
         }
 
-        public async Task ReloadCustomerBalance()
+        public async Task ReloadCustomerBalanceAsync()
         {
             if (Invoice is null) return;
             CustomerTotalBalance = await InvoiceCollectionManager.GetCustomerTotalBalanceById(Invoice.Customer.Id);
@@ -152,7 +145,7 @@ namespace AvazehWpf.ViewModels
         public void ReloadInvoiceBalance()
         {
             if (Invoice is null) return;
-            ReloadInvoice(Invoice.Id).ConfigureAwait(true);
+            _ = ReloadInvoiceAsync(Invoice.Id).ConfigureAwait(true);
         }
 
         public void ClosingWindow()

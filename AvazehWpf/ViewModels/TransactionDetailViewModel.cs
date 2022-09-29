@@ -1,25 +1,16 @@
 ﻿using Caliburn.Micro;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Controls.Primitives;
 using AvazehApiClient.DataAccess.Interfaces;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using System.Threading.Tasks;
 using AvazehApiClient.DataAccess;
-using AvazehApiClient.DataAccess.CollectionManagers;
-using SharedLibrary.Validators;
 using System.Windows.Input;
-using System.Windows.Data;
 using System.Collections.ObjectModel;
-using System.Windows.Threading;
 using SharedLibrary.Enums;
-using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
-using SharedLibrary.SettingsModels;
 using System.Xml.Serialization;
 using System.IO;
 using System.Diagnostics;
@@ -39,9 +30,9 @@ namespace AvazehWpf.ViewModels
             if (TransactionId is not null)
             {
                 TDM.TransactionId = (int)TransactionId;
-                ReloadTransaction(TransactionId).ConfigureAwait(true);
+                _ = ReloadTransactionAsync(TransactionId).ConfigureAwait(true);
             }
-            else GetComboboxItems().ConfigureAwait(true);
+            else _ = GetComboboxItemsAsync().ConfigureAwait(true);
         }
         private readonly ITransactionCollectionManager TCM;
         private readonly ITransactionDetailManager TDM;
@@ -86,18 +77,17 @@ namespace AvazehWpf.ViewModels
             set { _Transaction = value; NotifyOfPropertyChange(() => Transaction); }
         }
 
-        private async Task ReloadTransaction(int? TransactionId)
+        private async Task ReloadTransactionAsync(int? TransactionId)
         {
             if (TransactionId is null || (int)TransactionId == 0) return;
             Transaction = await TCM.GetItemById((int)TransactionId);
             WindowTitle = Transaction.FileName + " - فایل";
-            await GetComboboxItems();
-            await Search();
+            await GetComboboxItemsAsync();
+            await SearchAsync();
         }
 
         public void EditItem() //DataGrid doubleClick event
         {
-            if (!GeneralSettings.CanEditTransactions) return;
             if (Transaction == null || SelectedItem == null) return;
             EdittingItem = true;
             SelectedItem.Clone(WorkItem);
@@ -105,9 +95,8 @@ namespace AvazehWpf.ViewModels
             NotifyOfPropertyChange(() => WorkItem);
         }
 
-        public async Task AddOrUpdateItem()
+        public async Task AddOrUpdateItemAsync()
         {
-            if (!GeneralSettings.CanEditTransactions) return;
             if (Transaction == null || WorkItem == null) return;
             WorkItem.TransactionId = Transaction.Id;
             var validate = TDM.ValidateItem(WorkItem);
@@ -146,7 +135,7 @@ namespace AvazehWpf.ViewModels
                 }
                 else //Edit Item
                 {
-                    await UpdateItemInDatabase(WorkItem);
+                    await UpdateItemInDatabaseAsync(WorkItem);
                     EdittingItem = false;
                 }
             }
@@ -169,9 +158,8 @@ namespace AvazehWpf.ViewModels
             ((GetView() as Window).FindName("ProductsCombobox") as ComboBox).Focus();
         }
 
-        private async Task UpdateItemInDatabase(TransactionItemModel item)
+        private async Task UpdateItemInDatabaseAsync(TransactionItemModel item)
         {
-            if (!GeneralSettings.CanEditTransactions) return;
             var ResultItem = await TDM.UpdateItemAsync(item);
             var EdittedItem = Transaction.Items.FirstOrDefault(x => x.Id == item.Id);
             if (ResultItem != null) ResultItem.Clone(EdittedItem);
@@ -194,9 +182,8 @@ namespace AvazehWpf.ViewModels
             RefreshDataGrid();
         }
 
-        public async Task DeleteItem()
+        public async Task DeleteItemAsync()
         {
-            if (!GeneralSettings.CanEditTransactions) return;
             if (Transaction == null || Transaction.Items == null || Transaction.Items.Count == 0 || SelectedItem == null || SelectedItem.Id == 0) return;
             var result = MessageBox.Show("Are you sure you want to delete this row ?", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
@@ -214,14 +201,13 @@ namespace AvazehWpf.ViewModels
         {
             if (Key.Delete == e.Key)
             {
-                DeleteItem().ConfigureAwait(true);
+                _ = DeleteItemAsync().ConfigureAwait(true);
                 e.Handled = true;
             }
         }
 
-        public async Task DeleteTransactionAndClose()
+        public async Task DeleteTransactionAndCloseAsync()
         {
-            if (!GeneralSettings.CanEditTransactions) return;
             if (Transaction == null) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete Transaction file {Transaction.FileName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
@@ -237,9 +223,8 @@ namespace AvazehWpf.ViewModels
             Transaction = temp;
         }
 
-        public async Task SaveTransactionChanges()
+        public async Task SaveTransactionChangesAsync()
         {
-            if (!GeneralSettings.CanEditTransactions) return;
             var result = await TCM.UpdateItemAsync(Transaction);
             if (result == null)
             {
@@ -259,10 +244,10 @@ namespace AvazehWpf.ViewModels
             cm.IsOpen = true;
         }
 
-        public async Task PrintTransaction(int t)
+        public async Task PrintTransactionAsync(int t)
         {
             if (Transaction == null) return;
-            await ReloadTransaction(Transaction.Id);
+            await ReloadTransactionAsync(Transaction.Id);
             PrintTransactionModel pim = new();
             pim.PrintSettings = PrintSettings;
             Transaction.AsPrintModel(pim);
@@ -284,9 +269,8 @@ namespace AvazehWpf.ViewModels
             p.Start();
         }
 
-        public async Task Search()
+        public async Task SearchAsync()
         {
-            if (!GeneralSettings.CanViewTransactions) return;
             TransactionFinancialStatus? FinStatus = SelectedFinStatus >= Enum.GetNames(typeof(TransactionFinancialStatus)).Length ? null : (TransactionFinancialStatus)SelectedFinStatus;
             TDM.SearchValue = SearchText;
             EdittingItem = false;
@@ -297,17 +281,15 @@ namespace AvazehWpf.ViewModels
             NotifyOfPropertyChange(() => Transaction);
         }
 
-        public async Task PreviousPage()
+        public async Task PreviousPageAsync()
         {
-            if (!GeneralSettings.CanViewTransactions) return;
             await TDM.LoadPreviousPageAsync();
             Transaction.Items= TDM.Items;
             NotifyOfPropertyChange(() => Transaction);
         }
 
-        public async Task NextPage()
+        public async Task NextPageAsync()
         {
-            if (!GeneralSettings.CanViewTransactions) return;
             await TDM.LoadNextPageAsync();
             Transaction.Items= TDM.Items;
             NotifyOfPropertyChange(() => Transaction);
@@ -318,7 +300,7 @@ namespace AvazehWpf.ViewModels
             (GetView() as Window).Close();
         }
 
-        public async Task ClosingWindow()
+        public async Task ClosingWindowAsync()
         {
             if (CallBackFunc != null) await CallBackFunc?.Invoke();
         }
@@ -334,7 +316,7 @@ namespace AvazehWpf.ViewModels
             combo.IsDropDownOpen = true;
         }
 
-        public async Task Window_PreviewKeyDown(object window, KeyEventArgs e)
+        public void Window_PreviewKeyDown(object window, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
             {
@@ -347,15 +329,15 @@ namespace AvazehWpf.ViewModels
             }
         }
 
-        public async Task InputArea_PreviewKeyDown(object window, KeyEventArgs e)
+        public async Task InputArea_PreviewKeyDownAsync(object window, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
                 if (((window as Window).FindName("SearchText") as TextBox).IsFocused)
                 {
-                    await Search();
+                    await SearchAsync();
                 }
-                else await AddOrUpdateItem();
+                else await AddOrUpdateItemAsync();
             }
         }
 
@@ -369,7 +351,7 @@ namespace AvazehWpf.ViewModels
             NotifyOfPropertyChange(() => WorkItem);
         }
 
-        private async Task GetComboboxItems()
+        private async Task GetComboboxItemsAsync()
         {
             ProductItemsForComboBox = await Singleton.ReloadProductNamesAndTransactionItems(Transaction == null ? 0 : Transaction.Id);
             TransactionsForComboBox = await Singleton.ReloadTransactionNames(TDM == null ? 0 : TDM.TransactionId);

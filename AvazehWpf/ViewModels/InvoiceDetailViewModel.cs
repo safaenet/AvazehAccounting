@@ -11,18 +11,11 @@ using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using System.Threading.Tasks;
 using AvazehApiClient.DataAccess;
-using AvazehApiClient.DataAccess.CollectionManagers;
-using SharedLibrary.Validators;
 using System.Windows.Input;
-using System.Windows.Data;
 using System.Collections.ObjectModel;
-using System.Windows.Threading;
-using System.Xml.Linq;
 using System.Xml.Serialization;
-using System.Xml;
 using System.IO;
 using System.Diagnostics;
-using System.Globalization;
 using SharedLibrary.SecurityAndSettingsModels;
 
 namespace AvazehWpf.ViewModels
@@ -37,7 +30,7 @@ namespace AvazehWpf.ViewModels
             SC = sc;
             CallBackFunc = callBack;
             Singleton = singleton;
-            LoadInvoice(InvoiceId).ConfigureAwait(true);
+            _ = LoadInvoiceAsync(InvoiceId).ConfigureAwait(true);
         }
 
         private readonly IInvoiceCollectionManager ICM;
@@ -76,13 +69,13 @@ namespace AvazehWpf.ViewModels
             set { phoneNumberText = value; }
         }
 
-        private async Task LoadInvoice(int? InvoiceId)
+        private async Task LoadInvoiceAsync(int? InvoiceId)
         {
             if (InvoiceId is not null)
             {
-                await ReloadInvoice(InvoiceId);
+                await ReloadInvoiceAsync(InvoiceId);
             }
-            await GetComboboxItems();
+            await GetComboboxItemsAsync();
         }
 
         public string WindowTitle
@@ -124,15 +117,15 @@ namespace AvazehWpf.ViewModels
             set { _Invoice = value; NotifyOfPropertyChange(() => Invoice); }
         }
 
-        private async Task ReloadInvoice(int? InvoiceId)
+        private async Task ReloadInvoiceAsync(int? InvoiceId)
         {
             if (InvoiceId is null || (int)InvoiceId == 0) return;
             Invoice = await ICM.GetItemById((int)InvoiceId);
             WindowTitle = Invoice.Customer.FullName + " - فاکتور";
-            await ReloadCustomerPreviousBalance();
+            await ReloadCustomerPreviousBalanceAsync();
         }
 
-        public async Task ReloadCustomerPreviousBalance()
+        public async Task ReloadCustomerPreviousBalanceAsync()
         {
             if (Invoice is null) return;
             CustomerPreviousTotalBalance = await ICM.GetCustomerTotalBalanceById(Invoice.Customer.Id, Invoice.Id);
@@ -159,7 +152,7 @@ namespace AvazehWpf.ViewModels
             FocusOnProductsCombobox();
         }
 
-        public async Task AddOrUpdateItem()
+        public async Task AddOrUpdateItemAsync()
         {
             if (Invoice == null) return;
             var pcm = SC.GetInstance<ICollectionManager<ProductModel>>();
@@ -191,7 +184,7 @@ namespace AvazehWpf.ViewModels
                         {
                             WorkItem = item;
                             WorkItem.CountString = (WorkItem.CountValue + InvoiceSettings.BarcodeAddItemCount).ToString();
-                            await UpdateItemInDatabase(WorkItem);
+                            await UpdateItemInDatabaseAsync(WorkItem);
                         }
                     }
                     else if (User.Settings.AskToAddNotExistingProduct) //Not found by barcode, Try to create new product.
@@ -242,7 +235,7 @@ namespace AvazehWpf.ViewModels
                         }
                         else //Edit Item
                         {
-                            await UpdateItemInDatabase(WorkItem);
+                            await UpdateItemInDatabaseAsync(WorkItem);
                             EdittingItem = false;
                         }
                     }
@@ -272,7 +265,7 @@ namespace AvazehWpf.ViewModels
             ((GetView() as Window).FindName("ProductsCombobox") as ComboBox).Focus();
         }
 
-        private async Task UpdateItemInDatabase(InvoiceItemModel item)
+        private async Task UpdateItemInDatabaseAsync(InvoiceItemModel item)
         {
             var ResultItem = await IDM.UpdateItemAsync(item);
             var EdittedItem = Invoice.Items.FirstOrDefault(x => x.Id == item.Id);
@@ -280,7 +273,7 @@ namespace AvazehWpf.ViewModels
             RefreshDataGrid();
         }
 
-        public async Task DeleteItem()
+        public async Task DeleteItemAsync()
         {
             if (Invoice == null || Invoice.Items == null || !Invoice.Items.Any() || SelectedItem == null) return;
             var result = MessageBox.Show("Are you sure you want to delete this row ?", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
@@ -306,12 +299,12 @@ namespace AvazehWpf.ViewModels
         {
             if (Key.Delete == e.Key)
             {
-                DeleteItem().ConfigureAwait(true);
+                _ = DeleteItemAsync().ConfigureAwait(true);
                 e.Handled = true;
             }
         }
 
-        public async Task DeleteInvoiceAndClose()
+        public async Task DeleteInvoiceAndCloseAsync()
         {
             if (Invoice == null) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete Invoice for {Invoice.Customer.FullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
@@ -330,21 +323,21 @@ namespace AvazehWpf.ViewModels
 
         private void RefreshAndReloadCustomerTotalBalance()
         {
-            ReloadInvoice(Invoice.Id).ConfigureAwait(true);
+            _ = ReloadInvoiceAsync(Invoice.Id).ConfigureAwait(true);
         }
 
         private async Task RefreshAndReloadCustomerTotalBalanceAsync()
         {
-            await ReloadInvoice(Invoice.Id);
+            await ReloadInvoiceAsync(Invoice.Id);
         }
 
-        public async Task ViewPayments()
+        public async Task ViewPaymentsAsync()
         {
             WindowManager wm = new();
             await wm.ShowWindowAsync(new InvoicePaymentsViewModel(ICM, IDM, User, Invoice, RefreshAndReloadCustomerTotalBalance, SC, true));
         }
 
-        public async Task SaveInvoiceChanges()
+        public async Task SaveInvoiceChangesAsync()
         {
             var result = await ICM.UpdateItemAsync(Invoice);
             if (result == null)
@@ -366,10 +359,10 @@ namespace AvazehWpf.ViewModels
             cm.IsOpen = true;
         }
 
-        public async Task PrintInvoice(int t)
+        public async Task PrintInvoiceAsync(int t)
         {
             if (Invoice == null) return;
-            await ReloadInvoice(Invoice.Id);
+            await ReloadInvoiceAsync(Invoice.Id);
             PrintInvoiceModel pim = new();
             pim.PrintSettings = PrintSettings;
             Invoice.AsPrintModel(pim);
@@ -402,7 +395,7 @@ namespace AvazehWpf.ViewModels
             p.Start();
         }
 
-        public async Task EditOwner()
+        public async Task EditOwnerAsync()
         {
             if (Invoice is null) return;
             WindowManager wm = new();
@@ -415,7 +408,7 @@ namespace AvazehWpf.ViewModels
             (GetView() as Window).Close();
         }
 
-        public async Task ClosingWindow()
+        public async Task ClosingWindowAsync()
         {
             if (CallBackFunc != null)
                 await CallBackFunc?.Invoke();
@@ -427,18 +420,12 @@ namespace AvazehWpf.ViewModels
                 IsSellPriceDropDownOpen = true;
         }
 
-        public void ProductNames_PreviewTextInput(object sender, EventArgs e)
-        {
-            var combo = sender as ComboBox;
-            combo.IsDropDownOpen = true;
-        }
-
         public void ProductNames_PreviewTextInput()
         {
             IsProductInputDropDownOpen = true;
         }
 
-        public async Task ProductNames_SelectionChanged(object sender, EventArgs e)
+        public async Task ProductNames_SelectionChangedAsync(object sender, EventArgs e)
         {
             if (Invoice == null || SelectedProductItem == null) return;
             if (CanUpdateRowFromDB is false) return;
@@ -470,7 +457,7 @@ namespace AvazehWpf.ViewModels
             }
         }
 
-        private async Task GetComboboxItems()
+        private async Task GetComboboxItemsAsync()
         {
             ProductItemsForComboBox = await Singleton.ReloadProductNames();
             ProductUnits = await Singleton.ReloadProductUnits();

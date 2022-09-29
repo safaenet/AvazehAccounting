@@ -1,24 +1,13 @@
 ﻿using AvazehApiClient.DataAccess;
-using AvazehApiClient.DataAccess.CollectionManagers;
 using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
-using SharedLibrary.DtoModels;
-using SharedLibrary.Enums;
 using SharedLibrary.SecurityAndSettingsModels;
-using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Threading;
 
 namespace AvazehWpf.ViewModels
 {
@@ -40,7 +29,7 @@ namespace AvazehWpf.ViewModels
             else
             {
                 ButtonTitle = "Update";
-                LoadSelectedItem().ConfigureAwait(true);
+                _ = LoadSelectedItemAsync().ConfigureAwait(true);
             }
         }
         public ITransactionCollectionManager TCM { get; set; }
@@ -77,7 +66,7 @@ namespace AvazehWpf.ViewModels
             (GetView() as Window).Close();
         }
 
-        public async Task AddOrUpdateTransaction()
+        public async Task AddOrUpdateTransactionAsync()
         {
             if (string.IsNullOrEmpty(TransactionInput))
             {
@@ -114,7 +103,7 @@ namespace AvazehWpf.ViewModels
             }
         }
 
-        private async Task LoadSelectedItem()
+        private async Task LoadSelectedItemAsync()
         {
             var transaction = await TCM.GetItemById((int)TransactionID);
             TransactionInput = transaction.FileName;
@@ -126,9 +115,9 @@ namespace AvazehWpf.ViewModels
             ((GetView() as Window).FindName("NewTransactionInput") as TextBox).Focus();
         }
 
-        public void ClosingWindow()
+        public async Task ClosingWindowAsync()
         {
-            CallBack?.Invoke();
+            await CallBack?.Invoke();
         }
 
         public void Window_PreviewKeyDown(object sender, KeyEventArgs e)

@@ -1,24 +1,16 @@
 ﻿using AvazehApiClient.DataAccess;
-using AvazehApiClient.DataAccess.CollectionManagers;
 using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
-using SharedLibrary.Enums;
 using SharedLibrary.SecurityAndSettingsModels;
-using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Threading;
 
 namespace AvazehWpf.ViewModels
 {
@@ -32,7 +24,7 @@ namespace AvazehWpf.ViewModels
             SC = sc;
             Singleton = singleton;
             InvoiceID = InvoiceId;
-            GetComboboxItems().ConfigureAwait(true);
+            _ = GetComboboxItemsAsync().ConfigureAwait(true);
             CallBack = callBack;
             if (InvoiceID == null)
             {
@@ -42,7 +34,7 @@ namespace AvazehWpf.ViewModels
             else
             {
                 ButtonTitle = "Update";
-                LoadSelectedItem().ConfigureAwait(true);
+                _ = LoadSelectedItemAsync().ConfigureAwait(true);
             }
         }
         public IInvoiceCollectionManager ICM { get; set; }
@@ -86,7 +78,7 @@ namespace AvazehWpf.ViewModels
             set { customerInput = value; NotifyOfPropertyChange(() => CustomerInput); }
         }
 
-        private async Task GetComboboxItems()
+        private async Task GetComboboxItemsAsync()
         {
             CustomerNamesForComboBox = await Singleton.ReloadCustomerNames();
         }
@@ -105,9 +97,9 @@ namespace AvazehWpf.ViewModels
             (GetView() as Window).Close();
         }
 
-        public async Task AddOrUpdateInvoice()
+        public async Task AddOrUpdateInvoiceAsync()
         {
-            var c = await CheckCustomer();
+            var c = await CheckCustomerAsync();
             if (c == null)
             {
                 MessageBox.Show("خطا هنگام ایجاد مشتری جدید", CustomerInput, MessageBoxButton.OK, MessageBoxImage.Error);
@@ -145,7 +137,7 @@ namespace AvazehWpf.ViewModels
             }
         }
 
-        private async Task<CustomerModel> CheckCustomer()
+        private async Task<CustomerModel> CheckCustomerAsync()
         {
             if (SelectedCustomer != null) return await CCM.GetItemById(SelectedCustomer.Id);
             var res = MessageBox.Show("مشتری وارد شده وجود ندارد. آیا ایجاد شود؟", "ایجاد مشتری جدید", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes);
@@ -159,7 +151,7 @@ namespace AvazehWpf.ViewModels
             return null;
         }
 
-        private async Task LoadSelectedItem()
+        private async Task LoadSelectedItemAsync()
         {
             SelectedCustomer = new();
             var invoice = await ICM.GetItemById((int)InvoiceID);
@@ -173,9 +165,9 @@ namespace AvazehWpf.ViewModels
             IsCustomerInputDropDownOpen = true;
         }
 
-        public void ClosingWindow()
+        public async Task ClosingWindowAsync()
         {
-            CallBack?.Invoke();
+            await CallBack?.Invoke();
         }
 
         public void Window_PreviewKeyDown(object sender, KeyEventArgs e)

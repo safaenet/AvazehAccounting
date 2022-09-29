@@ -1,30 +1,9 @@
 ﻿using Caliburn.Micro;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Controls.Primitives;
 using AvazehApiClient.DataAccess.Interfaces;
 using SharedLibrary.DalModels;
-using SharedLibrary.DtoModels;
 using System.Threading.Tasks;
 using AvazehApiClient.DataAccess;
-using AvazehApiClient.DataAccess.CollectionManagers;
-using SharedLibrary.Validators;
-using System.Windows.Input;
-using System.Windows.Data;
-using System.Collections.ObjectModel;
-using System.Windows.Threading;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-using System.Xml;
-using System.IO;
-using System.Diagnostics;
-using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
-using SharedLibrary.SettingsModels;
-using System.Globalization;
 using System.Net.Http;
 using SharedLibrary.SecurityAndSettingsModels;
 
@@ -36,11 +15,10 @@ namespace AvazehWpf.ViewModels
         {
             User = user;
             SC = sc;
-            LoadKnowledgeOfTheDayAsync().ConfigureAwait(true);
+            _ = LoadKnowledgeOfTheDayAsync().ConfigureAwait(true);
         }
 
         private readonly LoggedInUser_DTO User;
-        private GeneralSettingsModel generalSettings;
         SimpleContainer SC;
         private bool settingsLoaded;
 
@@ -85,10 +63,9 @@ namespace AvazehWpf.ViewModels
         }
 
 
-        public GeneralSettingsModel GeneralSettings { get => generalSettings; private set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); } }
         public bool ShowChequeNotification { get; set; }
 
-        public async Task AddNewInvoice()
+        public async Task AddNewInvoiceAsync()
         {
             var icm = SC.GetInstance<IInvoiceCollectionManager>();
             var ccm = SC.GetInstance<ICollectionManager<CustomerModel>>();
@@ -98,7 +75,7 @@ namespace AvazehWpf.ViewModels
             await wm.ShowWindowAsync(viewModel);
         }
 
-        public async Task ViewInvoiceList()
+        public async Task ViewInvoiceListAsync()
         {
             var icm = SC.GetInstance<IInvoiceCollectionManager>();
             var singleton = SC.GetInstance<SingletonClass>();
@@ -107,7 +84,7 @@ namespace AvazehWpf.ViewModels
             await wm.ShowWindowAsync(viewModel);
         }
 
-        public async Task AddNewTransaction()
+        public async Task AddNewTransactionAsync()
         {
             var tcm = SC.GetInstance<ITransactionCollectionManager>();
             var singleton = SC.GetInstance<SingletonClass>();
@@ -116,7 +93,7 @@ namespace AvazehWpf.ViewModels
             await wm.ShowWindowAsync(viewModel);
         }
 
-        public async Task ViewTransactionList()
+        public async Task ViewTransactionListAsync()
         {
             var tcm = SC.GetInstance<ITransactionCollectionManager>();
             var singleton = SC.GetInstance<SingletonClass>();
@@ -125,7 +102,7 @@ namespace AvazehWpf.ViewModels
             await wm.ShowWindowAsync(viewModel);
         }
 
-        public async Task ViewCheques()
+        public async Task ViewChequesAsync()
         {
             var ccm = SC.GetInstance<IChequeCollectionManagerAsync>();
             var singleton = SC.GetInstance<SingletonClass>();
@@ -134,7 +111,7 @@ namespace AvazehWpf.ViewModels
             await wm.ShowWindowAsync(viewModel);
         }
 
-        public async Task ViewCustomers()
+        public async Task ViewCustomersAsync()
         {
             var ccm = SC.GetInstance<ICollectionManager<CustomerModel>>();
             WindowManager wm = new();
@@ -142,7 +119,7 @@ namespace AvazehWpf.ViewModels
             await wm.ShowWindowAsync(viewModel);
         }
 
-        public async Task ViewProducts()
+        public async Task ViewProductsAsync()
         {
             var pcm = SC.GetInstance<ICollectionManager<ProductModel>>();
             WindowManager wm = new();
@@ -150,11 +127,11 @@ namespace AvazehWpf.ViewModels
             await wm.ShowWindowAsync(viewModel);
         }
 
-        public async Task TransactionShortcut1()
+        public async Task TransactionShortcut1Async()
         {
-            if (GeneralSettings != null && GeneralSettings.TransactionShortcut1.TransactionId <= 0) return;
+            if (User.Settings.TransactionShortcut1Id == 0) return;
             var tcm = SC.GetInstance<ITransactionCollectionManager>();
-            if (await tcm.GetItemById(GeneralSettings.TransactionShortcut1.TransactionId) == null)
+            if (await tcm.GetItemById(User.Settings.TransactionShortcut1Id) == null)
             {
                 MessageBox.Show("فایل یافت نشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -162,15 +139,15 @@ namespace AvazehWpf.ViewModels
             var tdm = SC.GetInstance<ITransactionDetailManager>();
             var singleton = SC.GetInstance<SingletonClass>();
             WindowManager wm = new();
-            var viewModel = new TransactionDetailViewModel(tcm, tdm, User, singleton, GeneralSettings.TransactionShortcut1.TransactionId, null);
+            var viewModel = new TransactionDetailViewModel(tcm, tdm, User, singleton, User.Settings.TransactionShortcut1Id, null);
             await wm.ShowWindowAsync(viewModel);
         }
 
-        public async Task TransactionShortcut2()
+        public async Task TransactionShortcut2Async()
         {
-            if (GeneralSettings != null && GeneralSettings.TransactionShortcut2.TransactionId <= 0) return;
+            if (User.Settings.TransactionShortcut2Id == 0) return;
             var tcm = SC.GetInstance<ITransactionCollectionManager>();
-            if (await tcm.GetItemById(GeneralSettings.TransactionShortcut2.TransactionId) == null)
+            if (await tcm.GetItemById(User.Settings.TransactionShortcut2Id) == null)
             {
                 MessageBox.Show("فایل یافت نشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -178,15 +155,15 @@ namespace AvazehWpf.ViewModels
             var tdm = SC.GetInstance<ITransactionDetailManager>();
             var singleton = SC.GetInstance<SingletonClass>();
             WindowManager wm = new();
-            var viewModel = new TransactionDetailViewModel(tcm, tdm, User, singleton, GeneralSettings.TransactionShortcut2.TransactionId, null);
+            var viewModel = new TransactionDetailViewModel(tcm, tdm, User, singleton, User.Settings.TransactionShortcut2Id, null);
             await wm.ShowWindowAsync(viewModel);
         }
 
-        public async Task TransactionShortcut3()
+        public async Task TransactionShortcut3Async()
         {
-            if (GeneralSettings != null && GeneralSettings.TransactionShortcut3.TransactionId <= 0) return;
+            if (User.Settings.TransactionShortcut3Id == 0) return;
             var tcm = SC.GetInstance<ITransactionCollectionManager>();
-            if (await tcm.GetItemById(GeneralSettings.TransactionShortcut3.TransactionId) == null)
+            if (await tcm.GetItemById(User.Settings.TransactionShortcut3Id) == null)
             {
                 MessageBox.Show("فایل یافت نشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -194,15 +171,15 @@ namespace AvazehWpf.ViewModels
             var tdm = SC.GetInstance<ITransactionDetailManager>();
             var singleton = SC.GetInstance<SingletonClass>();
             WindowManager wm = new();
-            var viewModel = new TransactionDetailViewModel(tcm, tdm, User, singleton, GeneralSettings.TransactionShortcut3.TransactionId, null);
+            var viewModel = new TransactionDetailViewModel(tcm, tdm, User, singleton, User.Settings.TransactionShortcut3Id, null);
             await wm.ShowWindowAsync(viewModel);
         }
 
-        public async Task ViewSettings()
+        public async Task ViewSettingsAsync()
         {
             var singleton = SC.GetInstance<SingletonClass>();
             WindowManager wm = new();
-            var viewModel = new SettingsViewModel(singleton, User, LoadSettings);
+            var viewModel = new SettingsViewModel(singleton, User);
             await wm.ShowWindowAsync(viewModel);
         }
 

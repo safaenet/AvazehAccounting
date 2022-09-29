@@ -68,13 +68,13 @@
                 <Grid.Resources>
                     <ObjectDataProvider x:Key="FinStatusItems" MethodName="GetTransactionFinStatusItems" ObjectType="{x:Type viewmodels:TransactionFinStatusItems}"/>
                 </Grid.Resources>
-                <Button IsEnabled="False" x:Name="PrintList" Grid.Column="0" Height="25" Margin="0,0,5,0">
+                <Button IsEnabled="False" x:Name="PrintListAsync" Grid.Column="0" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="PrinterOutline" Margin="3"/>
                         <TextBlock Text="چاپ لیست" VerticalAlignment="Center" Margin="5,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="AddNewTransaction" IsEnabled="{Binding GeneralSettings.CanAddNewTransaction}" Grid.Column="1" Height="25" Margin="0,0,5,0">
+                <Button x:Name="AddNewTransactionAsync" IsEnabled="{Binding GeneralSettings.CanAddNewTransaction}" Grid.Column="1" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="NotePlusOutline" Margin="3"/>
                         <TextBlock Text="فایل جدید" VerticalAlignment="Center" Margin="5,0,30,0"/>
@@ -82,15 +82,15 @@
                 </Button>
                 <ComboBox Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Grid.Column="2" BorderThickness="2" BorderBrush="DarkGray" Height="25" VerticalContentAlignment="Center"
                           ItemsSource="{Binding Source={StaticResource FinStatusItems}}" SelectedValuePath="Key" DisplayMemberPath="Value"
-                          SelectedValue="{Binding SelectedFinStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action Search]"/>
-                <Button x:Name="Search" IsEnabled="{Binding GeneralSettings.CanViewTransactions}" Grid.Column="3" Height="25" Margin="0,0,5,0">
+                          SelectedValue="{Binding SelectedFinStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action SearchAsync]"/>
+                <Button x:Name="SearchAsync" IsEnabled="{Binding GeneralSettings.CanViewTransactions}" Grid.Column="3" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="DatabaseSearchOutline" Margin="3"/>
                         <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="3" HorizontalAlignment="Right"/>
                     </StackPanel>
                 </Button>
-                <TextBox x:Name="SearchText" Grid.Column="4" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]" VerticalContentAlignment="Center" Margin="0,0,3,0"/>
+                <TextBox x:Name="SearchText" Grid.Column="4" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandlerAsync($executionContext)]" VerticalContentAlignment="Center" Margin="0,0,3,0"/>
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -98,36 +98,36 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="PreviousPage" IsEnabled="{Binding GeneralSettings.CanViewTransactions}" Grid.Column="0" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
+                <Button x:Name="PreviousPageAsync" IsEnabled="{Binding GeneralSettings.CanViewTransactions}" Grid.Column="0" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ArrowLeftCircleOutline" Margin="3"/>
                         <TextBlock Text="صفحه قبل" VerticalAlignment="Center" Margin="30,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="NextPage" IsEnabled="{Binding GeneralSettings.CanViewTransactions}" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
+                <Button x:Name="NextPageAsync" IsEnabled="{Binding GeneralSettings.CanViewTransactions}" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="صفحه بعد" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="ArrowRightCircleOutline" Margin="3" HorizontalAlignment="Right"/>
                     </StackPanel>
                 </Button>
             </Grid>
-            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditTransaction]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" ItemsSource="{Binding Transactions}"
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditTransactionAsync]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" ItemsSource="{Binding Transactions}"
                       SelectedItem="{Binding SelectedTransaction}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" RowHeight="25"
                       HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding TransactionSettings.DataGridFontSize}" CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
                       viewmodels:DataGridBehavior.DisplayRowNumber="True">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditTransaction]" IsEnabled="{Binding GeneralSettings.CanViewTransactions}">
+                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditTransactionAsync]" IsEnabled="{Binding GeneralSettings.CanViewTransactions}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="OpenInApp"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="تغییر نام" cal:Message.Attach="[Event Click] = [Action RenameTransaction]" IsEnabled="{Binding GeneralSettings.CanEditTransactions}">
+                        <MenuItem Header="تغییر نام" cal:Message.Attach="[Event Click] = [Action RenameTransactionAsync]" IsEnabled="{Binding GeneralSettings.CanEditTransactions}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="Rename"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteTransaction]" IsEnabled="{Binding GeneralSettings.CanEditTransactions}">
+                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteTransactionAsync]" IsEnabled="{Binding GeneralSettings.CanEditTransactions}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="DeleteOutline"/>
                             </MenuItem.Icon>

@@ -21,7 +21,7 @@ namespace AvazehWpf.ViewModels
             User = user;
             Singleton = singelton;
             _SelectedCheque = new();
-            LoadSettings().ConfigureAwait(true);
+            _ = LoadSettingsAsync().ConfigureAwait(true);
         }
 
         private IChequeCollectionManagerAsync _CCM;
@@ -60,38 +60,38 @@ namespace AvazehWpf.ViewModels
         public string SearchText { get; set; }
         public int SelectedListQueryStatus { get; set; } = 4;
 
-        private async Task LoadSettings()
+        private async Task LoadSettingsAsync()
         {
             CCM.PageSize = User.Settings.ChequeListPageSize;
             CCM.QueryOrderType = User.Settings.ChequeListQueryOrderType;
-            await Search();
+            await SearchAsync();
         }
 
-        public void AddNewCheque()
+        public async Task AddNewChequeAsync()
         {
             WindowManager wm = new();
-            wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, null, Singleton, RefreshPage));
+            await wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, null, Singleton, RefreshPageAsync));
         }
 
-        public async Task PreviousPage()
+        public async Task PreviousPageAsync()
         {
             await CCM.LoadPreviousPageAsync();
             NotifyOfPropertyChange(() => Cheques);
         }
 
-        public async Task NextPage()
+        public async Task NextPageAsync()
         {
             await CCM.LoadNextPageAsync();
             NotifyOfPropertyChange(() => Cheques);
         }
 
-        public async Task RefreshPage()
+        public async Task RefreshPageAsync()
         {
             await CCM.RefreshPage();
             NotifyOfPropertyChange(() => Cheques);
         }
 
-        public async Task Search()
+        public async Task SearchAsync()
         {
             ChequeListQueryStatus? ListQueryStatus = SelectedListQueryStatus >= Enum.GetNames(typeof(ChequeListQueryStatus)).Length ? null : (ChequeListQueryStatus)SelectedListQueryStatus;
             CCM.ListQueryStatus = ListQueryStatus;
@@ -100,23 +100,22 @@ namespace AvazehWpf.ViewModels
             NotifyOfPropertyChange(() => Cheques);
         }
 
-        public async Task SearchBoxKeyDownHandler(ActionExecutionContext context)
+        public async Task SearchBoxKeyDownHandlerAsync(ActionExecutionContext context)
         {
-            var keyArgs = context.EventArgs as KeyEventArgs;
-            if (keyArgs != null && keyArgs.Key == Key.Enter)
+            if (context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
             {
-                await Search();
+                await SearchAsync();
             }
         }
 
-        public async Task EditCheque()
+        public async Task EditChequeAsync()
         {
             if (Cheques == null || Cheques.Count == 0 || SelectedCheque == null || SelectedCheque.Id == 0) return;
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, SelectedCheque, Singleton, RefreshPage));
+            await wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, SelectedCheque, Singleton, RefreshPageAsync));
         }
 
-        public async Task DeleteCheque()
+        public async Task DeleteChequeAsync()
         {
             if (Cheques == null || Cheques.Count == 0 || SelectedCheque == null || SelectedCheque.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete cheque from {SelectedCheque.Drawer}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);

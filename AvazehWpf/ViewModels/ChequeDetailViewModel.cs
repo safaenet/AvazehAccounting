@@ -45,10 +45,10 @@ namespace AvazehWpf.ViewModels
 
         private readonly ICollectionManager<ChequeModel> Manager;
         private ChequeModel _Cheque;
-        private Func<Task> CallBackFunc;
+        private readonly Func<Task> CallBackFunc;
         private string windowTitle;
         private SingletonClass Singleton;
-        PersianCalendar pCal = new();
+        readonly PersianCalendar pCal = new();
         private ObservableCollection<string> bankNamesForComboBox;
 
         public ObservableCollection<string> BankNamesForComboBox
@@ -89,7 +89,7 @@ namespace AvazehWpf.ViewModels
             Cheque.Events.RemoveAt(Cheque.Events.Count - 1);
         }
 
-        public async Task DeleteAndClose()
+        public async Task DeleteAndCloseAsync()
         {
             if (Cheque == null || Cheque.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete cheque of {Cheque.Drawer}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
@@ -103,9 +103,9 @@ namespace AvazehWpf.ViewModels
             (GetView() as Window).Close();
         }
 
-        public async Task SaveAndNew()
+        public async Task SaveAndNewAsync()
         {
-            if (await SaveToDatabase() == false) return;
+            if (await SaveToDatabaseAsync() == false) return;
             var newCheque = new ChequeModel();
             WindowManager wm = new();
             await wm.ShowWindowAsync(new ChequeDetailViewModel(Manager, newCheque, Singleton, CallBackFunc));
@@ -117,13 +117,13 @@ namespace AvazehWpf.ViewModels
             CloseWindow();
         }
 
-        public async Task SaveAndClose()
+        public async Task SaveAndCloseAsync()
         {
-            if (await SaveToDatabase() == false) return;
+            if (await SaveToDatabaseAsync() == false) return;
             CloseWindow();
         }
 
-        private async Task<bool> SaveToDatabase()
+        private async Task<bool> SaveToDatabaseAsync()
         {
             if (Cheque == null) return false;
             var validate = Manager.ValidateItem(Cheque);
@@ -154,7 +154,7 @@ namespace AvazehWpf.ViewModels
             }
         }
 
-        public async Task ClosingWindow()
+        public async Task ClosingWindowAsync()
         {
             await CallBackFunc?.Invoke();
         }

@@ -30,29 +30,29 @@
         </Style>
         <BooleanToVisibilityConverter x:Key="b2v"/>
         <ContextMenu x:Key="PrintInvoiceCM">
-            <MenuItem Header="فاکتور فروش بدون سربرگ" cal:Message.Attach="[Event Click] = [Action PrintInvoice(11)]">
+            <MenuItem Header="فاکتور فروش بدون سربرگ" cal:Message.Attach="[Event Click] = [Action PrintInvoiceAsync(11)]">
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="ReceiptOutline"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
-            <MenuItem Header="فاکتور فروش بدون سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoice(12)]">
+            <MenuItem Header="فاکتور فروش بدون سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoiceAsync(12)]">
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="ReceiptOutline"/>
                     </MenuItem.Icon>
                 </MenuItem>
-            <MenuItem Header="فاکتور فروش با سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoice(13)]">
+            <MenuItem Header="فاکتور فروش با سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoiceAsync(13)]">
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="ReceiptOutline"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
-            <MenuItem Header="پیش فاکتور بدون سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoice(21)]">
+            <MenuItem Header="پیش فاکتور بدون سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoiceAsync(21)]">
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="InvoiceOutline"/>
                     </MenuItem.Icon>
                 </MenuItem>
-            <MenuItem Header="پیش فاکتور با سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoice(22)]">
+            <MenuItem Header="پیش فاکتور با سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoiceAsync(22)]">
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="InvoiceOutline"/>
                     </MenuItem.Icon>
@@ -91,7 +91,7 @@
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام و نام خانوادگی مشتری" Margin="0,2,0,2"/>
                             </StackPanel>
                             <StackPanel Width="197" Orientation="Horizontal" HorizontalAlignment="Left">
-                                <Button x:Name="EditOwner" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" TabIndex="7" Width="20" Margin="0,0,2,0">
+                                <Button x:Name="EditOwnerAsync" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" TabIndex="7" Width="20" Margin="0,0,2,0">
                                     <materialDesign:PackIcon Kind="EditOutline" Width="15" Height="15"/>
                                 </Button>
                                 <TextBox Text="{Binding Invoice.Customer.FullName, Mode=OneWay}" IsReadOnly="True" MaxWidth="200" Width="175" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]"/>
@@ -211,13 +211,13 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <Button x:Name="SaveInvoiceChanges" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" Grid.Row="3" Margin="0,3,2,0">
+                    <Button x:Name="SaveInvoiceChangesAsync" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" Grid.Row="3" Margin="0,3,2,0">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="ContentSaveOutline" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="ذخیره تغییرات" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="DeleteInvoiceAndClose" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" Grid.Row="4" Margin="0,3,2,0">
+                    <Button x:Name="DeleteInvoiceAndCloseAsync" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" Grid.Row="4" Margin="0,3,2,0">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="DeleteOutline" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="حذف فاکتور" VerticalAlignment="Center"/>
@@ -230,7 +230,7 @@
                         </StackPanel>
                     </Button>
 
-                    <Button x:Name="ViewPayments" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" Grid.Row="6" Margin="0,3,2,0">
+                    <Button x:Name="ViewPaymentsAsync" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" Grid.Row="6" Margin="0,3,2,0">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Payment" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="پرداخت ها" VerticalAlignment="Center"/>
@@ -257,7 +257,7 @@
                     <ColumnDefinition Width="0.25*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="AddOrUpdateItem" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" IsDefault="True" Grid.Column="0" TabIndex="7" Width="40" Margin="0,0,5,0">
+                <Button x:Name="AddOrUpdateItemAsync" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" IsDefault="True" Grid.Column="0" TabIndex="7" Width="40" Margin="0,0,5,0">
                     <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Width="30" Height="30"/>
                 </Button>
 
@@ -322,7 +322,7 @@
                         <TextBlock TextAlignment="Center" Text="نام کالا" Margin="0,0,0,0"/>
                     </StackPanel>
                     <ComboBox IsTextSearchEnabled="True" IsEditable="True" VerticalContentAlignment="Center" Height="25" x:Name="ProductsCombobox"
-                              cal:Message.Attach="[Event SelectionChanged]=[Action ProductNames_SelectionChanged($source, $eventArgs)]; [Event PreviewTextInput]=[Action ProductNames_PreviewTextInput()]; [Event GotFocus] = [Action SetKeyboardLayout]"
+                              cal:Message.Attach="[Event SelectionChanged]=[Action ProductNames_SelectionChangedAsync($source, $eventArgs)]; [Event PreviewTextInput]=[Action ProductNames_PreviewTextInput()]; [Event GotFocus] = [Action SetKeyboardLayout]"
                               ItemsSource="{Binding ProductItemsForComboBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsDropDownOpen="{Binding IsProductInputDropDownOpen, Mode=TwoWay}"
                               SelectedItem="{Binding SelectedProductItem, Mode=TwoWay}" TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ItemName"
                               Text="{Binding ProductInput,Mode=TwoWay}">

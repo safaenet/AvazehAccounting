@@ -133,19 +133,19 @@
             </ScrollViewer>
             <Grid Grid.Column="0" Grid.Row="1">
                 <StackPanel Orientation="Vertical">
-                    <Button cal:Message.Attach="[Event Click] = [Action AddNewProduct()]" Height="25" Margin="0,0,0,3" >
+                    <Button cal:Message.Attach="[Event Click] = [Action AddNewProductAsync()]" Height="25" Margin="0,0,0,3" >
                         <StackPanel Width="80" Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="BoxAddOutline" Margin="0,0,3,0"/>
                             <TextBlock Text="کالای جدید" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action EditProduct()]" Height="25" Margin="0,0,0,3" >
+                    <Button cal:Message.Attach="[Event Click] = [Action EditProductAsync()]" Height="25" Margin="0,0,0,3" >
                         <StackPanel Width="70" Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="BoxEditOutline" Margin="0,0,3,0"/>
                             <TextBlock Text="ویرایش" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action DeleteProduct()]" Height="25" >
+                    <Button cal:Message.Attach="[Event Click] = [Action DeleteProductAsync()]" Height="25" >
                         <StackPanel Width="60" Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="DeleteOutline" Margin="0,0,3,0"/>
                             <TextBlock Text="حذف" VerticalAlignment="Center"/>
@@ -166,14 +166,14 @@
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="Search" Grid.Column="0" Height="25" Margin="3,0,0,0" >
+                <Button x:Name="SearchAsync" Grid.Column="0" Height="25" Margin="3,0,0,0" >
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="3" HorizontalAlignment="Right"/>
                         <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="Search" Margin="3"/>
                     </StackPanel>
                 </Button>
-                <TextBox x:Name="SearchText" Grid.Column="1" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]" VerticalContentAlignment="Center" Margin="3,0,3,0"/>
+                <TextBox x:Name="SearchText" Grid.Column="1" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandlerAsync($executionContext)]" VerticalContentAlignment="Center" Margin="3,0,3,0"/>
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -181,30 +181,30 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="PreviousPage" Height="25" HorizontalAlignment="Left" Margin="3,0,0,0">
+                <Button x:Name="PreviousPageAsync" Height="25" HorizontalAlignment="Left" Margin="3,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ArrowLeftCircleOutline" Margin="3"/>
                         <TextBlock Text="صفحه قبل" VerticalAlignment="Center" Margin="30,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
+                <Button x:Name="NextPageAsync" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="صفحه بعد" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="ArrowRightCircleOutline" Margin="3" HorizontalAlignment="Right"/>
                     </StackPanel>
                 </Button>
             </Grid>
-            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditProduct()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver"                      
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditProductAsync()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver"                      
                       SelectedItem="{Binding SelectedProduct}" AutoGenerateColumns="False" Background="Transparent" FlowDirection="RightToLeft" CanUserAddRows="False" CanUserDeleteRows="False" ItemsSource="{Binding Products}"
                       CellStyle="{StaticResource Body_Content_DataGrid_Centering}" RowHeight="25" AlternatingRowBackground="#f7f7f7" viewmodels:DataGridBehavior.DisplayRowNumber="True" Margin="3,0,0,0">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditProduct]">
+                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditProductAsync]">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="OpenInApp"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteProduct]">
+                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteProductAsync]">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="DeleteOutline"/>
                             </MenuItem.Icon>

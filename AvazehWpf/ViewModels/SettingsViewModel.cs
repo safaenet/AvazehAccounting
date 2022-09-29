@@ -1,13 +1,9 @@
 ﻿using Caliburn.Micro;
 using SharedLibrary.DtoModels;
-using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media;
 using AvazehApiClient.DataAccess;
 using AvazehApiClient.DataAccess.Interfaces;
 using SharedLibrary.DalModels;
@@ -24,10 +20,9 @@ namespace AvazehWpf.ViewModels
             Singleton = singleton;
             SettingsManager = settingsManager;
             CallBackFunc = callBack;
-            LoadAllSettings().ConfigureAwait(true);
+            _ = LoadAllSettings().ConfigureAwait(true);
         }
 
-        private AppSettingsModel appSettings;
         IAppSettingsManager SettingsManager;
         private readonly SingletonClass Singleton;
         private readonly Func<Task> CallBackFunc;
@@ -58,13 +53,6 @@ namespace AvazehWpf.ViewModels
         {
             get { return userDescriptions; }
             set { userDescriptions = value; NotifyOfPropertyChange(() => UserDescriptions); }
-        }
-
-
-        public AppSettingsModel AppSettings
-        {
-            get { return appSettings; }
-            set { appSettings = value; NotifyOfPropertyChange(() => AppSettings); }
         }
 
         public ObservableCollection<ItemsForComboBox> TransactionItemsForComboBox { get => transactionItemsForComboBox; set { transactionItemsForComboBox = value; NotifyOfPropertyChange(() => TransactionItemsForComboBox); } }

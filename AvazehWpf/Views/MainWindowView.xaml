@@ -31,7 +31,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <Button Grid.Row="0" Grid.Column="0" x:Name="AddNewInvoice" IsEnabled="{Binding GeneralSettings.CanAddNewInvoice}" Margin="2,2,2,2">
+        <Button Grid.Row="0" Grid.Column="0" x:Name="AddNewInvoiceAsync" IsEnabled="{Binding GeneralSettings.CanAddNewInvoice}" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -42,7 +42,7 @@
             </Grid>
         </Button>
 
-        <Button Grid.Row="0" Grid.Column="1" x:Name="AddNewTransaction" IsEnabled="{Binding GeneralSettings.CanAddNewTransaction}" Margin="2,2,2,2">
+        <Button Grid.Row="0" Grid.Column="1" x:Name="AddNewTransactionAsync" IsEnabled="{Binding GeneralSettings.CanAddNewTransaction}" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -53,7 +53,7 @@
             </Grid>
         </Button>
 
-        <Button Grid.Row="1" Grid.Column="0" x:Name="ViewInvoiceList" IsEnabled="{Binding GeneralSettings.CanViewInvoices}" Margin="2,2,2,2">
+        <Button Grid.Row="1" Grid.Column="0" x:Name="ViewInvoiceListAsync" IsEnabled="{Binding GeneralSettings.CanViewInvoices}" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -64,7 +64,7 @@
             </Grid>
         </Button>
 
-        <Button Grid.Row="1" Grid.Column="1" x:Name="ViewTransactionList" IsEnabled="{Binding GeneralSettings.CanViewTransactions}" Margin="2,2,2,2">
+        <Button Grid.Row="1" Grid.Column="1" x:Name="ViewTransactionListAsync" IsEnabled="{Binding GeneralSettings.CanViewTransactions}" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -75,7 +75,7 @@
             </Grid>
         </Button>
 
-        <Button Grid.Row="2" Grid.Column="0" x:Name="ViewCheques" IsEnabled="{Binding GeneralSettings.CanViewCheques}" Margin="2,2,2,2">
+        <Button Grid.Row="2" Grid.Column="0" x:Name="ViewChequesAsync" IsEnabled="{Binding GeneralSettings.CanViewCheques}" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -93,7 +93,7 @@
             </Grid>
         </Button>
 
-        <Button Grid.Row="4" Grid.Column="0" x:Name="ViewProducts" IsEnabled="{Binding GeneralSettings.CanViewCheques}" Margin="2,2,2,2">
+        <Button Grid.Row="4" Grid.Column="0" x:Name="ViewProductsAsync" IsEnabled="{Binding GeneralSettings.CanViewCheques}" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -104,7 +104,7 @@
             </Grid>
         </Button>
 
-        <Button Grid.Row="3" Grid.Column="0" x:Name="ViewCustomers" IsEnabled="{Binding GeneralSettings.CanViewCustomers}" Margin="2,2,2,2">
+        <Button Grid.Row="3" Grid.Column="0" x:Name="ViewCustomersAsync" IsEnabled="{Binding GeneralSettings.CanViewCustomers}" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -115,7 +115,7 @@
             </Grid>
         </Button>
 
-        <Button Grid.Row="2" Grid.Column="1" x:Name="TransactionShortcut1" Visibility="{Binding GeneralSettings.ShowTransactionShortcut1,Converter={StaticResource b2v}}" Margin="2,2,2,2">
+        <Button Grid.Row="2" Grid.Column="1" x:Name="TransactionShortcut1Async" Visibility="{Binding GeneralSettings.ShowTransactionShortcut1,Converter={StaticResource b2v}}" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -126,7 +126,7 @@
             </Grid>
         </Button>
 
-        <Button Grid.Row="3" Grid.Column="1" x:Name="TransactionShortcut2" Visibility="{Binding GeneralSettings.ShowTransactionShortcut2,Converter={StaticResource b2v}}" Margin="2,2,2,2">
+        <Button Grid.Row="3" Grid.Column="1" x:Name="TransactionShortcut2Async" Visibility="{Binding GeneralSettings.ShowTransactionShortcut2,Converter={StaticResource b2v}}" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -137,7 +137,7 @@
             </Grid>
         </Button>
 
-        <Button Grid.Row="4" Grid.Column="1" x:Name="TransactionShortcut3" Visibility="{Binding GeneralSettings.ShowTransactionShortcut3,Converter={StaticResource b2v}}" Margin="2,2,2,2">
+        <Button Grid.Row="4" Grid.Column="1" x:Name="TransactionShortcut3Async" Visibility="{Binding GeneralSettings.ShowTransactionShortcut3,Converter={StaticResource b2v}}" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -148,7 +148,7 @@
             </Grid>
         </Button>
 
-        <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ViewSettings" Margin="2,2,2,2">
+        <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ViewSettingsAsync" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
