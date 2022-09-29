@@ -17,6 +17,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Diagnostics;
 using SharedLibrary.SecurityAndSettingsModels;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace AvazehWpf.ViewModels
 {
@@ -154,11 +155,14 @@ namespace AvazehWpf.ViewModels
 
         public async Task AddOrUpdateItemAsync()
         {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(User.Token);
+            var enableBarcodeReader = jwtSecurityToken.Claims.Where(claims => claims.Type == System.Security.Claims.ClaimTypes.Role && claims.Value == nameof(UserPermissionsModel.CanUseBarcodeReader)).Any();
             if (Invoice == null) return;
             var pcm = SC.GetInstance<ICollectionManager<ProductModel>>();
             if (SelectedProductItem == null && ProductInput != null && ProductInput.Length > 0 && EdittingItem == false) //Search by Entered text
             {
-                if (InvoiceSettings.EnableBarcodeReader) //Search Barcode
+                if (enableBarcodeReader) //Search Barcode
                 {
                     var product = await pcm.GetItemByBarCodeAsync(ProductInput);
                     if (product != null) //Found by barcode.
@@ -183,11 +187,11 @@ namespace AvazehWpf.ViewModels
                         else //if exists in list, update it to "BarcodeAddItemCount" more
                         {
                             WorkItem = item;
-                            WorkItem.CountString = (WorkItem.CountValue + InvoiceSettings.BarcodeAddItemCount).ToString();
+                            WorkItem.CountString = (WorkItem.CountValue + User.GeneralSettings.BarcodeAddItemCount).ToString();
                             await UpdateItemInDatabaseAsync(WorkItem);
                         }
                     }
-                    else if (User.Settings.AskToAddNotExistingProduct) //Not found by barcode, Try to create new product.
+                    else if (User.UserSettings.AskToAddNotExistingProduct) //Not found by barcode, Try to create new product.
                     {
                         if (MessageBox.Show("نام کالای وارد شده موجود نیست. آیا به لیست کالاها اضافه شود ؟", "اضافه کردن کالا", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
                         {
@@ -364,7 +368,7 @@ namespace AvazehWpf.ViewModels
             if (Invoice == null) return;
             await ReloadInvoiceAsync(Invoice.Id);
             PrintInvoiceModel pim = new();
-            pim.PrintSettings = PrintSettings;
+            pim.PrintSettings = User.PrintSettings;
             Invoice.AsPrintModel(pim);
             /* 11: فاکتور فروش بدون سربرگ
              * 12: فاکتور فروش با سربرگ غیررسمی
@@ -480,7 +484,7 @@ namespace AvazehWpf.ViewModels
 
         public void SetKeyboardLayout()
         {
-            if (User.Settings.AutoSelectPersianLanguage)
+            if (User.UserSettings.AutoSelectPersianLanguage)
                 ExtensionsAndStatics.ChangeLanguageToPersian();
         }
     }

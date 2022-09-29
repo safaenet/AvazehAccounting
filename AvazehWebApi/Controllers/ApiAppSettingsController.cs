@@ -1,9 +1,6 @@
 ﻿using DataLibraryCore.DataAccess.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SharedLibrary.DalModels;
-using SharedLibrary.SettingsModels;
-using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
+using SharedLibrary.SecurityAndSettingsModels;
 using System.Threading.Tasks;
 
 namespace AvazehWeb.Controllers
@@ -27,34 +24,10 @@ namespace AvazehWeb.Controllers
             return item;
         }
 
-        [HttpGet(nameof(AppSettingsModel.InvoiceSettings))]
-        public async Task<ActionResult<InvoiceSettingsModel>> GetInvoiceSettingsAsync()
-        {
-            var item = await Manager.LoadInvoiceSettings();
-            if (item is null) return NotFound("Couldn't find specific Item");
-            return item;
-        }
-
-        [HttpGet(nameof(AppSettingsModel.TransactionSettings))]
-        public async Task<ActionResult<TransactionSettingsModel>> GetTransactionSettingsAsync()
-        {
-            var item = await Manager.LoadTransactionSettings();
-            if (item is null) return NotFound("Couldn't find specific Item");
-            return item;
-        }
-
-        [HttpGet(nameof(AppSettingsModel.ChequeSettings))]
-        public async Task<ActionResult<ChequeSettingsModel>> GetChequeSettingsAsync()
-        {
-            var item = await Manager.LoadChequeSettings();
-            if (item is null) return NotFound("Couldn't find specific Item");
-            return item;
-        }
-
         [HttpGet(nameof(AppSettingsModel.GeneralSettings))]
         public async Task<ActionResult<GeneralSettingsModel>> GetGeneralSettingsAsync()
         {
-            var item = await Manager.LoadGeneralSettings();
+            var item = await Manager.LoadGeneralSettingsAsync();
             if (item is null) return NotFound("Couldn't find specific Item");
             return item;
         }
@@ -62,7 +35,7 @@ namespace AvazehWeb.Controllers
         [HttpGet(nameof(AppSettingsModel.PrintSettings))]
         public async Task<ActionResult<PrintSettingsModel>> GetInvoicePrintSettingsAsync()
         {
-            var item = await Manager.LoadInvoicePrintSettings();
+            var item = await Manager.LoadPrintSettingsAsync();
             if (item is null) return NotFound("Couldn't find specific Item");
             return item;
         }

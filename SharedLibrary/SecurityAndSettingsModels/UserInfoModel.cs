@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SharedLibrary.SecurityAndSettingsModels
 {
-    public class UserInfo : UserInfoBase
+    public class UserInfoModel : UserInfoBaseModel
     {
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
-        public UserPermissions Permissions { get; set; }
-        public UserSettings Settings { get; set; }
+        public UserPermissionsModel Permissions { get; set; }
+        public UserSettingsModel Settings { get; set; }
     }
 }

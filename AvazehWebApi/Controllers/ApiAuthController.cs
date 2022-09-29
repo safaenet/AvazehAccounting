@@ -18,18 +18,20 @@ namespace AvazehWebAPI.Controllers
     [Route("api/v1/[controller]")]
     public class AuthController : Controller
     {
-        public AuthController(IUserProcessor userProcessor)
+        public AuthController(IUserProcessor userProcessor, IAppSettingsManager appSettingsManager)
         {
             UserProcessor = userProcessor;
+            ASM = appSettingsManager;
         }
 
         private readonly IUserProcessor UserProcessor;
+        private readonly IAppSettingsManager ASM;
 
         [HttpPost("Register"), AllowAnonymous]
-        public async Task<ActionResult<UserInfoBase>> Register(User_DTO_CreateUpdate user)
+        public async Task<ActionResult<UserInfoBaseModel>> Register(User_DTO_CreateUpdate user)
         {
             var adminsCount = await UserProcessor.GetCountOfAdminUsers();
-            if (adminsCount > 0 && !User.IsInRole(nameof(UserPermissions.CanManageOthers))) return BadRequest("اجازه صادر نشد");
+            if (adminsCount > 0 && !User.IsInRole(nameof(UserPermissionsModel.CanManageOthers))) return BadRequest("اجازه صادر نشد");
             var newUser = await UserProcessor.CreateUser(user);
             return newUser;
         }
@@ -56,9 +58,13 @@ namespace AvazehWebAPI.Controllers
             LoggedInUser_DTO loggedUser = new();
             loggedUser.Username = user.Username;
             loggedUser.Token = GenerateToken(userInfoBase, Permissions);
-            loggedUser.Settings = Settings;
+            loggedUser.UserSettings = Settings;
             loggedUser.DateCreated = userInfoBase.DateCreated;
             loggedUser.LastLoginDate = userInfoBase.LastLoginDate;
+
+            var appSettings = await ASM.LoadAllSettingsAsync();
+            loggedUser.GeneralSettings = appSettings.GeneralSettings;
+            loggedUser.PrintSettings = appSettings.PrintSettings;
             await UserProcessor.UpdateUserLastLoginDate(user.Username);
             return loggedUser;
         }
@@ -70,28 +76,28 @@ namespace AvazehWebAPI.Controllers
             return adminsCount > 0;
         }
 
-        [HttpPut("Update"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{nameof(UserPermissions.CanManageItself)}, {nameof(UserPermissions.CanManageOthers)}")]
+        [HttpPut("Update"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{nameof(UserPermissionsModel.CanManageItself)}, {nameof(UserPermissionsModel.CanManageOthers)}")]
         public async Task<ActionResult<bool>> UpdateUser(User_DTO_CreateUpdate user)
         {
             var ActorUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (ActorUser == user.Username && !User.IsInRole(nameof(UserPermissions.CanManageItself))) return BadRequest("اجازه صادر نشد");
-            if (ActorUser != user.Username && !User.IsInRole(nameof(UserPermissions.CanManageOthers))) return BadRequest("اجازه صادر نشد");
+            if (ActorUser == user.Username && !User.IsInRole(nameof(UserPermissionsModel.CanManageItself))) return BadRequest("اجازه صادر نشد");
+            if (ActorUser != user.Username && !User.IsInRole(nameof(UserPermissionsModel.CanManageOthers))) return BadRequest("اجازه صادر نشد");
             var updatedUser = await UserProcessor.UpdateUser(user);
             if (updatedUser == null) return false; else return true;
         }
 
-        [HttpDelete, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{nameof(UserPermissions.CanManageItself)}, {nameof(UserPermissions.CanManageOthers)}")]
+        [HttpDelete, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{nameof(UserPermissionsModel.CanManageItself)}, {nameof(UserPermissionsModel.CanManageOthers)}")]
         public async Task<ActionResult<bool>> DeleteUser(string Username)
         {
             var ActorUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (ActorUser == Username) return BadRequest("اجازه حذف خودتان را ندارید!");
-            if (ActorUser != Username && !User.IsInRole(nameof(UserPermissions.CanManageOthers))) return BadRequest("اجازه صادر نشد");
+            if (ActorUser != Username && !User.IsInRole(nameof(UserPermissionsModel.CanManageOthers))) return BadRequest("اجازه صادر نشد");
             var result = await UserProcessor.DeleteUser(Username);
             if(result > 0) return true;
             return false;
         }
 
-        private string GenerateToken(UserInfoBase userInfoBase, UserPermissions Permissions)
+        private string GenerateToken(UserInfoBaseModel userInfoBase, UserPermissionsModel Permissions)
         {
             var claims = new List<Claim>
             {
@@ -99,39 +105,39 @@ namespace AvazehWebAPI.Controllers
                 new Claim(ClaimTypes.Name, userInfoBase.FullName)
             };
 
-            if (Permissions.CanViewCustomersList) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewCustomersList)));
-            if (Permissions.CanViewCustomerDetails) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewCustomerDetails)));
-            if (Permissions.CanViewProductsList) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewProductsList)));
-            if (Permissions.CanViewProductDetails) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewProductDetails)));
-            if (Permissions.CanViewInvoicesList) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewInvoicesList)));
-            if (Permissions.CanViewInvoiceDetails) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewInvoiceDetails)));
-            if (Permissions.CanViewTransactionsList) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewTransactionsList)));
-            if (Permissions.CanViewTransactionDetails) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewTransactionDetails)));
-            if (Permissions.CanViewChequesList) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewChequesList)));
-            if (Permissions.CanViewChequeDetails) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewChequeDetails)));
-            if (Permissions.CanAddNewCustomer) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanAddNewCustomer)));
-            if (Permissions.CanAddNewProduct) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanAddNewProduct)));
-            if (Permissions.CanAddNewInvoice) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanAddNewInvoice)));
-            if (Permissions.CanAddNewTransaction) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanAddNewTransaction)));
-            if (Permissions.CanAddNewCheque) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanAddNewCheque)));
-            if (Permissions.CanEditCustomer) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditCustomer)));
-            if (Permissions.CanEditProduct) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditProduct)));
-            if (Permissions.CanEditInvoice) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditInvoice)));
-            if (Permissions.CanEditTransaction) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditTransaction)));
-            if (Permissions.CanEditCheque) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanEditCheque)));
-            if (Permissions.CanDeleteCustomer) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteCustomer)));
-            if (Permissions.CanDeleteProduct) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteProduct)));
-            if (Permissions.CanDeleteInvoice) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteInvoice)));
-            if (Permissions.CanDeleteInvoiceItem) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteInvoiceItem)));
-            if (Permissions.CanDeleteTransaction) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteTransaction)));
-            if (Permissions.CanDeleteTransactionItem) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteTransactionItem)));
-            if (Permissions.CanDeleteCheque) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanDeleteCheque)));
-            if (Permissions.CanPrintInvoice) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanPrintInvoice)));
-            if (Permissions.CanPrintTransaction) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanPrintTransaction)));
-            if (Permissions.CanViewNetProfits) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanViewNetProfits)));
-            if (Permissions.CanUseBarcodeReader) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanUseBarcodeReader)));
-            if (Permissions.CanManageItself) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanManageItself)));
-            if (Permissions.CanManageOthers) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissions.CanManageOthers)));
+            if (Permissions.CanViewCustomersList) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanViewCustomersList)));
+            if (Permissions.CanViewCustomerDetails) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanViewCustomerDetails)));
+            if (Permissions.CanViewProductsList) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanViewProductsList)));
+            if (Permissions.CanViewProductDetails) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanViewProductDetails)));
+            if (Permissions.CanViewInvoicesList) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanViewInvoicesList)));
+            if (Permissions.CanViewInvoiceDetails) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanViewInvoiceDetails)));
+            if (Permissions.CanViewTransactionsList) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanViewTransactionsList)));
+            if (Permissions.CanViewTransactionDetails) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanViewTransactionDetails)));
+            if (Permissions.CanViewChequesList) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanViewChequesList)));
+            if (Permissions.CanViewChequeDetails) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanViewChequeDetails)));
+            if (Permissions.CanAddNewCustomer) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanAddNewCustomer)));
+            if (Permissions.CanAddNewProduct) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanAddNewProduct)));
+            if (Permissions.CanAddNewInvoice) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanAddNewInvoice)));
+            if (Permissions.CanAddNewTransaction) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanAddNewTransaction)));
+            if (Permissions.CanAddNewCheque) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanAddNewCheque)));
+            if (Permissions.CanEditCustomer) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanEditCustomer)));
+            if (Permissions.CanEditProduct) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanEditProduct)));
+            if (Permissions.CanEditInvoice) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanEditInvoice)));
+            if (Permissions.CanEditTransaction) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanEditTransaction)));
+            if (Permissions.CanEditCheque) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanEditCheque)));
+            if (Permissions.CanDeleteCustomer) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanDeleteCustomer)));
+            if (Permissions.CanDeleteProduct) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanDeleteProduct)));
+            if (Permissions.CanDeleteInvoice) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanDeleteInvoice)));
+            if (Permissions.CanDeleteInvoiceItem) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanDeleteInvoiceItem)));
+            if (Permissions.CanDeleteTransaction) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanDeleteTransaction)));
+            if (Permissions.CanDeleteTransactionItem) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanDeleteTransactionItem)));
+            if (Permissions.CanDeleteCheque) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanDeleteCheque)));
+            if (Permissions.CanPrintInvoice) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanPrintInvoice)));
+            if (Permissions.CanPrintTransaction) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanPrintTransaction)));
+            if (Permissions.CanViewNetProfits) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanViewNetProfits)));
+            if (Permissions.CanUseBarcodeReader) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanUseBarcodeReader)));
+            if (Permissions.CanManageItself) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanManageItself)));
+            if (Permissions.CanManageOthers) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanManageOthers)));
 
             var validHours = SettingsDataAccess.AppConfiguration().GetSection("Jwt:ValidHours").Value;
             double.TryParse(validHours, out var addHours);

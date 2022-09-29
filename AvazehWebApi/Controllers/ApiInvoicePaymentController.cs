@@ -21,7 +21,7 @@ namespace AvazehWebAPI.Controllers
 
         private readonly IInvoiceProcessor Processor;
 
-        [HttpGet("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewInvoiceDetails))]
+        [HttpGet("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanViewInvoiceDetails))]
         public async Task<ActionResult<InvoicePaymentModel>> GetItemAsync(int Id)
         {
             var item = await Processor.GetInvoicePaymentFromDatabaseAsync(Id);
@@ -29,7 +29,7 @@ namespace AvazehWebAPI.Controllers
             return item;
         }
 
-        [HttpPost, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanEditInvoice))]
+        [HttpPost, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanEditInvoice))]
         public async Task<ActionResult<InvoicePaymentModel>> CreateItemAsync(InvoicePaymentModel_DTO_Create_Update model)
         {
             var newItem = model.AsDaL();
@@ -38,7 +38,7 @@ namespace AvazehWebAPI.Controllers
             return newItem;
         }
 
-        [HttpPut("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanEditInvoice))]
+        [HttpPut("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanEditInvoice))]
         public async Task<ActionResult<InvoicePaymentModel>> UpdateItemAsync(int Id, InvoicePaymentModel_DTO_Create_Update model)
         {
             if (model is null) return BadRequest("Model is not valid");
@@ -49,7 +49,7 @@ namespace AvazehWebAPI.Controllers
             return updatedModel;
         }
 
-        [HttpDelete, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanEditInvoice))]
+        [HttpDelete, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanEditInvoice))]
         public async Task<ActionResult> DeleteItemAsync(int Id)
         {
             if (await Processor.DeleteInvoicePaymentFromDatabaseAsync(Id) > 0) return Ok("Successfully deleted the item");

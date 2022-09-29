@@ -2,16 +2,11 @@
 using DataLibraryCore.DataAccess.Interfaces;
 using DataLibraryCore.DataAccess.SqlServer;
 using SharedLibrary.DalModels;
-using SharedLibrary.SettingsModels;
-using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
+using SharedLibrary.SecurityAndSettingsModels;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace DataLibraryCore.DataAccess
@@ -54,6 +49,9 @@ namespace DataLibraryCore.DataAccess
             StringReader stringReader = new StringReader(xmlString);
             settings = xmlSerializer.Deserialize(stringReader) as AppSettingsModel;
             if (settings != null && settings.PrintSettings != null) settings.PrintSettings.UserDescriptions = await GetUserDescriptionsAsync();
+            if (settings == null) settings = new();
+            if (settings.PrintSettings == null) settings.PrintSettings = new();
+            if (settings.GeneralSettings == null) settings.GeneralSettings = new();
             return settings;
         }
 
@@ -66,31 +64,13 @@ namespace DataLibraryCore.DataAccess
             return true;
         }
 
-        public async Task<InvoiceSettingsModel> LoadInvoiceSettings()
-        {
-            var settings = await LoadAllSettingsAsync();
-            return settings.InvoiceSettings;
-        }
-
-        public async Task<TransactionSettingsModel> LoadTransactionSettings()
-        {
-            var settings = await LoadAllSettingsAsync();
-            return settings.TransactionSettings;
-        }
-
-        public async Task<ChequeSettingsModel> LoadChequeSettings()
-        {
-            var settings = await LoadAllSettingsAsync();
-            return settings.ChequeSettings;
-        }
-
-        public async Task<GeneralSettingsModel> LoadGeneralSettings()
+        public async Task<GeneralSettingsModel> LoadGeneralSettingsAsync()
         {
             var settings = await LoadAllSettingsAsync();
             return settings.GeneralSettings;
         }
 
-        public async Task<PrintSettingsModel> LoadInvoicePrintSettings()
+        public async Task<PrintSettingsModel> LoadPrintSettingsAsync()
         {
             var settings = await LoadAllSettingsAsync();
             return settings.PrintSettings;
@@ -104,7 +84,7 @@ namespace DataLibraryCore.DataAccess
 
         private async Task<int> InsertUserDescriptionsToDatabaseAsync(List<UserDescriptionModel> descriptions)
         {
-            if (descriptions != null && descriptions.Count != 0) return await DataAccess.SaveDataAsync(InsertUserDescriptionsQuery, descriptions);
+            if (descriptions != null && descriptions.Count > 0) return await DataAccess.SaveDataAsync(InsertUserDescriptionsQuery, descriptions);
             return 0;
         }
     }

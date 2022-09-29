@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharedLibrary.SecurityAndSettingsModels
 {
-    public class UserPermissions
+    public class UserPermissionsModel
     {
         public bool CanViewCustomersList { get; set; }
         public bool CanViewCustomerDetails { get; set; }

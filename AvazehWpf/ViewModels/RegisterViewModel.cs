@@ -1,20 +1,9 @@
-﻿using AvazehApiClient.DataAccess;
-using AvazehApiClient.DataAccess.Interfaces;
-using AvazehUserControlLibraryWpf;
+﻿using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
-using Microsoft.VisualStudio.PlatformUI;
-using SharedLibrary.DalModels;
-using SharedLibrary.Enums;
 using SharedLibrary.SecurityAndSettingsModels;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace AvazehWpf.ViewModels
 {
@@ -82,7 +71,7 @@ namespace AvazehWpf.ViewModels
             };
             newUser.Permissions = new();
             newUser.Settings = new();
-            var result = await ApiProcessor.CreateItemAsync<User_DTO_CreateUpdate, UserInfoBase>("Auth/Register", newUser);
+            var result = await ApiProcessor.CreateItemAsync<User_DTO_CreateUpdate, UserInfoBaseModel>("Auth/Register", newUser);
             if (result == null)
             {
                 MessageBox.Show("خطا در ایجاد کاربر جدید", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);

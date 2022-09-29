@@ -64,8 +64,8 @@ namespace AvazehWpf.ViewModels
         public int SelectedFinStatus { get; set; } = 3;
         private async Task LoadSettingsAsync()
         {
-            TCM.PageSize = User.Settings.TransactionListPageSize;
-            TCM.QueryOrderType = User.Settings.TransactionListQueryOrderType;
+            TCM.PageSize = User.UserSettings.TransactionListPageSize;
+            TCM.QueryOrderType = User.UserSettings.TransactionListQueryOrderType;
             await SearchAsync();
         }
 

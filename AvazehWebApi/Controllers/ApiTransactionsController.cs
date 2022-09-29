@@ -24,7 +24,7 @@ namespace AvazehWebAPI.Controllers
         private readonly ITransactionCollectionManager Manager;
 
         //GET /Customer?Id=1&SearchText=sometext
-        [HttpGet, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewTransactionsList))]
+        [HttpGet, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanViewTransactionsList))]
         public async Task<ActionResult<ItemsCollection_DTO<TransactionListModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "Id", OrderType orderType = OrderType.DESC, TransactionFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false)
         {
             Manager.GenerateWhereClause(SearchText, OrderBy, orderType, FinStatus);
@@ -35,7 +35,7 @@ namespace AvazehWebAPI.Controllers
             return Manager.AsDto();
         }
 
-        [HttpGet("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanViewTransactionDetails))]
+        [HttpGet("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanViewTransactionDetails))]
         public async Task<ActionResult<TransactionModel>> GetItemAsync(int Id)
         {
             TransactionModel model = await Manager.Processor.LoadSingleItemAsync(Id);
@@ -56,7 +56,7 @@ namespace AvazehWebAPI.Controllers
             return items is null ? NotFound("Couldn't find any match") : items;
         }
 
-        [HttpPost, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanAddNewTransaction))]
+        [HttpPost, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanAddNewTransaction))]
         public async Task<ActionResult<TransactionModel>> CreateItemAsync(TransactionModel_DTO_Create_Update model)
         {
             var newItem = model.AsDaL();
@@ -65,7 +65,7 @@ namespace AvazehWebAPI.Controllers
             return newItem;
         }
 
-        [HttpPut("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanEditTransaction))]
+        [HttpPut("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanEditTransaction))]
         public async Task<ActionResult<TransactionModel>> UpdateItemAsync(int Id, TransactionModel_DTO_Create_Update model)
         {
             if (model is null) return BadRequest("Model is not valid");
@@ -76,7 +76,7 @@ namespace AvazehWebAPI.Controllers
             return updatedModel;
         }
 
-        [HttpDelete, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissions.CanDeleteTransaction))]
+        [HttpDelete, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanDeleteTransaction))]
         public async Task<ActionResult> DeleteItemAsync(int Id)
         {
             if (await Manager.Processor.DeleteItemByIdAsync(Id) > 0) return Ok("Successfully deleted the item");

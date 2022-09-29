@@ -129,9 +129,9 @@ namespace AvazehWpf.ViewModels
 
         public async Task TransactionShortcut1Async()
         {
-            if (User.Settings.TransactionShortcut1Id == 0) return;
+            if (User.UserSettings.TransactionShortcut1Id == 0) return;
             var tcm = SC.GetInstance<ITransactionCollectionManager>();
-            if (await tcm.GetItemById(User.Settings.TransactionShortcut1Id) == null)
+            if (await tcm.GetItemById(User.UserSettings.TransactionShortcut1Id) == null)
             {
                 MessageBox.Show("فایل یافت نشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -139,15 +139,15 @@ namespace AvazehWpf.ViewModels
             var tdm = SC.GetInstance<ITransactionDetailManager>();
             var singleton = SC.GetInstance<SingletonClass>();
             WindowManager wm = new();
-            var viewModel = new TransactionDetailViewModel(tcm, tdm, User, singleton, User.Settings.TransactionShortcut1Id, null);
+            var viewModel = new TransactionDetailViewModel(tcm, tdm, User, singleton, User.UserSettings.TransactionShortcut1Id, null);
             await wm.ShowWindowAsync(viewModel);
         }
 
         public async Task TransactionShortcut2Async()
         {
-            if (User.Settings.TransactionShortcut2Id == 0) return;
+            if (User.UserSettings.TransactionShortcut2Id == 0) return;
             var tcm = SC.GetInstance<ITransactionCollectionManager>();
-            if (await tcm.GetItemById(User.Settings.TransactionShortcut2Id) == null)
+            if (await tcm.GetItemById(User.UserSettings.TransactionShortcut2Id) == null)
             {
                 MessageBox.Show("فایل یافت نشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -155,15 +155,15 @@ namespace AvazehWpf.ViewModels
             var tdm = SC.GetInstance<ITransactionDetailManager>();
             var singleton = SC.GetInstance<SingletonClass>();
             WindowManager wm = new();
-            var viewModel = new TransactionDetailViewModel(tcm, tdm, User, singleton, User.Settings.TransactionShortcut2Id, null);
+            var viewModel = new TransactionDetailViewModel(tcm, tdm, User, singleton, User.UserSettings.TransactionShortcut2Id, null);
             await wm.ShowWindowAsync(viewModel);
         }
 
         public async Task TransactionShortcut3Async()
         {
-            if (User.Settings.TransactionShortcut3Id == 0) return;
+            if (User.UserSettings.TransactionShortcut3Id == 0) return;
             var tcm = SC.GetInstance<ITransactionCollectionManager>();
-            if (await tcm.GetItemById(User.Settings.TransactionShortcut3Id) == null)
+            if (await tcm.GetItemById(User.UserSettings.TransactionShortcut3Id) == null)
             {
                 MessageBox.Show("فایل یافت نشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -171,7 +171,7 @@ namespace AvazehWpf.ViewModels
             var tdm = SC.GetInstance<ITransactionDetailManager>();
             var singleton = SC.GetInstance<SingletonClass>();
             WindowManager wm = new();
-            var viewModel = new TransactionDetailViewModel(tcm, tdm, User, singleton, User.Settings.TransactionShortcut3Id, null);
+            var viewModel = new TransactionDetailViewModel(tcm, tdm, User, singleton, User.UserSettings.TransactionShortcut3Id, null);
             await wm.ShowWindowAsync(viewModel);
         }
 

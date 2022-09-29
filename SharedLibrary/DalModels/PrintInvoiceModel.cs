@@ -1,11 +1,5 @@
-﻿using SharedLibrary.DalModels;
-using SharedLibrary.SettingsModels;
-using System;
+﻿using SharedLibrary.SecurityAndSettingsModels;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharedLibrary.DalModels
 {

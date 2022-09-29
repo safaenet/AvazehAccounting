@@ -178,7 +178,7 @@ namespace AvazehWpf.ViewModels
 
         public void SetKeyboardLayout()
         {
-            if (User.Settings.AutoSelectPersianLanguage)
+            if (User.UserSettings.AutoSelectPersianLanguage)
                 ExtensionsAndStatics.ChangeLanguageToPersian();
         }
     }

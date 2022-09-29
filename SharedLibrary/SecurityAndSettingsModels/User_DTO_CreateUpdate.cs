@@ -12,7 +12,7 @@ namespace SharedLibrary.SecurityAndSettingsModels
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public UserPermissions Permissions { get; set; }
-        public UserSettings Settings { get; set; }
+        public UserPermissionsModel Permissions { get; set; }
+        public UserSettingsModel Settings { get; set; }
     }
 }

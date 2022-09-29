@@ -62,8 +62,8 @@ namespace AvazehWpf.ViewModels
 
         private async Task LoadSettingsAsync()
         {
-            CCM.PageSize = User.Settings.ChequeListPageSize;
-            CCM.QueryOrderType = User.Settings.ChequeListQueryOrderType;
+            CCM.PageSize = User.UserSettings.ChequeListPageSize;
+            CCM.QueryOrderType = User.UserSettings.ChequeListQueryOrderType;
             await SearchAsync();
         }
 

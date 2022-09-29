@@ -79,9 +79,9 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private readonly string GetCountOfAdminUsersQuery = @"SELECT COUNT(u.Username) FROM UserInfo u LEFT JOIN UserPermissions p ON u.Username = p.Username WHERE p.CanManageOthers = 1";
         private readonly string UpdateUserLastLoginDateQuery = @"UPDATE UserInfo SET LastLoginDate = @lastLoginDate, LastLoginTime = @lastLoginTime WHERE Username = @username";
 
-        public async Task<List<UserInfoBase>> GetUsersList()
+        public async Task<List<UserInfoBaseModel>> GetUsersList()
         {
-            var list =  await DataAccess.LoadDataAsync<UserInfoBase, DynamicParameters>(GetUsersListQuery, null);
+            var list =  await DataAccess.LoadDataAsync<UserInfoBaseModel, DynamicParameters>(GetUsersListQuery, null);
             return list.ToList();
         }
 
@@ -91,11 +91,11 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return count;
         }
 
-        public async Task<UserInfoBase> CreateUser(User_DTO_CreateUpdate user)
+        public async Task<UserInfoBaseModel> CreateUser(User_DTO_CreateUpdate user)
         {
             if (user == null || user.Permissions == null || user.Settings == null) return null;
             CreatePasswordHash(user.Password, out byte[] PasswordHash, out byte[] PasswordSalt);
-            UserInfoBase newUser = new()
+            UserInfoBaseModel newUser = new()
             {
                 Username = user.Username,
                 FirstName = user.FirstName,
@@ -131,38 +131,38 @@ namespace DataLibraryCore.DataAccess.SqlServer
             }
         }
 
-        public async Task<UserInfoBase> GetUserInfoBase(UserLogin_DTO user)
+        public async Task<UserInfoBaseModel> GetUserInfoBase(UserLogin_DTO user)
         {
             if (string.IsNullOrEmpty(user.Username)) return null;
             DynamicParameters dp = new();
             dp.Add("@username", user.Username);
-            var userInfoBase = await DataAccess.QuerySingleOrDefaultAsync<UserInfoBase, DynamicParameters>(SelectUserInfoBase, dp);
+            var userInfoBase = await DataAccess.QuerySingleOrDefaultAsync<UserInfoBaseModel, DynamicParameters>(SelectUserInfoBase, dp);
             return userInfoBase;
         }
 
-        public async Task<UserPermissions> GetUserPermissions(UserLogin_DTO user)
+        public async Task<UserPermissionsModel> GetUserPermissions(UserLogin_DTO user)
         {
             if (string.IsNullOrEmpty(user.Username)) return null;
             DynamicParameters dp = new();
             dp.Add("@username", user.Username);
-            var Permissions = await DataAccess.QuerySingleOrDefaultAsync<UserPermissions, DynamicParameters>(SelectUserPermissions, dp);
+            var Permissions = await DataAccess.QuerySingleOrDefaultAsync<UserPermissionsModel, DynamicParameters>(SelectUserPermissions, dp);
             return Permissions;
         }
 
-        public async Task<UserSettings> GetUserSettings(UserLogin_DTO user)
+        public async Task<UserSettingsModel> GetUserSettings(UserLogin_DTO user)
         {
             if (string.IsNullOrEmpty(user.Username)) return null;
             DynamicParameters dp = new();
             dp.Add("@username", user.Username);
-            var Settings = await DataAccess.QuerySingleOrDefaultAsync<UserSettings, DynamicParameters>(SelectUserSettings, dp);
+            var Settings = await DataAccess.QuerySingleOrDefaultAsync<UserSettingsModel, DynamicParameters>(SelectUserSettings, dp);
             return Settings;
         }
 
-        public async Task<UserInfo> UpdateUser(User_DTO_CreateUpdate user)
+        public async Task<UserInfoModel> UpdateUser(User_DTO_CreateUpdate user)
         {
             if (user == null || user.Permissions == null || user.Settings == null) return null;
             CreatePasswordHash(user.Password, out byte[] PasswordHash, out byte[] PasswordSalt);
-            UserInfo newUser = new()
+            UserInfoModel newUser = new()
             {
                 Username = user.Username,
                 FirstName = user.FirstName,

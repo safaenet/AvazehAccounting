@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SharedLibrary.SecurityAndSettingsModels
 {
-    public class UserSettings
+    public class UserSettingsModel
     {
         public string ColorNewItem { get; set; }
         public string ColorSoldItemColor { get; set; }

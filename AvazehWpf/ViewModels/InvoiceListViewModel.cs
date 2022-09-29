@@ -29,8 +29,8 @@ namespace AvazehWpf.ViewModels
             _SelectedInvoice = new();
             Singleton = singleton;
 
-            ICM.PageSize = User.Settings.InvoicePageSize;
-            ICM.QueryOrderType = User.Settings.InvoiceListQueryOrderType;
+            ICM.PageSize = User.UserSettings.InvoicePageSize;
+            ICM.QueryOrderType = User.UserSettings.InvoiceListQueryOrderType;
 
             _ = SearchAsync().ConfigureAwait(true);
         }
@@ -119,7 +119,7 @@ namespace AvazehWpf.ViewModels
 
         public void SearchSync()
         {
-            Task.Run(SearchAsync);
+            _ = Task.Run(SearchAsync);
         }
 
         public async Task SearchBoxKeyDownHandlerAsync(ActionExecutionContext context)
@@ -185,7 +185,7 @@ namespace AvazehWpf.ViewModels
             var Invoice = await ICM.GetItemById(SelectedInvoice.Id);
             if (Invoice == null) return;
             PrintInvoiceModel pim = new();
-            pim.PrintSettings = PrintSettings;
+            pim.PrintSettings = User.PrintSettings;
             Invoice.AsPrintModel(pim);
             if (t == 12) pim.PrintSettings.MainHeaderText = "فاکتور فروش";
             else if (t == 13) pim.PrintSettings.MainHeaderText = "فروشگاه آوازه";
@@ -212,7 +212,7 @@ namespace AvazehWpf.ViewModels
 
         public void SetKeyboardLayout()
         {
-            if (User.Settings.AutoSelectPersianLanguage)
+            if (User.UserSettings.AutoSelectPersianLanguage)
                 ExtensionsAndStatics.ChangeLanguageToPersian();
         }
 

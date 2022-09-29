@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharedLibrary.SecurityAndSettingsModels
 {
-    public class GeneralSettings
+    public class GeneralSettingsModel
     {
         public string CompanyName { get; set; } = "آوازه";
         public int BarcodeAddItemCount { get; set; } = 1;

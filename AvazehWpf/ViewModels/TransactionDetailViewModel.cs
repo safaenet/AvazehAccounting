@@ -249,7 +249,7 @@ namespace AvazehWpf.ViewModels
             if (Transaction == null) return;
             await ReloadTransactionAsync(Transaction.Id);
             PrintTransactionModel pim = new();
-            pim.PrintSettings = PrintSettings;
+            pim.PrintSettings = User.PrintSettings;
             Transaction.AsPrintModel(pim);
             pim.TransactionType = t;
             XmlSerializer xmlSerializer = new(pim.GetType());
@@ -369,7 +369,7 @@ namespace AvazehWpf.ViewModels
 
         public void SetKeyboardLayout()
         {
-            if (User.Settings.AutoSelectPersianLanguage)
+            if (User.UserSettings.AutoSelectPersianLanguage)
                 ExtensionsAndStatics.ChangeLanguageToPersian();
         }
     }

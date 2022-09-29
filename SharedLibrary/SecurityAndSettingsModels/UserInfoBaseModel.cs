@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharedLibrary.SecurityAndSettingsModels
 {
-    public class UserInfoBase
+    public class UserInfoBaseModel
     {
         public string Username { get; set; }
         public string FirstName { get; set; }

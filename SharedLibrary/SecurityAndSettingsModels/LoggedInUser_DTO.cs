@@ -13,6 +13,8 @@ namespace SharedLibrary.SecurityAndSettingsModels
         public string DateCreated { get; set; }
         public string LastLoginDate { get; set; }
         public string LastLoginTime { get; set; }
-        public UserSettings Settings { get; set; }
+        public UserSettingsModel UserSettings { get; set; }
+        public PrintSettingsModel PrintSettings { get; set; }
+        public GeneralSettingsModel GeneralSettings { get; set; }
     }
 }

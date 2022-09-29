@@ -29,7 +29,6 @@ namespace AvazehWpf.ViewModels
             set { canRegisterAsync = value; NotifyOfPropertyChange(() => CanRegisterAsync); }
         }
 
-
         public string Password
         {
             get => ((GetView() as Window).FindName("Password") as PasswordBox).Password;
