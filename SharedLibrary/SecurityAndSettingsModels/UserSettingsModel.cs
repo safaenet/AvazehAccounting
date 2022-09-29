@@ -24,6 +24,7 @@ namespace SharedLibrary.SecurityAndSettingsModels
         public string ColorNegativeProfit { get; set; }
         public string ColorPositiveItem { get; set; }
         public string ColorNegativeItem { get; set; }
+
         public int DataGridFontSize { get; set; }
         public int ChequeListPageSize { get; set; }
         public OrderType ChequeListQueryOrderType { get; set; }

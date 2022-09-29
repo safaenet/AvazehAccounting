@@ -1,9 +1,5 @@
 ﻿using AvazehApiClient.DataAccess;
-using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using SharedLibrary.SecurityAndSettingsModels;
 using System.Threading.Tasks;
 
 namespace AvazehWpf
@@ -14,10 +10,10 @@ namespace AvazehWpf
         {
             Settings = new();
             CurrentPersianDate = new System.Globalization.PersianCalendar().GetPersianDate();
-            LoadSettings().ConfigureAwait(false);
+            _ = LoadSettingsAsync().ConfigureAwait(false);
         }
 
-        private async Task LoadSettings()
+        private async Task LoadSettingsAsync()
         {
             AppSettingsManager manager = new(new ApiProcessor());
             Settings = await manager.LoadAllAppSettings();

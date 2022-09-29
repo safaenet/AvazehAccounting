@@ -10,20 +10,28 @@ using SharedLibrary.DalModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using SharedLibrary.SecurityAndSettingsModels;
 
 namespace AvazehWpf.ViewModels
 {
     public class SettingsViewModel : ViewAware
     {
-        public SettingsViewModel(SingletonClass singleton, IAppSettingsManager settingsManager, Func<Task> callBack)
+        public SettingsViewModel(SingletonClass singleton, LoggedInUser_DTO user)
         {
             Singleton = singleton;
-            SettingsManager = settingsManager;
-            CallBackFunc = callBack;
-            _ = LoadAllSettings().ConfigureAwait(true);
+            User = user;
+            _ = LoadAllSettingsAsync().ConfigureAwait(true);
         }
 
-        IAppSettingsManager SettingsManager;
+        private LoggedInUser_DTO User;
+        private UserSettingsModel userSettings;
+
+        public UserSettingsModel UserSettings
+        {
+            get { return userSettings; }
+            set { userSettings = value; NotifyOfPropertyChange(() => UserSettings); }
+        }
+
         private readonly SingletonClass Singleton;
         private readonly Func<Task> CallBackFunc;
         private ObservableCollection<ItemsForComboBox> transactionItemsForComboBox;
@@ -60,19 +68,19 @@ namespace AvazehWpf.ViewModels
         public ItemsForComboBox SelectedTransactionItem1
         {
             get => selectedTransactionItem1;
-            set { selectedTransactionItem1 = value; AppSettings.GeneralSettings.TransactionShortcut1.TransactionId = selectedTransactionItem1 == null ? 0 : selectedTransactionItem1.Id; NotifyOfPropertyChange(() => SelectedTransactionItem1); }
+            set { selectedTransactionItem1 = value; User.UserSettings.TransactionShortcut1Id = selectedTransactionItem1 == null ? 0 : selectedTransactionItem1.Id; NotifyOfPropertyChange(() => SelectedTransactionItem1); }
         }
 
         public ItemsForComboBox SelectedTransactionItem2
         {
             get => selectedTransactionItem2;
-            set { selectedTransactionItem2 = value; AppSettings.GeneralSettings.TransactionShortcut2.TransactionId = selectedTransactionItem2 == null ? 0 : selectedTransactionItem2.Id; NotifyOfPropertyChange(() => SelectedTransactionItem2); }
+            set { selectedTransactionItem2 = value; User.UserSettings.TransactionShortcut2Id = selectedTransactionItem2 == null ? 0 : selectedTransactionItem2.Id; NotifyOfPropertyChange(() => SelectedTransactionItem2); }
         }
 
         public ItemsForComboBox SelectedTransactionItem3
         {
             get => selectedTransactionItem3;
-            set { selectedTransactionItem3 = value; AppSettings.GeneralSettings.TransactionShortcut3.TransactionId = selectedTransactionItem3 == null ? 0 : selectedTransactionItem3.Id; NotifyOfPropertyChange(() => SelectedTransactionItem3); }
+            set { selectedTransactionItem3 = value; User.UserSettings.TransactionShortcut3Id = selectedTransactionItem3 == null ? 0 : selectedTransactionItem3.Id; NotifyOfPropertyChange(() => SelectedTransactionItem3); }
         }
 
         public UserDescriptionModel SelectedUserDescriptionModel
@@ -86,16 +94,16 @@ namespace AvazehWpf.ViewModels
             }
         }
 
-        private async Task LoadTransactionNames()
+        private async Task LoadTransactionNamesAsync()
         {
             TransactionItemsForComboBox = await Singleton.ReloadTransactionNames();
         }
 
-        private async Task LoadAllSettings()
+        private async Task LoadAllSettingsAsync()
         {
-            await LoadTransactionNames();
+            await LoadTransactionNamesAsync();
             AppSettings = new();
-            var s = await SettingsManager.LoadAllAppSettings();
+            var s = await User.LoadAllAppSettings();
             if (s != null) AppSettings = s;
             UserDescriptions = new(AppSettings.PrintSettings.UserDescriptions);
             if (AppSettings != null && AppSettings.GeneralSettings != null)
@@ -114,14 +122,12 @@ namespace AvazehWpf.ViewModels
             UserDescriptions.Add(model);
             SelectedUserDescriptionModel = model;
             NotifyOfPropertyChange(() => SelectedUserDescriptionModel);
-            NotifyOfPropertyChange(() => AppSettings);
         }
 
         public void DeleteUserDescription()
         {
             UserDescriptions.Remove(SelectedUserDescriptionModel);
             NotifyOfPropertyChange(() => SelectedUserDescriptionModel);
-            NotifyOfPropertyChange(() => AppSettings);
         }
         public void Window_PreviewKeyDown(KeyEventArgs e)
         {
@@ -135,27 +141,24 @@ namespace AvazehWpf.ViewModels
 
         public void SaveSettings()
         {
-            if (AppSettings.GeneralSettings.RequireAuthentication)
-            {
-                var pass1 = (((GetView() as Window).FindName("Password1")) as PasswordBox).Password;
-                var pass2 = (((GetView() as Window).FindName("Password2")) as PasswordBox).Password;
-                if (pass1 != pass2)
-                {
-                    MessageBox.Show("رمز عبور و تایید آن برابر نیستند", "خطای رمز", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-                else if (pass1.Length < 4)
-                {
-                    MessageBox.Show("رمز عبور باید بزرگتر از 3 کاراکتر باشد", "خطای رمز", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-                else AppSettings.GeneralSettings.Password = pass1;
-            }
-            if (AppSettings.GeneralSettings.ShowTransactionShortcut1 && AppSettings.GeneralSettings.TransactionShortcut1.TransactionId <= 0) AppSettings.GeneralSettings.ShowTransactionShortcut1 = false;
-            if (AppSettings.GeneralSettings.ShowTransactionShortcut2 && AppSettings.GeneralSettings.TransactionShortcut2.TransactionId <= 0) AppSettings.GeneralSettings.ShowTransactionShortcut2 = false;
-            if (AppSettings.GeneralSettings.ShowTransactionShortcut3 && AppSettings.GeneralSettings.TransactionShortcut3.TransactionId <= 0) AppSettings.GeneralSettings.ShowTransactionShortcut3 = false;
-            AppSettings.PrintSettings.UserDescriptions = UserDescriptions.ToList();
-            SettingsManager.SaveAllAppSettings(AppSettings);
+            //if (User.GeneralSettings.RequireAuthentication)
+            //{
+            //    var pass1 = (((GetView() as Window).FindName("Password1")) as PasswordBox).Password;
+            //    var pass2 = (((GetView() as Window).FindName("Password2")) as PasswordBox).Password;
+            //    if (pass1 != pass2)
+            //    {
+            //        MessageBox.Show("رمز عبور و تایید آن برابر نیستند", "خطای رمز", MessageBoxButton.OK, MessageBoxImage.Error);
+            //        return;
+            //    }
+            //    else if (pass1.Length < 4)
+            //    {
+            //        MessageBox.Show("رمز عبور باید بزرگتر از 3 کاراکتر باشد", "خطای رمز", MessageBoxButton.OK, MessageBoxImage.Error);
+            //        return;
+            //    }
+            //    else AppSettings.GeneralSettings.Password = pass1;
+            //}
+            User.PrintSettings.UserDescriptions = UserDescriptions.ToList();
+            ASM.SaveAllAppSettings(AppSettings);
         }
 
         public void CloseWindow()
