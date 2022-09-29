@@ -357,4 +357,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="TransactionListPageSize" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="de00a46d-384f-434c-b7a2-4df59e019280" ChangeDateTime="09/29/2022 13:14:39">
+    <Property Name="ElementName" Value="[dbo].[UserSettings].[ColorSoldItemColor]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserSettings]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ColorSoldItem" />
+  </Operation>
 </Operations>

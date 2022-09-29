@@ -4,6 +4,7 @@ using SharedLibrary.DtoModels;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Linq;
+using SharedLibrary.SecurityAndSettingsModels;
 
 namespace AvazehApiClient.DataAccess
 {
@@ -338,6 +339,91 @@ namespace AvazehApiClient.DataAccess
         {
             var now = System.DateTime.Now;
             return string.Format("{0:0000}/{1:00}/{2:00}", pCal.GetYear(now), pCal.GetMonth(now), pCal.GetDayOfMonth(now));
+        }
+
+        public static void Clone(this UserSettingsModel From, UserSettingsModel To)
+        {
+            To = new()
+            {
+                ColorNewItem = From.ColorNewItem,
+                ColorSoldItem = From.ColorSoldItem,
+                ColorNonSufficientFundItem = From.ColorNonSufficientFundItem,
+                ColorCashedItem = From.ColorCashedItem,
+                ColorChequeNotification = From.ColorChequeNotification,
+                ColorUpdatedItem = From.ColorUpdatedItem,
+                ColorBalancedItem = From.ColorBalancedItem,
+                ColorDeptorItem = From.ColorDeptorItem,
+                ColorCreditorItem = From.ColorCreditorItem,
+                ColorInactiveItem = From.ColorInactiveItem,
+                ColorArchivedItem = From.ColorArchivedItem,
+                ColorDeletedItem = From.ColorDeletedItem,
+                ColorNegativeProfit = From.ColorNegativeProfit,
+                ColorPositiveItem = From.ColorPositiveItem,
+                ColorNegativeItem = From.ColorNegativeItem,
+
+                DataGridFontSize = From.DataGridFontSize,
+                ChequeListPageSize = From.ChequeListPageSize,
+                ChequeListQueryOrderType = From.ChequeListQueryOrderType,
+                ChequeNotifyDays = From.ChequeNotifyDays,
+                ChequeNotify = From.ChequeNotify,
+                InvoicePageSize = From.InvoicePageSize,
+                InvoiceListQueryOrderType = From.InvoiceListQueryOrderType,
+                InvoiceDetailQueryOrderType = From.InvoiceDetailQueryOrderType,
+                TransactionListPageSize = From.TransactionListPageSize,
+                TransactionDetailPageSize = From.TransactionDetailPageSize,
+                TransactionListQueryOrderType = From.TransactionListQueryOrderType,
+                TransactionDetailQueryOrderType = From.TransactionDetailQueryOrderType,
+                AutoSelectPersianLanguage = From.AutoSelectPersianLanguage,
+                TransactionShortcut1Id = From.TransactionShortcut1Id,
+                TransactionShortcut2Id = From.TransactionShortcut2Id,
+                TransactionShortcut3Id = From.TransactionShortcut3Id,
+                TransactionShortcut1Name = From.TransactionShortcut1Name,
+                TransactionShortcut2Name = From.TransactionShortcut2Name,
+                TransactionShortcut3Name = From.TransactionShortcut3Name,
+                AskToAddNotExistingProduct = From.AskToAddNotExistingProduct
+            };
+        }
+
+        public static void Clone(this PrintSettingsModel From, PrintSettingsModel To)
+        {
+            To = new()
+            {
+                MainHeaderText = From.MainHeaderText,
+                HeaderDescription1 = From.HeaderDescription1,
+                HeaderDescription2 = From.HeaderDescription2,
+                LeftHeaderImage = From.LeftHeaderImage,
+                RightHeaderImage = From.RightHeaderImage,
+                FooterTextLeft = From.FooterTextLeft,
+                FooterTextRight = From.FooterTextRight,
+                MainHeaderTextFontSizeA5P = From.MainHeaderTextFontSizeA5P,
+                HeaderDescriptionFontSizeA5P = From.HeaderDescriptionFontSizeA5P,
+                TypeTextFontSizeA5P = From.TypeTextFontSizeA5P,
+                MainHeaderTextFontSizeA5L = From.MainHeaderTextFontSizeA5L,
+                HeaderDescriptionFontSizeA5L = From.HeaderDescriptionFontSizeA5L,
+                TypeTextFontSizeA5L = From.TypeTextFontSizeA5L,
+                MainHeaderTextFontSizeA4P = From.MainHeaderTextFontSizeA4P,
+                HeaderDescriptionFontSizeA4P = From.HeaderDescriptionFontSizeA4P,
+                TypeTextFontSizeA4P = From.TypeTextFontSizeA4P,
+                PageHeaderFontSize = From.PageHeaderFontSize,
+                DetailsFontSize = From.DetailsFontSize,
+                PageFooterFontSize = From.PageFooterFontSize,
+                DescriptionFontSize = From.DescriptionFontSize,
+                DefaultPrintLayout = From.DefaultPrintLayout,
+                DefaultPaperSize = From.DefaultPaperSize,
+            };
+            if (From.UserDescriptions != null)
+            {
+                To.UserDescriptions = new();
+                foreach (var item in From.UserDescriptions)
+                {
+                    To.UserDescriptions.Add(new()
+                    {
+                        Id = item.Id,
+                        DescriptionTitle = item.DescriptionTitle,
+                        DescriptionText = item.DescriptionText
+                    });
+                }
+            }
         }
     }
 }

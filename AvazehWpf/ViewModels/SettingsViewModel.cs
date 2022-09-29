@@ -5,20 +5,21 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using AvazehApiClient.DataAccess;
-using AvazehApiClient.DataAccess.Interfaces;
 using SharedLibrary.DalModels;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using SharedLibrary.SecurityAndSettingsModels;
+using AvazehApiClient.DataAccess.Interfaces;
 
 namespace AvazehWpf.ViewModels
 {
     public class SettingsViewModel : ViewAware
     {
-        public SettingsViewModel(SingletonClass singleton, LoggedInUser_DTO user)
+        public SettingsViewModel(SimpleContainer sc, SingletonClass singleton, LoggedInUser_DTO user)
         {
             Singleton = singleton;
+            SC = sc;
+            ASM = SC.GetInstance<IAppSettingsManager>();
             User = user;
             _ = LoadAllSettingsAsync().ConfigureAwait(true);
         }
@@ -32,8 +33,27 @@ namespace AvazehWpf.ViewModels
             set { userSettings = value; NotifyOfPropertyChange(() => UserSettings); }
         }
 
+        private PrintSettingsModel printSettings;
+
+        public PrintSettingsModel PrintSettings
+        {
+            get { return printSettings; }
+            set { printSettings = value; }
+        }
+
+        private GeneralSettingsModel generalSettings;
+
+        public GeneralSettingsModel GeneralSettings
+        {
+            get { return generalSettings; }
+            set { generalSettings = value; }
+        }
+
+
         private readonly SingletonClass Singleton;
+        private readonly SimpleContainer SC;
         private readonly Func<Task> CallBackFunc;
+        private readonly IAppSettingsManager ASM;
         private ObservableCollection<ItemsForComboBox> transactionItemsForComboBox;
         private ItemsForComboBox selectedTransactionItem1;
         private ItemsForComboBox selectedTransactionItem2;
@@ -102,15 +122,15 @@ namespace AvazehWpf.ViewModels
         private async Task LoadAllSettingsAsync()
         {
             await LoadTransactionNamesAsync();
-            AppSettings = new();
-            var s = await User.LoadAllAppSettings();
-            if (s != null) AppSettings = s;
-            UserDescriptions = new(AppSettings.PrintSettings.UserDescriptions);
-            if (AppSettings != null && AppSettings.GeneralSettings != null)
+
+            User.UserSettings.Clone(UserSettings);
+            User.PrintSettings.Clone(PrintSettings);
+            UserDescriptions = new(PrintSettings.UserDescriptions);
+            if (UserSettings != null)
             {
-                if (AppSettings.GeneralSettings.ShowTransactionShortcut1) SelectedTransactionItem1 = TransactionItemsForComboBox.Where(x => x.Id == AppSettings.GeneralSettings.TransactionShortcut1.TransactionId).SingleOrDefault();
-                if (AppSettings.GeneralSettings.ShowTransactionShortcut2) SelectedTransactionItem2 = TransactionItemsForComboBox.Where(x => x.Id == AppSettings.GeneralSettings.TransactionShortcut2.TransactionId).SingleOrDefault();
-                if (AppSettings.GeneralSettings.ShowTransactionShortcut3) SelectedTransactionItem3 = TransactionItemsForComboBox.Where(x => x.Id == AppSettings.GeneralSettings.TransactionShortcut3.TransactionId).SingleOrDefault();
+                if (UserSettings.TransactionShortcut1Id > 0) SelectedTransactionItem1 = TransactionItemsForComboBox.Where(x => x.Id == UserSettings.TransactionShortcut1Id).SingleOrDefault();
+                if (UserSettings.TransactionShortcut2Id > 0) SelectedTransactionItem2 = TransactionItemsForComboBox.Where(x => x.Id == UserSettings.TransactionShortcut2Id).SingleOrDefault();
+                if (UserSettings.TransactionShortcut3Id > 0) SelectedTransactionItem3 = TransactionItemsForComboBox.Where(x => x.Id == UserSettings.TransactionShortcut3Id).SingleOrDefault();
             }
             SettingsLoaded = true;
         }
@@ -134,31 +154,18 @@ namespace AvazehWpf.ViewModels
             if (e.Key == Key.Escape) CloseWindow();
         }
 
-        public async Task ClosingWindow()
+        public async Task ClosingWindowAsync()
         {
             if (CallBackFunc != null) await CallBackFunc?.Invoke();
         }
 
-        public void SaveSettings()
-        {
-            //if (User.GeneralSettings.RequireAuthentication)
-            //{
-            //    var pass1 = (((GetView() as Window).FindName("Password1")) as PasswordBox).Password;
-            //    var pass2 = (((GetView() as Window).FindName("Password2")) as PasswordBox).Password;
-            //    if (pass1 != pass2)
-            //    {
-            //        MessageBox.Show("رمز عبور و تایید آن برابر نیستند", "خطای رمز", MessageBoxButton.OK, MessageBoxImage.Error);
-            //        return;
-            //    }
-            //    else if (pass1.Length < 4)
-            //    {
-            //        MessageBox.Show("رمز عبور باید بزرگتر از 3 کاراکتر باشد", "خطای رمز", MessageBoxButton.OK, MessageBoxImage.Error);
-            //        return;
-            //    }
-            //    else AppSettings.GeneralSettings.Password = pass1;
-            //}
+        public async Task SaveSettingsAsync()
+        {            
             User.PrintSettings.UserDescriptions = UserDescriptions.ToList();
-            ASM.SaveAllAppSettings(AppSettings);
+            AppSettingsModel appSettings = new AppSettingsModel();
+            appSettings.GeneralSettings = GeneralSettings;
+            appSettings.PrintSettings = PrintSettings;
+            await ASM.SaveAllAppSettings(appSettings);
         }
 
         public void CloseWindow()

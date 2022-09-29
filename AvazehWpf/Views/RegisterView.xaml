@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AvazehWpf.Views" xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:RegisterViewModel}" mc:Ignorable="d"
-        Title="ثبت نام" Height="250" Width="350" ResizeMode="CanMinimize">
+        Title="ثبت نام" Height="250" Width="350" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="35"/>
@@ -62,7 +62,7 @@
                 <ColumnDefinition Width="150"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="RegisterAsync" Content="ثبت نام" Grid.Column="1" Margin="5"/>
+            <Button x:Name="RegisterAsync" IsDefault="True" Content="ثبت نام" Grid.Column="1" Margin="5"/>
         </Grid>
     </Grid>
 </Window>

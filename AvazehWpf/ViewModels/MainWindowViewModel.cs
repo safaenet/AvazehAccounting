@@ -179,7 +179,7 @@ namespace AvazehWpf.ViewModels
         {
             var singleton = SC.GetInstance<SingletonClass>();
             WindowManager wm = new();
-            var viewModel = new SettingsViewModel(singleton, User);
+            var viewModel = new SettingsViewModel(SC, singleton, User);
             await wm.ShowWindowAsync(viewModel);
         }
 

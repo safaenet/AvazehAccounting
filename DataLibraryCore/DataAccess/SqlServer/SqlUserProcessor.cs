@@ -22,7 +22,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
         }
 
         private readonly IDataAccess DataAccess;
-        private readonly string CreateUserQuery = @"            
+        private readonly string CreateUserQuery = @"
             INSERT INTO UserPermissions (Username, CanViewCustomersList, CanViewCustomerDetails, CanViewProductsList, CanViewProductDetails, CanViewInvoicesList, CanViewInvoiceDetails, CanViewTransactionsList, CanViewTransactionDetails,
             CanViewChequesList, CanViewChequeDetails, CanAddNewCustomer, CanAddNewProduct, CanAddNewInvoice, CanAddNewTransaction, CanAddNewCheque, CanEditCustomer, CanEditProduct, CanEditInvoice,
             CanEditTransaction, CanEditCheque, CanDeleteCustomer, CanDeleteProduct, CanDeleteInvoice, CanDeleteInvoiceItem, CanDeleteTransaction, CanDeleteTransactionItem,
@@ -33,14 +33,14 @@ namespace DataLibraryCore.DataAccess.SqlServer
             @canEditTransaction, @canEditCheque, @canDeleteCustomer, @canDeleteProduct, @canDeleteInvoice, @canDeleteInvoiceItem, @canDeleteTransaction, @canDeleteTransactionItem,
             @canDeleteCheque, @canPrintInvoice, @canPrintTransaction, @canViewNetProfits, @canUseBarcodeReader, @canManageItself, @canManageOthers);
 
-            INSERT INTO UserSettings (Username, ColorNewItem, ColorSoldItemColor, ColorNonSufficientFundItem, ColorCashedItem, ColorChequeNotification, ColorUpdatedItem,
-            ColorBalancedItem, ColorDeptorItem, ColorCreditorItem, ColorInactiveItem, ColorArchiveItem, ColorDeletedItem, ColorNegativeProfit, ColorPositiveItem, ColorNegativeItem,
+            INSERT INTO UserSettings (Username, ColorNewItem, ColorSoldItem, ColorNonSufficientFundItem, ColorCashedItem, ColorChequeNotification, ColorUpdatedItem,
+            ColorBalancedItem, ColorDeptorItem, ColorCreditorItem, ColorInactiveItem, ColorArchivedItem, ColorDeletedItem, ColorNegativeProfit, ColorPositiveItem, ColorNegativeItem,
             DataGridFontSize, ChequeListPageSize, ChequeListQueryOrderType, ChequeNotifyDays, ChequeNotify, InvoicePageSize, InvoiceListQueryOrderType, InvoiceDetailQueryOrderType,
             TransactionListPageSize, TransactionDetailPageSize, TransactionListQueryOrderType, TransactionDetailQueryOrderType, AutoSelectPersianLanguage, TransactionShortcut1Id, TransactionShortcut2Id, TransactionShortcut3Id,
             TransactionShortcut1Name, TransactionShortcut2Name, TransactionShortcut3Name, AskToAddNotExistingProduct)
             
-            VALUES (@username, @colorNewItem, @colorSoldItemColor, @colorNonSufficientFundItem, @colorCashedItem, @colorChequeNotification, @colorUpdatedItem,
-            @colorBalancedItem, @colorDeptorItem, @colorCreditorItem, @colorInactiveItem, @colorArchiveItem, @colorDeletedItem, @colorNegativeProfit, @colorPositiveItem, @colorNegativeItem,
+            VALUES (@username, @colorNewItem, @colorSoldItem, @colorNonSufficientFundItem, @colorCashedItem, @colorChequeNotification, @colorUpdatedItem,
+            @colorBalancedItem, @colorDeptorItem, @colorCreditorItem, @colorInactiveItem, @colorArchivedItem, @colorDeletedItem, @colorNegativeProfit, @colorPositiveItem, @colorNegativeItem,
             @dataGridFontSize, @chequeListPageSize, @chequeListQueryOrderType, @chequeNotifyDays, @chequeNotify, @invoicePageSize, @invoiceListQueryOrderType, @invoiceDetailQueryOrderType,
             @transactionListPageSize, @transactionDetailPageSize, @transactionListQueryOrderType, @transactionDetailQueryOrderType, @autoSelectPersianLanguage, @transactionShortcut1Id, @transactionShortcut2Id, @transactionShortcut3Id,
             @transactionShortcut1Name, @transactionShortcut2Name, @transactionShortcut3Name, @askToAddNotExistingProduct);
@@ -48,19 +48,18 @@ namespace DataLibraryCore.DataAccess.SqlServer
             INSERT INTO UserInfo (Username, PasswordHash, PasswordSalt, FirstName, LastName, DateCreated)
             VALUES (@username, @passwordHash, @passwordSalt, @firstName, @lastName, @dateCreated);";
 
-        private readonly string UpdateUserQuery = @"UPDATE UserInfo SET PasswordHash = @passwordHash, PasswordSalt = @passwordSalt, FirstName = @firstName, LastName = @lastName WHERE Username = @username;
-            UPDATE UserPermissions SET CanViewCustomersList = @canViewCustomersList, CanViewCustomerDetails = @canViewCustomerDetails, CanViewProductsList = @canViewProductsList, CanViewProductDetails = @canViewProductDetails,
+        private static readonly string UpdateUserInfoQuery = @"UPDATE UserInfo SET PasswordHash = @passwordHash, PasswordSalt = @passwordSalt, FirstName = @firstName, LastName = @lastName WHERE Username = @username;";
+        private static readonly string UpdateUserPermissionsQuery = @"UPDATE UserPermissions SET CanViewCustomersList = @canViewCustomersList, CanViewCustomerDetails = @canViewCustomerDetails, CanViewProductsList = @canViewProductsList, CanViewProductDetails = @canViewProductDetails,
             CanViewInvoicesList = @canViewInvoicesList, CanViewInvoiceDetails = @canViewInvoiceDetails, CanViewTransactionsList = @canViewTransactionsList, CanViewTransactionDetails = @canViewTransactionDetails,
             CanViewChequesList = @canViewChequesList, CanViewChequeDetails = @canViewChequeDetails, CanAddNewCustomer = @canAddNewCustomer, CanAddNewProduct = @canAddNewProduct, CanAddNewInvoice = @canAddNewInvoice,
             CanAddNewTransaction = @canAddNewTransaction, CanAddNewCheque = @canAddNewCheque, CanEditCustomer = @canEditCustomer, CanEditProduct = @canEditProduct,
             CanEditInvoice = @canEditInvoice, CanEditTransaction = @canEditTransaction, CanEditCheque = @canEditCheque, CanDeleteCustomer = @canDeleteCustomer,
             CanDeleteProduct = @canDeleteProduct, CanDeleteInvoice = @canDeleteInvoice, CanDeleteInvoiceItem = @canDeleteInvoiceItem, CanDeleteTransaction = @canDeleteTransaction,
             CanDeleteTransactionItem = @canDeleteTransactionItem, CanDeleteCheque = @canDeleteCheque, CanPrintInvoice = @canPrintInvoice, CanPrintTransaction = @canPrintTransaction,
-            CanViewNetProfits = @canViewNetProfits, CanUseBarcodeReader = @canUseBarcodeReader, CanManageItself = @canManageItself, CanManageOthers = @canManageOthers WHERE Username = @username;
-            
-            UPDATE UserSettings SET Username = @username, ColorNewItem = @colorNewItem, ColorSoldItemColor = @colorSoldItemColor, ColorNonSufficientFundItem = @colorNonSufficientFundItem,
+            CanViewNetProfits = @canViewNetProfits, CanUseBarcodeReader = @canUseBarcodeReader, CanManageItself = @canManageItself, CanManageOthers = @canManageOthers WHERE Username = @username;";
+        private static readonly string UpdateUserSettingsQuery = @"UPDATE UserSettings SET Username = @username, ColorNewItem = @colorNewItem, ColorSoldItem = @colorSoldItem, ColorNonSufficientFundItem = @colorNonSufficientFundItem,
             ColorCashedItem = @colorCashedItem, ColorChequeNotification = @colorChequeNotification, ColorUpdatedItem = @colorUpdatedItem, ColorBalancedItem = @colorBalancedItem,
-            ColorDeptorItem = @colorDeptorItem, ColorCreditorItem = @colorCreditorItem, ColorInactiveItem = @colorInactiveItem, ColorArchiveItem = @colorArchiveItem,
+            ColorDeptorItem = @colorDeptorItem, ColorCreditorItem = @colorCreditorItem, ColorInactiveItem = @colorInactiveItem, ColorArchivedItem = @colorArchivedItem,
             ColorDeletedItem = @colorDeletedItem, ColorNegativeProfit = @colorNegativeProfit, ColorPositiveItem = @colorPositiveItem, ColorNegativeItem = @colorNegativeItem,
             DataGridFontSize = @dataGridFontSize, ChequeListPageSize = @chequeListPageSize, ChequeListQueryOrderType = @chequeListQueryOrderType, ChequeNotifyDays = @chequeNotifyDays,
             ChequeNotify = @chequeNotify, InvoicePageSize = @invoicePageSize, InvoiceListQueryOrderType = @invoiceListQueryOrderType, InvoiceDetailQueryOrderType = @invoiceDetailQueryOrderType,
@@ -69,6 +68,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             TransactionShortcut1Id = @transactionShortcut1Id, TransactionShortcut2Id = @transactionShortcut2Id, TransactionShortcut3Id = transactionShortcut3Id,
             TransactionShortcut1Name = @transactionShortcut1Name, TransactionShortcut2Name = @transactionShortcut2Name, TransactionShortcut3Name = @transactionShortcut3Name,
             AskToAddNotExistingProduct = @askToAddNotExistingProduct WHERE Username = @username;";
+        private readonly string UpdateUserQuery = @$"{UpdateUserInfoQuery}{UpdateUserPermissionsQuery}{UpdateUserSettingsQuery}";
         private readonly string SelectUserInfoBase = @"SELECT Username, FirstName, LastName, DateCreated, LastLoginDate, LastLoginTime FROM UserInfo WHERE Username = @username";
         private readonly string SelectUserPermissions = @"SELECT * FROM UserPermissions WHERE Username = @username";
         private readonly string SelectUserSettings = @"SELECT * FROM UserSettings WHERE Username = @username";
@@ -102,7 +102,10 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 LastName = user.LastName,
                 DateCreated = PersianCalendarModel.GetCurrentPersianDate()
             };
-            var dp = FillParameters(user);
+            var dp = new DynamicParameters();
+            FillUserBaseParameters(dp, user);
+            FillUserPermissionParameters(dp, user.Permissions);
+            FillUserSettingsParameters(dp, user.Settings);
             dp.Add("@passwordHash", PasswordHash, System.Data.DbType.Binary);
             dp.Add("@passwordSalt", PasswordSalt, System.Data.DbType.Binary);
             dp.Add("@dateCreated", newUser.DateCreated);
@@ -172,12 +175,25 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 PasswordHash = PasswordHash,
                 PasswordSalt = PasswordSalt
             };
-            var dp = FillParameters(user);
+            var dp = new DynamicParameters();
+            FillUserBaseParameters(dp, user);
+            FillUserPermissionParameters(dp, user.Permissions);
+            FillUserSettingsParameters(dp, user.Settings);
             dp.Add("@passwordHash", newUser.PasswordHash);
             dp.Add("@passwordSalt", newUser.PasswordSalt);
 
             var AffectedCount = await DataAccess.SaveDataAsync(UpdateUserQuery, dp);
             if (AffectedCount > 0) return newUser; else return null;
+        }
+
+        public async Task<bool> UpdateUserSettings(string Username, UserSettingsModel userSettings)
+        {
+            if (Username == null || userSettings == null) return false;
+            var dp = new DynamicParameters();
+            dp.Add("@username", Username);
+            FillUserSettingsParameters(dp, userSettings);
+            var AffectedCount = await DataAccess.SaveDataAsync(UpdateUserSettingsQuery, dp);
+            return AffectedCount > 0;
         }
 
         public async Task<int> DeleteUser(string username)
@@ -207,84 +223,87 @@ namespace DataLibraryCore.DataAccess.SqlServer
             }
         }
 
-        private DynamicParameters FillParameters(User_DTO_CreateUpdate user)
+        private void FillUserBaseParameters(DynamicParameters dp, User_DTO_CreateUpdate user)
         {
-            DynamicParameters dp = new();
             dp.Add("@username", user.Username);
             dp.Add("@firstName", user.FirstName);
             dp.Add("@lastName", user.LastName);
+        }
 
-            dp.Add("@canViewCustomersList", user.Permissions.CanViewCustomersList);
-            dp.Add("@canViewCustomerDetails", user.Permissions.CanViewCustomerDetails);
-            dp.Add("@canViewProductsList", user.Permissions.CanViewProductsList);
-            dp.Add("@canViewProductDetails", user.Permissions.CanViewProductDetails);
-            dp.Add("@canViewInvoicesList", user.Permissions.CanViewInvoicesList);
-            dp.Add("@canViewInvoiceDetails", user.Permissions.CanViewInvoiceDetails);
-            dp.Add("@canViewTransactionsList", user.Permissions.CanViewTransactionsList);
-            dp.Add("@canViewTransactionDetails", user.Permissions.CanViewTransactionDetails);
-            dp.Add("@canViewChequesList", user.Permissions.CanViewChequesList);
-            dp.Add("@canViewChequeDetails", user.Permissions.CanViewChequeDetails);
-            dp.Add("@canAddNewCustomer", user.Permissions.CanAddNewCustomer);
-            dp.Add("@canAddNewProduct", user.Permissions.CanAddNewProduct);
-            dp.Add("@canAddNewInvoice", user.Permissions.CanAddNewInvoice);
-            dp.Add("@canAddNewTransaction", user.Permissions.CanAddNewTransaction);
-            dp.Add("@canAddNewCheque", user.Permissions.CanAddNewCheque);
-            dp.Add("@canEditCustomer", user.Permissions.CanEditCustomer);
-            dp.Add("@canEditProduct", user.Permissions.CanEditProduct);
-            dp.Add("@canEditInvoice", user.Permissions.CanEditInvoice);
-            dp.Add("@canEditTransaction", user.Permissions.CanEditTransaction);
-            dp.Add("@canEditCheque", user.Permissions.CanEditCheque);
-            dp.Add("@canDeleteCustomer", user.Permissions.CanDeleteCustomer);
-            dp.Add("@canDeleteProduct", user.Permissions.CanDeleteProduct);
-            dp.Add("@canDeleteInvoice", user.Permissions.CanDeleteInvoice);
-            dp.Add("@canDeleteInvoiceItem", user.Permissions.CanDeleteInvoiceItem);
-            dp.Add("@canDeleteTransaction", user.Permissions.CanDeleteTransaction);
-            dp.Add("@canDeleteTransactionItem", user.Permissions.CanDeleteTransactionItem);
-            dp.Add("@canDeleteCheque", user.Permissions.CanDeleteCheque);
-            dp.Add("@canPrintInvoice", user.Permissions.CanPrintInvoice);
-            dp.Add("@canPrintTransaction", user.Permissions.CanPrintTransaction);
-            dp.Add("@canViewNetProfits", user.Permissions.CanViewNetProfits);
-            dp.Add("@canUseBarcodeReader", user.Permissions.CanUseBarcodeReader);
-            dp.Add("@canManageItself", user.Permissions.CanManageItself);
-            dp.Add("@canManageOthers", user.Permissions.CanManageOthers);
+        private void FillUserPermissionParameters(DynamicParameters dp, UserPermissionsModel Permissions)
+        {
+            dp.Add("@canViewCustomersList", Permissions.CanViewCustomersList);
+            dp.Add("@canViewCustomerDetails", Permissions.CanViewCustomerDetails);
+            dp.Add("@canViewProductsList", Permissions.CanViewProductsList);
+            dp.Add("@canViewProductDetails", Permissions.CanViewProductDetails);
+            dp.Add("@canViewInvoicesList", Permissions.CanViewInvoicesList);
+            dp.Add("@canViewInvoiceDetails", Permissions.CanViewInvoiceDetails);
+            dp.Add("@canViewTransactionsList", Permissions.CanViewTransactionsList);
+            dp.Add("@canViewTransactionDetails", Permissions.CanViewTransactionDetails);
+            dp.Add("@canViewChequesList", Permissions.CanViewChequesList);
+            dp.Add("@canViewChequeDetails", Permissions.CanViewChequeDetails);
+            dp.Add("@canAddNewCustomer", Permissions.CanAddNewCustomer);
+            dp.Add("@canAddNewProduct", Permissions.CanAddNewProduct);
+            dp.Add("@canAddNewInvoice", Permissions.CanAddNewInvoice);
+            dp.Add("@canAddNewTransaction", Permissions.CanAddNewTransaction);
+            dp.Add("@canAddNewCheque", Permissions.CanAddNewCheque);
+            dp.Add("@canEditCustomer", Permissions.CanEditCustomer);
+            dp.Add("@canEditProduct", Permissions.CanEditProduct);
+            dp.Add("@canEditInvoice", Permissions.CanEditInvoice);
+            dp.Add("@canEditTransaction", Permissions.CanEditTransaction);
+            dp.Add("@canEditCheque", Permissions.CanEditCheque);
+            dp.Add("@canDeleteCustomer", Permissions.CanDeleteCustomer);
+            dp.Add("@canDeleteProduct", Permissions.CanDeleteProduct);
+            dp.Add("@canDeleteInvoice", Permissions.CanDeleteInvoice);
+            dp.Add("@canDeleteInvoiceItem", Permissions.CanDeleteInvoiceItem);
+            dp.Add("@canDeleteTransaction", Permissions.CanDeleteTransaction);
+            dp.Add("@canDeleteTransactionItem", Permissions.CanDeleteTransactionItem);
+            dp.Add("@canDeleteCheque", Permissions.CanDeleteCheque);
+            dp.Add("@canPrintInvoice", Permissions.CanPrintInvoice);
+            dp.Add("@canPrintTransaction", Permissions.CanPrintTransaction);
+            dp.Add("@canViewNetProfits", Permissions.CanViewNetProfits);
+            dp.Add("@canUseBarcodeReader", Permissions.CanUseBarcodeReader);
+            dp.Add("@canManageItself", Permissions.CanManageItself);
+            dp.Add("@canManageOthers", Permissions.CanManageOthers);
+        }
 
-            dp.Add("@colorNewItem", user.Settings.ColorNewItem);
-            dp.Add("@colorSoldItemColor", user.Settings.ColorSoldItemColor);
-            dp.Add("@colorNonSufficientFundItem", user.Settings.ColorNonSufficientFundItem);
-            dp.Add("@colorCashedItem", user.Settings.ColorCashedItem);
-            dp.Add("@colorChequeNotification", user.Settings.ColorChequeNotification);
-            dp.Add("@colorUpdatedItem", user.Settings.ColorUpdatedItem);
-            dp.Add("@colorBalancedItem", user.Settings.ColorBalancedItem);
-            dp.Add("@colorDeptorItem", user.Settings.ColorDeptorItem);
-            dp.Add("@colorCreditorItem", user.Settings.ColorCreditorItem);
-            dp.Add("@colorInactiveItem", user.Settings.ColorInactiveItem);
-            dp.Add("@colorArchiveItem", user.Settings.ColorArchiveItem);
-            dp.Add("@colorDeletedItem", user.Settings.ColorDeletedItem);
-            dp.Add("@colorNegativeProfit", user.Settings.ColorNegativeProfit);
-            dp.Add("@colorPositiveItem", user.Settings.ColorPositiveItem);
-            dp.Add("@colorNegativeItem", user.Settings.ColorNegativeItem);
-            dp.Add("@dataGridFontSize", user.Settings.DataGridFontSize);
-            dp.Add("@chequeListPageSize", user.Settings.ChequeListPageSize);
-            dp.Add("@chequeListQueryOrderType", user.Settings.ChequeListQueryOrderType);
-            dp.Add("@chequeNotifyDays", user.Settings.ChequeNotifyDays);
-            dp.Add("@chequeNotify", user.Settings.ChequeNotify);
-            dp.Add("@invoicePageSize", user.Settings.InvoicePageSize);
-            dp.Add("@invoiceListQueryOrderType", user.Settings.InvoiceListQueryOrderType);
-            dp.Add("@invoiceDetailQueryOrderType", user.Settings.InvoiceDetailQueryOrderType);
-            dp.Add("@transactionPageSize", user.Settings.TransactionListPageSize);
-            dp.Add("@transactionDetailPageSize", user.Settings.TransactionDetailPageSize);
-            dp.Add("@transactionListQueryOrderType", user.Settings.TransactionListQueryOrderType);
-            dp.Add("@transactionDetailQueryOrderType", user.Settings.TransactionDetailQueryOrderType);
-            dp.Add("@autoSelectPersianLanguage", user.Settings.AutoSelectPersianLanguage);
-            dp.Add("@transactionShortcut1Id", user.Settings.TransactionShortcut1Id);
-            dp.Add("@transactionShortcut2Id", user.Settings.TransactionShortcut2Id);
-            dp.Add("@transactionShortcut3Id", user.Settings.TransactionShortcut3Id);
-            dp.Add("@transactionShortcut1Name", user.Settings.TransactionShortcut1Name);
-            dp.Add("@transactionShortcut2Name", user.Settings.TransactionShortcut2Name);
-            dp.Add("@transactionShortcut3Name", user.Settings.TransactionShortcut3Name);
-            dp.Add("@askToAddNotExistingProduct", user.Settings.AskToAddNotExistingProduct);
-
-            return dp;
+        private void FillUserSettingsParameters(DynamicParameters dp, UserSettingsModel Settings)
+        {
+            dp.Add("@colorNewItem", Settings.ColorNewItem);
+            dp.Add("@colorSoldItem", Settings.ColorSoldItem);
+            dp.Add("@colorNonSufficientFundItem", Settings.ColorNonSufficientFundItem);
+            dp.Add("@colorCashedItem", Settings.ColorCashedItem);
+            dp.Add("@colorChequeNotification", Settings.ColorChequeNotification);
+            dp.Add("@colorUpdatedItem", Settings.ColorUpdatedItem);
+            dp.Add("@colorBalancedItem", Settings.ColorBalancedItem);
+            dp.Add("@colorDeptorItem", Settings.ColorDeptorItem);
+            dp.Add("@colorCreditorItem", Settings.ColorCreditorItem);
+            dp.Add("@colorInactiveItem", Settings.ColorInactiveItem);
+            dp.Add("@colorArchivedItem", Settings.ColorArchivedItem);
+            dp.Add("@colorDeletedItem", Settings.ColorDeletedItem);
+            dp.Add("@colorNegativeProfit", Settings.ColorNegativeProfit);
+            dp.Add("@colorPositiveItem", Settings.ColorPositiveItem);
+            dp.Add("@colorNegativeItem", Settings.ColorNegativeItem);
+            dp.Add("@dataGridFontSize", Settings.DataGridFontSize);
+            dp.Add("@chequeListPageSize", Settings.ChequeListPageSize);
+            dp.Add("@chequeListQueryOrderType", Settings.ChequeListQueryOrderType);
+            dp.Add("@chequeNotifyDays", Settings.ChequeNotifyDays);
+            dp.Add("@chequeNotify", Settings.ChequeNotify);
+            dp.Add("@invoicePageSize", Settings.InvoicePageSize);
+            dp.Add("@invoiceListQueryOrderType", Settings.InvoiceListQueryOrderType);
+            dp.Add("@invoiceDetailQueryOrderType", Settings.InvoiceDetailQueryOrderType);
+            dp.Add("@transactionListPageSize", Settings.TransactionListPageSize);
+            dp.Add("@transactionDetailPageSize", Settings.TransactionDetailPageSize);
+            dp.Add("@transactionListQueryOrderType", Settings.TransactionListQueryOrderType);
+            dp.Add("@transactionDetailQueryOrderType", Settings.TransactionDetailQueryOrderType);
+            dp.Add("@autoSelectPersianLanguage", Settings.AutoSelectPersianLanguage);
+            dp.Add("@transactionShortcut1Id",Settings.TransactionShortcut1Id);
+            dp.Add("@transactionShortcut2Id",Settings.TransactionShortcut2Id);
+            dp.Add("@transactionShortcut3Id",Settings.TransactionShortcut3Id);
+            dp.Add("@transactionShortcut1Name", Settings.TransactionShortcut1Name);
+            dp.Add("@transactionShortcut2Name", Settings.TransactionShortcut2Name);
+            dp.Add("@transactionShortcut3Name", Settings.TransactionShortcut3Name);
+            dp.Add("@askToAddNotExistingProduct", Settings.AskToAddNotExistingProduct);
         }
     }
 }

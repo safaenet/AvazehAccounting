@@ -39,6 +39,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task GetIfAdminExistsAsync()
         {
+            //CanRegisterAsync = true;
             CanRegisterAsync = !(await ApiProcessor.GetBooleanAsync("Auth/AdminExists"));
         }
 

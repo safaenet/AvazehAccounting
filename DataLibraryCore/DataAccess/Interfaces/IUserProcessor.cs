@@ -15,6 +15,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
         Task<UserPermissionsModel> GetUserPermissions(UserLogin_DTO user);
         Task<UserSettingsModel> GetUserSettings(UserLogin_DTO user);
         Task<UserInfoModel> UpdateUser(User_DTO_CreateUpdate user);
+        Task<bool> UpdateUserSettings(string Username, UserSettingsModel userSettings);
         Task UpdateUserLastLoginDate(string username);
     }
 }

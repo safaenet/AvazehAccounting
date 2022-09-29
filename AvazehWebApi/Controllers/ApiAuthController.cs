@@ -76,14 +76,18 @@ namespace AvazehWebAPI.Controllers
             return adminsCount > 0;
         }
 
-        [HttpPut("Update"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{nameof(UserPermissionsModel.CanManageItself)}, {nameof(UserPermissionsModel.CanManageOthers)}")]
+        [HttpPut("Update"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanManageOthers))]
         public async Task<ActionResult<bool>> UpdateUser(User_DTO_CreateUpdate user)
         {
-            var ActorUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (ActorUser == user.Username && !User.IsInRole(nameof(UserPermissionsModel.CanManageItself))) return BadRequest("اجازه صادر نشد");
-            if (ActorUser != user.Username && !User.IsInRole(nameof(UserPermissionsModel.CanManageOthers))) return BadRequest("اجازه صادر نشد");
             var updatedUser = await UserProcessor.UpdateUser(user);
             if (updatedUser == null) return false; else return true;
+        }
+
+        [HttpPut("UpdateUserSettings"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanManageItself))]
+        public async Task<ActionResult<bool>> UpdateUserSettings(User_DTO_CreateUpdate user)
+        {
+            var result = await UserProcessor.UpdateUserSettings(user.Username, user.Settings);
+            return result;
         }
 
         [HttpDelete, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{nameof(UserPermissionsModel.CanManageItself)}, {nameof(UserPermissionsModel.CanManageOthers)}")]
