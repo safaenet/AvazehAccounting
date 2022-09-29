@@ -23,7 +23,7 @@ namespace AvazehWpf.ViewModels
             Manager = manager;
             CallBackFunc = callBack;
             Singleton = singleton;
-            LoadBankNamesForComboboxAsync().ConfigureAwait(true);
+            _ = LoadBankNamesForComboboxAsync().ConfigureAwait(true);
             if (cheque is not null)
             {
                 Cheque = cheque;

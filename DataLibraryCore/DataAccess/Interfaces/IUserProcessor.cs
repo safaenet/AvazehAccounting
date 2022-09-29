@@ -8,7 +8,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
     {
         Task<List<UserInfoBase>> GetUsersList();
         Task<int> GetCountOfAdminUsers();
-        Task<UserInfo> CreateUser(User_DTO_CreateUpdate user);
+        Task<UserInfoBase> CreateUser(User_DTO_CreateUpdate user);
         Task<bool> VerifyUser(UserLogin_DTO user);
         Task<int> DeleteUser(string username);
         Task<UserInfoBase> GetUserInfoBase(UserLogin_DTO user);

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SharedLibrary.SettingsModels
+namespace SharedLibrary.SecurityAndSettingsModels
 {
     public class PrintSettingsModel
     {

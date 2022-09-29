@@ -91,24 +91,20 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return count;
         }
 
-        public async Task<UserInfo> CreateUser(User_DTO_CreateUpdate user)
+        public async Task<UserInfoBase> CreateUser(User_DTO_CreateUpdate user)
         {
             if (user == null || user.Permissions == null || user.Settings == null) return null;
             CreatePasswordHash(user.Password, out byte[] PasswordHash, out byte[] PasswordSalt);
-            UserInfo newUser = new()
+            UserInfoBase newUser = new()
             {
                 Username = user.Username,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Permissions = user.Permissions,
-                Settings = user.Settings,
-                DateCreated = PersianCalendarModel.GetCurrentPersianDate(),
-                PasswordHash = PasswordHash,
-                PasswordSalt = PasswordSalt
+                DateCreated = PersianCalendarModel.GetCurrentPersianDate()
             };
             var dp = FillParameters(user);
-            dp.Add("@passwordHash", newUser.PasswordHash, System.Data.DbType.Binary);
-            dp.Add("@passwordSalt", newUser.PasswordSalt, System.Data.DbType.Binary);
+            dp.Add("@passwordHash", PasswordHash, System.Data.DbType.Binary);
+            dp.Add("@passwordSalt", PasswordSalt, System.Data.DbType.Binary);
             dp.Add("@dateCreated", newUser.DateCreated);
 
             var AffectedCount = await DataAccess.SaveDataAsync(CreateUserQuery, dp);

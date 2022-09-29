@@ -4,7 +4,6 @@ using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
 using SharedLibrary.SecurityAndSettingsModels;
-using SharedLibrary.SettingsModels.WindowsApplicationSettingsModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -70,7 +69,6 @@ namespace AvazehWpf.ViewModels
 
         public void AddNewCheque()
         {
-            //if (GeneralSettings!= null && !GeneralSettings.CanAddNewCheque) return;
             WindowManager wm = new();
             wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, null, Singleton, RefreshPage));
         }
@@ -95,7 +93,6 @@ namespace AvazehWpf.ViewModels
 
         public async Task Search()
         {
-            //if (!GeneralSettings.CanViewCheques) return;
             ChequeListQueryStatus? ListQueryStatus = SelectedListQueryStatus >= Enum.GetNames(typeof(ChequeListQueryStatus)).Length ? null : (ChequeListQueryStatus)SelectedListQueryStatus;
             CCM.ListQueryStatus = ListQueryStatus;
             CCM.SearchValue = SearchText;
@@ -114,7 +111,6 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditCheque()
         {
-            //if (!GeneralSettings.CanEditCheques) return;
             if (Cheques == null || Cheques.Count == 0 || SelectedCheque == null || SelectedCheque.Id == 0) return;
             WindowManager wm = new();
             await wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, SelectedCheque, Singleton, RefreshPage));
@@ -122,7 +118,6 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteCheque()
         {
-            //if (!GeneralSettings.CanEditCheques) return;
             if (Cheques == null || Cheques.Count == 0 || SelectedCheque == null || SelectedCheque.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete cheque from {SelectedCheque.Drawer}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;

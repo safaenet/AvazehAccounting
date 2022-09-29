@@ -70,7 +70,7 @@ namespace AvazehWpf.ViewModels
         {
             if(Password!=VerifyPassword)
             {
-                MessageBox.Show("رمز عبور با تایید آن مطابقت ندارد","",MessageBoxButton.OK,MessageBoxImage.Error);
+                MessageBox.Show("رمز عبور با تایید آن مطابقت ندارد","خطا",MessageBoxButton.OK,MessageBoxImage.Error);
                 return;
             }
             User_DTO_CreateUpdate newUser = new()
@@ -82,7 +82,19 @@ namespace AvazehWpf.ViewModels
             };
             newUser.Permissions = new();
             newUser.Settings = new();
-            ApiProcessor.CreateItemAsync<User_DTO_CreateUpdate, bool?>("Auth/Register", newUser);
+            var result = await ApiProcessor.CreateItemAsync<User_DTO_CreateUpdate, UserInfoBase>("Auth/Register", newUser);
+            if (result == null)
+            {
+                MessageBox.Show("خطا در ایجاد کاربر جدید", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            else
+            {
+                WindowManager wm = new();
+                var viewModel = new LoginViewModel(SC, ApiProcessor);
+                await wm.ShowWindowAsync(viewModel);
+                (GetView() as Window).Close();
+            }
         }
     }
 }

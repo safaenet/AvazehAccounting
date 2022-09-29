@@ -26,7 +26,7 @@ namespace AvazehWebAPI.Controllers
         private readonly IUserProcessor UserProcessor;
 
         [HttpPost("Register"), AllowAnonymous]
-        public async Task<ActionResult<UserInfo>> Register(User_DTO_CreateUpdate user)
+        public async Task<ActionResult<UserInfoBase>> Register(User_DTO_CreateUpdate user)
         {
             var adminsCount = await UserProcessor.GetCountOfAdminUsers();
             if (adminsCount > 0 && !User.IsInRole(nameof(UserPermissions.CanManageOthers))) return BadRequest("اجازه صادر نشد");

@@ -1,21 +1,10 @@
-﻿using AvazehApiClient.DataAccess;
-using AvazehApiClient.DataAccess.Interfaces;
-using AvazehUserControlLibraryWpf;
+﻿using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
-using Microsoft.VisualStudio.PlatformUI;
-using SharedLibrary.DalModels;
-using SharedLibrary.Enums;
 using SharedLibrary.SecurityAndSettingsModels;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Linq;
-using System.Security;
+using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace AvazehWpf.ViewModels
 {
@@ -25,7 +14,7 @@ namespace AvazehWpf.ViewModels
         {
             SC = sc;
             ApiProcessor = apiProcessor;
-            GetIfAdminExists().ConfigureAwait(true);
+            _ = GetIfAdminExistsAsync().ConfigureAwait(true);
         }
 
         private readonly SimpleContainer SC;
@@ -49,7 +38,7 @@ namespace AvazehWpf.ViewModels
 
         public string Username { get => username; set { username = value; NotifyOfPropertyChange(() => Username); } }
 
-        public async Task GetIfAdminExists()
+        public async Task GetIfAdminExistsAsync()
         {
             CanRegisterAsync = !(await ApiProcessor.GetBooleanAsync("Auth/AdminExists"));
         }
@@ -68,7 +57,10 @@ namespace AvazehWpf.ViewModels
                 MessageBox.Show("نام کاربری یا رمز عبور اشتباه است", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            else ApiProcessor.Token = User.Token;
+            ApiProcessor.Token = User.Token;
+            //var handler = new JwtSecurityTokenHandler();
+            //var jwtSecurityToken = handler.ReadJwtToken(ApiProcessor.Token);
+            
             WindowManager wm = new();
             var viewModel = new MainWindowViewModel(User, SC);
             await wm.ShowWindowAsync(viewModel);
