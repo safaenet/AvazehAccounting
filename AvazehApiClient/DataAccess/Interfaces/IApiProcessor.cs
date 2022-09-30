@@ -8,6 +8,8 @@ namespace AvazehApiClient.DataAccess.Interfaces
     public interface IApiProcessor
     {
         string Token { get; set; }
+        Task<bool> TestDBConnectionAsync();
+        bool IsInRole(string role);
         Task<T> GetCollectionAsync<T>(string Key, string OrderBy, OrderType orderType, int Page = 1, string SearchText = "", int PageSize = 50, bool ForceLoad = false) where T : class;
         Task<T> GetCollectionAsync<T>(string Key, string SearchText) where T : class;
         Task<T> GetCollectionAsync<T>(string Key, int Id1, int Id2, int Id3) where T : class;

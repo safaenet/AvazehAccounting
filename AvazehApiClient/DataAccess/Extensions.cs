@@ -341,76 +341,74 @@ namespace AvazehApiClient.DataAccess
             return string.Format("{0:0000}/{1:00}/{2:00}", pCal.GetYear(now), pCal.GetMonth(now), pCal.GetDayOfMonth(now));
         }
 
-        public static void Clone(this UserSettingsModel From, UserSettingsModel To)
+        public static UserSettingsModel Clone(this UserSettingsModel From)
         {
-            To = new()
-            {
-                ColorNewItem = From.ColorNewItem,
-                ColorSoldItem = From.ColorSoldItem,
-                ColorNonSufficientFundItem = From.ColorNonSufficientFundItem,
-                ColorCashedItem = From.ColorCashedItem,
-                ColorChequeNotification = From.ColorChequeNotification,
-                ColorUpdatedItem = From.ColorUpdatedItem,
-                ColorBalancedItem = From.ColorBalancedItem,
-                ColorDeptorItem = From.ColorDeptorItem,
-                ColorCreditorItem = From.ColorCreditorItem,
-                ColorInactiveItem = From.ColorInactiveItem,
-                ColorArchivedItem = From.ColorArchivedItem,
-                ColorDeletedItem = From.ColorDeletedItem,
-                ColorNegativeProfit = From.ColorNegativeProfit,
-                ColorPositiveItem = From.ColorPositiveItem,
-                ColorNegativeItem = From.ColorNegativeItem,
+            UserSettingsModel To = new();
+            To = new();
+            To.ColorNewItem = From.ColorNewItem;
+            To.ColorSoldItem = From.ColorSoldItem;
+            To.ColorNonSufficientFundItem = From.ColorNonSufficientFundItem;
+            To.ColorCashedItem = From.ColorCashedItem;
+            To.ColorChequeNotification = From.ColorChequeNotification;
+            To.ColorUpdatedItem = From.ColorUpdatedItem;
+            To.ColorBalancedItem = From.ColorBalancedItem;
+            To.ColorDeptorItem = From.ColorDeptorItem;
+            To.ColorCreditorItem = From.ColorCreditorItem;
+            To.ColorInactiveItem = From.ColorInactiveItem;
+            To.ColorArchivedItem = From.ColorArchivedItem;
+            To.ColorDeletedItem = From.ColorDeletedItem;
+            To.ColorNegativeProfit = From.ColorNegativeProfit;
+            To.ColorPositiveItem = From.ColorPositiveItem;
+            To.ColorNegativeItem = From.ColorNegativeItem;
 
-                DataGridFontSize = From.DataGridFontSize,
-                ChequeListPageSize = From.ChequeListPageSize,
-                ChequeListQueryOrderType = From.ChequeListQueryOrderType,
-                ChequeNotifyDays = From.ChequeNotifyDays,
-                ChequeNotify = From.ChequeNotify,
-                InvoicePageSize = From.InvoicePageSize,
-                InvoiceListQueryOrderType = From.InvoiceListQueryOrderType,
-                InvoiceDetailQueryOrderType = From.InvoiceDetailQueryOrderType,
-                TransactionListPageSize = From.TransactionListPageSize,
-                TransactionDetailPageSize = From.TransactionDetailPageSize,
-                TransactionListQueryOrderType = From.TransactionListQueryOrderType,
-                TransactionDetailQueryOrderType = From.TransactionDetailQueryOrderType,
-                AutoSelectPersianLanguage = From.AutoSelectPersianLanguage,
-                TransactionShortcut1Id = From.TransactionShortcut1Id,
-                TransactionShortcut2Id = From.TransactionShortcut2Id,
-                TransactionShortcut3Id = From.TransactionShortcut3Id,
-                TransactionShortcut1Name = From.TransactionShortcut1Name,
-                TransactionShortcut2Name = From.TransactionShortcut2Name,
-                TransactionShortcut3Name = From.TransactionShortcut3Name,
-                AskToAddNotExistingProduct = From.AskToAddNotExistingProduct
-            };
+            To.DataGridFontSize = From.DataGridFontSize;
+            To.ChequeListPageSize = From.ChequeListPageSize;
+            To.ChequeListQueryOrderType = From.ChequeListQueryOrderType;
+            To.ChequeNotifyDays = From.ChequeNotifyDays;
+            To.ChequeNotify = From.ChequeNotify;
+            To.InvoicePageSize = From.InvoicePageSize;
+            To.InvoiceListQueryOrderType = From.InvoiceListQueryOrderType;
+            To.InvoiceDetailQueryOrderType = From.InvoiceDetailQueryOrderType;
+            To.TransactionListPageSize = From.TransactionListPageSize;
+            To.TransactionDetailPageSize = From.TransactionDetailPageSize;
+            To.TransactionListQueryOrderType = From.TransactionListQueryOrderType;
+            To.TransactionDetailQueryOrderType = From.TransactionDetailQueryOrderType;
+            To.AutoSelectPersianLanguage = From.AutoSelectPersianLanguage;
+            To.TransactionShortcut1Id = From.TransactionShortcut1Id;
+            To.TransactionShortcut2Id = From.TransactionShortcut2Id;
+            To.TransactionShortcut3Id = From.TransactionShortcut3Id;
+            To.TransactionShortcut1Name = From.TransactionShortcut1Name;
+            To.TransactionShortcut2Name = From.TransactionShortcut2Name;
+            To.TransactionShortcut3Name = From.TransactionShortcut3Name;
+            To.AskToAddNotExistingProduct = From.AskToAddNotExistingProduct;
+            return To;
         }
 
-        public static void Clone(this PrintSettingsModel From, PrintSettingsModel To)
+        public static PrintSettingsModel Clone(this PrintSettingsModel From)
         {
-            To = new()
-            {
-                MainHeaderText = From.MainHeaderText,
-                HeaderDescription1 = From.HeaderDescription1,
-                HeaderDescription2 = From.HeaderDescription2,
-                LeftHeaderImage = From.LeftHeaderImage,
-                RightHeaderImage = From.RightHeaderImage,
-                FooterTextLeft = From.FooterTextLeft,
-                FooterTextRight = From.FooterTextRight,
-                MainHeaderTextFontSizeA5P = From.MainHeaderTextFontSizeA5P,
-                HeaderDescriptionFontSizeA5P = From.HeaderDescriptionFontSizeA5P,
-                TypeTextFontSizeA5P = From.TypeTextFontSizeA5P,
-                MainHeaderTextFontSizeA5L = From.MainHeaderTextFontSizeA5L,
-                HeaderDescriptionFontSizeA5L = From.HeaderDescriptionFontSizeA5L,
-                TypeTextFontSizeA5L = From.TypeTextFontSizeA5L,
-                MainHeaderTextFontSizeA4P = From.MainHeaderTextFontSizeA4P,
-                HeaderDescriptionFontSizeA4P = From.HeaderDescriptionFontSizeA4P,
-                TypeTextFontSizeA4P = From.TypeTextFontSizeA4P,
-                PageHeaderFontSize = From.PageHeaderFontSize,
-                DetailsFontSize = From.DetailsFontSize,
-                PageFooterFontSize = From.PageFooterFontSize,
-                DescriptionFontSize = From.DescriptionFontSize,
-                DefaultPrintLayout = From.DefaultPrintLayout,
-                DefaultPaperSize = From.DefaultPaperSize,
-            };
+            PrintSettingsModel To = new();
+            To.MainHeaderText = From.MainHeaderText;
+            To.HeaderDescription1 = From.HeaderDescription1;
+            To.HeaderDescription2 = From.HeaderDescription2;
+            To.LeftHeaderImage = From.LeftHeaderImage;
+            To.RightHeaderImage = From.RightHeaderImage;
+            To.FooterTextLeft = From.FooterTextLeft;
+            To.FooterTextRight = From.FooterTextRight;
+            To.MainHeaderTextFontSizeA5P = From.MainHeaderTextFontSizeA5P;
+            To.HeaderDescriptionFontSizeA5P = From.HeaderDescriptionFontSizeA5P;
+            To.TypeTextFontSizeA5P = From.TypeTextFontSizeA5P;
+            To.MainHeaderTextFontSizeA5L = From.MainHeaderTextFontSizeA5L;
+            To.HeaderDescriptionFontSizeA5L = From.HeaderDescriptionFontSizeA5L;
+            To.TypeTextFontSizeA5L = From.TypeTextFontSizeA5L;
+            To.MainHeaderTextFontSizeA4P = From.MainHeaderTextFontSizeA4P;
+            To.HeaderDescriptionFontSizeA4P = From.HeaderDescriptionFontSizeA4P;
+            To.TypeTextFontSizeA4P = From.TypeTextFontSizeA4P;
+            To.PageHeaderFontSize = From.PageHeaderFontSize;
+            To.DetailsFontSize = From.DetailsFontSize;
+            To.PageFooterFontSize = From.PageFooterFontSize;
+            To.DescriptionFontSize = From.DescriptionFontSize;
+            To.DefaultPrintLayout = From.DefaultPrintLayout;
+            To.DefaultPaperSize = From.DefaultPaperSize;
             if (From.UserDescriptions != null)
             {
                 To.UserDescriptions = new();
@@ -424,6 +422,18 @@ namespace AvazehApiClient.DataAccess
                     });
                 }
             }
+            return To;
+        }
+
+        public static GeneralSettingsModel Clone(this GeneralSettingsModel From)
+        {
+            GeneralSettingsModel To = new()
+            {
+                BarcodeAddItemCount = From.BarcodeAddItemCount,
+                CanHaveDuplicateItemsInInvoice = From.CanHaveDuplicateItemsInInvoice,
+                CompanyName = From.CompanyName
+            };
+            return To;
         }
     }
 }

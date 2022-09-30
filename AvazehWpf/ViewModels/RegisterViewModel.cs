@@ -17,7 +17,6 @@ namespace AvazehWpf.ViewModels
 
         private readonly SimpleContainer SC;
         private readonly IApiProcessor ApiProcessor;
-        private readonly User_DTO_CreateUpdate newUser;
 
         private string username;
 

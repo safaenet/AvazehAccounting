@@ -17,7 +17,6 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Diagnostics;
 using SharedLibrary.SecurityAndSettingsModels;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace AvazehWpf.ViewModels
 {
@@ -155,9 +154,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task AddOrUpdateItemAsync()
         {
-            var handler = new JwtSecurityTokenHandler();
-            var jwtSecurityToken = handler.ReadJwtToken(User.Token);
-            var enableBarcodeReader = jwtSecurityToken.Claims.Where(claims => claims.Type == System.Security.Claims.ClaimTypes.Role && claims.Value == nameof(UserPermissionsModel.CanUseBarcodeReader)).Any();
+            var enableBarcodeReader = ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanUseBarcodeReader));
             if (Invoice == null) return;
             var pcm = SC.GetInstance<ICollectionManager<ProductModel>>();
             if (SelectedProductItem == null && ProductInput != null && ProductInput.Length > 0 && EdittingItem == false) //Search by Entered text

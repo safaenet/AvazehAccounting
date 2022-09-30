@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:LoginViewModel}" mc:Ignorable="d"
-        Title="ورود" Height="185" Width="350" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+        Title="ورود" Height="210" Width="350" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
             <RowDefinition Height="35"/>
             <RowDefinition Height="35"/>
             <RowDefinition Height="35"/>
@@ -41,5 +42,6 @@
             <Button x:Name="LoginAsync" IsDefault="True" Content="ورود" Margin="5"/>
             <Button x:Name="RegisterAsync" Content="ثبت نام" Grid.Column="2" Margin="5"/>
         </Grid>
+        <TextBlock Text="{Binding StatusText}" FlowDirection="RightToLeft" Grid.Row="4" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5"/>
     </Grid>
 </Window>

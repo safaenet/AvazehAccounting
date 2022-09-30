@@ -12,8 +12,11 @@ namespace AvazehWpf.ViewModels
     {
         public LoginViewModel(SimpleContainer sc, IApiProcessor apiProcessor)
         {
+            CanLoginAsync = true;
+            StatusText = "در حال ارتباط با سرور...";
             SC = sc;
             ApiProcessor = apiProcessor;
+            _ = TestDBConnectionAsync().ConfigureAwait(true);
             _ = GetIfAdminExistsAsync().ConfigureAwait(true);
         }
 
@@ -27,6 +30,21 @@ namespace AvazehWpf.ViewModels
         {
             get { return canRegisterAsync; }
             set { canRegisterAsync = value; NotifyOfPropertyChange(() => CanRegisterAsync); }
+        }
+        private bool canLoginAsync;
+
+        public bool CanLoginAsync
+        {
+            get { return canLoginAsync; }
+            set { canLoginAsync = value; NotifyOfPropertyChange(() => CanLoginAsync); }
+        }
+
+        private string statusText;
+
+        public string StatusText
+        {
+            get { return statusText; }
+            set { statusText = value; NotifyOfPropertyChange(() => StatusText); }
         }
 
         public string Password
@@ -45,6 +63,8 @@ namespace AvazehWpf.ViewModels
 
         public async Task LoginAsync()
         {
+            CanLoginAsync = false;
+            StatusText = "در حال ورود. لطفا شکیبا باشید";
             UserLogin_DTO user = new()
             {
                 Username = Username,
@@ -54,6 +74,8 @@ namespace AvazehWpf.ViewModels
             User = await ApiProcessor.CreateItemAsync<UserLogin_DTO, LoggedInUser_DTO>("Auth/Login", user);
             if (User == null || string.IsNullOrEmpty(User.Token))
             {
+                CanLoginAsync = true;
+                StatusText = "ورود موفقیت آمیز نبود";
                 MessageBox.Show("نام کاربری یا رمز عبور اشتباه است", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -73,6 +95,15 @@ namespace AvazehWpf.ViewModels
             var viewModel = new RegisterViewModel(SC, ApiProcessor);
             await wm.ShowWindowAsync(viewModel);
             (GetView() as Window).Close();
+        }
+
+        public async Task TestDBConnectionAsync()
+        {
+            if (await ApiProcessor.TestDBConnectionAsync())
+            {
+                StatusText = "ارتباط با سرور برقرار شد. لطفا وارد شوید";
+            }
+            else StatusText = "ارتباط با سرور برقرار نشد. لطفا تنظیمات را چک کنید";
         }
     }
 }

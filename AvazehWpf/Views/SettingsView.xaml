@@ -132,7 +132,7 @@
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="آیتم آرشیو شده" VerticalAlignment="Center" Margin="5"/>
-                                        <xctk:ColorPicker SelectedColor="{Binding UserSettings.ColorArchiveItem, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding UserSettings.ColorArchivedItem, Converter={StaticResource StringToColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Width="50" Margin="5"/>
                                     </Grid>
                                     <Grid Grid.Column="0" Grid.Row="5">
                                         <Grid.ColumnDefinitions>
@@ -261,7 +261,7 @@
                                 <TextBlock Grid.Column="0" Text="تعداد اقلام فایل در هر صفحه" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                 <xctk:IntegerUpDown Text="{Binding UserSettings.TransactionDetailPageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
                                 <Separator Grid.Column="2" Grid.Row="0" Margin="3,0,3,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
-                                <TextBlock Grid.Column="4" Text="نحوه مرتب سازی اقلام فایل ها" VerticalAlignment="Center" Margin="0,0,3,0"/>
+                                <TextBlock Grid.Column="4" Text="نحوه مرتب سازی اقلام فایل" VerticalAlignment="Center" Margin="0,0,3,0"/>
                                 <ComboBox Text="{Binding UserSettings.TransactionDetailQueryOrderType, Converter={StaticResource PersianOrderStringToEnglishOrderStringConverter},Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="5" VerticalContentAlignment="Center" Width="70">
                                     <ComboBoxItem Content="صعودی"/>
                                     <ComboBoxItem Content="نزولی"/>

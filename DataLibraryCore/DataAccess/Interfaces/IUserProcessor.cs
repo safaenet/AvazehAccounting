@@ -6,6 +6,7 @@ namespace DataLibraryCore.DataAccess.Interfaces
 {
     public interface IUserProcessor
     {
+        Task<bool> TestDBConnectionAsync();
         Task<List<UserInfoBaseModel>> GetUsersList();
         Task<int> GetCountOfAdminUsers();
         Task<UserInfoBaseModel> CreateUser(User_DTO_CreateUpdate user);

@@ -79,6 +79,12 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private readonly string GetCountOfAdminUsersQuery = @"SELECT COUNT(u.Username) FROM UserInfo u LEFT JOIN UserPermissions p ON u.Username = p.Username WHERE p.CanManageOthers = 1";
         private readonly string UpdateUserLastLoginDateQuery = @"UPDATE UserInfo SET LastLoginDate = @lastLoginDate, LastLoginTime = @lastLoginTime WHERE Username = @username";
 
+        public async Task<bool> TestDBConnectionAsync()
+        {
+            var result = await DataAccess.TestConnectionAsync();
+            return result;
+        }
+
         public async Task<List<UserInfoBaseModel>> GetUsersList()
         {
             var list =  await DataAccess.LoadDataAsync<UserInfoBaseModel, DynamicParameters>(GetUsersListQuery, null);

@@ -3,6 +3,8 @@ using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -29,6 +31,24 @@ namespace AvazehApiClient.DataAccess
                 ApiClient.DefaultRequestHeaders.Clear();
                 ApiClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             }
+        }
+
+        public async Task<bool> TestDBConnectionAsync()
+        {
+            var Url = $"Auth/TestConnection";
+            var response = await ApiClient.GetAsync(Url);
+            if (response.IsSuccessStatusCode && (await response.Content.ReadAsAsync<bool>()))
+                return true;
+            return false;
+        }
+
+        public bool IsInRole(string role)
+        {
+            if(string.IsNullOrEmpty(Token)) return false;
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(Token);
+            var result = jwtSecurityToken.Claims.Where(claims => claims.Type == System.Security.Claims.ClaimTypes.Role && claims.Value == role).Any();
+            return result;
         }
 
         public async Task<T> GetCollectionAsync<T>(string Key, string OrderBy, OrderType orderType, int Page = 1, string SearchText = "", int PageSize = 50, bool ForceLoad = false) where T : class

@@ -38,7 +38,7 @@ namespace AvazehWpf.ViewModels
         public PrintSettingsModel PrintSettings
         {
             get { return printSettings; }
-            set { printSettings = value; }
+            set { printSettings = value; NotifyOfPropertyChange(() => PrintSettings); }
         }
 
         private GeneralSettingsModel generalSettings;
@@ -46,7 +46,7 @@ namespace AvazehWpf.ViewModels
         public GeneralSettingsModel GeneralSettings
         {
             get { return generalSettings; }
-            set { generalSettings = value; }
+            set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); }
         }
 
 
@@ -123,9 +123,10 @@ namespace AvazehWpf.ViewModels
         {
             await LoadTransactionNamesAsync();
 
-            User.UserSettings.Clone(UserSettings);
-            User.PrintSettings.Clone(PrintSettings);
-            UserDescriptions = new(PrintSettings.UserDescriptions);
+            UserSettings = User.UserSettings.Clone();
+            PrintSettings = User.PrintSettings.Clone();
+            GeneralSettings= User.GeneralSettings.Clone();
+            if (PrintSettings.UserDescriptions != null) UserDescriptions = new(PrintSettings.UserDescriptions); else UserDescriptions = new();
             if (UserSettings != null)
             {
                 if (UserSettings.TransactionShortcut1Id > 0) SelectedTransactionItem1 = TransactionItemsForComboBox.Where(x => x.Id == UserSettings.TransactionShortcut1Id).SingleOrDefault();
@@ -162,10 +163,12 @@ namespace AvazehWpf.ViewModels
         public async Task SaveSettingsAsync()
         {            
             User.PrintSettings.UserDescriptions = UserDescriptions.ToList();
-            AppSettingsModel appSettings = new AppSettingsModel();
+            AppSettingsModel appSettings = new();
             appSettings.GeneralSettings = GeneralSettings;
             appSettings.PrintSettings = PrintSettings;
             await ASM.SaveAllAppSettings(appSettings);
+            User.GeneralSettings = GeneralSettings;
+            User.PrintSettings= PrintSettings;
         }
 
         public void CloseWindow()

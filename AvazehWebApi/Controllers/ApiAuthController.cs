@@ -27,6 +27,13 @@ namespace AvazehWebAPI.Controllers
         private readonly IUserProcessor UserProcessor;
         private readonly IAppSettingsManager ASM;
 
+        [HttpGet("TestConnection"), AllowAnonymous]
+        public async Task<ActionResult<bool>> TestDBConnection()
+        {
+            var result = await UserProcessor.TestDBConnectionAsync();
+            return Ok(result);
+        }
+
         [HttpPost("Register"), AllowAnonymous]
         public async Task<ActionResult<UserInfoBaseModel>> Register(User_DTO_CreateUpdate user)
         {
