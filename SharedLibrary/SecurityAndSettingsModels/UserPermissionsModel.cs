@@ -18,16 +18,19 @@ namespace SharedLibrary.SecurityAndSettingsModels
         public bool CanViewTransactionDetails { get; set; } = true;
         public bool CanViewChequesList { get; set; } = true;
         public bool CanViewChequeDetails { get; set; } = true;
+
         public bool CanAddNewCustomer { get; set; } = true;
         public bool CanAddNewProduct { get; set; } = true;
         public bool CanAddNewInvoice { get; set; } = true;
         public bool CanAddNewTransaction { get; set; } = true;
         public bool CanAddNewCheque { get; set; } = true;
+
         public bool CanEditCustomer { get; set; } = true;
         public bool CanEditProduct { get; set; } = true;
         public bool CanEditInvoice { get; set; } = true;
         public bool CanEditTransaction { get; set; } = true;
         public bool CanEditCheque { get; set; } = true;
+
         public bool CanDeleteCustomer { get; set; } = true;
         public bool CanDeleteProduct { get; set; } = true;
         public bool CanDeleteInvoice { get; set; } = true;
@@ -35,6 +38,7 @@ namespace SharedLibrary.SecurityAndSettingsModels
         public bool CanDeleteTransaction { get; set; } = true;
         public bool CanDeleteTransactionItem { get; set; } = true;
         public bool CanDeleteCheque { get; set; } = true;
+
         public bool CanPrintInvoice { get; set; } = true;
         public bool CanPrintTransaction { get; set; } = true;
         public bool CanViewNetProfits { get; set; } = true;

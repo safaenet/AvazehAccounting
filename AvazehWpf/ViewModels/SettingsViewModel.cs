@@ -49,6 +49,15 @@ namespace AvazehWpf.ViewModels
             set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); }
         }
 
+        public UserPermissionsModel UserPermissions
+        {
+            get => userPermissions;
+            set
+            {
+                userPermissions = value;
+                NotifyOfPropertyChange(() => UserPermissions);
+            }
+        }
 
         private readonly SingletonClass Singleton;
         private readonly SimpleContainer SC;
@@ -62,6 +71,7 @@ namespace AvazehWpf.ViewModels
         private ObservableCollection<UserDescriptionModel> userDescriptions;
         private string verifyPassword;
         private bool settingsLoaded;
+        private UserPermissionsModel userPermissions;
 
         public bool SettingsLoaded
         {
@@ -69,13 +79,11 @@ namespace AvazehWpf.ViewModels
             set { settingsLoaded = value; NotifyOfPropertyChange(() => SettingsLoaded); }
         }
 
-
         public string VerifyPassword
         {
             get { return verifyPassword; }
             set { verifyPassword = value; NotifyOfPropertyChange(() => VerifyPassword); }
         }
-
 
         public ObservableCollection<UserDescriptionModel> UserDescriptions
         {
@@ -125,7 +133,7 @@ namespace AvazehWpf.ViewModels
 
             UserSettings = User.UserSettings.Clone();
             PrintSettings = User.PrintSettings.Clone();
-            GeneralSettings= User.GeneralSettings.Clone();
+            GeneralSettings = User.GeneralSettings.Clone();
             if (PrintSettings.UserDescriptions != null) UserDescriptions = new(PrintSettings.UserDescriptions); else UserDescriptions = new();
             if (UserSettings != null)
             {
@@ -161,14 +169,14 @@ namespace AvazehWpf.ViewModels
         }
 
         public async Task SaveSettingsAsync()
-        {            
+        {
             User.PrintSettings.UserDescriptions = UserDescriptions.ToList();
             AppSettingsModel appSettings = new();
             appSettings.GeneralSettings = GeneralSettings;
             appSettings.PrintSettings = PrintSettings;
             await ASM.SaveAllAppSettings(appSettings);
-            User.GeneralSettings = GeneralSettings;
-            User.PrintSettings= PrintSettings;
+            User.GeneralSettings = GeneralSettings.Clone();
+            User.PrintSettings = PrintSettings.Clone();
         }
 
         public void CloseWindow()
