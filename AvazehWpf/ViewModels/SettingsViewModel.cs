@@ -49,15 +49,42 @@ namespace AvazehWpf.ViewModels
             set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); }
         }
 
-        public UserPermissionsModel UserPermissions
+        private User_DTO_CreateUpdate user_DTO;
+
+        public User_DTO_CreateUpdate User_DTO
         {
-            get => userPermissions;
+            get => user_DTO;
             set
             {
-                userPermissions = value;
-                NotifyOfPropertyChange(() => UserPermissions);
+                user_DTO = value;
+                NotifyOfPropertyChange(() => User_DTO);
             }
         }
+
+        private UserInfoBaseModel selectedUserInfoBase;
+
+        public UserInfoBaseModel SelectedUserInfoBase
+        {
+            get { return selectedUserInfoBase; }
+            set { selectedUserInfoBase = value; NotifyOfPropertyChange(() => SelectedUserInfoBase);}
+        }
+
+        private ObservableCollection<UserInfoBaseModel> userInfoBases;
+
+        public ObservableCollection<UserInfoBaseModel> UserInfoBases
+        {
+            get { return userInfoBases; }
+            set { userInfoBases = value; NotifyOfPropertyChange(() => UserInfoBases);}
+        }
+
+        private string passwordVerify;
+
+        public string PasswordVerify
+        {
+            get { return passwordVerify; }
+            set { passwordVerify = value;  NotifyOfPropertyChange(() => PasswordVerify);}
+        }
+
 
         private readonly SingletonClass Singleton;
         private readonly SimpleContainer SC;
@@ -71,7 +98,6 @@ namespace AvazehWpf.ViewModels
         private ObservableCollection<UserDescriptionModel> userDescriptions;
         private string verifyPassword;
         private bool settingsLoaded;
-        private UserPermissionsModel userPermissions;
 
         public bool SettingsLoaded
         {
