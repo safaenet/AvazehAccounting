@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[UserPermissions]
 (
-	[Username] NVARCHAR(50) NOT NULL, 
+    [Id] INT NOT NULL PRIMARY KEY, 
     [CanViewCustomersList] BIT NOT NULL DEFAULT 1, 
     [CanViewCustomerDetails] BIT NOT NULL DEFAULT 1, 
     [CanViewProductsList] BIT NOT NULL DEFAULT 1, 
@@ -38,5 +38,4 @@
     [CanUseBarcodeReader] BIT NOT NULL DEFAULT 1, 
     [CanManageItself] BIT NOT NULL DEFAULT 1, 
     [CanManageOthers] BIT NOT NULL DEFAULT 1, 
-    CONSTRAINT [PK_UserPermissions] PRIMARY KEY ([Username]), 
 )

@@ -48,11 +48,11 @@ namespace AvazehWebAPI.Controllers
         {
             var IsVerified = await UserProcessor.VerifyUser(user);
             if (!IsVerified) return BadRequest("نام کاربری یا رمز عبور اشتباه است");
-            var userInfoBase = await UserProcessor.GetUserInfoBase(user);
+            var userInfoBase = await UserProcessor.GetUserInfoBase(user.Username);
             if (userInfoBase == null) return BadRequest("مشخصات کاربر یافت نشد");
-            var Permissions = await UserProcessor.GetUserPermissions(user);
+            var Permissions = await UserProcessor.GetUserPermissions(userInfoBase.Id);
             if (Permissions == null) return BadRequest("مجوز های کاربر یافت نشد");
-            var Settings = await UserProcessor.GetUserSettings(user);
+            var Settings = await UserProcessor.GetUserSettings(userInfoBase.Id);
             if (Settings == null) return BadRequest("تنظیمات کاربر یافت نشد");
 
             //UserInfoBase userInfoBase = new();
@@ -63,7 +63,7 @@ namespace AvazehWebAPI.Controllers
             //UserSettings Settings = new();
 
             LoggedInUser_DTO loggedUser = new();
-            loggedUser.Username = user.Username;
+            loggedUser.Id = userInfoBase.Id;
             loggedUser.Token = GenerateToken(userInfoBase, Permissions);
             loggedUser.UserSettings = Settings;
             loggedUser.DateCreated = userInfoBase.DateCreated;
@@ -98,22 +98,24 @@ namespace AvazehWebAPI.Controllers
         }
 
         [HttpDelete, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{nameof(UserPermissionsModel.CanManageItself)}, {nameof(UserPermissionsModel.CanManageOthers)}")]
-        public async Task<ActionResult<bool>> DeleteUser(string Username)
+        public async Task<ActionResult<bool>> DeleteUser(int Id)
         {
-            var ActorUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (ActorUser == Username) return BadRequest("اجازه حذف خودتان را ندارید!");
-            if (ActorUser != Username && !User.IsInRole(nameof(UserPermissionsModel.CanManageOthers))) return BadRequest("اجازه صادر نشد");
-            var result = await UserProcessor.DeleteUser(Username);
+            var ActorUserId = User.FindFirstValue(ClaimTypes.SerialNumber);
+            if (ActorUserId == Id.ToString()) return BadRequest("اجازه حذف خودتان را ندارید!");
+            if (ActorUserId != Id.ToString() && !User.IsInRole(nameof(UserPermissionsModel.CanManageOthers))) return BadRequest("اجازه صادر نشد");
+            var result = await UserProcessor.DeleteUser(Id);
             if(result > 0) return true;
             return false;
         }
 
-        private string GenerateToken(UserInfoBaseModel userInfoBase, UserPermissionsModel Permissions)
+        private static string GenerateToken(UserInfoBaseModel userInfoBase, UserPermissionsModel Permissions)
         {
             var claims = new List<Claim>
             {
+                new Claim(ClaimTypes.SerialNumber, userInfoBase.Id.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, userInfoBase.Username),
-                new Claim(ClaimTypes.Name, userInfoBase.FullName)
+                new Claim(ClaimTypes.GivenName, userInfoBase.FirstName),
+                new Claim(ClaimTypes.Surname, userInfoBase.LastName),
             };
 
             if (Permissions.CanViewCustomersList) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanViewCustomersList)));
@@ -151,7 +153,7 @@ namespace AvazehWebAPI.Controllers
             if (Permissions.CanManageOthers) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanManageOthers)));
 
             var validHours = SettingsDataAccess.AppConfiguration().GetSection("Jwt:ValidHours").Value;
-            double.TryParse(validHours, out var addHours);
+            _ = double.TryParse(validHours, out var addHours);
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SettingsDataAccess.AppConfiguration().GetSection("Jwt:Key").Value));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var token = new JwtSecurityToken(

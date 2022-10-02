@@ -144,7 +144,6 @@ namespace AvazehWpf.ViewModels
             {
                 selectedUserDescriptionModel = value;
                 NotifyOfPropertyChange(() => SelectedUserDescriptionModel);
-                //((GetView() as Window).FindName("cmbUserDescriptions") as ComboBox).
             }
         }
 

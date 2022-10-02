@@ -561,7 +561,7 @@
                                                 <ColumnDefinition Width="auto"/>
                                                 <ColumnDefinition Width="auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <ComboBox x:Name="cmbUserDescriptions" ItemsSource="{Binding UserDescriptions}" DisplayMemberPath="DescriptionTitle" SelectedItem="{Binding SelectedUserDescriptionModel, Mode=TwoWay}" Grid.Column="0" Margin="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Right"/>
+                                            <ComboBox ItemsSource="{Binding UserDescriptions}" DisplayMemberPath="DescriptionTitle" SelectedItem="{Binding SelectedUserDescriptionModel, Mode=TwoWay}" Grid.Column="0" Margin="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Right"/>
                                             <TextBlock Grid.Column="1" Text="عنوان توضیحات" VerticalAlignment="Center" Margin="5"/>
                                             <Separator Grid.Column="2" Margin="0,0,0,5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                             <Button Grid.Column="3" x:Name="AddNewUserDescription" Margin="5,7,0,7">
@@ -635,7 +635,7 @@
                         <Button x:Name="SaveUserChanges" Content="ذخیره تغییرات" Width="80" Grid.Column="0" VerticalContentAlignment="Center" Margin="5,5,0,5"/>
                         <Button x:Name="DeleteUser" Content="حذف کاربر" Grid.Column="1" VerticalContentAlignment="Center" Margin="5,5,0,5"/>
                         <Button x:Name="CreateNewUser" Content="کاربر جدید" Grid.Column="2" VerticalContentAlignment="Center" Margin="5,5,0,5"/>
-                        <ComboBox x:Name="cmbUserInfoBases" ItemsSource="{Binding UserInfoBases}" DisplayMemberPath="Username" SelectedItem="{Binding SelectedUserInfoBase}" Grid.Column="3" Width="150" Margin="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <ComboBox ItemsSource="{Binding UserInfoBases}" DisplayMemberPath="Username" SelectedItem="{Binding SelectedUserInfoBase}" Grid.Column="3" Width="150" Margin="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                         <TextBlock Grid.Column="4" Text="نام کاربری" VerticalAlignment="Center" Margin="5"/>
                     </Grid>
                     <Grid Grid.Row="1">

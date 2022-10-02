@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[UserSettings]
 (
-	[Username] NVARCHAR(50) NOT NULL, 
+    [Id] INT NOT NULL PRIMARY KEY, 
     [ColorNewItem] NVARCHAR(10) NOT NULL DEFAULT '#FFF5F533', 
     [ColorSoldItem] NVARCHAR(10) NOT NULL DEFAULT '#ff66e6ff', 
     [ColorNonSufficientFundItem] NVARCHAR(10) NOT NULL DEFAULT '#ffff9c7a', 
@@ -37,7 +37,6 @@
     [TransactionShortcut2Name] NVARCHAR(50) NULL DEFAULT 'میانبر دو', 
     [TransactionShortcut3Name] NVARCHAR(50) NULL DEFAULT 'میانبر سه', 
     [AskToAddNotExistingProduct] BIT NOT NULL DEFAULT 1, 
-    CONSTRAINT [PK_UserSettings] PRIMARY KEY ([Username]), 
 )
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',

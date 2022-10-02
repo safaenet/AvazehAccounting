@@ -8,8 +8,6 @@ namespace SharedLibrary.SecurityAndSettingsModels
 {
     public class UserInfoModel : UserInfoBaseModel
     {
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
         public UserPermissionsModel Permissions { get; set; }
         public UserSettingsModel Settings { get; set; }
     }
