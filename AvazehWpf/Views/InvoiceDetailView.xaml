@@ -15,7 +15,6 @@
         Width="1200" Height="675"
         cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]; [Event Loaded] = [FocusOnProductsCombobox()]">
     <Window.Resources>
-        <local:AppSettings x:Key="AppSettings"/>
         <!--body content datagrid cell vertical centering-->
         <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
             <Setter Property="Template">
@@ -91,7 +90,7 @@
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام و نام خانوادگی مشتری" Margin="0,2,0,2"/>
                             </StackPanel>
                             <StackPanel Width="197" Orientation="Horizontal" HorizontalAlignment="Left">
-                                <Button x:Name="EditOwnerAsync" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" TabIndex="7" Width="20" Margin="0,0,2,0">
+                                <Button x:Name="EditOwnerAsync" TabIndex="7" Width="20" Margin="0,0,2,0">
                                     <materialDesign:PackIcon Kind="EditOutline" Width="15" Height="15"/>
                                 </Button>
                                 <TextBox Text="{Binding Invoice.Customer.FullName, Mode=OneWay}" IsReadOnly="True" MaxWidth="200" Width="175" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]"/>
@@ -198,26 +197,26 @@
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="کل بدهی" FontWeight="Bold" Margin="3,0,0,2" VerticalAlignment="Center"/>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" IsEnabled="{Binding InvoiceSettings.DetailShowNetProfit}" Margin="0,0,3,3" HorizontalAlignment="Right">
+                        <StackPanel Orientation="Horizontal" IsEnabled="{Binding ShowNetProfits}" Margin="0,0,3,3" HorizontalAlignment="Right">
                             <TextBlock Text="{Binding Invoice.NetProfit, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Visibility="{Binding IsChecked, ElementName=ShowNetProfit, Converter={StaticResource b2v}}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="118" VerticalAlignment="Center"/>
                             <CheckBox x:Name="ShowNetProfit" FlowDirection="RightToLeft">
                                 <TextBlock Text="سود خالص" Margin="0,0,0,2"/>
                             </CheckBox>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Visibility="{Binding InvoiceSettings.DetailShowNetProfit}" Margin="0,0,3,0" HorizontalAlignment="Right">
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding ShowNetProfits}" Margin="0,0,3,0" HorizontalAlignment="Right">
                             <TextBlock Text="{Binding Invoice.CurrentProfit, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Visibility="{Binding IsChecked, ElementName=ShowNetProfit, Converter={StaticResource b2v}}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="120" VerticalAlignment="Center"/>
                             <TextBlock Text="سود جاری" Margin="0,0,22,2"/>
                         </StackPanel>
                     </StackPanel>
 
-                    <Button x:Name="SaveInvoiceChangesAsync" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" Grid.Row="3" Margin="0,3,2,0">
+                    <Button x:Name="SaveInvoiceChangesAsync" Grid.Row="3" Margin="0,3,2,0">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="ContentSaveOutline" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="ذخیره تغییرات" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="DeleteInvoiceAndCloseAsync" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" Grid.Row="4" Margin="0,3,2,0">
+                    <Button x:Name="DeleteInvoiceAndCloseAsync" Grid.Row="4" Margin="0,3,2,0">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="DeleteOutline" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="حذف فاکتور" VerticalAlignment="Center"/>
@@ -230,7 +229,7 @@
                         </StackPanel>
                     </Button>
 
-                    <Button x:Name="ViewPaymentsAsync" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" Grid.Row="6" Margin="0,3,2,0">
+                    <Button x:Name="ViewPaymentsAsync" Grid.Row="6" Margin="0,3,2,0">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Payment" Width="20" Height="20" Margin="3"/>
                             <TextBlock Text="پرداخت ها" VerticalAlignment="Center"/>
@@ -257,7 +256,7 @@
                     <ColumnDefinition Width="0.25*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="AddOrUpdateItemAsync" IsEnabled="{Binding GeneralSettings.CanEditInvoices}" IsDefault="True" Grid.Column="0" TabIndex="7" Width="40" Margin="0,0,5,0">
+                <Button x:Name="AddOrUpdateItemAsync" IsDefault="True" Grid.Column="0" TabIndex="7" Width="40" Margin="0,0,5,0">
                     <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Width="30" Height="30"/>
                 </Button>
 
@@ -288,8 +287,8 @@
                         <TextBlock TextAlignment="Center" Text="قیمت فروش" Margin="0,0,0,0"/>
                     </StackPanel>
                     <ComboBox ItemsSource="{Binding RecentSellPrices}" SelectedValuePath="SellPrice" DisplayMemberPath="SellPrice" Text="{Binding WorkItem.SellPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}"
-                              cal:Message.Attach="[Event GotFocus] = [Action SellPrice_GotFocus()]; [Event KeyUp] = [Action CalculateTotalAmountOfWorkItem($source, $eventArgs)]" BorderThickness="2" BorderBrush="Red"
-                              IsDropDownOpen="{Binding IsSellPriceDropDownOpen, Mode=TwoWay}" IsEditable="True" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TabIndex="4"/>
+                              cal:Message.Attach="[Event GotFocus] = [Action SellPrice_GotFocus()]; [Event LostFocus] = [Action SellPrice_LostFocus()]; [Event KeyUp] = [Action CalculateTotalAmountOfWorkItem($source, $eventArgs)]" BorderThickness="{Binding SellPriceBorderThickness}"
+                              IsEditable="True" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TabIndex="4"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="5" Visibility="{Binding IsChecked, ElementName=ShowNetProfit, Converter={StaticResource b2v}}" Width="100" IsEnabled="{Binding InvoiceSettings.DetailShowNetProfit}" Orientation="Vertical" Margin="0,0,3,0">
@@ -336,11 +335,11 @@
             </Grid>
             <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditItem()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
                       Grid.Row="1" ItemsSource="{Binding Invoice.Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" FlowDirection="RightToLeft" AutoGenerateColumns="False"
-                      CellStyle="{StaticResource Body_Content_DataGrid_Centering}" HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding InvoiceSettings.DetailDataGridFontSize}"
+                      CellStyle="{StaticResource Body_Content_DataGrid_Centering}" HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding User.UserSettings.DataGridFontSize}"
                       IsTabStop="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteItem]" IsEnabled="{Binding GeneralSettings.CanEditInvoices}">
+                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteItem]">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="DeleteOutline"/>
                             </MenuItem.Icon>
@@ -349,7 +348,7 @@
                 </DataGrid.ContextMenu>
                 <DataGrid.Resources>
                     <local:DateToColorConverter x:Key="DateToColorConverter"/>
-                    <local:AmountToColorConverter x:Key="AmountToColorConverter"/>
+                    <local:AmountToColorConverter x:Key="AmountToColorConverterForNetProfit" BalancedColor="{Binding User.UserSettings.ColorBalancedItem}" PositiveColor="{Binding User.UserSettings.ColorPositiveItem}" NegativeColor="{Binding User.UserSettings.ColorNegativeItem}"/>
                 </DataGrid.Resources>                
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="ت" CanUserResize="False">
@@ -433,16 +432,7 @@
                         </DataGridTextColumn.CellStyle>
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <MultiBinding Converter="{StaticResource AmountToColorConverter}">
-                                            <Binding Path="NetProfit"/>
-                                            <Binding Source="null"/>
-                                            <Binding Source="null"/>
-                                            <Binding Path="Settings.InvoiceSettings.DetailNegativeProfitColor" Source="{StaticResource AppSettings}"/>
-                                        </MultiBinding>
-                                    </Setter.Value>
-                                </Setter>
+                                <Setter Property="Background" Value="{Binding Path=NetProfit, Converter={StaticResource AmountToColorConverterForNetProfit}}"/>
                                 <Setter Property="Foreground" Value="Black"/>
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                             </Style>

@@ -54,4 +54,10 @@
         ASC,
         DESC
     }
+
+    public enum ProductStatus
+    {
+        InActive = 0,
+        Active = 1
+    }
 }

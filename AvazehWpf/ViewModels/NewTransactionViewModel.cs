@@ -117,7 +117,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task ClosingWindowAsync()
         {
-            await CallBack?.Invoke();
+            if (CallBack != null) await CallBack?.Invoke();
         }
 
         public void Window_PreviewKeyDown(object sender, KeyEventArgs e)

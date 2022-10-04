@@ -43,11 +43,12 @@
             </Grid.ColumnDefinitions>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,0,0" VerticalAlignment="Top">
@@ -89,6 +90,7 @@
                     </StackPanel>
                     <TextBox Text="{Binding Product.Barcode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="15" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
+                <CheckBox Content="فعال" IsChecked="{Binding Product.IsActive, Mode=TwoWay}" Grid.Row="5" Margin="15,5,5,5"/>
             </Grid>
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
@@ -99,7 +101,7 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,10,10">
+                <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,10,0">
                     <StackPanel Width="50" Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="Counter" Margin="0,0,3,0"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="تعداد" Margin="0,0,0,2"/>

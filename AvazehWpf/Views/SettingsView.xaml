@@ -7,7 +7,7 @@
         xmlns:cal="http://www.caliburnproject.org"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" d:DataContext="{d:DesignInstance Type=viewmodels:SettingsViewModel}"
-        Title="تنظیمات" Height="500" Width="450" MaxWidth="450" MinWidth="450" IsEnabled="{Binding SettingsLoaded}"
+        Title="تنظیمات" Height="520" Width="450" MaxWidth="450" MinWidth="450" IsEnabled="{Binding SettingsLoaded}"
         cal:Message.Attach="[Event Closing] = [Action ClosingWindowAsync]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($eventArgs)]" ResizeMode="CanMinimize">
     <Window.Resources>
         <local:StringToColorConverter x:Key="StringToColorConverter"/>
@@ -632,10 +632,11 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="SaveUserChanges" Content="ذخیره تغییرات" Width="80" Grid.Column="0" VerticalContentAlignment="Center" Margin="5,5,0,5"/>
-                        <Button x:Name="DeleteUser" Content="حذف کاربر" Grid.Column="1" VerticalContentAlignment="Center" Margin="5,5,0,5"/>
+                        <Button x:Name="SaveUserChangesAsync" Content="ذخیره تغییرات" Width="80" Grid.Column="0" VerticalContentAlignment="Center" Margin="5,5,0,5"/>
+                        <Button x:Name="DeleteUserAsync" Content="حذف کاربر" Grid.Column="1" VerticalContentAlignment="Center" Margin="5,5,0,5"/>
                         <Button x:Name="CreateNewUser" Content="کاربر جدید" Grid.Column="2" VerticalContentAlignment="Center" Margin="5,5,0,5"/>
-                        <ComboBox ItemsSource="{Binding UserInfoBases}" DisplayMemberPath="Username" SelectedItem="{Binding SelectedUserInfoBase}" Grid.Column="3" Width="150" Margin="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <ComboBox ItemsSource="{Binding UserInfoBases}" DisplayMemberPath="Username" SelectedItem="{Binding SelectedUserInfoBase}" Grid.Column="3" Width="150" Margin="5"
+                                  cal:Message.Attach="[Event SelectionChanged] = [Action LoadUserPermissionsAsync]" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
                         <TextBlock Grid.Column="4" Text="نام کاربری" VerticalAlignment="Center" Margin="5"/>
                     </Grid>
                     <Grid Grid.Row="1">
@@ -647,24 +648,26 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Text="{Binding PasswordVerify, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Height="25" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5"/>
+                        <PasswordBox x:Name="Password2" Grid.Column="0" Height="25" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5"/>
                         <TextBlock Text=":تکرار رمز" Grid.Column="1" Height="25" VerticalAlignment="Center" Margin="0,5,0,0"/>
-                        <TextBox Text="{Binding User_DTO.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Height="25" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5"/>
+                        <PasswordBox x:Name="Password1" Grid.Column="2" Height="25" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5"/>
                         <TextBlock Text=":رمز عبور" Grid.Column="3" Height="25" VerticalAlignment="Center" Margin="0,5,0,0"/>
-                        <TextBox Text="{Binding User_DTO.Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4" Height="25" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5"/>
+                        <TextBox Text="{Binding SelectedUserInfoBase.Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4" Height="25" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5"/>
                         <TextBlock Text=":نام کاربری" Grid.Column="5" Height="25" VerticalAlignment="Center" Margin="0,5,5,0"/>                      
                     </Grid>
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Text="{Binding User_DTO.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Height="25" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5"/>
-                        <TextBlock Text=":نام خانوادگی" Grid.Column="1" Height="25" VerticalAlignment="Center" Margin="0,5,5,0"/>
-                        <TextBox Text="{Binding User_DTO.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Height="25" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5"/>
-                        <TextBlock Text=":نام" Grid.Column="3" Height="25" VerticalAlignment="Center" Margin="0,5,5,0"/>                        
+                        <CheckBox Content="فعال" IsChecked="{Binding SelectedUserInfoBase.IsActive, Mode=TwoWay}" Grid.Column="0" Margin="5,0,5,0" VerticalContentAlignment="Center"/>                      
+                        <TextBox Text="{Binding SelectedUserInfoBase.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Height="25" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5"/>
+                        <TextBlock Text=":نام خانوادگی" Grid.Column="2" Height="25" VerticalAlignment="Center" Margin="0,5,5,0"/>
+                        <TextBox Text="{Binding SelectedUserInfoBase.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="3" Height="25" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5"/>
+                        <TextBlock Text=":نام" Grid.Column="4" Height="25" VerticalAlignment="Center" Margin="0,5,5,0"/>                        
                     </Grid>
                     <Grid Grid.Row="3">
                         <Grid.ColumnDefinitions>
@@ -696,22 +699,22 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <CheckBox Content="نمایش لیست مشتری ها" IsChecked="{Binding User_DTO.Permissions.CanViewCustomersList, Mode=TwoWay}" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
-                                    <CheckBox Content="نمایش جزئیات مشتری" IsChecked="{Binding User_DTO.Permissions.CanViewCustomerDetails, Mode=TwoWay}" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="نمایش لیست مشتری ها" IsChecked="{Binding SelectedUserPermissions.CanViewCustomersList, Mode=TwoWay}" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="نمایش جزئیات مشتری" IsChecked="{Binding SelectedUserPermissions.CanViewCustomerDetails, Mode=TwoWay}" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
 
-                                    <CheckBox Content="نمایش لیست کالاها" IsChecked="{Binding User_DTO.Permissions.CanViewProductsList, Mode=TwoWay}" Grid.Row="1" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
-                                    <CheckBox Content="نمایش جزئیات کالا" IsChecked="{Binding User_DTO.Permissions.CanViewProductDetails, Mode=TwoWay}" Grid.Row="1" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="نمایش لیست کالاها" IsChecked="{Binding SelectedUserPermissions.CanViewProductsList, Mode=TwoWay}" Grid.Row="1" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="نمایش جزئیات کالا" IsChecked="{Binding SelectedUserPermissions.CanViewProductDetails, Mode=TwoWay}" Grid.Row="1" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
 
-                                    <CheckBox Content="نمایش لیست فاکتورها" IsChecked="{Binding User_DTO.Permissions.CanViewInvoicesList, Mode=TwoWay}" Grid.Row="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                                    <CheckBox Content="نمایش جزئیات فاکتور" IsChecked="{Binding User_DTO.Permissions.CanViewInvoiceDetails, Mode=TwoWay}" Grid.Row="2" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="نمایش لیست فاکتورها" IsChecked="{Binding SelectedUserPermissions.CanViewInvoicesList, Mode=TwoWay}" Grid.Row="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="نمایش جزئیات فاکتور" IsChecked="{Binding SelectedUserPermissions.CanViewInvoiceDetails, Mode=TwoWay}" Grid.Row="2" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
 
-                                    <CheckBox Content="نمایش لیست فایل ها" IsChecked="{Binding User_DTO.Permissions.CanViewTransactionsList, Mode=TwoWay}" Grid.Row="3" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                                    <CheckBox Content="نمایش جزئیات فایل" IsChecked="{Binding User_DTO.Permissions.CanViewTransactionDetails, Mode=TwoWay}" Grid.Row="3" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="نمایش لیست فایل ها" IsChecked="{Binding SelectedUserPermissions.CanViewTransactionsList, Mode=TwoWay}" Grid.Row="3" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="نمایش جزئیات فایل" IsChecked="{Binding SelectedUserPermissions.CanViewTransactionDetails, Mode=TwoWay}" Grid.Row="3" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
 
-                                    <CheckBox Content="نمایش لیست چک ها" IsChecked="{Binding User_DTO.Permissions.CanViewChequesList, Mode=TwoWay}" Grid.Row="4" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                                    <CheckBox Content="نمایش جزئیات چک" IsChecked="{Binding User_DTO.Permissions.CanViewChequeDetails, Mode=TwoWay}" Grid.Row="4" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="نمایش لیست چک ها" IsChecked="{Binding SelectedUserPermissions.CanViewChequesList, Mode=TwoWay}" Grid.Row="4" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="نمایش جزئیات چک" IsChecked="{Binding SelectedUserPermissions.CanViewChequeDetails, Mode=TwoWay}" Grid.Row="4" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
                                     
-                                    <CheckBox Content="نمایش سود خالص" IsChecked="{Binding User_DTO.Permissions.CanViewNetProfits, Mode=TwoWay}" Grid.Row="5" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="نمایش سود خالص" IsChecked="{Binding SelectedUserPermissions.CanViewNetProfits, Mode=TwoWay}" Grid.Row="5" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
                                 </Grid>
                             </TabItem>
                             <TabItem Header="اضافه کردن">
@@ -725,12 +728,12 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <CheckBox Content="اضافه کردن مشتری" IsChecked="{Binding User_DTO.Permissions.CanAddNewCustomer, Mode=TwoWay}" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
-                                    <CheckBox Content="اضافه کردن کالا" IsChecked="{Binding User_DTO.Permissions.CanAddNewProduct, Mode=TwoWay}" Grid.Column="1" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                                    <CheckBox Content="اضافه کردن فاکتور" IsChecked="{Binding User_DTO.Permissions.CanAddNewInvoice, Mode=TwoWay}" Grid.Column="2" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="اضافه کردن مشتری" IsChecked="{Binding SelectedUserPermissions.CanAddNewCustomer, Mode=TwoWay}" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="اضافه کردن کالا" IsChecked="{Binding SelectedUserPermissions.CanAddNewProduct, Mode=TwoWay}" Grid.Column="1" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="اضافه کردن فاکتور" IsChecked="{Binding SelectedUserPermissions.CanAddNewInvoice, Mode=TwoWay}" Grid.Column="2" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
 
-                                    <CheckBox Content="اضافه کردن فایل" IsChecked="{Binding User_DTO.Permissions.CanAddNewTransaction, Mode=TwoWay}" Grid.Row="1" Grid.Column="0" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                                    <CheckBox Content="اضافه کردن چک" IsChecked="{Binding User_DTO.Permissions.CanAddNewCheque, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="اضافه کردن فایل" IsChecked="{Binding SelectedUserPermissions.CanAddNewTransaction, Mode=TwoWay}" Grid.Row="1" Grid.Column="0" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="اضافه کردن چک" IsChecked="{Binding SelectedUserPermissions.CanAddNewCheque, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
                                 </Grid>
                             </TabItem>
                             <TabItem Header="ویرایش کردن">
@@ -744,12 +747,12 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <CheckBox Content="ویرایش مشتری" IsChecked="{Binding User_DTO.Permissions.CanEditCustomer, Mode=TwoWay}" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
-                                    <CheckBox Content="ویرایش کالا" IsChecked="{Binding User_DTO.Permissions.CanEditProduct, Mode=TwoWay}" Grid.Column="1" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                                    <CheckBox Content="ویرایش فاکتور" IsChecked="{Binding User_DTO.Permissions.CanEditInvoice, Mode=TwoWay}" Grid.Column="2" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="ویرایش مشتری" IsChecked="{Binding SelectedUserPermissions.CanEditCustomer, Mode=TwoWay}" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="ویرایش کالا" IsChecked="{Binding SelectedUserPermissions.CanEditProduct, Mode=TwoWay}" Grid.Column="1" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="ویرایش فاکتور" IsChecked="{Binding SelectedUserPermissions.CanEditInvoice, Mode=TwoWay}" Grid.Column="2" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
 
-                                    <CheckBox Content="ویرایش فایل" IsChecked="{Binding User_DTO.Permissions.CanEditTransaction, Mode=TwoWay}" Grid.Row="1" Grid.Column="0" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                                    <CheckBox Content="ویرایش چک" IsChecked="{Binding User_DTO.Permissions.CanEditCheque, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="ویرایش فایل" IsChecked="{Binding SelectedUserPermissions.CanEditTransaction, Mode=TwoWay}" Grid.Row="1" Grid.Column="0" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="ویرایش چک" IsChecked="{Binding SelectedUserPermissions.CanEditCheque, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
                                 </Grid>
                             </TabItem>
                             <TabItem Header="حذف کردن">
@@ -765,15 +768,15 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <CheckBox Content="حذف مشتری" IsChecked="{Binding User_DTO.Permissions.CanDeleteCustomer, Mode=TwoWay}" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
-                                    <CheckBox Content="حذف کالا" IsChecked="{Binding User_DTO.Permissions.CanDeleteProduct, Mode=TwoWay}" Grid.Column="1" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                                    <CheckBox Content="حذف اقلام فاکتور" IsChecked="{Binding User_DTO.Permissions.CanDeleteInvoiceItem, Mode=TwoWay}" Grid.Column="2" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="حذف مشتری" IsChecked="{Binding SelectedUserPermissions.CanDeleteCustomer, Mode=TwoWay}" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="حذف کالا" IsChecked="{Binding SelectedUserPermissions.CanDeleteProduct, Mode=TwoWay}" Grid.Column="1" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="حذف اقلام فاکتور" IsChecked="{Binding SelectedUserPermissions.CanDeleteInvoiceItem, Mode=TwoWay}" Grid.Column="2" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
 
-                                    <CheckBox Content="حذف فاکتور" IsChecked="{Binding User_DTO.Permissions.CanDeleteInvoice, Mode=TwoWay}" Grid.Row="1" Grid.Column="0" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                                    <CheckBox Content="حذف اقلام فایل" IsChecked="{Binding User_DTO.Permissions.CanDeleteTransactionItem, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                                    <CheckBox Content="حذف فایل" IsChecked="{Binding User_DTO.Permissions.CanDeleteTransaction, Mode=TwoWay}" Grid.Row="1" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="حذف فاکتور" IsChecked="{Binding SelectedUserPermissions.CanDeleteInvoice, Mode=TwoWay}" Grid.Row="1" Grid.Column="0" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="حذف اقلام فایل" IsChecked="{Binding SelectedUserPermissions.CanDeleteTransactionItem, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="حذف فایل" IsChecked="{Binding SelectedUserPermissions.CanDeleteTransaction, Mode=TwoWay}" Grid.Row="1" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
 
-                                    <CheckBox Content="حذف چک" IsChecked="{Binding User_DTO.Permissions.CanDeleteCheque, Mode=TwoWay}" Grid.Row="2" Grid.Column="0" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="حذف چک" IsChecked="{Binding SelectedUserPermissions.CanDeleteCheque, Mode=TwoWay}" Grid.Row="2" Grid.Column="0" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
                                 </Grid>
                             </TabItem>
                             <TabItem Header="بقیه">
@@ -789,12 +792,12 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <CheckBox Content="چاپ فاکتور" IsChecked="{Binding User_DTO.Permissions.CanPrintInvoice, Mode=TwoWay}" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
-                                    <CheckBox Content="چاپ فایل" IsChecked="{Binding User_DTO.Permissions.CanPrintTransaction, Mode=TwoWay}" Grid.Column="1" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                                    <CheckBox Content="استفاده از بارکدخوان" IsChecked="{Binding User_DTO.Permissions.CanUseBarcodeReader, Mode=TwoWay}" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="چاپ فاکتور" IsChecked="{Binding SelectedUserPermissions.CanPrintInvoice, Mode=TwoWay}" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="چاپ فایل" IsChecked="{Binding SelectedUserPermissions.CanPrintTransaction, Mode=TwoWay}" Grid.Column="1" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="استفاده از بارکدخوان" IsChecked="{Binding SelectedUserPermissions.CanUseBarcodeReader, Mode=TwoWay}" Grid.Column="2" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
                                     
-                                    <CheckBox Content="تغییر مشخصات خود" IsChecked="{Binding User_DTO.Permissions.CanManageItself, Mode=TwoWay}" Grid.Row="1" Grid.Column="0" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
-                                    <CheckBox Content="تغییر مشخصات دیگران" IsChecked="{Binding User_DTO.Permissions.CanManageOthers, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="تغییر مشخصات خود" IsChecked="{Binding SelectedUserPermissions.CanManageItself, Mode=TwoWay}" Grid.Row="1" Grid.Column="0" Margin="5,0,5,0" VerticalContentAlignment="Center"/>
+                                    <CheckBox Content="تغییر مشخصات دیگران" IsChecked="{Binding SelectedUserPermissions.CanManageOthers, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" VerticalContentAlignment="Center"/>
                                 </Grid>
                             </TabItem>
                         </TabControl>

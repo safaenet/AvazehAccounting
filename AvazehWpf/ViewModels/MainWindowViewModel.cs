@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using AvazehApiClient.DataAccess;
 using System.Net.Http;
 using SharedLibrary.SecurityAndSettingsModels;
+using System.Security.Claims;
+using System;
+using AvazehWpf.Views;
 
 namespace AvazehWpf.ViewModels
 {
@@ -16,11 +19,14 @@ namespace AvazehWpf.ViewModels
             User = user;
             SC = sc;
             _ = LoadKnowledgeOfTheDayAsync().ConfigureAwait(true);
+            ApiProcessor = SC.GetInstance<IApiProcessor>();
+            if (User != null) UserFullName = $"{ApiProcessor.GetRoleValue(ClaimTypes.GivenName)} {ApiProcessor.GetRoleValue(ClaimTypes.Surname)}";
         }
 
         private readonly LoggedInUser_DTO User;
-        SimpleContainer SC;
+        private readonly SimpleContainer SC;
         private bool settingsLoaded;
+        private IApiProcessor ApiProcessor;
 
         public bool SettingsLoaded
         {
@@ -30,7 +36,8 @@ namespace AvazehWpf.ViewModels
 
         private bool kodAvailable;
         private KnowledgeModel knowledgeOfTheDay;
-        
+        private string userFullName;
+
         public bool KodAvailable
         {
             get { return kodAvailable; }
@@ -41,6 +48,16 @@ namespace AvazehWpf.ViewModels
         {
             get { return knowledgeOfTheDay; }
             set { knowledgeOfTheDay = value; NotifyOfPropertyChange(() => KnowledgeOfTheDay); }
+        }
+
+        public string UserFullName
+        {
+            get => userFullName; 
+            set
+            {
+                userFullName = value;
+                NotifyOfPropertyChange(() => UserFullName);
+            }
         }
 
         private async Task LoadKnowledgeOfTheDayAsync()
@@ -185,7 +202,20 @@ namespace AvazehWpf.ViewModels
 
         public void Window_Closed()
         {
-            Application.Current.Shutdown();
+            //Application.Current.Shutdown();
+        }
+
+        public async Task LogoutAsync()
+        {
+            ApiProcessor.Token = null;
+            for (int i = Application.Current.Windows.Count - 1; i > 0; i--)
+            {
+                Application.Current.Windows[i].Close();
+            }
+            WindowManager wm = new();
+            var viewModel = new LoginViewModel(SC, ApiProcessor);
+            await wm.ShowWindowAsync(viewModel);
+            (GetView() as Window).Close();
         }
     }
 

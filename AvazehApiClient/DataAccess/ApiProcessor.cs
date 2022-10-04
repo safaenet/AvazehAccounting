@@ -29,7 +29,10 @@ namespace AvazehApiClient.DataAccess
             {
                 token = value;
                 ApiClient.DefaultRequestHeaders.Clear();
-                ApiClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                if (!string.IsNullOrEmpty(token))
+                {
+                    ApiClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                }
             }
         }
 
@@ -47,7 +50,16 @@ namespace AvazehApiClient.DataAccess
             if(string.IsNullOrEmpty(Token)) return false;
             var handler = new JwtSecurityTokenHandler();
             var jwtSecurityToken = handler.ReadJwtToken(Token);
-            var result = jwtSecurityToken.Claims.Where(claims => claims.Type == System.Security.Claims.ClaimTypes.Role && claims.Value == role).Any();
+            var result = jwtSecurityToken.Claims.Where(claim => claim.Type == System.Security.Claims.ClaimTypes.Role && claim.Value == role).Any();
+            return result;
+        }
+
+        public string GetRoleValue(string roleType)
+        {
+            if(string.IsNullOrEmpty(Token)) return null;
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(Token);
+            var result = jwtSecurityToken.Claims.Where(claim => claim.Type == roleType).FirstOrDefault().Value;
             return result;
         }
 

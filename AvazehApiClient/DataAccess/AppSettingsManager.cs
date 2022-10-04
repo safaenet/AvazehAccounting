@@ -10,7 +10,7 @@ namespace AvazehApiClient.DataAccess
         {
             Processor = apiProcessor;
         }
-        private IApiProcessor Processor;
+        private readonly IApiProcessor Processor;
         private readonly string Key = "AppSettings";
 
         public async Task<AppSettingsModel> LoadAllAppSettings() => await Processor.GetItemAsync<AppSettingsModel>(Key, null);

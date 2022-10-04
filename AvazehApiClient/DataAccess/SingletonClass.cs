@@ -1,11 +1,8 @@
 ﻿using AvazehApiClient.DataAccess.Interfaces;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
-using System;
-using System.Collections.Generic;
+using SharedLibrary.SecurityAndSettingsModels;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AvazehApiClient.DataAccess
@@ -28,6 +25,7 @@ namespace AvazehApiClient.DataAccess
         public async Task<ObservableCollection<ItemsForComboBox>> ReloadTransactionNames(int Id = 0) => await Processor.GetCollectionAsync<ObservableCollection<ItemsForComboBox>>("Transactions/TransactionNames", Id == 0 ? null : Id.ToString());
 
         public async Task<ObservableCollection<string>> ReloadBankNames() => await Processor.GetCollectionAsync<ObservableCollection<string>>("Cheque/Banknames", null);
+        public async Task<ObservableCollection<UserInfoBaseModel>> ReloadUserInfoBases() => await Processor.GetCollectionAsync<ObservableCollection<UserInfoBaseModel>>("Auth/UserInfoBases", null);
 
         public async Task<ObservableCollection<ItemsForComboBox>> ReloadCustomerNames() => await Processor.GetCollectionAsync<ObservableCollection<ItemsForComboBox>>("Invoices/CustomerNames", null);
     }

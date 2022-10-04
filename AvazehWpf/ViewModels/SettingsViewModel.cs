@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Input;
 using SharedLibrary.SecurityAndSettingsModels;
 using AvazehApiClient.DataAccess.Interfaces;
+using System.Windows.Controls;
 
 namespace AvazehWpf.ViewModels
 {
@@ -20,12 +21,14 @@ namespace AvazehWpf.ViewModels
             Singleton = singleton;
             SC = sc;
             ASM = SC.GetInstance<IAppSettingsManager>();
+            ApiProcessor = SC.GetInstance<IApiProcessor>();
             User = user;
             _ = LoadAllSettingsAsync().ConfigureAwait(true);
         }
 
-        private LoggedInUser_DTO User;
+        private readonly LoggedInUser_DTO User;
         private UserSettingsModel userSettings;
+        private readonly IApiProcessor ApiProcessor;
 
         public UserSettingsModel UserSettings
         {
@@ -49,42 +52,37 @@ namespace AvazehWpf.ViewModels
             set { generalSettings = value; NotifyOfPropertyChange(() => GeneralSettings); }
         }
 
-        private User_DTO_CreateUpdate user_DTO;
-
-        public User_DTO_CreateUpdate User_DTO
-        {
-            get => user_DTO;
-            set
-            {
-                user_DTO = value;
-                NotifyOfPropertyChange(() => User_DTO);
-            }
-        }
-
         private UserInfoBaseModel selectedUserInfoBase;
 
         public UserInfoBaseModel SelectedUserInfoBase
         {
-            get { return selectedUserInfoBase; }
-            set { selectedUserInfoBase = value; NotifyOfPropertyChange(() => SelectedUserInfoBase);}
+            get => selectedUserInfoBase;
+            set
+            {
+                selectedUserInfoBase = value;
+                NotifyOfPropertyChange(() => SelectedUserInfoBase);
+            }
+        }
+
+        private UserPermissionsModel selectedUserPermissions;
+
+        public UserPermissionsModel SelectedUserPermissions
+        {
+            get => selectedUserPermissions;
+            set
+            {
+                selectedUserPermissions = value;
+                NotifyOfPropertyChange(() => SelectedUserPermissions);
+            }
         }
 
         private ObservableCollection<UserInfoBaseModel> userInfoBases;
 
         public ObservableCollection<UserInfoBaseModel> UserInfoBases
         {
-            get { return userInfoBases; }
-            set { userInfoBases = value; NotifyOfPropertyChange(() => UserInfoBases);}
+            get => userInfoBases;
+            set { userInfoBases = value; NotifyOfPropertyChange(() => UserInfoBases); }
         }
-
-        private string passwordVerify;
-
-        public string PasswordVerify
-        {
-            get { return passwordVerify; }
-            set { passwordVerify = value;  NotifyOfPropertyChange(() => PasswordVerify);}
-        }
-
 
         private readonly SingletonClass Singleton;
         private readonly SimpleContainer SC;
@@ -96,19 +94,12 @@ namespace AvazehWpf.ViewModels
         private ItemsForComboBox selectedTransactionItem3;
         private UserDescriptionModel selectedUserDescriptionModel;
         private ObservableCollection<UserDescriptionModel> userDescriptions;
-        private string verifyPassword;
         private bool settingsLoaded;
 
         public bool SettingsLoaded
         {
             get { return settingsLoaded; }
             set { settingsLoaded = value; NotifyOfPropertyChange(() => SettingsLoaded); }
-        }
-
-        public string VerifyPassword
-        {
-            get { return verifyPassword; }
-            set { verifyPassword = value; NotifyOfPropertyChange(() => VerifyPassword); }
         }
 
         public ObservableCollection<UserDescriptionModel> UserDescriptions
@@ -147,6 +138,18 @@ namespace AvazehWpf.ViewModels
             }
         }
 
+        public string Password1
+        {
+            get => ((GetView() as Window).FindName("Password1") as PasswordBox).Password;
+            set => ((GetView() as Window).FindName("Password1") as PasswordBox).Password = value;
+        }
+
+        public string Password2
+        {
+            get => ((GetView() as Window).FindName("Password2") as PasswordBox).Password;
+            set => ((GetView() as Window).FindName("Password2") as PasswordBox).Password = value;
+        }
+
         private async Task LoadTransactionNamesAsync()
         {
             TransactionItemsForComboBox = await Singleton.ReloadTransactionNames();
@@ -155,7 +158,9 @@ namespace AvazehWpf.ViewModels
         private async Task LoadAllSettingsAsync()
         {
             await LoadTransactionNamesAsync();
-
+            UserInfoBases = await Singleton.ReloadUserInfoBases();
+            if (UserInfoBases != null && UserInfoBases.Count > 0) SelectedUserInfoBase = UserInfoBases.SingleOrDefault(user => user.Id == User.Id);
+            await LoadUserPermissionsAsync();
             UserSettings = User.UserSettings.Clone();
             PrintSettings = User.PrintSettings.Clone();
             GeneralSettings = User.GeneralSettings.Clone();
@@ -202,6 +207,91 @@ namespace AvazehWpf.ViewModels
             await ASM.SaveAllAppSettings(appSettings);
             User.GeneralSettings = GeneralSettings.Clone();
             User.PrintSettings = PrintSettings.Clone();
+
+            var result = await ApiProcessor.UpdateItemAsync<UserSettingsModel, UserSettingsModel>("Auth/UpdateUserSettings", User.Id, UserSettings);
+            if (result == null) MessageBox.Show("خطا هنگام ذخیره تنظیمات", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+            else User.UserSettings = UserSettings.Clone();
+        }
+
+        public async Task SaveUserChangesAsync()
+        {
+            var IsNew = SelectedUserInfoBase.Id == -1;
+            User_DTO_CreateUpdate user = new()
+            {
+                Username = SelectedUserInfoBase.Username,
+                FirstName = SelectedUserInfoBase.FirstName,
+                LastName = SelectedUserInfoBase.LastName,
+                IsActive = SelectedUserInfoBase.IsActive,
+                Permissions = SelectedUserPermissions
+            };
+            if (!string.IsNullOrEmpty(Password1))
+            {
+                if(Password1.Length < 4)
+                {
+                    MessageBox.Show("رمز باید حداقل 4 کاراکتر باشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                if (Password1 != Password2)
+                {
+                    MessageBox.Show("رمز جدید با تایید آن مطابقت ندارد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                user.Password = Password1;
+            }
+            else if (IsNew)
+            {
+                MessageBox.Show("کاربر جدید باید رمز داشته باشد", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            else user.Password = null;
+            UserInfoBaseModel result;
+            if (IsNew)
+            {
+                user.Settings = new();
+                result = await ApiProcessor.CreateItemAsync<User_DTO_CreateUpdate, UserInfoBaseModel>("Auth/RegisterNew", user);
+                if (result != null) SelectedUserInfoBase.Id = result.Id;
+            }
+            else result = await ApiProcessor.UpdateItemAsync<User_DTO_CreateUpdate, UserInfoBaseModel>("Auth/UpdateUser", SelectedUserInfoBase.Id, user);
+            if (result == null) MessageBox.Show("خطا هنگام ذخیره تنظیمات کاربر", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public async Task DeleteUserAsync()
+        {
+            var msg = MessageBox.Show("آیا مطمئنید؟ با زدن دکمه 'بله' کاربر حذف خواهد شد", "حذف", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            var result = await ApiProcessor.DeleteItemAsync("Auth/DeleteUser", SelectedUserInfoBase.Id);
+            if (!result)
+            {
+                MessageBox.Show("خطا هنگام حذف کاربر", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            var delete = MessageBox.Show("آیا مطمئنید؟ با زدن دکمه 'بله' کاربر حذف خواهد شد", "حذف", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (delete == MessageBoxResult.Yes) UserInfoBases.Remove(SelectedUserInfoBase);
+        }
+
+        public async Task LoadUserPermissionsAsync()
+        {
+            if (SelectedUserInfoBase == null) return;
+            if (SelectedUserInfoBase.Id == -1)
+                SelectedUserPermissions = new();
+            else
+            {
+                var perms = await ApiProcessor.GetItemAsync<UserPermissionsModel>("Auth/UserPermissions", SelectedUserInfoBase.Id.ToString());
+                SelectedUserPermissions = perms;
+            }
+        }
+
+        public void CreateNewUser()
+        {
+            var newUsers = UserInfoBases.Where(user => user.Id == -1);
+            if (newUsers != null && newUsers.Any())
+            {
+                SelectedUserInfoBase= newUsers.FirstOrDefault();
+                return;
+            }
+            UserInfoBaseModel newUser = new();
+            newUser.Id = -1;
+            UserInfoBases.Add(newUser);
+            SelectedUserInfoBase = newUser;
         }
 
         public void CloseWindow()

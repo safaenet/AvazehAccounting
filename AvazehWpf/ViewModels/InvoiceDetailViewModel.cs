@@ -35,8 +35,8 @@ namespace AvazehWpf.ViewModels
 
         private readonly IInvoiceCollectionManager ICM;
         private readonly IInvoiceDetailManager IDM;
-        private readonly LoggedInUser_DTO User;
-        SimpleContainer SC;
+        private LoggedInUser_DTO user;
+        readonly SimpleContainer SC;
         private readonly SingletonClass Singleton;
         private InvoiceModel _Invoice;
         private readonly Func<Task> CallBackFunc;
@@ -46,6 +46,7 @@ namespace AvazehWpf.ViewModels
         private InvoiceItemModel _workItem = new();
         private bool CanUpdateRowFromDB = true; //False when user DoubleClicks on a row.
         private bool EdittingItem = false;
+        public LoggedInUser_DTO User { get => user; init => user = value; }
         public bool CanSaveInvoiceChanges { get; set; } = true;
         public InvoiceItemModel SelectedItem { get; set; }
         public InvoiceItemModel WorkItem { get => _workItem; set { _workItem = value; NotifyOfPropertyChange(() => WorkItem); } }
@@ -54,6 +55,7 @@ namespace AvazehWpf.ViewModels
         public ObservableCollection<ItemsForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
         public ObservableCollection<ProductUnitModel> ProductUnits { get => productUnits; set { productUnits = value; NotifyOfPropertyChange(() => ProductUnits); } }
         public ObservableCollection<RecentSellPriceModel> RecentSellPrices { get => recentSellPrices; set { recentSellPrices = value; NotifyOfPropertyChange(() => RecentSellPrices); } }
+        public bool ShowNetProfits => ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewNetProfits));
         private ItemsForComboBox _selectedProductItem;
         private bool isSellPriceDropDownOpen;
         private string productInput;
@@ -97,6 +99,15 @@ namespace AvazehWpf.ViewModels
             get => isSellPriceDropDownOpen;
             set { isSellPriceDropDownOpen = value; NotifyOfPropertyChange(() => IsSellPriceDropDownOpen); }
         }
+
+        private int sellPriceBorderThickness = 1;
+
+        public int SellPriceBorderThickness
+        {
+            get { return sellPriceBorderThickness; }
+            set { sellPriceBorderThickness = value; NotifyOfPropertyChange(() => SellPriceBorderThickness); }
+        }
+
 
 
         public ProductUnitModel SelectedProductUnit
@@ -418,7 +429,13 @@ namespace AvazehWpf.ViewModels
         public void SellPrice_GotFocus()
         {
             if (RecentSellPrices != null && RecentSellPrices.Count > 1)
-                IsSellPriceDropDownOpen = true;
+                SellPriceBorderThickness = 3;
+            else SellPriceBorderThickness = 1;
+        }
+
+        public void SellPrice_LostFocus()
+        {
+            SellPriceBorderThickness = 1;
         }
 
         public void ProductNames_PreviewTextInput()

@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.ObjectModel;
 
 namespace AvazehWebAPI.Controllers
 {
@@ -35,24 +36,32 @@ namespace AvazehWebAPI.Controllers
         }
 
         [HttpPost("Register"), AllowAnonymous]
-        public async Task<ActionResult<UserInfoBaseModel>> Register(User_DTO_CreateUpdate user)
+        public async Task<ActionResult<UserInfoBaseModel>> RegisterFirstAdmin(User_DTO_CreateUpdate user)
         {
-            var adminsCount = await UserProcessor.GetCountOfAdminUsers();
+            var adminsCount = await UserProcessor.GetCountOfAdminUsersAsync();
             if (adminsCount > 0 && !User.IsInRole(nameof(UserPermissionsModel.CanManageOthers))) return BadRequest("اجازه صادر نشد");
-            var newUser = await UserProcessor.CreateUser(user);
+            var newUser = await UserProcessor.CreateUserAsync(user);
+            return newUser;
+        }
+
+        [HttpPost("RegisterNew"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanManageOthers))]
+        public async Task<ActionResult<UserInfoBaseModel>> RegisterNew(User_DTO_CreateUpdate user)
+        {
+            var newUser = await UserProcessor.CreateUserAsync(user);
             return newUser;
         }
 
         [HttpPost("Login"), AllowAnonymous]
         public async Task<ActionResult<LoggedInUser_DTO>> Login(UserLogin_DTO user)
         {
-            var IsVerified = await UserProcessor.VerifyUser(user);
+            var IsVerified = await UserProcessor.VerifyUserAsync(user);
             if (!IsVerified) return BadRequest("نام کاربری یا رمز عبور اشتباه است");
-            var userInfoBase = await UserProcessor.GetUserInfoBase(user.Username);
+            var userInfoBase = await UserProcessor.GetUserInfoBaseAsync(user.Username);
             if (userInfoBase == null) return BadRequest("مشخصات کاربر یافت نشد");
-            var Permissions = await UserProcessor.GetUserPermissions(userInfoBase.Id);
+            if (!userInfoBase.IsActive) return BadRequest("کاربر فعال نیست");
+            var Permissions = await UserProcessor.GetUserPermissionsAsync(userInfoBase.Id);
             if (Permissions == null) return BadRequest("مجوز های کاربر یافت نشد");
-            var Settings = await UserProcessor.GetUserSettings(userInfoBase.Id);
+            var Settings = await UserProcessor.GetUserSettingsAsync(userInfoBase.Id);
             if (Settings == null) return BadRequest("تنظیمات کاربر یافت نشد");
 
             //UserInfoBase userInfoBase = new();
@@ -68,42 +77,80 @@ namespace AvazehWebAPI.Controllers
             loggedUser.UserSettings = Settings;
             loggedUser.DateCreated = userInfoBase.DateCreated;
             loggedUser.LastLoginDate = userInfoBase.LastLoginDate;
+            loggedUser.LastLoginTime = userInfoBase.LastLoginTime;
 
             var appSettings = await ASM.LoadAllSettingsAsync();
             loggedUser.GeneralSettings = appSettings.GeneralSettings;
             loggedUser.PrintSettings = appSettings.PrintSettings;
-            await UserProcessor.UpdateUserLastLoginDate(user.Username);
+            await UserProcessor.UpdateUserLastLoginDateAsync(user.Username);
             return loggedUser;
         }
 
         [HttpGet("AdminExists"), AllowAnonymous]
         public async Task<ActionResult<bool>> AdminExists()
         {
-            var adminsCount = await UserProcessor.GetCountOfAdminUsers();
+            var adminsCount = await UserProcessor.GetCountOfAdminUsersAsync();
             return adminsCount > 0;
         }
 
-        [HttpPut("Update"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanManageOthers))]
-        public async Task<ActionResult<bool>> UpdateUser(User_DTO_CreateUpdate user)
+        [HttpGet("UserInfoBases"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{nameof(UserPermissionsModel.CanManageItself)}, {nameof(UserPermissionsModel.CanManageOthers)}")]
+        public async Task<ActionResult<ObservableCollection<UserInfoBaseModel>>> GetItemsAsync()
         {
-            var updatedUser = await UserProcessor.UpdateUser(user);
-            if (updatedUser == null) return false; else return true;
+            ObservableCollection<UserInfoBaseModel> users = new();
+            if (User.IsInRole(nameof(UserPermissionsModel.CanManageOthers)))
+                users = await UserProcessor.GetUsersAsync();
+            else
+            {
+                var username = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = await UserProcessor.GetUserInfoBaseAsync(username);
+                users.Add(user);
+            }
+            return users.Count > 0 ? users : null;
         }
 
-        [HttpPut("UpdateUserSettings"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanManageItself))]
-        public async Task<ActionResult<bool>> UpdateUserSettings(User_DTO_CreateUpdate user)
+        [HttpGet("UserPermissions/{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{nameof(UserPermissionsModel.CanManageItself)}, {nameof(UserPermissionsModel.CanManageOthers)}")]
+        public async Task<ActionResult<UserPermissionsModel>> GetUserPermissionsAsync(int Id)
         {
-            var result = await UserProcessor.UpdateUserSettings(user.Username, user.Settings);
+            var permissions = await UserProcessor.GetUserPermissionsAsync(Id);
+            return permissions;
+        }
+
+        [HttpPut("UpdateUser/{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{nameof(UserPermissionsModel.CanManageItself)}, {nameof(UserPermissionsModel.CanManageOthers)}")]
+        public async Task<ActionResult<UserInfoBaseModel>> UpdateUser(int Id, User_DTO_CreateUpdate user)
+        {
+            if (!string.IsNullOrEmpty(user.Password) && user.Password.Length < 4) return BadRequest(user.Password);
+            var ActorUserId = User.FindFirstValue(ClaimTypes.SerialNumber);
+            if (ActorUserId != Id.ToString() && !User.IsInRole(nameof(UserPermissionsModel.CanManageOthers))) return BadRequest("اجازه صادر نشد");
+            if (user == null) return null;
+            UserInfoBaseModel userInfoBase = new()
+            {
+                Id = Id,
+                Username = user.Username,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                IsActive = user.IsActive
+            };
+
+            var result1 = await UserProcessor.UpdateUserInfoAsync(userInfoBase, !string.IsNullOrEmpty(user.Password), user.Password);
+            var result2 = await UserProcessor.UpdateUserPermissionsAsync(Id, user.Permissions);
+            if (result1 == null || result2 == null) return null;
+            return result1;
+        }
+
+        [HttpPut("UpdateUserSettings/{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanManageItself))]
+        public async Task<ActionResult<UserSettingsModel>> UpdateUserSettings(int Id, UserSettingsModel Settings)
+        {
+            var result = await UserProcessor.UpdateUserSettingsAsync(Id, Settings);
             return result;
         }
 
-        [HttpDelete, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{nameof(UserPermissionsModel.CanManageItself)}, {nameof(UserPermissionsModel.CanManageOthers)}")]
+        [HttpDelete("DeleteUser"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{nameof(UserPermissionsModel.CanManageItself)}, {nameof(UserPermissionsModel.CanManageOthers)}")]
         public async Task<ActionResult<bool>> DeleteUser(int Id)
         {
             var ActorUserId = User.FindFirstValue(ClaimTypes.SerialNumber);
             if (ActorUserId == Id.ToString()) return BadRequest("اجازه حذف خودتان را ندارید!");
             if (ActorUserId != Id.ToString() && !User.IsInRole(nameof(UserPermissionsModel.CanManageOthers))) return BadRequest("اجازه صادر نشد");
-            var result = await UserProcessor.DeleteUser(Id);
+            var result = await UserProcessor.DeleteUserAsync(Id);
             if(result > 0) return true;
             return false;
         }

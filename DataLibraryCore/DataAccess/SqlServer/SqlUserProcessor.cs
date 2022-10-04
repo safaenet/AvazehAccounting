@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 using SharedLibrary.SecurityAndSettingsModels;
 using System.Security.Cryptography;
 using System.Text;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System;
-using Microsoft.IdentityModel.Tokens;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
@@ -23,8 +21,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         private readonly IDataAccess DataAccess;
         private readonly string CreateUserQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [UserInfo]) + 1;
-            INSERT INTO UserInfo ([Id], [Username], PasswordHash, PasswordSalt, FirstName, LastName, DateCreated)
-            VALUES (@newId, @username, @passwordHash, @passwordSalt, @firstName, @lastName, @dateCreated);
+            INSERT INTO UserInfo ([Id], [Username], PasswordHash, PasswordSalt, FirstName, LastName, DateCreated, IsActive)
+            VALUES (@newId, @username, @passwordHash, @passwordSalt, @firstName, @lastName, @dateCreated, @isActive);
 
             INSERT INTO UserPermissions ([Id], CanViewCustomersList, CanViewCustomerDetails, CanViewProductsList, CanViewProductDetails, CanViewInvoicesList, CanViewInvoiceDetails, CanViewTransactionsList, CanViewTransactionDetails,
             CanViewChequesList, CanViewChequeDetails, CanAddNewCustomer, CanAddNewProduct, CanAddNewInvoice, CanAddNewTransaction, CanAddNewCheque, CanEditCustomer, CanEditProduct, CanEditInvoice,
@@ -46,9 +44,11 @@ namespace DataLibraryCore.DataAccess.SqlServer
             @colorBalancedItem, @colorDeptorItem, @colorCreditorItem, @colorInactiveItem, @colorArchivedItem, @colorDeletedItem, @colorNegativeProfit, @colorPositiveItem, @colorNegativeItem,
             @dataGridFontSize, @chequeListPageSize, @chequeListQueryOrderType, @chequeNotifyDays, @chequeNotify, @invoicePageSize, @invoiceListQueryOrderType, @invoiceDetailQueryOrderType,
             @transactionListPageSize, @transactionDetailPageSize, @transactionListQueryOrderType, @transactionDetailQueryOrderType, @autoSelectPersianLanguage, @transactionShortcut1Id, @transactionShortcut2Id, @transactionShortcut3Id,
-            @transactionShortcut1Name, @transactionShortcut2Name, @transactionShortcut3Name, @askToAddNotExistingProduct);";
+            @transactionShortcut1Name, @transactionShortcut2Name, @transactionShortcut3Name, @askToAddNotExistingProduct);
+            SELECT @id = @newId;";
 
-        private static readonly string UpdateUserInfoQuery = @"UPDATE UserInfo SET Username = @username, PasswordHash = @passwordHash, PasswordSalt = @passwordSalt, FirstName = @firstName, LastName = @lastName WHERE [Id] = @id;";
+        private static readonly string UpdateUserInfoQueryWithPassword = @"UPDATE UserInfo SET Username = @username, PasswordHash = @passwordHash, PasswordSalt = @passwordSalt, FirstName = @firstName, LastName = @lastName, IsActive = @isActive WHERE [Id] = @id;";
+        private static readonly string UpdateUserInfoQueryWithoutPassword = @"UPDATE UserInfo SET Username = @username, FirstName = @firstName, LastName = @lastName, IsActive = @isActive WHERE [Id] = @id;";
         private static readonly string UpdateUserPermissionsQuery = @"UPDATE UserPermissions SET CanViewCustomersList = @canViewCustomersList, CanViewCustomerDetails = @canViewCustomerDetails, CanViewProductsList = @canViewProductsList, CanViewProductDetails = @canViewProductDetails,
             CanViewInvoicesList = @canViewInvoicesList, CanViewInvoiceDetails = @canViewInvoiceDetails, CanViewTransactionsList = @canViewTransactionsList, CanViewTransactionDetails = @canViewTransactionDetails,
             CanViewChequesList = @canViewChequesList, CanViewChequeDetails = @canViewChequeDetails, CanAddNewCustomer = @canAddNewCustomer, CanAddNewProduct = @canAddNewProduct, CanAddNewInvoice = @canAddNewInvoice,
@@ -68,15 +68,14 @@ namespace DataLibraryCore.DataAccess.SqlServer
             TransactionShortcut1Id = @transactionShortcut1Id, TransactionShortcut2Id = @transactionShortcut2Id, TransactionShortcut3Id = transactionShortcut3Id,
             TransactionShortcut1Name = @transactionShortcut1Name, TransactionShortcut2Name = @transactionShortcut2Name, TransactionShortcut3Name = @transactionShortcut3Name,
             AskToAddNotExistingProduct = @askToAddNotExistingProduct WHERE [Id] = @id;";
-        private readonly string UpdateUserQuery = @$"{UpdateUserInfoQuery}{UpdateUserPermissionsQuery}{UpdateUserSettingsQuery}";
-        private readonly string SelectUserInfoBase = @"SELECT [Id], [Username], FirstName, LastName, DateCreated, LastLoginDate, LastLoginTime FROM UserInfo WHERE Username = @username";
+        private readonly string SelectUserInfoBase = @"SELECT [Id], [Username], FirstName, LastName, DateCreated, LastLoginDate, LastLoginTime, IsActive FROM UserInfo WHERE Username = @username";
         private readonly string SelectUserPermissions = @"SELECT * FROM UserPermissions WHERE [Id] = @id";
         private readonly string SelectUserSettings = @"SELECT * FROM UserSettings WHERE [Id] = @id";
         private readonly string GetPasswordHash = @"SELECT PasswordHash FROM UserInfo WHERE Username = @username";
         private readonly string GetPasswordSalt = @"SELECT PasswordSalt FROM UserInfo WHERE Username = @username";
         private readonly string DeleteUserFromDB = @"DELETE FROM UserInfo WHERE [Id] = @id; DELETE FROM UserPermissions WHERE [Id] = @id; DELETE FROM UserSettings WHERE [Id] = @id";
-        private readonly string GetUsersListQuery = @"SELECT [Id], Username, FirstName, LastName, DateCreated, LastLoginDate, LastLoginTime FROM UserInfo";
-        private readonly string GetCountOfAdminUsersQuery = @"SELECT COUNT(u.Username) FROM UserInfo u LEFT JOIN UserPermissions p ON u.Username = p.Username WHERE p.CanManageOthers = 1";
+        private readonly string GetUsersListQuery = @"SELECT [Id], Username, FirstName, LastName, DateCreated, LastLoginDate, LastLoginTime, IsActive FROM UserInfo";
+        private readonly string GetCountOfAdminUsersQuery = @"SELECT COUNT(u.Username) FROM UserInfo u LEFT JOIN UserPermissions p ON u.Id = p.Id WHERE p.CanManageOthers = 1 AND u.IsActive = 1";
         private readonly string UpdateUserLastLoginDateQuery = @"UPDATE UserInfo SET LastLoginDate = @lastLoginDate, LastLoginTime = @lastLoginTime WHERE Username = @username";
 
         public async Task<bool> TestDBConnectionAsync()
@@ -85,19 +84,19 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return result;
         }
 
-        public async Task<List<UserInfoBaseModel>> GetUsersList()
+        public async Task<ObservableCollection<UserInfoBaseModel>> GetUsersAsync()
         {
             var list =  await DataAccess.LoadDataAsync<UserInfoBaseModel, DynamicParameters>(GetUsersListQuery, null);
-            return list.ToList();
+            return list;
         }
 
-        public async Task<int> GetCountOfAdminUsers()
+        public async Task<int> GetCountOfAdminUsersAsync()
         {
             var count =  await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(GetCountOfAdminUsersQuery, null);
             return count;
         }
 
-        public async Task<UserInfoBaseModel> CreateUser(User_DTO_CreateUpdate user)
+        public async Task<UserInfoBaseModel> CreateUserAsync(User_DTO_CreateUpdate user)
         {
             if (user == null || string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password) || user.Password.Length < 4 || user.Permissions == null || user.Settings == null) return null;
             CreatePasswordHash(user.Password, out byte[] PasswordHash, out byte[] PasswordSalt);
@@ -106,23 +105,24 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 Username = user.Username,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                IsActive = user.IsActive,
                 DateCreated = PersianCalendarModel.GetCurrentPersianDate()
             };
             var dp = new DynamicParameters();
-            FillUserBaseParameters(dp, user);
+            FillUserBaseParameters(dp, newUser);
             FillUserPermissionParameters(dp, user.Permissions);
             FillUserSettingsParameters(dp, user.Settings);
             dp.Add("@passwordHash", PasswordHash, System.Data.DbType.Binary);
             dp.Add("@passwordSalt", PasswordSalt, System.Data.DbType.Binary);
             dp.Add("@dateCreated", newUser.DateCreated);
-            dp.Add("@newId", 0, System.Data.DbType.Int32, System.Data.ParameterDirection.Output);
+            dp.Add("@id", 0, System.Data.DbType.Int32, System.Data.ParameterDirection.Output);
 
             var AffectedCount = await DataAccess.SaveDataAsync(CreateUserQuery, dp);
-            newUser.Id = dp.Get<int>("@newId");
+            newUser.Id = dp.Get<int>("@id");
             if (AffectedCount > 0) return newUser; else return null;
         }
 
-        public async Task<bool> VerifyUser(UserLogin_DTO user)
+        public async Task<bool> VerifyUserAsync(UserLogin_DTO user)
         {
             if (string.IsNullOrEmpty(user.Username)) return false;
             DynamicParameters dp = new();
@@ -140,7 +140,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return ComputedHash.SequenceEqual(oldPasswordHash);
         }
 
-        public async Task<UserInfoBaseModel> GetUserInfoBase(string Username)
+        public async Task<UserInfoBaseModel> GetUserInfoBaseAsync(string Username)
         {
             if (string.IsNullOrEmpty(Username)) return null;
             DynamicParameters dp = new();
@@ -149,7 +149,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return userInfoBase;
         }
 
-        public async Task<UserPermissionsModel> GetUserPermissions(int Id)
+        public async Task<UserPermissionsModel> GetUserPermissionsAsync(int Id)
         {
             DynamicParameters dp = new();
             dp.Add("@id", Id);
@@ -157,7 +157,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return Permissions;
         }
 
-        public async Task<UserSettingsModel> GetUserSettings(int Id)
+        public async Task<UserSettingsModel> GetUserSettingsAsync(int Id)
         {
             DynamicParameters dp = new();
             dp.Add("@id", Id);
@@ -165,46 +165,50 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return Settings;
         }
 
-        public async Task<UserInfoBaseModel> UpdateUser(User_DTO_CreateUpdate user)
+        public async Task<UserInfoBaseModel> UpdateUserInfoAsync(UserInfoBaseModel user, bool ChangePassword = false, string NewPassword = null)
         {
-            if (user == null || user.Permissions == null || user.Settings == null) return null;
-            var userInfoBase = await GetUserInfoBase(user.Username);
-            if (userInfoBase == null) return null;
-            CreatePasswordHash(user.Password, out byte[] PasswordHash, out byte[] PasswordSalt);
+            if (user == null) return null;
             var dp = new DynamicParameters();
+            if (ChangePassword)
+            {
+                CreatePasswordHash(NewPassword, out byte[] PasswordHash, out byte[] PasswordSalt);
+                dp.Add("@passwordHash", PasswordHash);
+                dp.Add("@passwordSalt", PasswordSalt);
+            }
             FillUserBaseParameters(dp, user);
-            FillUserPermissionParameters(dp, user.Permissions);
-            FillUserSettingsParameters(dp, user.Settings);
-            dp.Add("@passwordHash", PasswordHash);
-            dp.Add("@passwordSalt", PasswordSalt);
-            dp.Add("@id", userInfoBase.Id);
-            userInfoBase.Username = user.Username;
-            userInfoBase.FirstName = user.FirstName;
-            userInfoBase.LastName = user.LastName;
-            var AffectedCount = await DataAccess.SaveDataAsync(UpdateUserQuery, dp);
-            if (AffectedCount > 0) return userInfoBase; else return null;
+            dp.Add("@id", user.Id);
+            var AffectedCount = await DataAccess.SaveDataAsync(ChangePassword ? UpdateUserInfoQueryWithPassword : UpdateUserInfoQueryWithoutPassword, dp);
+            if (AffectedCount > 0) return user; else return null;
         }
 
-        public async Task<bool> UpdateUserSettings(string Username, UserSettingsModel userSettings)
+        public async Task<UserPermissionsModel> UpdateUserPermissionsAsync(int Id, UserPermissionsModel userPermissions)
         {
-            if (userSettings == null) return false;
-            var userInfoBase = await GetUserInfoBase(Username);
-            if (userInfoBase == null) return false;
+            if (userPermissions == null) return null;
             var dp = new DynamicParameters();
-            dp.Add("@id", userInfoBase.Id);
+            dp.Add("@id", Id);
+            FillUserPermissionParameters(dp, userPermissions);
+            var AffectedCount = await DataAccess.SaveDataAsync(UpdateUserPermissionsQuery, dp);
+            if (AffectedCount > 0) return userPermissions; else return null;
+        }
+
+        public async Task<UserSettingsModel> UpdateUserSettingsAsync(int Id, UserSettingsModel userSettings)
+        {
+            if (userSettings == null) return null;
+            var dp = new DynamicParameters();
+            dp.Add("@id", Id);
             FillUserSettingsParameters(dp, userSettings);
             var AffectedCount = await DataAccess.SaveDataAsync(UpdateUserSettingsQuery, dp);
-            return AffectedCount > 0;
+            if (AffectedCount > 0) return userSettings; else return null;
         }
 
-        public async Task<int> DeleteUser(int Id)
+        public async Task<int> DeleteUserAsync(int Id)
         {
             DynamicParameters dp = new();
             dp.Add("@id", Id);
             return await DataAccess.SaveDataAsync(DeleteUserFromDB, dp);
         }
 
-        public async Task UpdateUserLastLoginDate(string username)
+        public async Task UpdateUserLastLoginDateAsync(string username)
         {
             if (string.IsNullOrEmpty(username)) return;
             DynamicParameters dp = new();
@@ -216,18 +220,17 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
-            using (var hmac = new HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            }
+            using var hmac = new HMACSHA512();
+            passwordSalt = hmac.Key;
+            passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
         }
 
-        private static void FillUserBaseParameters(DynamicParameters dp, User_DTO_CreateUpdate user)
+        private static void FillUserBaseParameters(DynamicParameters dp, UserInfoBaseModel user)
         {
             dp.Add("@username", user.Username);
             dp.Add("@firstName", user.FirstName);
             dp.Add("@lastName", user.LastName);
+            dp.Add("@isActive", user.IsActive);
         }
 
         private static void FillUserPermissionParameters(DynamicParameters dp, UserPermissionsModel Permissions)

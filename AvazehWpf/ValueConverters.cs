@@ -212,40 +212,137 @@ namespace AvazehWpf
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
     }
 
-    public class DateToColorConverter : IMultiValueConverter
+    //public class DateToColorConverter : IMultiValueConverter
+    //{
+    //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        if (values == null || values.Length != 3 || values[0] == null || values[2] == null) return DependencyProperty.UnsetValue;
+    //        if ((string)values[0] == (string)values[1]) return new SolidColorBrush(((string)values[2]).ToColor());
+    //        return DependencyProperty.UnsetValue;
+    //    }
+
+    //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
+    //}
+
+    public class DateToColorConverter : Freezable, IValueConverter
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        #region Overrides of Freezable    
+        protected override Freezable CreateInstanceCore()
         {
-            if (values == null || values.Length != 3 || values[0] == null || values[2] == null) return DependencyProperty.UnsetValue;
-            if ((string)values[0] == (string)values[1]) return new SolidColorBrush(((string)values[2]).ToColor());
+            return new DateToColorConverter();
+        }
+        #endregion
+
+        public string ItemColor
+        {
+            get { return (string)GetValue(ItemColorProperty); }
+            set { SetValue(ItemColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ItemColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ItemColorProperty =
+            DependencyProperty.Register("ItemColor", typeof(string), typeof(DateToColorConverter), new PropertyMetadata(null));
+
+        public string Date
+        {
+            get { return (string)GetValue(DateProperty); }
+            set { SetValue(DateProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Date.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DateProperty =
+            DependencyProperty.Register("Date", typeof(string), typeof(DateToColorConverter), new PropertyMetadata(null));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null) return DependencyProperty.UnsetValue;
+            if ((string)value == Date) return new SolidColorBrush(ItemColor.ToColor());
             return DependencyProperty.UnsetValue;
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 
-    public class AmountToColorConverter : IMultiValueConverter
+    //public class AmountToColorConverter : IMultiValueConverter
+    //{
+    //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        if (values == null || values.Length != 4 || values[0] == null) return DependencyProperty.UnsetValue;
+    //        switch ((double)values[0])
+    //        {
+    //            case 0:
+    //                if (values[1] is not string || string.IsNullOrEmpty((string)values[1])) return DependencyProperty.UnsetValue;
+    //                return new SolidColorBrush(((string)values[1]).ToColor());
+    //            case > 0:
+    //                if (values[2] is not string || string.IsNullOrEmpty((string)values[2])) return DependencyProperty.UnsetValue;
+    //                return new SolidColorBrush(((string)values[2]).ToColor());
+    //            case < 0:
+    //                if (values[3] is not string || string.IsNullOrEmpty((string)values[3])) return DependencyProperty.UnsetValue;
+    //                return new SolidColorBrush(((string)values[3]).ToColor());
+    //        }
+    //        return DependencyProperty.UnsetValue;
+    //    }
+
+    //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => throw new NotImplementedException();
+    //}
+
+    public class AmountToColorConverter : Freezable, IValueConverter
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        #region Overrides of Freezable    
+        protected override Freezable CreateInstanceCore()
         {
-            if (values == null || values.Length != 4 || values[0] == null) return DependencyProperty.UnsetValue;
-            switch ((double)values[0])
+            return new AmountToColorConverter();
+        }
+        #endregion
+
+        public string BalancedColor
+        {
+            get { return (string)GetValue(BalancedColorProperty); }
+            set { SetValue(BalancedColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ItemColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty BalancedColorProperty =
+            DependencyProperty.Register("BalancedColor", typeof(string), typeof(AmountToColorConverter), new PropertyMetadata(null));
+
+        public string PositiveColor
+        {
+            get { return (string)GetValue(PositiveColorProperty); }
+            set { SetValue(PositiveColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Date.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PositiveColorProperty =
+            DependencyProperty.Register("PositiveColor", typeof(string), typeof(AmountToColorConverter), new PropertyMetadata(null));
+
+        public string NegativeColor
+        {
+            get { return (string)GetValue(NegativeColorProperty); }
+            set { SetValue(NegativeColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Date.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty NegativeColorProperty =
+            DependencyProperty.Register("NegativeColor", typeof(string), typeof(AmountToColorConverter), new PropertyMetadata(null));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null) return DependencyProperty.UnsetValue;
+            switch ((double)value)
             {
                 case 0:
-                    if (values[1] is not string || string.IsNullOrEmpty((string)values[1])) return DependencyProperty.UnsetValue;
-                    return new SolidColorBrush(((string)values[1]).ToColor());
+                    return new SolidColorBrush(BalancedColor.ToColor());
                 case > 0:
-                    if (values[2] is not string || string.IsNullOrEmpty((string)values[2])) return DependencyProperty.UnsetValue;
-                    return new SolidColorBrush(((string)values[2]).ToColor());
+                    return new SolidColorBrush(PositiveColor.ToColor());
                 case < 0:
-                    if (values[3] is not string || string.IsNullOrEmpty((string)values[3])) return DependencyProperty.UnsetValue;
-                    return new SolidColorBrush(((string)values[3]).ToColor());
+                    return new SolidColorBrush(NegativeColor.ToColor());
             }
             return DependencyProperty.UnsetValue;
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => throw new NotImplementedException();
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
+
     public class SumOfValues : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -309,5 +406,16 @@ namespace AvazehWpf
         {
             throw new NotImplementedException();
         }
+    }
+
+    public class ProductStatusToPersianConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if(value == null) return DependencyProperty.UnsetValue; ;
+            if ((bool)value) return "فعال"; else return "غیرفعال";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }

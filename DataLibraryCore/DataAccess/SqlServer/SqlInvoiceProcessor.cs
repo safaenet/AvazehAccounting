@@ -398,7 +398,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         public async Task<List<ItemsForComboBox>> GetProductItemsAsync(string SearchText = null)
         {
-            var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [ProductName] LIKE '%{ SearchText }%'";
+            var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [ProductName] LIKE '%{ SearchText }%' AND IsActive = 1";
             var sql = string.Format(GetProductItemsQuery, where);
             var items = await DataAccess.LoadDataAsync<ItemsForComboBox, DynamicParameters>(sql, null);
             return items?.ToList();

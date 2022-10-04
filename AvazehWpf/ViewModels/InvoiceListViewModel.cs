@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,6 +26,7 @@ namespace AvazehWpf.ViewModels
         {
             ICM = manager;
             User = user;
+            CurrentPersianDate = new PersianCalendar().GetPersianDate();
             SC = sc;
             _SelectedInvoice = new();
             Singleton = singleton;
@@ -35,11 +37,13 @@ namespace AvazehWpf.ViewModels
             _ = SearchAsync().ConfigureAwait(true);
         }
 
-        SimpleContainer SC;
+        readonly SimpleContainer SC;
         private IInvoiceCollectionManager _ICM;
-        private readonly LoggedInUser_DTO User;
+        public LoggedInUser_DTO User { get => user; init => user = value; }
+        public string CurrentPersianDate { get; init; }
         private InvoiceListModel _SelectedInvoice;
         private string searchText;
+        private LoggedInUser_DTO user;
         private readonly SingletonClass Singleton;
 
         public InvoiceListModel SelectedInvoice
@@ -220,6 +224,31 @@ namespace AvazehWpf.ViewModels
         {
             if (e.Key == Key.Escape) (GetView() as Window).Close();
         }
+
+        //public static Dictionary<string, string> GetColorSettings()
+        //{
+        //    Dictionary<string, string> colors = new();
+        //    colors.Add(nameof(UserSettingsModel.ColorNewItem), User.UserSettings.ColorNewItem);
+        //    colors.Add(nameof(UserSettingsModel.ColorSoldItem), User.UserSettings.ColorSoldItem);
+        //    colors.Add(nameof(UserSettingsModel.ColorNonSufficientFundItem), User.UserSettings.ColorNonSufficientFundItem);
+        //    colors.Add(nameof(UserSettingsModel.ColorCashedItem), User.UserSettings.ColorCashedItem);
+        //    colors.Add(nameof(UserSettingsModel.ColorChequeNotification), User.UserSettings.ColorChequeNotification);
+        //    colors.Add(nameof(UserSettingsModel.ColorUpdatedItem), User.UserSettings.ColorUpdatedItem);
+        //    colors.Add(nameof(UserSettingsModel.ColorBalancedItem), User.UserSettings.ColorBalancedItem);
+        //    colors.Add(nameof(UserSettingsModel.ColorDeptorItem), User.UserSettings.ColorDeptorItem);
+        //    colors.Add(nameof(UserSettingsModel.ColorCreditorItem), User.UserSettings.ColorCreditorItem);
+        //    colors.Add(nameof(UserSettingsModel.ColorInactiveItem), User.UserSettings.ColorInactiveItem);
+        //    colors.Add(nameof(UserSettingsModel.ColorArchivedItem), User.UserSettings.ColorArchivedItem);
+        //    colors.Add(nameof(UserSettingsModel.ColorDeletedItem), User.UserSettings.ColorDeletedItem);
+        //    colors.Add(nameof(UserSettingsModel.ColorNegativeProfit), User.UserSettings.ColorNegativeProfit);
+        //    colors.Add(nameof(UserSettingsModel.ColorPositiveItem), User.UserSettings.ColorPositiveItem);
+        //    colors.Add(nameof(UserSettingsModel.ColorNegativeItem), User.UserSettings.ColorNegativeItem);
+        //    var now = DateTime.Now;
+        //    PersianCalendar pCal = new();
+        //    var date = string.Format("{0:0000}/{1:00}/{2:00}", pCal.GetYear(now), pCal.GetMonth(now), pCal.GetDayOfMonth(now));
+        //    colors.Add("CurrentPersianDate", date);
+        //    return colors;
+        //}
     }
 
     public static class InvoiceFinStatusAndLifeStatusItems //For ComboBoxes

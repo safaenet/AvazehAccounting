@@ -123,7 +123,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         public async Task<List<ItemsForComboBox>> GetProductItemsAsync(string SearchText = null, int TransactionId = 0)
         {
-            var where1 = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [ProductName] LIKE '%{ SearchText }%'";
+            var where1 = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [ProductName] LIKE '%{ SearchText }%' AND IsActive = 1";
             var where2 = string.IsNullOrEmpty(SearchText) ? "" : $" AND [Title] LIKE '%{ SearchText }%'";
             var where3 = TransactionId == 0 ? "" : $" AND [TransactionId] = { TransactionId }";
             var sql = string.Format(GetProductItemsQuery, where1, where2, where3);

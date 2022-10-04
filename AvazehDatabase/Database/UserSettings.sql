@@ -37,6 +37,8 @@
     [TransactionShortcut2Name] NVARCHAR(50) NULL DEFAULT 'میانبر دو', 
     [TransactionShortcut3Name] NVARCHAR(50) NULL DEFAULT 'میانبر سه', 
     [AskToAddNotExistingProduct] BIT NOT NULL DEFAULT 1, 
+        
+    CONSTRAINT [FK_UserInfo_ToUserSettings] FOREIGN KEY ([Id]) REFERENCES [UserInfo]([Id]) ON DELETE CASCADE
 )
 GO
 EXEC sp_addextendedproperty @name = N'MS_Description',

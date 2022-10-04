@@ -31,5 +31,8 @@ namespace SharedLibrary.DtoModels //DTO Models
 
         [Display(Name = "Description")]
         public string Descriptions { get; set; }
+
+        [Display(Name = "Is Active")]
+        public bool IsActive { get; set; } = true;
     }
 }

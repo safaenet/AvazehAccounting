@@ -66,7 +66,8 @@ namespace AvazehWpf.ViewModels
                 Username = Username,
                 Password = Password,
                 FirstName = FirstName,
-                LastName = LastName
+                LastName = LastName,
+                IsActive = true
             };
             newUser.Permissions = new();
             newUser.Settings = new();

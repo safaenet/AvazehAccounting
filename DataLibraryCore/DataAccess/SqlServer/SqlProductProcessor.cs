@@ -24,11 +24,11 @@ namespace DataLibraryCore.DataAccess.SqlServer
         private const string QueryOrderBy = "ProductName";
         private const OrderType QueryOrderType = OrderType.ASC;
         private readonly string CreateProductQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Products]) + 1;
-            INSERT INTO Products ([Id], ProductName, BuyPrice, SellPrice, Barcode, CountString, DateCreated, TimeCreated, Descriptions)
-            VALUES (@newId, @productName, @buyPrice, @sellPrice, @barcode, @countString, @dateCreated, @timeCreated, @descriptions);
+            INSERT INTO Products ([Id], ProductName, BuyPrice, SellPrice, Barcode, CountString, DateCreated, TimeCreated, Descriptions, IsActive)
+            VALUES (@newId, @productName, @buyPrice, @sellPrice, @barcode, @countString, @dateCreated, @timeCreated, @descriptions, @isActive);
             SELECT @id = @newId;";
         private readonly string UpdateProductQuery = @"UPDATE Products SET ProductName = @productName, BuyPrice = @buyPrice, SellPrice = @sellPrice, Barcode = @barcode,
-            CountString = @countString, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, Descriptions = @descriptions
+            CountString = @countString, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, Descriptions = @descriptions, IsActive = @isActive
             WHERE Id = @id";
         private readonly string DeleteProductQuery = @"DELETE FROM Products WHERE Id = @id";
 
@@ -70,6 +70,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@dateCreated", item.DateCreated);
             dp.Add("@timeCreated", item.TimeCreated);
             dp.Add("@descriptions", item.Descriptions);
+            dp.Add("@isActive", item.IsActive);
             var AffectedCount = await DataAccess.SaveDataAsync(CreateProductQuery, dp);
             var OutputId = dp.Get<int>("@id");
             if (AffectedCount > 0) item.Id = OutputId;

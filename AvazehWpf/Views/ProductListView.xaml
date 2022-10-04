@@ -16,6 +16,7 @@
         <BooleanToVisibilityConverter x:Key="b2v"/>
         <local:NameToBrushConverterForBackground x:Key="NameToBrushConverterForBackground"/>
         <local:NameToBrushConverterForForeground x:Key="NameToBrushConverterForForeground"/>
+        <local:ProductStatusToPersianConverter x:Key="ProductStatusToPersianConverter"/>
         <!--body content datagrid cell vertical centering-->
         <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
             <Setter Property="Template">
@@ -234,6 +235,7 @@
                     <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="70"/>
                     <DataGridTextColumn Header="تاریخ بروزرسانی" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="90"/>
                     <DataGridTextColumn Header="توضیحات" Binding="{Binding Path=Descriptions, Mode=OneWay}" Width="*"/>
+                    <DataGridTextColumn Header="وضعیت" Binding="{Binding Path=IsActive, Mode=OneWay, Converter={StaticResource ProductStatusToPersianConverter}}" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

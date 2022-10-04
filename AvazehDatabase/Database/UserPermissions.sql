@@ -38,4 +38,6 @@
     [CanUseBarcodeReader] BIT NOT NULL DEFAULT 1, 
     [CanManageItself] BIT NOT NULL DEFAULT 1, 
     [CanManageOthers] BIT NOT NULL DEFAULT 1, 
+    
+    CONSTRAINT [FK_UserInfo_ToUserPermissions] FOREIGN KEY ([Id]) REFERENCES [UserInfo]([Id]) ON DELETE CASCADE,
 )
