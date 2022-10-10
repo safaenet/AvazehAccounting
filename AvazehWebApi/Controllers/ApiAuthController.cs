@@ -64,13 +64,6 @@ namespace AvazehWebAPI.Controllers
             var Settings = await UserProcessor.GetUserSettingsAsync(userInfoBase.Id);
             if (Settings == null) return BadRequest("تنظیمات کاربر یافت نشد");
 
-            //UserInfoBase userInfoBase = new();
-            //userInfoBase.FirstName = "Safa";
-            //userInfoBase.LastName = "Dana";
-            //userInfoBase.DateCreated = "1404/04/04";
-            //UserPermissions Permissions = new();
-            //UserSettings Settings = new();
-
             LoggedInUser_DTO loggedUser = new();
             loggedUser.Id = userInfoBase.Id;
             loggedUser.Token = GenerateToken(userInfoBase, Permissions);

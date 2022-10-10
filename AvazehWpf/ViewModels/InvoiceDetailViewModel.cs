@@ -17,6 +17,8 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Diagnostics;
 using SharedLibrary.SecurityAndSettingsModels;
+using System.Globalization;
+using SharedLibrary.Enums;
 
 namespace AvazehWpf.ViewModels
 {
@@ -27,15 +29,25 @@ namespace AvazehWpf.ViewModels
             ICM = iManager;
             IDM = dManager;
             User = user;
+            CurrentPersianDate = new PersianCalendar().GetPersianDate();
             SC = sc;
             CallBackFunc = callBack;
             Singleton = singleton;
+            LoadSettings();
             _ = LoadInvoiceAsync(InvoiceId).ConfigureAwait(true);
+        }
+
+        private void LoadSettings()
+        {
+            CanEditInvoice = ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanEditInvoice));
+            CanDeleteInvoice = ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanDeleteInvoice));
+            CanDeleteInvoiceItem = ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanDeleteInvoiceItem));
+            CanPrintInvoice = ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanPrintInvoice));
+            ShowNetProfits = ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewNetProfits));
         }
 
         private readonly IInvoiceCollectionManager ICM;
         private readonly IInvoiceDetailManager IDM;
-        private LoggedInUser_DTO user;
         readonly SimpleContainer SC;
         private readonly SingletonClass Singleton;
         private InvoiceModel _Invoice;
@@ -46,7 +58,16 @@ namespace AvazehWpf.ViewModels
         private InvoiceItemModel _workItem = new();
         private bool CanUpdateRowFromDB = true; //False when user DoubleClicks on a row.
         private bool EdittingItem = false;
-        public LoggedInUser_DTO User { get => user; init => user = value; }
+        public LoggedInUser_DTO User { get; init; }
+        public int SelectedDiscountType
+        {
+            get => selectedDiscountType; set
+            {
+                selectedDiscountType = value;
+                NotifyOfPropertyChange(() => SelectedDiscountType);
+            }
+        }
+        public string CurrentPersianDate { get; init; }
         public bool CanSaveInvoiceChanges { get; set; } = true;
         public InvoiceItemModel SelectedItem { get; set; }
         public InvoiceItemModel WorkItem { get => _workItem; set { _workItem = value; NotifyOfPropertyChange(() => WorkItem); } }
@@ -55,7 +76,17 @@ namespace AvazehWpf.ViewModels
         public ObservableCollection<ItemsForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
         public ObservableCollection<ProductUnitModel> ProductUnits { get => productUnits; set { productUnits = value; NotifyOfPropertyChange(() => ProductUnits); } }
         public ObservableCollection<RecentSellPriceModel> RecentSellPrices { get => recentSellPrices; set { recentSellPrices = value; NotifyOfPropertyChange(() => RecentSellPrices); } }
-        public bool ShowNetProfits => ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewNetProfits));
+        private bool showNetProfits;
+        public bool ShowNetProfits
+        {
+            get => showNetProfits;
+            set
+            {
+                showNetProfits = value;
+                NotifyOfPropertyChange(() => ShowNetProfits);
+            }
+        }
+
         private ItemsForComboBox _selectedProductItem;
         private bool isSellPriceDropDownOpen;
         private string productInput;
@@ -64,11 +95,40 @@ namespace AvazehWpf.ViewModels
         private bool isProductInputDropDownOpen;
         private string windowTitle;
         private string phoneNumberText;
+        private int selectedDiscountType;
 
         public string PhoneNumberText
         {
             get { return phoneNumberText; }
             set { phoneNumberText = value; }
+        }
+
+        private bool canEditInvoice;
+        public bool CanEditInvoice
+        {
+            get { return canEditInvoice; }
+            set { canEditInvoice = value; NotifyOfPropertyChange(() => CanEditInvoice); }
+        }
+
+        private bool canDeleteInvoice;
+        public bool CanDeleteInvoice
+        {
+            get { return canDeleteInvoice; }
+            set { canDeleteInvoice = value; NotifyOfPropertyChange(() => CanDeleteInvoice); }
+        }
+
+        private bool canDeleteInvoiceItem;
+        public bool CanDeleteInvoiceItem
+        {
+            get { return canDeleteInvoiceItem; }
+            set { canDeleteInvoiceItem = value; NotifyOfPropertyChange(() => CanDeleteInvoiceItem); }
+        }
+
+        private bool canPrintInvoice;
+        public bool CanPrintInvoice
+        {
+            get { return canPrintInvoice; }
+            set { canPrintInvoice = value; NotifyOfPropertyChange(() => CanPrintInvoice); }
         }
 
         private async Task LoadInvoiceAsync(int? InvoiceId)
@@ -100,16 +160,6 @@ namespace AvazehWpf.ViewModels
             set { isSellPriceDropDownOpen = value; NotifyOfPropertyChange(() => IsSellPriceDropDownOpen); }
         }
 
-        private int sellPriceBorderThickness = 1;
-
-        public int SellPriceBorderThickness
-        {
-            get { return sellPriceBorderThickness; }
-            set { sellPriceBorderThickness = value; NotifyOfPropertyChange(() => SellPriceBorderThickness); }
-        }
-
-
-
         public ProductUnitModel SelectedProductUnit
         {
             get => WorkItem.Unit;
@@ -132,6 +182,7 @@ namespace AvazehWpf.ViewModels
         {
             if (InvoiceId is null || (int)InvoiceId == 0) return;
             Invoice = await ICM.GetItemById((int)InvoiceId);
+            SelectedDiscountType = (int)Invoice.DiscountType;
             WindowTitle = Invoice.Customer.FullName + " - فاکتور";
             await ReloadCustomerPreviousBalanceAsync();
         }
@@ -151,7 +202,7 @@ namespace AvazehWpf.ViewModels
 
         public void EditItem() //DataGrid doubleClick event
         {
-            if (Invoice == null || SelectedItem == null) return;
+            if (!CanEditInvoice || Invoice == null || SelectedItem == null) return;
             CanUpdateRowFromDB = false;
             EdittingItem = true;
             SelectedItem.Clone(WorkItem);
@@ -165,8 +216,8 @@ namespace AvazehWpf.ViewModels
 
         public async Task AddOrUpdateItemAsync()
         {
-            var enableBarcodeReader = ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanUseBarcodeReader));
-            if (Invoice == null) return;
+            if (!CanEditInvoice || Invoice == null) return;
+            var enableBarcodeReader = ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanUseBarcodeReader));            
             var pcm = SC.GetInstance<ICollectionManager<ProductModel>>();
             if (SelectedProductItem == null && ProductInput != null && ProductInput.Length > 0 && EdittingItem == false) //Search by Entered text
             {
@@ -287,7 +338,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteItemAsync()
         {
-            if (Invoice == null || Invoice.Items == null || !Invoice.Items.Any() || SelectedItem == null) return;
+            if (!CanDeleteInvoiceItem || Invoice == null || Invoice.Items == null || !Invoice.Items.Any() || SelectedItem == null) return;
             var result = MessageBox.Show("Are you sure you want to delete this row ?", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
             if (await IDM.DeleteItemAsync(SelectedItem.Id))
@@ -318,7 +369,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteInvoiceAndCloseAsync()
         {
-            if (Invoice == null) return;
+            if (!CanDeleteInvoice || Invoice == null) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete Invoice for {Invoice.Customer.FullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
             if (await ICM.DeleteItemAsync(Invoice.Id) == false) MessageBox.Show($"Invoice with ID: {Invoice.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -345,12 +396,15 @@ namespace AvazehWpf.ViewModels
 
         public async Task ViewPaymentsAsync()
         {
+            if (!CanEditInvoice) return;
             WindowManager wm = new();
             await wm.ShowWindowAsync(new InvoicePaymentsViewModel(ICM, IDM, User, Invoice, RefreshAndReloadCustomerTotalBalance, SC, true));
         }
 
         public async Task SaveInvoiceChangesAsync()
         {
+            if(!CanEditInvoice) return;
+            Invoice.DiscountType = (DiscountTypes)SelectedDiscountType;
             var result = await ICM.UpdateItemAsync(Invoice);
             if (result == null)
             {
@@ -366,6 +420,7 @@ namespace AvazehWpf.ViewModels
 
         public void PrintInvoiceMenu(object sender, object window)
         {
+            if (!CanPrintInvoice) return;
             ContextMenu cm = (window as Window).FindResource("PrintInvoiceCM") as ContextMenu;
             cm.PlacementTarget = sender as Button;
             cm.IsOpen = true;
@@ -373,7 +428,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task PrintInvoiceAsync(int t)
         {
-            if (Invoice == null) return;
+            if (!CanPrintInvoice || Invoice == null) return;
             await ReloadInvoiceAsync(Invoice.Id);
             PrintInvoiceModel pim = new();
             pim.PrintSettings = User.PrintSettings;
@@ -409,7 +464,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditOwnerAsync()
         {
-            if (Invoice is null) return;
+            if (!CanEditInvoice || Invoice is null) return;
             WindowManager wm = new();
             var ccm = SC.GetInstance<ICollectionManager<CustomerModel>>();
             await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, Invoice.Id, ICM, ccm, RefreshAndReloadCustomerTotalBalanceAsync, User, SC));
@@ -429,13 +484,12 @@ namespace AvazehWpf.ViewModels
         public void SellPrice_GotFocus()
         {
             if (RecentSellPrices != null && RecentSellPrices.Count > 1)
-                SellPriceBorderThickness = 3;
-            else SellPriceBorderThickness = 1;
+                IsSellPriceDropDownOpen = true;
         }
 
         public void SellPrice_LostFocus()
         {
-            SellPriceBorderThickness = 1;
+
         }
 
         public void ProductNames_PreviewTextInput()
@@ -502,9 +556,24 @@ namespace AvazehWpf.ViewModels
                 ExtensionsAndStatics.ChangeLanguageToPersian();
         }
     }
+    public static class InvoiceDiscountTypeItems //For ComboBoxes
+    {
+        public static Dictionary<int, string> GetDiscountTypeItems()
+        {
+            Dictionary<int, string> choices = new();
+            for (int i = 0; i < Enum.GetNames(typeof(DiscountTypes)).Length; i++)
+            {
+                if (Enum.GetName(typeof(DiscountTypes), i) == DiscountTypes.Amount.ToString())
+                    choices.Add((int)DiscountTypes.Amount, "مبلغ");
+                else if (Enum.GetName(typeof(DiscountTypes), i) == DiscountTypes.Percent.ToString())
+                    choices.Add((int)DiscountTypes.Percent, "درصد");
+            }
+            return choices;
+        }
+    }
 
-    #region DataGrid Row Number
-    public class DataGridBehavior
+        #region DataGrid Row Number
+        public class DataGridBehavior
     {
         #region DisplayRowNumber
 

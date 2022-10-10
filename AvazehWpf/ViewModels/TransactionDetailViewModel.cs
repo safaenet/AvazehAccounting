@@ -15,6 +15,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Diagnostics;
 using SharedLibrary.SecurityAndSettingsModels;
+using System.Globalization;
 
 namespace AvazehWpf.ViewModels
 {
@@ -25,6 +26,8 @@ namespace AvazehWpf.ViewModels
             TCM = iManager;
             TDM = dManager;
             User = user;
+            LoadSettings();
+            CurrentPersianDate = new PersianCalendar().GetPersianDate();
             CallBackFunc = callBack;
             Singleton = singleton;
             if (TransactionId is not null)
@@ -34,9 +37,19 @@ namespace AvazehWpf.ViewModels
             }
             else _ = GetComboboxItemsAsync().ConfigureAwait(true);
         }
+
+        private void LoadSettings()
+        {
+            CanEditTransaction = TCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanEditTransaction));
+            CanDeleteTransaction = TCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanDeleteTransaction));
+            CanDeleteTransactionItem = TCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanDeleteTransactionItem));
+            CanPrintTransaction = TCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanPrintTransaction));
+        }
+
         private readonly ITransactionCollectionManager TCM;
         private readonly ITransactionDetailManager TDM;
-        private readonly LoggedInUser_DTO User;
+        public LoggedInUser_DTO User { get; init; }
+        public string CurrentPersianDate { get; init; }
         private SingletonClass Singleton;
         private TransactionModel _Transaction;
         private readonly Func<Task> CallBackFunc;
@@ -55,6 +68,34 @@ namespace AvazehWpf.ViewModels
         {
             get { return windowTitle; }
             set { windowTitle = value; NotifyOfPropertyChange(() => WindowTitle); }
+        }
+
+        private bool canEditTransaction;
+        public bool CanEditTransaction
+        {
+            get { return canEditTransaction; }
+            set { canEditTransaction = value; NotifyOfPropertyChange(() => CanEditTransaction); }
+        }
+
+        private bool canDeleteTransaction;
+        public bool CanDeleteTransaction
+        {
+            get { return canDeleteTransaction; }
+            set { canDeleteTransaction = value; NotifyOfPropertyChange(() => CanDeleteTransaction); }
+        }
+
+        private bool canDeleteTransactionItem;
+        public bool CanDeleteTransactionItem
+        {
+            get { return canDeleteTransactionItem; }
+            set { canDeleteTransactionItem = value; NotifyOfPropertyChange(() => CanDeleteTransactionItem); }
+        }
+
+        private bool canPrintTransaction;
+        public bool CanPrintTransaction
+        {
+            get { return canPrintTransaction; }
+            set { canPrintTransaction = value; NotifyOfPropertyChange(() => CanPrintTransaction); }
         }
 
         public bool CanSaveTransactionChanges { get => canSaveTransactionChanges; set { canSaveTransactionChanges = value; NotifyOfPropertyChange(() => CanSaveTransactionChanges); } }
@@ -88,7 +129,7 @@ namespace AvazehWpf.ViewModels
 
         public void EditItem() //DataGrid doubleClick event
         {
-            if (Transaction == null || SelectedItem == null) return;
+            if (!CanEditTransaction || Transaction == null || SelectedItem == null) return;
             EdittingItem = true;
             SelectedItem.Clone(WorkItem);
             SelectedItem.Clone(selectedItem_Backup);
@@ -97,7 +138,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task AddOrUpdateItemAsync()
         {
-            if (Transaction == null || WorkItem == null) return;
+            if (!CanEditTransaction || Transaction == null || WorkItem == null) return;
             WorkItem.TransactionId = Transaction.Id;
             var validate = TDM.ValidateItem(WorkItem);
             if (validate.IsValid)
@@ -184,7 +225,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteItemAsync()
         {
-            if (Transaction == null || Transaction.Items == null || Transaction.Items.Count == 0 || SelectedItem == null || SelectedItem.Id == 0) return;
+            if (!CanDeleteTransactionItem || Transaction == null || Transaction.Items == null || Transaction.Items.Count == 0 || SelectedItem == null || SelectedItem.Id == 0) return;
             var result = MessageBox.Show("Are you sure you want to delete this row ?", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
             if (await TDM.DeleteItemAsync(SelectedItem.Id))
@@ -208,7 +249,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteTransactionAndCloseAsync()
         {
-            if (Transaction == null) return;
+            if (!CanDeleteTransaction || Transaction == null) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete Transaction file {Transaction.FileName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
             if (await TCM.DeleteItemAsync(Transaction.Id) == false) MessageBox.Show($"Transaction with ID: {Transaction.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -225,6 +266,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task SaveTransactionChangesAsync()
         {
+            if (!CanEditTransaction) return;
             var result = await TCM.UpdateItemAsync(Transaction);
             if (result == null)
             {
@@ -239,6 +281,7 @@ namespace AvazehWpf.ViewModels
 
         public void PrintTransactionMenu(object sender, object window)
         {
+            if (!CanPrintTransaction) return;
             ContextMenu cm = (window as Window).FindResource("PrintTransactionCM") as ContextMenu;
             cm.PlacementTarget = sender as Button;
             cm.IsOpen = true;
@@ -246,7 +289,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task PrintTransactionAsync(int t)
         {
-            if (Transaction == null) return;
+            if (!CanPrintTransaction || Transaction == null) return;
             await ReloadTransactionAsync(Transaction.Id);
             PrintTransactionModel pim = new();
             pim.PrintSettings = User.PrintSettings;

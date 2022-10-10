@@ -162,19 +162,19 @@
                     <TextBlock Text="انصراف" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="DeleteAndCloseAsync" Grid.Column="1" Margin="0,5,5,0">
+            <Button x:Name="DeleteAndCloseAsync" IsEnabled="{Binding CanDeleteProduct}" Grid.Column="1" Margin="0,5,5,0">
                 <StackPanel Width="110" Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="DeleteOutline" Margin="5,0,5,0"/>
                     <TextBlock Text="حذف و بستن" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="SaveAndNewAsync" Grid.Column="2" Margin="0,5,5,0">
+            <Button x:Name="SaveAndNewAsync" IsEnabled="{Binding CanEditProduct}" Grid.Column="2" Margin="0,5,5,0">
                 <StackPanel Width="110" Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="ContentDuplicate" Margin="5,0,5,0"/>
                     <TextBlock Text="ذخیره و جدید" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="SaveAndCloseAsync" Grid.Column="3" Margin="0,5,5,0">
+            <Button x:Name="SaveAndCloseAsync" IsEnabled="{Binding CanEditProduct}" Grid.Column="3" Margin="0,5,5,0">
                 <StackPanel Width="110" Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="ContentSaveOutline" Margin="5,0,5,0"/>
                     <TextBlock Text="ذخیره و بستن" VerticalAlignment="Center"/>

@@ -14,8 +14,8 @@
         cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="b2v"/>
-        <local:NameToBrushConverterForBackground x:Key="NameToBrushConverterForBackground"/>
-        <local:NameToBrushConverterForForeground x:Key="NameToBrushConverterForForeground"/>
+        <local:DateToColorConverter x:Key="DateToColorConverterForNewItem" ItemColor="{Binding User.UserSettings.ColorNewItem}" Date="{Binding CurrentPersianDate}"/>
+        <local:DateToColorConverter x:Key="DateToColorConverterForUpdatedItem" ItemColor="{Binding User.UserSettings.ColorUpdatedItem}" Date="{Binding CurrentPersianDate}"/>
         <local:ProductStatusToPersianConverter x:Key="ProductStatusToPersianConverter"/>
         <!--body content datagrid cell vertical centering-->
         <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
@@ -123,7 +123,7 @@
                     </DockPanel>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="3,3,0,5">
-                        <CheckBox x:Name="ShowBuyPrice" FlowDirection="RightToLeft" Margin="5,0,0,0">
+                        <CheckBox x:Name="ShowBuyPrice" IsEnabled="{Binding CanViewNetProfits}" FlowDirection="RightToLeft" Margin="5,0,0,0">
                             <TextBlock Text="قیمت خرید" Margin="0,0,0,0"/>
                         </CheckBox>
                         <CheckBox x:Name="ShowSellPrice" FlowDirection="RightToLeft" IsChecked="True" Margin="35,0,0,0">
@@ -134,19 +134,19 @@
             </ScrollViewer>
             <Grid Grid.Column="0" Grid.Row="1">
                 <StackPanel Orientation="Vertical">
-                    <Button cal:Message.Attach="[Event Click] = [Action AddNewProductAsync()]" Height="25" Margin="0,0,0,3" >
+                    <Button cal:Message.Attach="[Event Click] = [Action AddNewProductAsync()]" IsEnabled="{Binding CanAddNewProduct}" Height="25" Margin="0,0,0,3" >
                         <StackPanel Width="80" Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="BoxAddOutline" Margin="0,0,3,0"/>
                             <TextBlock Text="کالای جدید" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action EditProductAsync()]" Height="25" Margin="0,0,0,3" >
+                    <Button cal:Message.Attach="[Event Click] = [Action EditProductAsync()]" IsEnabled="{Binding CanViewProductDetails}" Height="25" Margin="0,0,0,3" >
                         <StackPanel Width="70" Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="BoxEditOutline" Margin="0,0,3,0"/>
                             <TextBlock Text="ویرایش" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action DeleteProductAsync()]" Height="25" >
+                    <Button cal:Message.Attach="[Event Click] = [Action DeleteProductAsync()]" IsEnabled="{Binding CanDeleteProduct}" Height="25" >
                         <StackPanel Width="60" Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="DeleteOutline" Margin="0,0,3,0"/>
                             <TextBlock Text="حذف" VerticalAlignment="Center"/>
@@ -216,8 +216,8 @@
                     <DataGridTextColumn Header="شماره" Binding="{Binding Path=Id, Mode=OneWay}" Width="50">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Background" Value="{Binding Path=DateCreated, Converter={StaticResource NameToBrushConverterForBackground}}"/>
-                                <Setter Property="Foreground" Value="{Binding Path=DateCreated, Converter={StaticResource NameToBrushConverterForForeground}}"/>
+                                <Setter Property="Background" Value="{Binding Path=DateCreated, Converter={StaticResource DateToColorConverterForNewItem}}"/>
+                                <Setter Property="Foreground" Value="Black"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
@@ -233,7 +233,14 @@
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="70"/>
-                    <DataGridTextColumn Header="تاریخ بروزرسانی" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="90"/>
+                    <DataGridTextColumn Header="تاریخ بروزرسانی" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="90">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background" Value="{Binding Path=DateUpdated, Converter={StaticResource DateToColorConverterForUpdatedItem}}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="توضیحات" Binding="{Binding Path=Descriptions, Mode=OneWay}" Width="*"/>
                     <DataGridTextColumn Header="وضعیت" Binding="{Binding Path=IsActive, Mode=OneWay, Converter={StaticResource ProductStatusToPersianConverter}}" Width="*"/>
                 </DataGrid.Columns>

@@ -7,8 +7,6 @@ using AvazehApiClient.DataAccess;
 using System.Net.Http;
 using SharedLibrary.SecurityAndSettingsModels;
 using System.Security.Claims;
-using System;
-using AvazehWpf.Views;
 
 namespace AvazehWpf.ViewModels
 {
@@ -20,13 +18,33 @@ namespace AvazehWpf.ViewModels
             SC = sc;
             _ = LoadKnowledgeOfTheDayAsync().ConfigureAwait(true);
             ApiProcessor = SC.GetInstance<IApiProcessor>();
-            if (User != null) UserFullName = $"{ApiProcessor.GetRoleValue(ClaimTypes.GivenName)} {ApiProcessor.GetRoleValue(ClaimTypes.Surname)}";
+            LoadSettings();
         }
 
-        private readonly LoggedInUser_DTO User;
+        private void LoadSettings()
+        {
+            if (User != null) UserFullName = $"{ApiProcessor.GetRoleValue(ClaimTypes.GivenName)} {ApiProcessor.GetRoleValue(ClaimTypes.Surname)}";
+            CanAddNewInvoiceAsync = ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanAddNewInvoice));
+            CanAddNewTransactionAsync = ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanAddNewTransaction));
+            CanViewInvoiceListAsync = ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewInvoicesList));
+            CanViewTransactionListAsync = ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewTransactionsList));
+            CanViewChequesAsync = ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewChequesList));
+            CanViewCustomersAsync = ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewCustomersList));
+            CanViewProductsAsync = ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewProductsList));
+            CanViewSettingsAsync = ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanManageItself)) || ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanManageOthers));
+        }
+
+        public LoggedInUser_DTO User
+        {
+            get => user;
+            set
+            {
+                user = value; NotifyOfPropertyChange(() => User);
+            }
+        }
         private readonly SimpleContainer SC;
         private bool settingsLoaded;
-        private IApiProcessor ApiProcessor;
+        private readonly IApiProcessor ApiProcessor;
 
         public bool SettingsLoaded
         {
@@ -52,12 +70,70 @@ namespace AvazehWpf.ViewModels
 
         public string UserFullName
         {
-            get => userFullName; 
+            get => userFullName;
             set
             {
                 userFullName = value;
                 NotifyOfPropertyChange(() => UserFullName);
             }
+        }
+
+        private bool canAddNewInvoiceAsync;
+        public bool CanAddNewInvoiceAsync
+        {
+            get { return canAddNewInvoiceAsync; }
+            set { canAddNewInvoiceAsync = value; NotifyOfPropertyChange(() => CanAddNewInvoiceAsync); }
+        }
+
+        private bool canAddNewTransactionAsync;
+        public bool CanAddNewTransactionAsync
+        {
+            get { return canAddNewTransactionAsync; }
+            set { canAddNewTransactionAsync = value; NotifyOfPropertyChange(() => CanAddNewTransactionAsync); }
+        }
+
+        private bool canViewInvoiceListAsync;
+        public bool CanViewInvoiceListAsync
+        {
+            get { return canViewInvoiceListAsync; }
+            set { canViewInvoiceListAsync = value; NotifyOfPropertyChange(() => CanViewInvoiceListAsync); }
+        }
+
+        private bool canViewTransactionListAsync;
+        public bool CanViewTransactionListAsync
+        {
+            get { return canViewTransactionListAsync; }
+            set { canViewTransactionListAsync = value; NotifyOfPropertyChange(() => CanViewTransactionListAsync); }
+        }
+
+        private bool canViewChequesAsync;
+        public bool CanViewChequesAsync
+        {
+            get { return canViewChequesAsync; }
+            set { canViewChequesAsync = value; NotifyOfPropertyChange(() => CanViewChequesAsync); }
+        }
+
+        private bool canViewCustomersAsync;
+        public bool CanViewCustomersAsync
+        {
+            get { return canViewCustomersAsync; }
+            set { canViewCustomersAsync = value; NotifyOfPropertyChange(() => CanViewCustomersAsync); }
+        }
+
+        private bool canViewProductsAsync;
+        public bool CanViewProductsAsync
+        {
+            get { return canViewProductsAsync; }
+            set { canViewProductsAsync = value; NotifyOfPropertyChange(() => CanViewProductsAsync); }
+        }
+
+        private bool canViewSettingsAsync;
+        private LoggedInUser_DTO user;
+
+        public bool CanViewSettingsAsync
+        {
+            get { return canViewSettingsAsync; }
+            set { canViewSettingsAsync = value; NotifyOfPropertyChange(() => CanViewSettingsAsync); }
         }
 
         private async Task LoadKnowledgeOfTheDayAsync()
@@ -132,7 +208,7 @@ namespace AvazehWpf.ViewModels
         {
             var ccm = SC.GetInstance<ICollectionManager<CustomerModel>>();
             WindowManager wm = new();
-            var viewModel = new CustomerListViewModel(ccm);
+            var viewModel = new CustomerListViewModel(ccm, User);
             await wm.ShowWindowAsync(viewModel);
         }
 
@@ -140,7 +216,7 @@ namespace AvazehWpf.ViewModels
         {
             var pcm = SC.GetInstance<ICollectionManager<ProductModel>>();
             WindowManager wm = new();
-            var viewModel = new ProductListViewModel(pcm);
+            var viewModel = new ProductListViewModel(pcm, User);
             await wm.ShowWindowAsync(viewModel);
         }
 

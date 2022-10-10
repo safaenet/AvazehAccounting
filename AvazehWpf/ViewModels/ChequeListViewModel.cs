@@ -7,6 +7,7 @@ using SharedLibrary.SecurityAndSettingsModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -19,21 +20,46 @@ namespace AvazehWpf.ViewModels
         {
             CCM = manager;
             User = user;
+            CurrentPersianDate = new PersianCalendar().GetPersianDate();
             Singleton = singelton;
             _SelectedCheque = new();
             _ = LoadSettingsAsync().ConfigureAwait(true);
         }
 
         private IChequeCollectionManagerAsync _CCM;
-        private readonly LoggedInUser_DTO User;
+        private LoggedInUser_DTO user;
         private ChequeModel _SelectedCheque;
         private SingletonClass Singleton;
+        public string CurrentPersianDate { get; init; }
+        public LoggedInUser_DTO User { get => user; init => user = value; }
 
         public ChequeModel SelectedCheque
         {
             get { return _SelectedCheque; }
             set { _SelectedCheque = value; NotifyOfPropertyChange(() => SelectedCheque); }
         }
+
+        private bool canEditChequeAsync;
+        public bool CanEditChequeAsync
+        {
+            get { return canEditChequeAsync; }
+            set { canEditChequeAsync = value; NotifyOfPropertyChange(() => CanEditChequeAsync); }
+        }
+
+        private bool canAddNewChequeAsync;
+        public bool CanAddNewChequeAsync
+        {
+            get { return canAddNewChequeAsync; }
+            set { canAddNewChequeAsync = value; NotifyOfPropertyChange(() => CanAddNewChequeAsync); }
+        }
+
+        private bool canDeleteChequeAsync;
+        public bool CanDeleteChequeAsync
+        {
+            get { return canDeleteChequeAsync; }
+            set { canDeleteChequeAsync = value; NotifyOfPropertyChange(() => CanDeleteChequeAsync); }
+        }
+
 
         public IChequeCollectionManagerAsync CCM
         {
@@ -62,6 +88,10 @@ namespace AvazehWpf.ViewModels
 
         private async Task LoadSettingsAsync()
         {
+            CanAddNewChequeAsync = CCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanAddNewCheque));
+            CanEditChequeAsync = CCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewChequeDetails));
+            CanDeleteChequeAsync = CCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanDeleteCheque));
+
             CCM.PageSize = User.UserSettings.ChequeListPageSize;
             CCM.QueryOrderType = User.UserSettings.ChequeListQueryOrderType;
             await SearchAsync();
@@ -110,7 +140,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditChequeAsync()
         {
-            if (Cheques == null || Cheques.Count == 0 || SelectedCheque == null || SelectedCheque.Id == 0) return;
+            if (!CanEditChequeAsync || Cheques == null || Cheques.Count == 0 || SelectedCheque == null || SelectedCheque.Id == 0) return;
             WindowManager wm = new();
             await wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, SelectedCheque, Singleton, RefreshPageAsync));
         }

@@ -122,11 +122,11 @@
                     <StackPanel Width="165" Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="PhoneOutline" Margin="0,0,3,0"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره تلفن ها" Margin="0,0,0,2"/>
-                        <Button x:Name="AddNewPhoneNumber" Margin="5,0,0,0">
+                        <Button x:Name="AddNewPhoneNumber" IsEnabled="{Binding CanEditCustomer}" Margin="5,0,0,0">
                             <materialDesign:PackIcon Kind="Plus"/>
                         </Button>
                         <Button x:Name="DeletePhoneNumber" Margin="5,0,0,0">
-                            <materialDesign:PackIcon Kind="Minus"/>
+                            <materialDesign:PackIcon IsEnabled="{Binding CanEditCustomer}" Kind="Minus"/>
                         </Button>
                     </StackPanel>
                     <ItemsControl ItemsSource="{Binding Customer.PhoneNumbers}">
@@ -162,19 +162,19 @@
                     <TextBlock Text="انصراف" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="DeleteAndCloseAsync" Grid.Column="1" Margin="0,5,5,0">
+            <Button x:Name="DeleteAndCloseAsync" IsEnabled="{Binding CanDeleteCustomer}" Grid.Column="1" Margin="0,5,5,0">
                 <StackPanel Width="110" Orientation="Horizontal" Margin="10,0,0,0">
                     <materialDesign:PackIcon Kind="DeleteOutline" Margin="5,0,5,0"/>
                     <TextBlock Text="حذف و بستن" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="SaveAndNewAsync" Grid.Column="2" Margin="0,5,5,0">
+            <Button x:Name="SaveAndNewAsync" IsEnabled="{Binding CanEditCustomer}" Grid.Column="2" Margin="0,5,5,0">
                 <StackPanel Width="100" Orientation="Horizontal" Margin="10,0,0,0">
                     <materialDesign:PackIcon Kind="ContentDuplicate" Margin="5,0,5,0"/>
                     <TextBlock Text="ذخیره و جدید" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="SaveAndCloseAsync" Grid.Column="3" Margin="0,5,0,0">
+            <Button x:Name="SaveAndCloseAsync" IsEnabled="{Binding CanEditCustomer}" Grid.Column="3" Margin="0,5,0,0">
                 <StackPanel Width="100" Orientation="Horizontal" Margin="10,0,0,0">
                     <materialDesign:PackIcon Kind="ContentSaveOutline" Margin="5,0,5,0"/>
                     <TextBlock Text="ذخیره و بستن" VerticalAlignment="Center"/>

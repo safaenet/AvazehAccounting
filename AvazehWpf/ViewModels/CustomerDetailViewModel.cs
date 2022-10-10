@@ -2,6 +2,7 @@
 using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
+using SharedLibrary.SecurityAndSettingsModels;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,10 +13,12 @@ namespace AvazehWpf.ViewModels
 {
     public class CustomerDetailViewModel : ViewAware
     {
-        public CustomerDetailViewModel(ICollectionManager<CustomerModel> manager, CustomerModel customer, Func<Task> callBack)
+        public CustomerDetailViewModel(ICollectionManager<CustomerModel> manager, CustomerModel customer, LoggedInUser_DTO user, Func<Task> callBack)
         {
             Manager = manager;
+            User = user;
             CallBackFunc = callBack;
+            LoadSettings();
             if (customer is not null)
             {
                 Customer = customer;
@@ -26,6 +29,12 @@ namespace AvazehWpf.ViewModels
                 Customer = new();
                 WindowTitle = "مشتری جدید";
             }
+        }
+
+        private void LoadSettings()
+        {
+            CanEditCustomer = Manager.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanEditCustomer));
+            CanDeleteCustomer = Manager.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanDeleteCustomer));
         }
 
         private readonly ICollectionManager<CustomerModel> Manager;
@@ -45,8 +54,24 @@ namespace AvazehWpf.ViewModels
             set { _Customer = value; NotifyOfPropertyChange(() => Customer); }
         }
 
+        public LoggedInUser_DTO User { get; init; }
+
+        private bool canEditCustomer;
+        public bool CanEditCustomer
+        {
+            get { return canEditCustomer; }
+            set { canEditCustomer = value; NotifyOfPropertyChange(() => CanEditCustomer); }
+        }
+        private bool canDeleteCustomer;
+        public bool CanDeleteCustomer
+        {
+            get { return canDeleteCustomer; }
+            set { canDeleteCustomer = value; NotifyOfPropertyChange(() => CanDeleteCustomer); }
+        }
+
         public void AddNewPhoneNumber()
         {
+            if (!CanEditCustomer) return;
             if (Customer == null) Customer = new();
             PhoneNumberModel newPhone = new();
             if (Customer.PhoneNumbers == null)
@@ -60,12 +85,14 @@ namespace AvazehWpf.ViewModels
 
         public void DeletePhoneNumber()
         {
+            if (!CanEditCustomer) return;
             if (Customer == null || Customer.PhoneNumbers == null || !Customer.PhoneNumbers.Any()) return;
             Customer.PhoneNumbers.RemoveAt(Customer.PhoneNumbers.Count - 1);
         }
 
         public async Task DeleteAndCloseAsync()
         {
+            if (!CanDeleteCustomer) return;
             if (Customer == null || Customer.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete {Customer.FullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
@@ -80,10 +107,11 @@ namespace AvazehWpf.ViewModels
 
         public async Task SaveAndNewAsync()
         {
+            if (!CanEditCustomer) return;
             if (await SaveToDatabaseAsync() == false) return;
             var newCustomer = new CustomerModel();
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new CustomerDetailViewModel(Manager, newCustomer, CallBackFunc));
+            await wm.ShowWindowAsync(new CustomerDetailViewModel(Manager, newCustomer, User, CallBackFunc));
             CloseWindow();
         }
 
@@ -94,6 +122,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task SaveAndCloseAsync()
         {
+            if (!CanEditCustomer) return;
             if (await SaveToDatabaseAsync() == false) return;
             CloseWindow();
         }

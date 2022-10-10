@@ -1,7 +1,10 @@
-﻿using AvazehApiClient.DataAccess.Interfaces;
+﻿using AvazehApiClient.DataAccess;
+using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
+using SharedLibrary.SecurityAndSettingsModels;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -10,11 +13,21 @@ namespace AvazehWpf.ViewModels
 {
     public class CustomerListViewModel : Screen
     {
-        public CustomerListViewModel(ICollectionManager<CustomerModel> manager)
+        public CustomerListViewModel(ICollectionManager<CustomerModel> manager, LoggedInUser_DTO user)
         {
             CCM = manager;
+            User = user;
+            LoadSettings();
+            CurrentPersianDate = new PersianCalendar().GetPersianDate();
             _SelectedCustomer = new();
             _ = SearchAsync().ConfigureAwait(true);
+        }
+
+        private void LoadSettings()
+        {
+            CanAddNewCustomer = CCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanAddNewCustomer));
+            CanViewCustomerDetails = CCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewCustomerDetails));
+            CanDeleteCustomer = CCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanDeleteCustomer));
         }
 
         private ICollectionManager<CustomerModel> _CCM;
@@ -37,6 +50,30 @@ namespace AvazehWpf.ViewModels
             }
         }
 
+        public LoggedInUser_DTO User { get; init; }
+        public string CurrentPersianDate { get; init; }
+
+        private bool canAddNewCustomer;
+        public bool CanAddNewCustomer
+        {
+            get { return canAddNewCustomer; }
+            set { canAddNewCustomer = value; NotifyOfPropertyChange(() => CanAddNewCustomer); }
+        }
+
+        private bool canViewCustomerDetails;
+        public bool CanViewCustomerDetails
+        {
+            get { return canViewCustomerDetails; }
+            set { canViewCustomerDetails = value; NotifyOfPropertyChange(() => CanViewCustomerDetails); }
+        }
+
+        private bool canDeleteCustomer;
+        public bool CanDeleteCustomer
+        {
+            get { return canDeleteCustomer; }
+            set { canDeleteCustomer = value; NotifyOfPropertyChange(() => CanDeleteCustomer); }
+        }
+
         public ObservableCollection<CustomerModel> Customers
         {
             get => CCM.Items;
@@ -52,8 +89,9 @@ namespace AvazehWpf.ViewModels
 
         public async Task AddNewCustomerAsync()
         {
+            if (!CanAddNewCustomer) return;
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new CustomerDetailViewModel(CCM, null, RefreshPageAsync));
+            await wm.ShowWindowAsync(new CustomerDetailViewModel(CCM, null, User, RefreshPageAsync));
         }
 
         public async Task PreviousPageAsync()
@@ -91,14 +129,14 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditCustomerAsync()
         {
-            if (Customers == null || Customers.Count == 0 || SelectedCustomer == null || SelectedCustomer.Id == 0) return;
+            if (!CanViewCustomerDetails || Customers == null || Customers.Count == 0 || SelectedCustomer == null || SelectedCustomer.Id == 0) return;
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new CustomerDetailViewModel(CCM, SelectedCustomer, RefreshPageAsync));
+            await wm.ShowWindowAsync(new CustomerDetailViewModel(CCM, SelectedCustomer, User, RefreshPageAsync));
         }
 
         public async Task DeleteCustomerAsync()
         {
-            if (Customers == null || Customers.Count == 0 || SelectedCustomer == null || SelectedCustomer.Id == 0) return;
+            if (!CanDeleteCustomer || Customers == null || Customers.Count == 0 || SelectedCustomer == null || SelectedCustomer.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete {SelectedCustomer.FullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
             var output = await CCM.DeleteItemAsync(SelectedCustomer.Id);

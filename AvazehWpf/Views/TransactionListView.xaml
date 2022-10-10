@@ -13,7 +13,6 @@
         Title="فایل ها" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1030" Height="650" cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
     <Window.Resources>
-        <local:AppSettings x:Key="AppSettings"/>
         <BooleanToVisibilityConverter x:Key="b2v"/>
         <!--body content datagrid cell vertical centering-->
         <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
@@ -28,7 +27,7 @@
             </Setter>
         </Style>
     </Window.Resources>
-    <Grid Visibility="{Binding GeneralSettings.CanViewTransactions}">
+    <Grid>
         <Grid.Resources>
             <Style TargetType="TextBox">
                 <Setter Property="TextAlignment" Value="Center"/>
@@ -74,7 +73,7 @@
                         <TextBlock Text="چاپ لیست" VerticalAlignment="Center" Margin="5,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="AddNewTransactionAsync" IsEnabled="{Binding GeneralSettings.CanAddNewTransaction}" Grid.Column="1" Height="25" Margin="0,0,5,0">
+                <Button x:Name="AddNewTransactionAsync" IsEnabled="{Binding CanAddNewTransaction}" Grid.Column="1" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="NotePlusOutline" Margin="3"/>
                         <TextBlock Text="فایل جدید" VerticalAlignment="Center" Margin="5,0,30,0"/>
@@ -83,7 +82,7 @@
                 <ComboBox Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Grid.Column="2" BorderThickness="2" BorderBrush="DarkGray" Height="25" VerticalContentAlignment="Center"
                           ItemsSource="{Binding Source={StaticResource FinStatusItems}}" SelectedValuePath="Key" DisplayMemberPath="Value"
                           SelectedValue="{Binding SelectedFinStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action SearchAsync]"/>
-                <Button x:Name="SearchAsync" IsEnabled="{Binding GeneralSettings.CanViewTransactions}" Grid.Column="3" Height="25" Margin="0,0,5,0">
+                <Button x:Name="SearchAsync" Grid.Column="3" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="DatabaseSearchOutline" Margin="3"/>
                         <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
@@ -98,13 +97,13 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="PreviousPageAsync" IsEnabled="{Binding GeneralSettings.CanViewTransactions}" Grid.Column="0" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
+                <Button x:Name="PreviousPageAsync" Grid.Column="0" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ArrowLeftCircleOutline" Margin="3"/>
                         <TextBlock Text="صفحه قبل" VerticalAlignment="Center" Margin="30,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="NextPageAsync" IsEnabled="{Binding GeneralSettings.CanViewTransactions}" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
+                <Button x:Name="NextPageAsync" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="صفحه بعد" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="ArrowRightCircleOutline" Margin="3" HorizontalAlignment="Right"/>
@@ -113,21 +112,21 @@
             </Grid>
             <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditTransactionAsync]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" ItemsSource="{Binding Transactions}"
                       SelectedItem="{Binding SelectedTransaction}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" RowHeight="25"
-                      HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding TransactionSettings.DataGridFontSize}" CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
+                      HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding User.UserSettings.DataGridFontSize}" CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
                       viewmodels:DataGridBehavior.DisplayRowNumber="True">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditTransactionAsync]" IsEnabled="{Binding GeneralSettings.CanViewTransactions}">
+                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditTransactionAsync]" IsEnabled="{Binding CanViewTransactionDetails}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="OpenInApp"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="تغییر نام" cal:Message.Attach="[Event Click] = [Action RenameTransactionAsync]" IsEnabled="{Binding GeneralSettings.CanEditTransactions}">
+                        <MenuItem Header="تغییر نام" cal:Message.Attach="[Event Click] = [Action RenameTransactionAsync]" IsEnabled="{Binding CanEditTransaction}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="Rename"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteTransactionAsync]" IsEnabled="{Binding GeneralSettings.CanEditTransactions}">
+                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteTransactionAsync]" IsEnabled="{Binding CanDeleteTransaction}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="DeleteOutline"/>
                             </MenuItem.Icon>
@@ -135,33 +134,17 @@
                     </ContextMenu>
                 </DataGrid.ContextMenu>
                 <DataGrid.Resources>
-                    <local:DateToColorConverter x:Key="DateToColorConverter"/>
-                    <local:AmountToColorConverter x:Key="AmountToColorConverter"/>
-                    <local:NameToBrushConverterForBackground x:Key="NameToBrushConverterForBackground"/>
+                    <local:DateToColorConverter x:Key="DateToColorConverterForNewItem" ItemColor="{Binding User.UserSettings.ColorNewItem}" Date="{Binding CurrentPersianDate}"/>
+                    <local:DateToColorConverter x:Key="DateToColorConverterForUpdatedItem" ItemColor="{Binding User.UserSettings.ColorUpdatedItem}" Date="{Binding CurrentPersianDate}"/>
+                    <local:AmountToColorConverter x:Key="AmountToColorConverterForTotalBalance" BalancedColor="{Binding User.UserSettings.ColorBalancedItem}" PositiveColor="{Binding User.UserSettings.ColorDeptorItem}" NegativeColor="{Binding User.UserSettings.ColorCreditorItem}"/>
                     <local:EnglishToPersianTransactionFinStatusConverter x:Key="EnglishToPersianTransactionFinStatusConverter"/>
                 </DataGrid.Resources>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="شماره" Binding="{Binding Path=Id, Mode=OneWay}" Width="50">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <MultiBinding Converter="{StaticResource DateToColorConverter}">
-                                            <Binding Path="DateCreated"/>
-                                            <Binding Path="CurrentPersianDate" Source="{StaticResource AppSettings}"/>
-                                            <Binding Path="Settings.TransactionSettings.NewItemColor" Source="{StaticResource AppSettings}"/>
-                                        </MultiBinding>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Foreground">
-                                    <Setter.Value>
-                                        <MultiBinding Converter="{StaticResource DateToColorConverter}">
-                                            <Binding Path="DateCreated"/>
-                                            <Binding Path="CurrentPersianDate" Source="{StaticResource AppSettings}"/>
-                                            <Binding Source="#FF000000"/>
-                                        </MultiBinding>
-                                    </Setter.Value>
-                                </Setter>
+                                <Setter Property="Background" Value="{Binding Path=DateCreated, Converter={StaticResource DateToColorConverterForNewItem}}"/>
+                                <Setter Property="Foreground" Value="Black"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
@@ -176,25 +159,8 @@
                     <DataGridTextColumn Header="تاریخ بروزرسانی" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="89">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <MultiBinding Converter="{StaticResource DateToColorConverter}">
-                                            <Binding Path="DateUpdated"/>
-                                            <Binding Path="CurrentPersianDate" Source="{StaticResource AppSettings}"/>
-                                            <Binding Path="Settings.TransactionSettings.UpdatedItemColor" Source="{StaticResource AppSettings}"/>
-                                        </MultiBinding>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Foreground">
-                                    <Setter.Value>
-                                        <MultiBinding Converter="{StaticResource DateToColorConverter}">
-                                            <Binding Path="DateUpdated"/>
-                                            <Binding Path="CurrentPersianDate" Source="{StaticResource AppSettings}"/>
-                                            <Binding Source="#FF000000"/>
-                                        </MultiBinding>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="TextAlignment" Value="Center"/>
+                                <Setter Property="Background" Value="{Binding Path=DateUpdated, Converter={StaticResource DateToColorConverterForUpdatedItem}}"/>
+                                <Setter Property="Foreground" Value="Black"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
@@ -205,16 +171,7 @@
                     <DataGridTextColumn Header="وضعیت مالی" Binding="{Binding Path=TransactionFinancialStatus, Converter={StaticResource EnglishToPersianTransactionFinStatusConverter}, Mode=OneWay}" Width="75">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <MultiBinding Converter="{StaticResource AmountToColorConverter}">
-                                            <Binding Path="TotalBalance"/>
-                                            <Binding Path="Settings.TransactionSettings.BalancedItemColor" Source="{StaticResource AppSettings}"/>
-                                            <Binding Path="Settings.TransactionSettings.PositiveItemColor" Source="{StaticResource AppSettings}"/>
-                                            <Binding Path="Settings.TransactionSettings.NegativeItemColor" Source="{StaticResource AppSettings}"/>
-                                        </MultiBinding>
-                                    </Setter.Value>
-                                </Setter>
+                                <Setter Property="Background" Value="{Binding Path=TotalBalance, Converter={StaticResource AmountToColorConverterForTotalBalance}}"/>
                                 <Setter Property="Foreground" Value="Black"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>

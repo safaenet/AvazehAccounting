@@ -30,11 +30,20 @@ namespace AvazehWpf.ViewModels
             SC = sc;
             _SelectedInvoice = new();
             Singleton = singleton;
-
+            LoadSettings();
             ICM.PageSize = User.UserSettings.InvoicePageSize;
             ICM.QueryOrderType = User.UserSettings.InvoiceListQueryOrderType;
 
             _ = SearchAsync().ConfigureAwait(true);
+        }
+
+        private void LoadSettings()
+        {
+            CanAddNewInvoice = ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanAddNewInvoice));
+            CanEditInvoice = ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanEditInvoice));
+            CanViewInvoiceDetails = ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewInvoiceDetails));
+            CanDeleteInvoice = ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanDeleteInvoice));
+            CanPrintInvoice = ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanPrintInvoice));
         }
 
         readonly SimpleContainer SC;
@@ -85,6 +94,41 @@ namespace AvazehWpf.ViewModels
         public int SelectedFinStatus { get; set; } = 1;
         public int SelectedLifeStatus { get; set; }
 
+        private bool canAddNewInvoice;
+        public bool CanAddNewInvoice
+        {
+            get { return canAddNewInvoice; }
+            set { canAddNewInvoice = value; NotifyOfPropertyChange(() => CanAddNewInvoice); }
+        }
+
+        private bool canEditInvoice;
+        public bool CanEditInvoice
+        {
+            get { return canEditInvoice; }
+            set { canEditInvoice = value; NotifyOfPropertyChange(() => CanEditInvoice); }
+        }
+
+        private bool canViewInvoiceDetails;
+        public bool CanViewInvoiceDetails
+        {
+            get { return canViewInvoiceDetails; }
+            set { canViewInvoiceDetails = value; NotifyOfPropertyChange(() => CanViewInvoiceDetails); }
+        }
+
+        private bool canDeleteInvoice;
+        public bool CanDeleteInvoice
+        {
+            get { return canDeleteInvoice; }
+            set { canDeleteInvoice = value; NotifyOfPropertyChange(() => CanDeleteInvoice); }
+        }
+
+        private bool canPrintInvoice;
+        public bool CanPrintInvoice
+        {
+            get { return canPrintInvoice; }
+            set { canPrintInvoice = value; NotifyOfPropertyChange(() => CanPrintInvoice); }
+        }
+
         public async Task PreviousPageAsync()
         {
             await ICM.LoadPreviousPageAsync();
@@ -105,6 +149,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task AddNewInvoiceAsync()
         {
+            if (!CanAddNewInvoice) return;
             WindowManager wm = new();
             ICollectionManager<CustomerModel> cManager = new CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>(ICM.ApiProcessor);
             await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, null, ICM, cManager, SearchAsync, User, SC));
@@ -136,7 +181,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditInvoiceAsync()
         {
-            if (Invoices == null || Invoices.Count == 0 || SelectedInvoice == null || SelectedInvoice.Id == 0) return;
+            if (!CanViewInvoiceDetails || Invoices == null || Invoices.Count == 0 || SelectedInvoice == null || SelectedInvoice.Id == 0) return;
             var idm = SC.GetInstance<IInvoiceDetailManager>();
             WindowManager wm = new();
             await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, idm, User, Singleton, SelectedInvoice.Id, RefreshPageAsync, SC));
@@ -144,7 +189,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task DeleteInvoiceAsync()
         {
-            if (Invoices == null || Invoices.Count == 0 || SelectedInvoice == null || SelectedInvoice.Id == 0) return;
+            if (!CanDeleteInvoice || Invoices == null || Invoices.Count == 0 || SelectedInvoice == null || SelectedInvoice.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete invoice of {SelectedInvoice.CustomerFullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
             var output = await ICM.DeleteItemAsync(SelectedInvoice.Id);
@@ -154,7 +199,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task ViewPaymentsAsync()
         {
-            if (SelectedInvoice is null) return;
+            if (!CanViewInvoiceDetails || SelectedInvoice is null) return;
             WindowManager wm = new();
             var invoice = await ICM.GetItemById(SelectedInvoice.Id);
             var idm = SC.GetInstance<IInvoiceDetailManager>();
@@ -175,7 +220,7 @@ namespace AvazehWpf.ViewModels
         }
 
         public void dg_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
+        {            
             if (Key.Delete == e.Key)
             {
                 _ = DeleteInvoiceAsync().ConfigureAwait(true);
@@ -185,7 +230,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task PrintInvoiceAsync(int t)
         {
-            if (Invoices == null || Invoices.Count == 0 || SelectedInvoice == null || SelectedInvoice.Id == 0) return;
+            if (!CanPrintInvoice || Invoices == null || Invoices.Count == 0 || SelectedInvoice == null || SelectedInvoice.Id == 0) return;
             var Invoice = await ICM.GetItemById(SelectedInvoice.Id);
             if (Invoice == null) return;
             PrintInvoiceModel pim = new();
@@ -224,31 +269,6 @@ namespace AvazehWpf.ViewModels
         {
             if (e.Key == Key.Escape) (GetView() as Window).Close();
         }
-
-        //public static Dictionary<string, string> GetColorSettings()
-        //{
-        //    Dictionary<string, string> colors = new();
-        //    colors.Add(nameof(UserSettingsModel.ColorNewItem), User.UserSettings.ColorNewItem);
-        //    colors.Add(nameof(UserSettingsModel.ColorSoldItem), User.UserSettings.ColorSoldItem);
-        //    colors.Add(nameof(UserSettingsModel.ColorNonSufficientFundItem), User.UserSettings.ColorNonSufficientFundItem);
-        //    colors.Add(nameof(UserSettingsModel.ColorCashedItem), User.UserSettings.ColorCashedItem);
-        //    colors.Add(nameof(UserSettingsModel.ColorChequeNotification), User.UserSettings.ColorChequeNotification);
-        //    colors.Add(nameof(UserSettingsModel.ColorUpdatedItem), User.UserSettings.ColorUpdatedItem);
-        //    colors.Add(nameof(UserSettingsModel.ColorBalancedItem), User.UserSettings.ColorBalancedItem);
-        //    colors.Add(nameof(UserSettingsModel.ColorDeptorItem), User.UserSettings.ColorDeptorItem);
-        //    colors.Add(nameof(UserSettingsModel.ColorCreditorItem), User.UserSettings.ColorCreditorItem);
-        //    colors.Add(nameof(UserSettingsModel.ColorInactiveItem), User.UserSettings.ColorInactiveItem);
-        //    colors.Add(nameof(UserSettingsModel.ColorArchivedItem), User.UserSettings.ColorArchivedItem);
-        //    colors.Add(nameof(UserSettingsModel.ColorDeletedItem), User.UserSettings.ColorDeletedItem);
-        //    colors.Add(nameof(UserSettingsModel.ColorNegativeProfit), User.UserSettings.ColorNegativeProfit);
-        //    colors.Add(nameof(UserSettingsModel.ColorPositiveItem), User.UserSettings.ColorPositiveItem);
-        //    colors.Add(nameof(UserSettingsModel.ColorNegativeItem), User.UserSettings.ColorNegativeItem);
-        //    var now = DateTime.Now;
-        //    PersianCalendar pCal = new();
-        //    var date = string.Format("{0:0000}/{1:00}/{2:00}", pCal.GetYear(now), pCal.GetMonth(now), pCal.GetDayOfMonth(now));
-        //    colors.Add("CurrentPersianDate", date);
-        //    return colors;
-        //}
     }
 
     public static class InvoiceFinStatusAndLifeStatusItems //For ComboBoxes

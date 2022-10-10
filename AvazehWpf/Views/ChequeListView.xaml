@@ -13,11 +13,10 @@
         Width="1350" Height="650"
         cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
     <Window.Resources>
-        <local:AppSettings x:Key="AppSettings"/>
         <ObjectDataProvider x:Key="ListQueryStatusItems" MethodName="GetChequeListQueryStatusItems" ObjectType="{x:Type viewmodels:ChequeListQueryStatusItems}"/>
         <local:EnglishToPersianChequeEventTypeConverter x:Key="EnglishToPersianChequeEventTypeConverter"/>
-        <local:ChequeEventToColorConverter x:Key="ChequeEventToColorConverter"/>
-        <local:DateToColorConverter x:Key="DateToColorConverter"/>
+        <local:ChequeEventToColorConverter x:Key="ChequeEventToColorConverter" SoldColor="{Binding User.UserSettings.ColorSoldItem}" NonSufficientFundColor="{Binding User.UserSettings.ColorNonSufficientFundItem}" CashedColor="{Binding User.UserSettings.ColorCashedItem}"/>
+        <local:DateToColorConverter x:Key="DateToColorConverterForNewItem" ItemColor="{Binding User.UserSettings.ColorNewItem}" Date="{Binding CurrentPersianDate}"/>
         <!--body content datagrid cell vertical centering-->
         <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
             <Setter Property="Template">
@@ -149,19 +148,19 @@
             </ScrollViewer>
             <Grid Grid.Column="0" Grid.Row="1">
                 <StackPanel Orientation="Vertical">
-                    <Button cal:Message.Attach="[Event Click] = [Action AddNewChequeAsync()]" IsEnabled="{Binding GeneralSettings.CanAddNewCheque}" Height="25" Margin="0,0,0,3">
+                    <Button x:Name="AddNewChequeAsync" Height="25" Margin="0,0,0,3">
                         <StackPanel Width="70" Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Plus" Margin="3"/>
                             <TextBlock Text="چک جدید" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action EditChequeAsync()]" IsEnabled="{Binding GeneralSettings.CanEditCheques}" Height="25" Margin="0,0,0,3">
+                    <Button x:Name="EditChequeAsync" Height="25" Margin="0,0,0,3">
                         <StackPanel Width="60" Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="EditOutline" Margin="3"/>
                             <TextBlock Text="ویرایش" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action DeleteChequeAsync()]" IsEnabled="{Binding GeneralSettings.CanEditCheques}" Height="25">
+                    <Button x:Name="DeleteChequeAsync" Height="25">
                         <StackPanel Width="50" Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="DeleteOutline" Margin="3"/>
                             <TextBlock Text="حذف" VerticalAlignment="Center"/>
@@ -184,8 +183,8 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <ComboBox Width="100" ItemsSource="{Binding Source={StaticResource ListQueryStatusItems}}" SelectedValuePath="Key" DisplayMemberPath="Value" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center"
-                          SelectedValue="{Binding SelectedListQueryStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action Search]" Height="25" Margin="3,0,0,0"/>
-                <Button x:Name="SearchAsync" IsEnabled="{Binding GeneralSettings.CanViewCheques}" Grid.Column="1" Height="25" Margin="3,0,0,0">
+                          SelectedValue="{Binding SelectedListQueryStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action SearchAsync]" Height="25" Margin="3,0,0,0"/>
+                <Button x:Name="SearchAsync" Grid.Column="1" Height="25" Margin="3,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="3" HorizontalAlignment="Right"/>
                         <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
@@ -200,13 +199,13 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="PreviousPageAsync" IsEnabled="{Binding GeneralSettings.CanViewCheques}" Height="25" HorizontalAlignment="Left"  Margin="3,0,0,0">
+                <Button x:Name="PreviousPageAsync" Height="25" HorizontalAlignment="Left"  Margin="3,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ArrowLeftCircleOutline" Margin="3"/>
                         <TextBlock Text="صفحه قبل" VerticalAlignment="Center" Margin="30,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="NextPageAsync" IsEnabled="{Binding GeneralSettings.CanViewCheques}" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
+                <Button x:Name="NextPageAsync" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="صفحه بعد" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="ArrowRightCircleOutline" Margin="3" HorizontalAlignment="Right"/>
@@ -214,16 +213,16 @@
                 </Button>
             </Grid>
             <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditChequeAsync()]" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Grid.Row="2" ItemsSource="{Binding Cheques}"
-                      HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding ChequeSettings.DataGridFontSize}" SelectedItem="{Binding SelectedCheque}" Margin="3,0,0,0"
+                      HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding User.UserSettings.DataGridFontSize}" SelectedItem="{Binding SelectedCheque}" Margin="3,0,0,0"
                       AutoGenerateColumns="False" FlowDirection="RightToLeft" Background="Transparent" RowHeight="25" CanUserAddRows="False" CanUserDeleteRows="False" viewmodels:DataGridBehavior.DisplayRowNumber="True">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditChequeAsync]" IsEnabled="{Binding GeneralSettings.CanEditCheques}">
+                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditChequeAsync]" IsEnabled="{Binding CanEditChequeAsync}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="OpenInApp"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteChequeAsync]" IsEnabled="{Binding GeneralSettings.CanEditCheques}">
+                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteChequeAsync]" IsEnabled="{Binding CanDeleteChequeAsync}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="DeleteOutline"/>
                             </MenuItem.Icon>
@@ -234,15 +233,7 @@
                     <DataGridTextColumn Header="شماره" Binding="{Binding Id, Mode=OneWay}" Width="50">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <MultiBinding Converter="{StaticResource DateToColorConverter}">
-                                            <Binding Path="IssueDate"/>
-                                            <Binding Path="CurrentPersianDate" Source="{StaticResource AppSettings}"/>
-                                            <Binding Path="Settings.ChequeSettings.NewItemColor" Source="{StaticResource AppSettings}"/>
-                                        </MultiBinding>
-                                    </Setter.Value>
-                                </Setter>
+                                <Setter Property="Background" Value="{Binding Path=IssueDate, Converter={StaticResource DateToColorConverterForNewItem}}"/>
                                 <Setter Property="Foreground" Value="Black"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
@@ -281,16 +272,7 @@
                                         </MultiBinding>
                                     </Setter.Value>
                                 </Setter>
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <MultiBinding Converter="{StaticResource ChequeEventToColorConverter}">
-                                            <Binding Path="LastEventString"/>
-                                            <Binding Path="Settings.ChequeSettings.SoldItemColor" Source="{StaticResource AppSettings}"/>
-                                            <Binding Path="Settings.ChequeSettings.NonSufficientFundItemColor" Source="{StaticResource AppSettings}"/>
-                                            <Binding Path="Settings.ChequeSettings.CashedItemColor" Source="{StaticResource AppSettings}"/>
-                                        </MultiBinding>
-                                    </Setter.Value>
-                                </Setter>
+                                <Setter Property="Background" Value="{Binding Path=LastEventString, Converter={StaticResource ChequeEventToColorConverter}}"/>
                                 <Setter Property="Foreground" Value="Black"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>

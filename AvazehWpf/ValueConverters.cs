@@ -198,31 +198,65 @@ namespace AvazehWpf
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
     }
 
-    public class ChequeEventToColorConverter : IMultiValueConverter
+    public class ChequeEventToColorConverter : Freezable, IValueConverter
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        #region Overrides of Freezable    
+        protected override Freezable CreateInstanceCore()
         {
-            if (values == null || values.Length != 4 || values[0] == null) return DependencyProperty.UnsetValue;
-            else if ((string)values[0] == ChequeEventTypes.Sold.ToString()) return new SolidColorBrush(((string)values[1]).ToColor());
-            else if ((string)values[0] == ChequeEventTypes.NonSufficientFund.ToString()) return new SolidColorBrush(((string)values[2]).ToColor());
-            else if ((string)values[0] == ChequeEventTypes.Cashed.ToString()) return new SolidColorBrush(((string)values[3]).ToColor());
+            return new ChequeEventToColorConverter();
+        }
+        #endregion
+
+        public string SoldColor
+        {
+            get { return (string)GetValue(SoldColorProperty); }
+            set { SetValue(SoldColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ItemColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SoldColorProperty =
+            DependencyProperty.Register("SoldColor", typeof(string), typeof(ChequeEventToColorConverter), new PropertyMetadata(null));
+
+        public string NonSufficientFundColor
+        {
+            get { return (string)GetValue(NonSufficientFundColorProperty); }
+            set { SetValue(NonSufficientFundColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Date.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty NonSufficientFundColorProperty =
+            DependencyProperty.Register("NonSufficientFundColor", typeof(string), typeof(ChequeEventToColorConverter), new PropertyMetadata(null));
+
+        public string CashedColor
+        {
+            get { return (string)GetValue(CashedColorProperty); }
+            set { SetValue(CashedColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Date.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CashedColorProperty =
+            DependencyProperty.Register("CashedColor", typeof(string), typeof(ChequeEventToColorConverter), new PropertyMetadata(null));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null) return DependencyProperty.UnsetValue;
+            else if ((string)value == ChequeEventTypes.Sold.ToString())
+            {
+                if (string.IsNullOrEmpty(SoldColor)) return DependencyProperty.UnsetValue; else return new SolidColorBrush(SoldColor.ToColor());
+            }
+            else if ((string)value == ChequeEventTypes.NonSufficientFund.ToString())
+            {
+                if (string.IsNullOrEmpty(NonSufficientFundColor)) return DependencyProperty.UnsetValue; else return new SolidColorBrush(NonSufficientFundColor.ToColor());
+            }
+            else if ((string)value == ChequeEventTypes.Cashed.ToString())
+            {
+                if (string.IsNullOrEmpty(CashedColor)) return DependencyProperty.UnsetValue; else return new SolidColorBrush(CashedColor.ToColor());
+            }
             return DependencyProperty.UnsetValue;
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
-
-    //public class DateToColorConverter : IMultiValueConverter
-    //{
-    //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-    //    {
-    //        if (values == null || values.Length != 3 || values[0] == null || values[2] == null) return DependencyProperty.UnsetValue;
-    //        if ((string)values[0] == (string)values[1]) return new SolidColorBrush(((string)values[2]).ToColor());
-    //        return DependencyProperty.UnsetValue;
-    //    }
-
-    //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture) => throw new NotImplementedException();
-    //}
 
     public class DateToColorConverter : Freezable, IValueConverter
     {
@@ -255,36 +289,13 @@ namespace AvazehWpf
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null) return DependencyProperty.UnsetValue;
+            if (value == null || string.IsNullOrEmpty(ItemColor)) return DependencyProperty.UnsetValue;
             if ((string)value == Date) return new SolidColorBrush(ItemColor.ToColor());
             return DependencyProperty.UnsetValue;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
-
-    //public class AmountToColorConverter : IMultiValueConverter
-    //{
-    //    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-    //    {
-    //        if (values == null || values.Length != 4 || values[0] == null) return DependencyProperty.UnsetValue;
-    //        switch ((double)values[0])
-    //        {
-    //            case 0:
-    //                if (values[1] is not string || string.IsNullOrEmpty((string)values[1])) return DependencyProperty.UnsetValue;
-    //                return new SolidColorBrush(((string)values[1]).ToColor());
-    //            case > 0:
-    //                if (values[2] is not string || string.IsNullOrEmpty((string)values[2])) return DependencyProperty.UnsetValue;
-    //                return new SolidColorBrush(((string)values[2]).ToColor());
-    //            case < 0:
-    //                if (values[3] is not string || string.IsNullOrEmpty((string)values[3])) return DependencyProperty.UnsetValue;
-    //                return new SolidColorBrush(((string)values[3]).ToColor());
-    //        }
-    //        return DependencyProperty.UnsetValue;
-    //    }
-
-    //    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => throw new NotImplementedException();
-    //}
 
     public class AmountToColorConverter : Freezable, IValueConverter
     {
@@ -331,11 +342,11 @@ namespace AvazehWpf
             switch ((double)value)
             {
                 case 0:
-                    return new SolidColorBrush(BalancedColor.ToColor());
+                    if(string.IsNullOrEmpty(BalancedColor)) return DependencyProperty.UnsetValue; else return new SolidColorBrush(BalancedColor.ToColor());
                 case > 0:
-                    return new SolidColorBrush(PositiveColor.ToColor());
+                    if (string.IsNullOrEmpty(PositiveColor)) return DependencyProperty.UnsetValue; else return new SolidColorBrush(PositiveColor.ToColor());
                 case < 0:
-                    return new SolidColorBrush(NegativeColor.ToColor());
+                    if (string.IsNullOrEmpty(NegativeColor)) return DependencyProperty.UnsetValue; else return new SolidColorBrush(NegativeColor.ToColor());
             }
             return DependencyProperty.UnsetValue;
         }
@@ -414,6 +425,17 @@ namespace AvazehWpf
         {
             if(value == null) return DependencyProperty.UnsetValue; ;
             if ((bool)value) return "فعال"; else return "غیرفعال";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+    }
+
+    public class NumberToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (int.TryParse(value.ToString(), out int val) == false) return DependencyProperty.UnsetValue;
+            if (val != 0) return Visibility.Visible; else return Visibility.Hidden;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();

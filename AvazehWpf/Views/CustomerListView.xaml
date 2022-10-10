@@ -13,8 +13,7 @@
         Width="1350" Height="650"
         cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
     <Window.Resources>
-        <local:NameToBrushConverterForBackground x:Key="NameToBrushConverterForBackground"/>
-        <local:NameToBrushConverterForForeground x:Key="NameToBrushConverterForForeground"/>
+        <local:DateToColorConverter x:Key="DateToColorConverterForNewItem" ItemColor="{Binding User.UserSettings.ColorNewItem}" Date="{Binding CurrentPersianDate}"/>
         <!--body content datagrid cell vertical centering-->
         <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
             <Setter Property="Template">
@@ -126,19 +125,19 @@
             </ScrollViewer>
             <Grid Grid.Column="0" Grid.Row="1">
                 <StackPanel Orientation="Vertical">
-                    <Button cal:Message.Attach="[Event Click] = [Action AddNewCustomerAsync()]" Height="25" Margin="0,0,3,3">
+                    <Button cal:Message.Attach="[Event Click] = [Action AddNewCustomerAsync()]" IsEnabled="{Binding CanAddNewCustomer}" Height="25" Margin="0,0,3,3">
                         <StackPanel Width="90" Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="PersonPlusOutline" Margin="3"/>
                             <TextBlock Text="مشتری جدید" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action EditCustomerAsync()]" Height="25" Margin="0,0,3,3">
+                    <Button cal:Message.Attach="[Event Click] = [Action EditCustomerAsync()]" IsEnabled="{Binding CanViewCustomerDetails}" Height="25" Margin="0,0,3,3">
                         <StackPanel Width="70" Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="EditOutline" Margin="3"/>
                             <TextBlock Text="ویرایش" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action DeleteCustomerAsync()]" Height="25" Margin="0,0,3,0">
+                    <Button cal:Message.Attach="[Event Click] = [Action DeleteCustomerAsync()]" IsEnabled="{Binding CanDeleteCustomer}" Height="25" Margin="0,0,3,0">
                         <StackPanel Width="70" Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="DeleteOutline" Margin="3"/>
                             <TextBlock Text="حذف" VerticalAlignment="Center"/>
@@ -195,8 +194,8 @@
                     <DataGridTextColumn Header="شماره" Binding="{Binding Path=Id, Mode=OneWay}" Width="50">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Background" Value="{Binding Path=DateJoined, Converter={StaticResource NameToBrushConverterForBackground}}"/>
-                                <Setter Property="Foreground" Value="{Binding Path=DateJoined, Converter={StaticResource NameToBrushConverterForForeground}}"/>
+                                <Setter Property="Background" Value="{Binding Path=DateJoined, Converter={StaticResource DateToColorConverterForNewItem}}"/>
+                                <Setter Property="Foreground" Value="Black"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>

@@ -19,7 +19,8 @@ namespace AvazehApiClient.DataAccess
                 SellPrice = model.SellPrice,
                 Barcode = model.Barcode,
                 CountString = model.CountString,
-                Descriptions = model.Descriptions
+                Descriptions = model.Descriptions,
+                IsActive = model.IsActive,
             };
         }
 
@@ -160,6 +161,7 @@ namespace AvazehApiClient.DataAccess
             To.DateUpdated = From.DateUpdated;
             To.TimeUpdated = From.TimeUpdated;
             To.Descriptions = From.Descriptions;
+            To.IsActive = From.IsActive;
         }
 
         public static void Clone(this CustomerModel From, CustomerModel To)
@@ -344,7 +346,6 @@ namespace AvazehApiClient.DataAccess
         public static UserSettingsModel Clone(this UserSettingsModel From)
         {
             UserSettingsModel To = new();
-            To = new();
             To.ColorNewItem = From.ColorNewItem;
             To.ColorSoldItem = From.ColorSoldItem;
             To.ColorNonSufficientFundItem = From.ColorNonSufficientFundItem;
@@ -410,18 +411,7 @@ namespace AvazehApiClient.DataAccess
             To.DefaultPrintLayout = From.DefaultPrintLayout;
             To.DefaultPaperSize = From.DefaultPaperSize;
             if (From.UserDescriptions != null)
-            {
-                To.UserDescriptions = new();
-                foreach (var item in From.UserDescriptions)
-                {
-                    To.UserDescriptions.Add(new()
-                    {
-                        Id = item.Id,
-                        DescriptionTitle = item.DescriptionTitle,
-                        DescriptionText = item.DescriptionText
-                    });
-                }
-            }
+                To.UserDescriptions = From.UserDescriptions.ToList();
             return To;
         }
 
@@ -433,6 +423,7 @@ namespace AvazehApiClient.DataAccess
                 CanHaveDuplicateItemsInInvoice = From.CanHaveDuplicateItemsInInvoice,
                 CompanyName = From.CompanyName
             };
+            if (From.ProductUnits != null) To.ProductUnits = From.ProductUnits.ToList();
             return To;
         }
     }

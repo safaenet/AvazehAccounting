@@ -39,6 +39,7 @@ namespace AvazehApiClient.DataAccess
         public async Task<bool> TestDBConnectionAsync()
         {
             var Url = $"Auth/TestConnection";
+            //ApiClient.Timeout
             var response = await ApiClient.GetAsync(Url);
             if (response.IsSuccessStatusCode && (await response.Content.ReadAsAsync<bool>()))
                 return true;

@@ -3,9 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cal="http://www.caliburnproject.org"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:LoginViewModel}" mc:Ignorable="d"
-        Title="ورود" Height="210" Width="350" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+        cal:Message.Attach="[Event Loaded] = [Action LoadSettings]"
+        Title="ورود" Height="210" Width="350" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" FocusManager.FocusedElement="{Binding FocusedElement}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="35"/>
@@ -19,7 +21,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="60"/>
             </Grid.ColumnDefinitions>
-            <TextBox Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <TextBox x:Name="txtUsername" Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" TabIndex="0"  Margin="5"/>
             <TextBlock Grid.Column="1" Text="نام کاربری" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5"/>
         </Grid>
         <Grid Grid.Row="1">
@@ -27,11 +29,11 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="60"/>
             </Grid.ColumnDefinitions>
-            <PasswordBox x:Name="Password" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <PasswordBox x:Name="txtPassword" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" TabIndex="1" Margin="5"/>
             <TextBlock Grid.Column="1" Text="رمز عبور" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5"/>
         </Grid>
         <Grid Grid.Row="2">
-            <CheckBox Content="نام کاربری من را به خاطر بسپار" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5"/>
+            <CheckBox Content="نام کاربری من را به خاطر بسپار" IsChecked="{Binding RememberUsername, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Right" TabIndex="2" Margin="5"/>
         </Grid>
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
@@ -39,8 +41,8 @@
                 <ColumnDefinition Width="60"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="LoginAsync" IsDefault="True" Content="ورود" Margin="5"/>
-            <Button x:Name="RegisterAsync" Content="ثبت نام" Grid.Column="2" Margin="5"/>
+            <Button x:Name="LoginAsync" IsDefault="True" Content="ورود" TabIndex="3" Margin="5"/>
+            <Button x:Name="RegisterAsync" Content="ثبت نام" Grid.Column="2" TabIndex="4" Margin="5"/>
         </Grid>
         <TextBlock Text="{Binding StatusText}" FlowDirection="RightToLeft" Grid.Row="4" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5"/>
     </Grid>

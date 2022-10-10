@@ -20,7 +20,8 @@ namespace AvazehWeb
                 SellPrice = model.SellPrice,
                 Barcode = model.Barcode,
                 CountString = model.CountString,
-                Descriptions = model.Descriptions
+                Descriptions = model.Descriptions,
+                IsActive = model.IsActive
             };
         }
 

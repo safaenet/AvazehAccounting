@@ -3,6 +3,7 @@ using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using SharedLibrary.SecurityAndSettingsModels;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,6 +19,7 @@ namespace AvazehWpf.ViewModels
             InvoiceCollectionManager = iManager;
             InvoiceDetailManager = dManager;
             User = user;
+            CurrentPersianDate = new PersianCalendar().GetPersianDate();
             SC = sc;
             CallBackAction = callBack;
             if (ReloadInvoiceNeeded && Invoice != null)  _ = ReloadInvoiceAsync(Invoice.Id).ConfigureAwait(true);
@@ -27,8 +29,9 @@ namespace AvazehWpf.ViewModels
         public double CustomerTotalBalance { get => customerTotalBalance; private set { customerTotalBalance = value; NotifyOfPropertyChange(() => CustomerTotalBalance); } }
         private readonly IInvoiceCollectionManager InvoiceCollectionManager;
         private readonly IInvoiceDetailManager InvoiceDetailManager;
-        private readonly LoggedInUser_DTO User;
-        readonly SimpleContainer SC;
+        public LoggedInUser_DTO User { get; init; }
+        public string CurrentPersianDate { get; init; }
+        private readonly SimpleContainer SC;
         private readonly System.Action CallBackAction;
         private bool EdittingItem = false;
         private InvoicePaymentModel _workItem = new();

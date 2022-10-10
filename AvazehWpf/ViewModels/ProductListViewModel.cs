@@ -1,7 +1,10 @@
-﻿using AvazehApiClient.DataAccess.Interfaces;
+﻿using AvazehApiClient.DataAccess;
+using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
+using SharedLibrary.SecurityAndSettingsModels;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -10,16 +13,29 @@ namespace AvazehWpf.ViewModels
 {
     public class ProductListViewModel : Screen
     {
-        public ProductListViewModel(ICollectionManager<ProductModel> manager)
+        public ProductListViewModel(ICollectionManager<ProductModel> manager, LoggedInUser_DTO user)
         {
             PCM = manager;
+            User = user;
+            LoadSettings();
+            CurrentPersianDate = new PersianCalendar().GetPersianDate();
             _SelectedProduct = new();
             _ = SearchAsync().ConfigureAwait(true);
+        }
+
+        private void LoadSettings()
+        {
+            CanAddNewProduct = PCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanAddNewCustomer));
+            CanViewProductDetails = PCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewCustomerDetails));
+            CanDeleteProduct = PCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanDeleteCustomer));
+            CanViewNetProfits = PCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewNetProfits));
         }
 
         private ICollectionManager<ProductModel> _PCM;
         private ProductModel _SelectedProduct;
 
+        public LoggedInUser_DTO User { get; init; }
+        public string CurrentPersianDate { get; init; }
         public ProductModel SelectedProduct
         {
             get => _SelectedProduct;
@@ -50,10 +66,39 @@ namespace AvazehWpf.ViewModels
 
         public string SearchText { get; set; }
 
+        private bool canAddNewProduct;
+        public bool CanAddNewProduct
+        {
+            get { return canAddNewProduct; }
+            set { canAddNewProduct = value; NotifyOfPropertyChange(() => CanAddNewProduct); }
+        }
+
+        private bool canViewProductDetails;
+        public bool CanViewProductDetails
+        {
+            get { return canViewProductDetails; }
+            set { canViewProductDetails = value; NotifyOfPropertyChange(() => CanViewProductDetails); }
+        }
+
+        private bool canDeleteProduct;
+        public bool CanDeleteProduct
+        {
+            get { return canDeleteProduct; }
+            set { canDeleteProduct = value; NotifyOfPropertyChange(() => CanDeleteProduct); }
+        }
+
+        private bool canViewNetProfits;
+        public bool CanViewNetProfits
+        {
+            get { return canViewNetProfits; }
+            set { canViewNetProfits = value; NotifyOfPropertyChange(() => CanViewNetProfits); }
+        }
+
         public async Task AddNewProductAsync()
         {
+            if (!CanAddNewProduct) return;
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new ProductDetailViewModel(PCM, null, RefreshPageAsync));
+            await wm.ShowWindowAsync(new ProductDetailViewModel(PCM, null, User, RefreshPageAsync));
         }
 
         public async Task PreviousPageAsync()
@@ -91,14 +136,14 @@ namespace AvazehWpf.ViewModels
 
         public async Task EditProductAsync()
         {
-            if (Products == null || Products.Count == 0 || SelectedProduct == null || SelectedProduct.Id == 0) return;
+            if (!CanViewProductDetails || Products == null || Products.Count == 0 || SelectedProduct == null || SelectedProduct.Id == 0) return;
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new ProductDetailViewModel(PCM, SelectedProduct, RefreshPageAsync));
+            await wm.ShowWindowAsync(new ProductDetailViewModel(PCM, SelectedProduct, User, RefreshPageAsync));
         }
 
         public async Task DeleteProductAsync()
         {
-            if (Products == null || Products.Count == 0 || SelectedProduct == null || SelectedProduct.Id == 0) return;
+            if (!CanDeleteProduct || Products == null || Products.Count == 0 || SelectedProduct == null || SelectedProduct.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete {SelectedProduct.ProductName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
             var output = await PCM.DeleteItemAsync(SelectedProduct.Id);

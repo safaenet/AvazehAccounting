@@ -11,9 +11,10 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
         xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary"
-        Title="{Binding GeneralSettings.CompanyName}" FontFamily="Tahoma" Height="545" Width="350"
+        Title="{Binding User.GeneralSettings.CompanyName}" FontFamily="Tahoma" Height="545" Width="350"
         cal:Message.Attach="[Event Closed] = [Window_Closed()]">
     <Window.Resources>
+        <local:NumberToVisibilityConverter x:Key="NumberToVisibilityConverter"/>
         <BooleanToVisibilityConverter x:Key="b2v"/>
     </Window.Resources>
     <Grid>
@@ -49,7 +50,7 @@
             <TextBlock Text="{Binding UserFullName}" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="3,0,5,0"/>
         </Grid>
 
-        <Button Grid.Row="1" Grid.Column="0" x:Name="AddNewInvoiceAsync" IsEnabled="{Binding GeneralSettings.CanAddNewInvoice}" Margin="2,2,2,2">
+        <Button Grid.Row="1" Grid.Column="0" x:Name="AddNewInvoiceAsync" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -60,7 +61,7 @@
             </Grid>
         </Button>
 
-        <Button Grid.Row="1" Grid.Column="1" x:Name="AddNewTransactionAsync" IsEnabled="{Binding GeneralSettings.CanAddNewTransaction}" Margin="2,2,2,2">
+        <Button Grid.Row="1" Grid.Column="1" x:Name="AddNewTransactionAsync" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -71,7 +72,7 @@
             </Grid>
         </Button>
 
-        <Button Grid.Row="2" Grid.Column="0" x:Name="ViewInvoiceListAsync" IsEnabled="{Binding GeneralSettings.CanViewInvoices}" Margin="2,2,2,2">
+        <Button Grid.Row="2" Grid.Column="0" x:Name="ViewInvoiceListAsync" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -82,7 +83,7 @@
             </Grid>
         </Button>
 
-        <Button Grid.Row="2" Grid.Column="1" x:Name="ViewTransactionListAsync" IsEnabled="{Binding GeneralSettings.CanViewTransactions}" Margin="2,2,2,2">
+        <Button Grid.Row="2" Grid.Column="1" x:Name="ViewTransactionListAsync" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -93,7 +94,7 @@
             </Grid>
         </Button>
 
-        <Button Grid.Row="3" Grid.Column="0" x:Name="ViewChequesAsync" IsEnabled="{Binding GeneralSettings.CanViewCheques}" Margin="2,2,2,2">
+        <Button Grid.Row="3" Grid.Column="0" x:Name="ViewChequesAsync" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -111,7 +112,7 @@
             </Grid>
         </Button>
 
-        <Button Grid.Row="5" Grid.Column="0" x:Name="ViewProductsAsync" IsEnabled="{Binding GeneralSettings.CanViewCheques}" Margin="2,2,2,2">
+        <Button Grid.Row="5" Grid.Column="0" x:Name="ViewProductsAsync" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -122,7 +123,7 @@
             </Grid>
         </Button>
 
-        <Button Grid.Row="4" Grid.Column="0" x:Name="ViewCustomersAsync" IsEnabled="{Binding GeneralSettings.CanViewCustomers}" Margin="2,2,2,2">
+        <Button Grid.Row="4" Grid.Column="0" x:Name="ViewCustomersAsync" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -133,36 +134,36 @@
             </Grid>
         </Button>
 
-        <Button Grid.Row="3" Grid.Column="1" x:Name="TransactionShortcut1Async" Visibility="{Binding GeneralSettings.ShowTransactionShortcut1,Converter={StaticResource b2v}}" Margin="2,2,2,2">
+        <Button Grid.Row="3" Grid.Column="1" x:Name="TransactionShortcut1Async" Visibility="{Binding User.UserSettings.TransactionShortcut1Id, Converter={StaticResource NumberToVisibilityConverter}}" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="16"/>
                 </Grid.RowDefinitions>
                 <materialDesign:PackIcon Kind="FileAccountOutline" Height="50" Width="50" Foreground="DarkMagenta" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <TextBlock Grid.Row="1" Text="{Binding GeneralSettings.TransactionShortcut1.ShortcutName}" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                <TextBlock Grid.Row="1" Text="{Binding User.UserSettings.TransactionShortcut1Name}" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
             </Grid>
         </Button>
 
-        <Button Grid.Row="4" Grid.Column="1" x:Name="TransactionShortcut2Async" Visibility="{Binding GeneralSettings.ShowTransactionShortcut2,Converter={StaticResource b2v}}" Margin="2,2,2,2">
+        <Button Grid.Row="4" Grid.Column="1" x:Name="TransactionShortcut2Async" Visibility="{Binding User.UserSettings.TransactionShortcut2Id, Converter={StaticResource NumberToVisibilityConverter}}" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="16"/>
                 </Grid.RowDefinitions>
                 <materialDesign:PackIcon Kind="FileAccountOutline" Height="50" Width="50" Foreground="DarkOrange" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <TextBlock Grid.Row="1" Text="{Binding GeneralSettings.TransactionShortcut2.ShortcutName}" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                <TextBlock Grid.Row="1" Text="{Binding User.UserSettings.TransactionShortcut2Name}" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
             </Grid>
         </Button>
 
-        <Button Grid.Row="5" Grid.Column="1" x:Name="TransactionShortcut3Async" Visibility="{Binding GeneralSettings.ShowTransactionShortcut3,Converter={StaticResource b2v}}" Margin="2,2,2,2">
+        <Button Grid.Row="5" Grid.Column="1" x:Name="TransactionShortcut3Async" Visibility="{Binding User.UserSettings.TransactionShortcut3Id, Converter={StaticResource NumberToVisibilityConverter}}" Margin="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="16"/>
                 </Grid.RowDefinitions>
                 <materialDesign:PackIcon Kind="FileAccountOutline" Height="50" Width="50" Foreground="DarkRed" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <TextBlock Grid.Row="1" Text="{Binding GeneralSettings.TransactionShortcut3.ShortcutName}" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                <TextBlock Grid.Row="1" Text="{Binding User.UserSettings.TransactionShortcut3Name}" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
             </Grid>
         </Button>
 
@@ -176,6 +177,7 @@
                 <TextBlock Grid.Row="1" Text="تنظیمات" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
             </Grid>
         </Button>
-        <TextBox Grid.Row="7" Grid.ColumnSpan="2" Text="{Binding KnowledgeOfTheDay.result.Content}" Visibility="{Binding KodAvailable, Converter={StaticResource b2v}}" IsReadOnly="True" Height="55" HorizontalContentAlignment="Right" TextWrapping="Wrap" Background="LightGray"/>
+        <TextBox Grid.Row="7" Grid.ColumnSpan="2" Text="{Binding KnowledgeOfTheDay.result.Content}" Visibility="{Binding KodAvailable, Converter={StaticResource b2v}}"
+                 IsReadOnly="True" Height="55" HorizontalContentAlignment="Right" TextWrapping="Wrap" Background="LightGray" Margin="2,0,2,2"/>
     </Grid>
 </Window>

@@ -1,6 +1,7 @@
 ﻿using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.SecurityAndSettingsModels;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,6 +19,7 @@ namespace AvazehWpf.ViewModels
             ApiProcessor = apiProcessor;
             _ = TestDBConnectionAsync().ConfigureAwait(true);
             _ = GetIfAdminExistsAsync().ConfigureAwait(true);
+            LoadSettings();
         }
 
         private readonly SimpleContainer SC;
@@ -25,6 +27,14 @@ namespace AvazehWpf.ViewModels
         private string username;
         private LoggedInUser_DTO User;
         private bool canRegisterAsync;
+        private bool rememberUsername;
+
+        public bool RememberUsername
+        {
+            get { return rememberUsername; }
+            set { rememberUsername = value; NotifyOfPropertyChange(() => RememberUsername); }
+        }
+
 
         public bool CanRegisterAsync
         {
@@ -49,11 +59,24 @@ namespace AvazehWpf.ViewModels
 
         public string Password
         {
-            get => ((GetView() as Window).FindName("Password") as PasswordBox).Password;
-            set => ((GetView() as Window).FindName("Password") as PasswordBox).Password = value;
+            get => ((GetView() as Window).FindName("txtPassword") as PasswordBox).Password;
+            set => ((GetView() as Window).FindName("txtPassword") as PasswordBox).Password = value;
         }
 
         public string Username { get => username; set { username = value; NotifyOfPropertyChange(() => Username); } }
+        public UIElement FocusedElement { get; set; }
+
+        public void LoadSettings()
+        {
+            var localsettings = LocalSettingsManager.LoadAllSettings();
+            RememberUsername = localsettings.RememberUsername;
+            if (RememberUsername)
+            {
+                Username = localsettings.LastLoggedUsername;
+                //var window = ((GetView() as Window).FindName("txtPassword") as PasswordBox).Focus();
+            }
+            //else ((GetView() as Window).FindName("txtUsername") as TextBox).Focus();
+        }
 
         public async Task GetIfAdminExistsAsync()
         {
@@ -80,8 +103,18 @@ namespace AvazehWpf.ViewModels
                 return;
             }
             ApiProcessor.Token = User.Token;
-            //var handler = new JwtSecurityTokenHandler();
-            //var jwtSecurityToken = handler.ReadJwtToken(ApiProcessor.Token);
+            var localSettings = LocalSettingsManager.LoadAllSettings();
+            if (RememberUsername)
+            {
+                localSettings.RememberUsername = true;
+                localSettings.LastLoggedUsername = Username;
+            }
+            else
+            {
+                localSettings.RememberUsername = false;
+                localSettings.LastLoggedUsername = null;
+            }
+            _ = LocalSettingsManager.SaveAllSettings(localSettings);
             
             WindowManager wm = new();
             var viewModel = new MainWindowViewModel(User, SC);

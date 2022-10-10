@@ -6,15 +6,18 @@ using AvazehApiClient.DataAccess;
 using System.Threading.Tasks;
 using System;
 using System.Windows.Input;
+using SharedLibrary.SecurityAndSettingsModels;
 
 namespace AvazehWpf.ViewModels
 {
     public class ProductDetailViewModel : ViewAware
     {
-        public ProductDetailViewModel(ICollectionManager<ProductModel> manager, ProductModel product, Func<Task> callBack)
+        public ProductDetailViewModel(ICollectionManager<ProductModel> manager, ProductModel product, LoggedInUser_DTO user, Func<Task> callBack)
         {
             Manager = manager;
+            User = user;
             CallBackFunc = callBack;
+            LoadSettings();
             if (product is not null)
             {
                 Product = product;
@@ -27,7 +30,14 @@ namespace AvazehWpf.ViewModels
             }
         }
 
+        private void LoadSettings()
+        {
+            CanEditProduct = Manager.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanEditProduct));
+            CanDeleteProduct = Manager.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanDeleteProduct));
+        }
+
         private readonly ICollectionManager<ProductModel> Manager;
+        public LoggedInUser_DTO User { get; init; }
         private ProductModel _Product;
         //private ProductModel _BackupProduct;
         private Func<Task> CallBackFunc;
@@ -44,10 +54,22 @@ namespace AvazehWpf.ViewModels
             get => _Product;
             set { _Product = value; NotifyOfPropertyChange(() => Product); }
         }
+        private bool canEditProduct;
+        public bool CanEditProduct
+        {
+            get { return canEditProduct; }
+            set { canEditProduct = value; NotifyOfPropertyChange(() => CanEditProduct); }
+        }
+        private bool canDeleteProduct;
+        public bool CanDeleteProduct
+        {
+            get { return canDeleteProduct; }
+            set { canDeleteProduct = value; NotifyOfPropertyChange(() => CanDeleteProduct); }
+        }
 
         public async Task DeleteAndCloseAsync()
         {
-            if (Product == null || Product.Id == 0) return;
+            if (!CanDeleteProduct || Product == null || Product.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete {Product.ProductName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
             if (await Manager.DeleteItemAsync(Product.Id) == false) MessageBox.Show($"Product with ID: {Product.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -61,10 +83,11 @@ namespace AvazehWpf.ViewModels
 
         public async Task SaveAndNewAsync()
         {
+            if (!CanEditProduct) return;
             if (await SaveToDatabaseAsync() == false) return;
             var newProduct = new ProductModel();
             WindowManager wm = new();
-            await wm.ShowWindowAsync(new ProductDetailViewModel(Manager, newProduct, CallBackFunc));
+            await wm.ShowWindowAsync(new ProductDetailViewModel(Manager, newProduct, User, CallBackFunc));
             CloseWindow();
         }
 
@@ -75,13 +98,14 @@ namespace AvazehWpf.ViewModels
 
         public async Task SaveAndCloseAsync()
         {
+            if (!CanEditProduct) return;
             if (await SaveToDatabaseAsync() == false) return;
             CloseWindow();
         }
 
         private async Task<bool> SaveToDatabaseAsync()
         {
-            if (Product == null) return false;
+            if (!CanEditProduct || Product == null) return false;
             var validate = Manager.ValidateItem(Product);
             if (validate.IsValid)
             {
