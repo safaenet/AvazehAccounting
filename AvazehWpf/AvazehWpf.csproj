@@ -6,6 +6,7 @@
     <UseWPF>true</UseWPF>
     <ReferencePath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win64_x64\dotnet\</ReferencePath>
     <ApplicationIcon>Oxygen-Icons.org-Oxygen-Apps-partitionmanager.ico</ApplicationIcon>
+    <StartupObject></StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
