@@ -100,7 +100,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
                     break;
             }
             var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
-            return @$"([Title] LIKE {criteria}
+            return @$"([Title] LIKE N{criteria}
                       {mode} CAST([Amount] AS VARCHAR) LIKE {criteria}
                       {mode} [CountString] LIKE {criteria}
                       {mode} CAST([CountValue] AS VARCHAR) LIKE {criteria}
@@ -109,7 +109,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
                       {mode} [TimeCreated] LIKE {criteria}
                       {mode} [DateUpdated] LIKE {criteria}
                       {mode} [TimeUpdated] LIKE {criteria}
-                      {mode} [Descriptions] LIKE {criteria} ) 
+                      {mode} [Descriptions] LIKE N{criteria} ) 
                       { (FinStatus == null ? "" : $" AND ISNULL(([Amount] * [CountValue]), 0) { finStatusOperand } 0 ")}
             ";
         }
