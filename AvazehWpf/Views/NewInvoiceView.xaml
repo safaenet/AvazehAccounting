@@ -33,6 +33,11 @@
                     <Setter Property="ToolTip" Value="{Binding Path=Id, StringFormat='Customer ID: {0}'}"/>
                 </Style>
             </ComboBox.ItemContainerStyle>
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
         </ComboBox>
     </Grid>
 </Window>

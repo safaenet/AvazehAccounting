@@ -470,6 +470,14 @@ namespace AvazehWpf.ViewModels
             await wm.ShowDialogAsync(new NewInvoiceViewModel(Singleton, Invoice.Id, ICM, ccm, RefreshAndReloadCustomerTotalBalanceAsync, User, SC));
         }
 
+        public async Task EditCustomerAsync()
+        {
+            if (!CanEditInvoice || Invoice is null) return;
+            WindowManager wm = new();
+            var ccm = SC.GetInstance<ICollectionManager<CustomerModel>>();
+            await wm.ShowWindowAsync(new CustomerDetailViewModel(ccm, Invoice.Customer, User, null));
+        }
+
         public void CloseWindow()
         {
             (GetView() as Window).Close();
@@ -529,7 +537,7 @@ namespace AvazehWpf.ViewModels
             }
         }
 
-        private async Task GetComboboxItemsAsync()
+        public async Task GetComboboxItemsAsync()
         {
             ProductItemsForComboBox = await Singleton.ReloadProductNames();
             ProductUnits = await Singleton.ReloadProductUnits();

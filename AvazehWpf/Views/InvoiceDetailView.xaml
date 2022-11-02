@@ -94,12 +94,15 @@
                                 <Button x:Name="EditOwnerAsync" IsEnabled="{Binding CanEditInvoice}" TabIndex="7" Width="20" Margin="0,0,2,0">
                                     <materialDesign:PackIcon Kind="EditOutline" Width="15" Height="15"/>
                                 </Button>
-                                <TextBox Text="{Binding Invoice.Customer.FullName, Mode=OneWay}" IsReadOnly="True" MaxWidth="200" Width="175" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]"/>
+                                <Button x:Name="EditCustomerAsync" IsEnabled="{Binding CanEditInvoice}" TabIndex="7" Width="20" Margin="0,0,2,0">
+                                    <materialDesign:PackIcon Kind="PersonEdit" Width="15" Height="15"/>
+                                </Button>
+                                <TextBox Text="{Binding Invoice.Customer.FullName, Mode=OneWay}" IsReadOnly="True" MaxWidth="200" Width="153" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]"/>
                             </StackPanel>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,3">
-                            <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <StackPanel Width="90" Orientation="Horizontal" HorizontalAlignment="Center">
                                 <materialDesign:PackIcon Kind="PhoneOutline" Margin="0,2,5,2"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره تماس" Margin="0,2,0,2"/>
                             </StackPanel>
@@ -111,8 +114,9 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                         </StackPanel>
-                        <StackPanel Orientation="Vertical" Margin="0,0,3,3">
-                            <StackPanel Width="100" Orientation="Horizontal" HorizontalAlignment="Center">
+                        
+                        <StackPanel Orientation="Vertical" Margin="0,0,0,3">
+                            <StackPanel Width="90" Orientation="Horizontal" HorizontalAlignment="Center">
                                 <materialDesign:PackIcon Kind="FileOutline" Margin="0,2,5,2"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره فاکتور" Margin="0,2,0,2"/>
                             </StackPanel>
@@ -322,7 +326,15 @@
                         <materialDesign:PackIcon Kind="Rename" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="نام کالا" Margin="0,0,0,0"/>
                     </StackPanel>
-                    <ComboBox IsTextSearchEnabled="True" IsEditable="True" VerticalContentAlignment="Center" Height="25" x:Name="ProductsCombobox" Margin="0,0,3,0"
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="GetComboboxItemsAsync" IsEnabled="{Binding CanEditInvoice}" ToolTip="بروزرسانی لیست کالا" IsTabStop="False" Width="20" Height="25" Margin="0,0,2,0">
+                            <materialDesign:PackIcon Kind="Refresh" Width="15" Height="15"/>
+                        </Button>
+                        <ComboBox Grid.Column="1" IsTextSearchEnabled="True" IsEditable="True" VerticalContentAlignment="Center" Height="25" x:Name="ProductsCombobox" Margin="0,0,3,0"
                               cal:Message.Attach="[Event SelectionChanged]=[Action ProductNames_SelectionChangedAsync($source, $eventArgs)]; [Event PreviewTextInput]=[Action ProductNames_PreviewTextInput()]; [Event GotFocus] = [Action SetKeyboardLayout]"
                               ItemsSource="{Binding ProductItemsForComboBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsDropDownOpen="{Binding IsProductInputDropDownOpen, Mode=TwoWay}"
                               SelectedItem="{Binding SelectedProductItem, Mode=TwoWay}" TabIndex="0" SelectedValuePath="Id" DisplayMemberPath="ItemName"
@@ -332,7 +344,13 @@
                                 <Setter Property="ToolTip" Value="{Binding Path=Id, StringFormat='Product ID: {0}'}"/>
                             </Style>
                         </ComboBox.ItemContainerStyle>
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
                     </ComboBox>
+                    </Grid>                    
                 </StackPanel>
             </Grid>
             <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditItem()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
@@ -450,6 +468,7 @@
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Background" Value="{Binding Path=DateCreated, Converter={StaticResource DateToColorConverterForNewItem}}"/>
                                 <Setter Property="Foreground" Value="Black"/>
+                                <Setter Property="TextAlignment" Value="Center"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
@@ -458,10 +477,17 @@
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Background" Value="{Binding Path=DateUpdated, Converter={StaticResource DateToColorConverterForUpdatedItem}}"/>
                                 <Setter Property="Foreground" Value="Black"/>
+                                <Setter Property="TextAlignment" Value="Center"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="ساعت ویرایش" Binding="{Binding TimeUpdated, Mode=OneWay}" Width="82"/>
+                    <DataGridTextColumn Header="ساعت ویرایش" Binding="{Binding TimeUpdated, Mode=OneWay}" Width="82">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="TextAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="توضیحات" Binding="{Binding Descriptions, Mode=OneWay}" Width="0.6*"/>
                 </DataGrid.Columns>
             </DataGrid>

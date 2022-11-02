@@ -22,7 +22,8 @@ namespace AvazehWpf.ViewModels
             if (customer is not null)
             {
                 Customer = customer;
-                WindowTitle = customer.FullName + " - مشتری"; ;
+                WindowTitle = customer.FullName + " - مشتری";
+                Customer.Clone(customerBackup);
             }
             else
             {
@@ -41,6 +42,7 @@ namespace AvazehWpf.ViewModels
         private CustomerModel _Customer;
         private Func<Task> CallBackFunc;
         private string windowTitle;
+        private CustomerModel customerBackup;
 
         public string WindowTitle
         {
@@ -93,7 +95,7 @@ namespace AvazehWpf.ViewModels
         public async Task DeleteAndCloseAsync()
         {
             if (!CanDeleteCustomer) return;
-            if (Customer == null || Customer.Id == 0) return;
+            if (Customer == null || Customer.Id == 0) CloseWindow();
             var result = MessageBox.Show("Are you sure ?", $"Delete {Customer.FullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
             if (await Manager.DeleteItemAsync(Customer.Id) == false) MessageBox.Show($"Customer with ID: {Customer.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -117,6 +119,7 @@ namespace AvazehWpf.ViewModels
 
         public void CancelAndClose()
         {
+            if (Customer != null && Customer.Id != 0) Customer = customerBackup;
             CloseWindow();
         }
 
@@ -159,7 +162,8 @@ namespace AvazehWpf.ViewModels
 
         public async Task ClosingWindowAsync()
         {
-            await CallBackFunc?.Invoke();
+            if (CallBackFunc != null)
+                await CallBackFunc?.Invoke();
         }
 
         public void Window_PreviewKeyDown(object window, KeyEventArgs e)

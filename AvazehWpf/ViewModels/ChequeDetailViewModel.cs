@@ -106,6 +106,8 @@ namespace AvazehWpf.ViewModels
         {
             if (await SaveToDatabaseAsync() == false) return;
             var newCheque = new ChequeModel();
+            Cheque.Clone(newCheque);
+            newCheque.Id = 0;
             WindowManager wm = new();
             await wm.ShowWindowAsync(new ChequeDetailViewModel(Manager, newCheque, Singleton, CallBackFunc));
             CloseWindow();
