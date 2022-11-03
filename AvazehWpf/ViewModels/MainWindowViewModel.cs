@@ -136,6 +136,8 @@ namespace AvazehWpf.ViewModels
             set { canViewSettingsAsync = value; NotifyOfPropertyChange(() => CanViewSettingsAsync); }
         }
 
+        public bool ShowChequeNotification { get; set; }
+
         private async Task LoadKnowledgeOfTheDayAsync()
         {
             HttpClient httpClient = new();
@@ -154,9 +156,6 @@ namespace AvazehWpf.ViewModels
             }
             else KodAvailable = false;
         }
-
-
-        public bool ShowChequeNotification { get; set; }
 
         public async Task AddNewInvoiceAsync()
         {
@@ -305,5 +304,4 @@ namespace AvazehWpf.ViewModels
     {
         public string Content { get; set; }
     }
-
 }

@@ -54,6 +54,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             SELECT * FROM ChequeEvents WHERE ChequeId IN (SELECT c.Id FROM @cheques c);";
         private readonly string DeleteChequeQuery = @"DELETE FROM Cheques WHERE [Id] = @id";
         private readonly string LoadBanknamesQuery = "SELECT DISTINCT [BankName] FROM [Cheques]";
+        private readonly string LoadCloseChequesQuery = "SELECT * FROM Cheques c LEFT JOIN [ChequeEvents] ce ON c.Id = ce.ChequeId WHERE CAST(REPLACE(DueDate,'/','') AS bigint) <= CAST(@nextDate AS bigint) AND CAST(REPLACE(DueDate,'/','') AS bigint) >= CAST(@today AS bigint) -- AND ce.[EventType] != 2";
 
         public string GenerateWhereClause(string val, ChequeListQueryStatus? listQueryStatus, SqlSearchMode mode = SqlSearchMode.OR)
         {
@@ -158,6 +159,15 @@ namespace DataLibraryCore.DataAccess.SqlServer
         {
             var result = await DataAccess.LoadDataAsync<string, DynamicParameters>(LoadBanknamesQuery, null);
             return result.ToList();
+        }
+
+        public async Task<ObservableCollection<ChequeModel>> LoadChequesByDueDate(string FromDate, string ToDate)
+        {
+            DynamicParameters dp = new();
+            dp.Add("@today", FromDate);
+            dp.Add("@nextDate", ToDate);
+            var result = await DataAccess.LoadDataAsync<ChequeModel, DynamicParameters>(LoadCloseChequesQuery, dp);
+            return result;
         }
 
         public async Task<int> GetTotalQueryCountAsync(string WhereClause)

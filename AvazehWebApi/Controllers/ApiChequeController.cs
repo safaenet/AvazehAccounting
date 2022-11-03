@@ -1,5 +1,6 @@
 ﻿using AvazehWeb;
 using DataLibraryCore.DataAccess.Interfaces;
+using DataLibraryCore.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,8 @@ using SharedLibrary.Enums;
 using SharedLibrary.SecurityAndSettingsModels;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace AvazehWebAPI.Controllers
@@ -51,13 +54,23 @@ namespace AvazehWebAPI.Controllers
             return items is null ? NotFound("Couldn't find any match") : items;
         }
 
+        [HttpGet("CloseCheques"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanViewChequesList))]
+        public async Task<ActionResult<List<ChequeModel>>> GetCloseChequesAsync()
+        {
+            int Id = int.Parse(User.FindFirstValue(ClaimTypes.SerialNumber));
+            IUserProcessor Processor;
+            var settings = await Processor.GetUserSettingsAsync(Id);
+            var items = await Manager.Processor.LoadChequesByDueDate(PersianCalendarModel.GetCurrentRawPersianDate(), PersianCalendarModel.GetCurrentRawPersianDate(settings.ChequeNotifyDays));
+            return items is null ? NotFound("Couldn't find any match") : items.ToList();
+        }
+
         [HttpPost, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanAddNewCheque))]
         public async Task<ActionResult<ChequeModel>> CreateItemAsync(ChequeModel_DTO_Create_Update model)
         {
             var newItem = model.AsDaL();
-            if (!Manager.Processor.ValidateItem(newItem as ChequeModel).IsValid) return BadRequest(0);
-            await Manager.Processor.CreateItemAsync(newItem as ChequeModel);
-            return newItem as ChequeModel;
+            if (!Manager.Processor.ValidateItem(newItem).IsValid) return BadRequest(0);
+            await Manager.Processor.CreateItemAsync(newItem);
+            return newItem;
         }
 
         [HttpPut("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanEditCheque))]
@@ -65,10 +78,10 @@ namespace AvazehWebAPI.Controllers
         {
             if (model is null) return BadRequest("Model is not valid");
             var updatedModel = model.AsDaL();
-            if (!Manager.Processor.ValidateItem(updatedModel as ChequeModel).IsValid) return BadRequest("Model is not valid");
+            if (!Manager.Processor.ValidateItem(updatedModel).IsValid) return BadRequest("Model is not valid");
             updatedModel.Id = Id;
-            if (await Manager.Processor.UpdateItemAsync(updatedModel as ChequeModel) == 0) return NotFound();
-            return updatedModel as ChequeModel;
+            if (await Manager.Processor.UpdateItemAsync(updatedModel) == 0) return NotFound();
+            return updatedModel;
         }
 
         [HttpDelete, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanDeleteCheque))]

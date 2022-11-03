@@ -13,5 +13,6 @@ namespace DataLibraryCore.DataAccess.Interfaces
         string GenerateWhereClause(string val, ChequeListQueryStatus? listQueryStatus, SqlSearchMode mode);
         Task<ObservableCollection<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy, OrderType Order);
         Task<List<string>> GetBanknames();
+        Task<ObservableCollection<ChequeModel>> LoadChequesByDueDate(string FromDate, string ToDate);
     }
 }
