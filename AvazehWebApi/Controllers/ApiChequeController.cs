@@ -8,6 +8,7 @@ using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
 using SharedLibrary.SecurityAndSettingsModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -20,12 +21,14 @@ namespace AvazehWebAPI.Controllers
     [Route("api/v1/[controller]")]
     public class ChequeController : ControllerBase
     {
-        public ChequeController(IChequeCollectionManager manager)
+        public ChequeController(IChequeCollectionManager manager, System.IServiceProvider service)
         {
             Manager = manager;
+            Service = service;
         }
 
         private readonly IChequeCollectionManager Manager;
+        private readonly IServiceProvider Service;
 
         //GET /Cheque?Id=1&SearchText=sometext
         [HttpGet, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanViewChequesList))]
@@ -55,10 +58,11 @@ namespace AvazehWebAPI.Controllers
         }
 
         [HttpGet("CloseCheques"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanViewChequesList))]
-        public async Task<ActionResult<List<ChequeModel>>> GetCloseChequesAsync()
+        public async Task<ActionResult<List<ChequeModel>>> GetCloseChequesAsync(int Days)
         {
             int Id = int.Parse(User.FindFirstValue(ClaimTypes.SerialNumber));
             IUserProcessor Processor;
+            Processor = Service.GetService(typeof(IUserProcessor)) as IUserProcessor;
             var settings = await Processor.GetUserSettingsAsync(Id);
             var items = await Manager.Processor.LoadChequesByDueDate(PersianCalendarModel.GetCurrentRawPersianDate(), PersianCalendarModel.GetCurrentRawPersianDate(settings.ChequeNotifyDays));
             return items is null ? NotFound("Couldn't find any match") : items.ToList();

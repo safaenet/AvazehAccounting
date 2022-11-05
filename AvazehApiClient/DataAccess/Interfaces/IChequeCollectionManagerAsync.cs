@@ -11,5 +11,6 @@ namespace AvazehApiClient.DataAccess.Interfaces
     public interface IChequeCollectionManagerAsync : ICollectionManager<ChequeModel>
     {
         ChequeListQueryStatus? ListQueryStatus { get; set; }
+        Task<List<ChequeModel>> GetCloseCheques();
     }
 }

@@ -129,6 +129,7 @@ namespace AvazehWpf.ViewModels
 
         private bool canViewSettingsAsync;
         private LoggedInUser_DTO user;
+        private bool showChequeNotification;
 
         public bool CanViewSettingsAsync
         {
@@ -136,7 +137,14 @@ namespace AvazehWpf.ViewModels
             set { canViewSettingsAsync = value; NotifyOfPropertyChange(() => CanViewSettingsAsync); }
         }
 
-        public bool ShowChequeNotification { get; set; }
+        public bool ShowChequeNotification
+        {
+            get => showChequeNotification; set
+            {
+                showChequeNotification = value;
+                NotifyOfPropertyChange(() => ShowChequeNotification);
+            }
+        }
 
         private async Task LoadKnowledgeOfTheDayAsync()
         {
@@ -197,10 +205,11 @@ namespace AvazehWpf.ViewModels
         public async Task ViewChequesAsync()
         {
             var ccm = SC.GetInstance<IChequeCollectionManagerAsync>();
-            var singleton = SC.GetInstance<SingletonClass>();
-            WindowManager wm = new();
-            var viewModel = new ChequeListViewModel(ccm, User, singleton);
-            await wm.ShowWindowAsync(viewModel);
+            //var singleton = SC.GetInstance<SingletonClass>();
+            //WindowManager wm = new();
+            //var viewModel = new ChequeListViewModel(ccm, User, singleton);
+            //await wm.ShowWindowAsync(viewModel);
+            var list = await ccm.GetCloseCheques();
         }
 
         public async Task ViewCustomersAsync()

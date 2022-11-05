@@ -5,6 +5,7 @@ using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
 using SharedLibrary.Validators;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -81,6 +82,12 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
             ChequeValidator validator = new();
             var result = validator.Validate(item);
             return result;
+        }
+
+        public async Task<List<ChequeModel>> GetCloseCheques()
+        {
+            var list = await ApiProcessor.GetCollectionAsync<List<ChequeModel>>("CloseCheques", 0);
+            return list;
         }
 
         public async Task<int> GotoPageAsync(int PageNumber, bool Refresh = false)
