@@ -53,8 +53,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
             SELECT * FROM @cheques ORDER BY {1} {2};
             SELECT * FROM ChequeEvents WHERE ChequeId IN (SELECT c.Id FROM @cheques c);";
         private readonly string DeleteChequeQuery = @"DELETE FROM Cheques WHERE [Id] = @id";
-        private readonly string LoadBanknamesQuery = "SELECT DISTINCT [BankName] FROM [Cheques]";
-        private readonly string LoadCloseChequesQuery = "SELECT * FROM Cheques c LEFT JOIN [ChequeEvents] ce ON c.Id = ce.ChequeId WHERE CAST(REPLACE(DueDate,'/','') AS bigint) <= CAST(@nextDate AS bigint) AND CAST(REPLACE(DueDate,'/','') AS bigint) >= CAST(@today AS bigint) -- AND ce.[EventType] != 2";
+        private readonly string LoadBanknamesQuery = "SELECT DISTINCT [BankName] FROM [Cheques]";        
 
         public string GenerateWhereClause(string val, ChequeListQueryStatus? listQueryStatus, SqlSearchMode mode = SqlSearchMode.OR)
         {
@@ -163,10 +162,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         public async Task<ObservableCollection<ChequeModel>> LoadChequesByDueDate(string FromDate, string ToDate)
         {
-            DynamicParameters dp = new();
-            dp.Add("@today", FromDate);
-            dp.Add("@nextDate", ToDate);
-            var result = await DataAccess.LoadDataAsync<ChequeModel, DynamicParameters>(LoadCloseChequesQuery, dp);
+            string LoadCloseChequesQuery = $" CAST(REPLACE(c.DueDate,'/','') AS bigint) <= CAST('{ ToDate }' AS bigint) AND CAST(REPLACE(c.DueDate,'/','') AS bigint) >= CAST('{ FromDate }' AS bigint) ";
+            var result = await LoadManyItemsAsync(0, int.MaxValue, LoadCloseChequesQuery);
             return result;
         }
 
@@ -180,8 +177,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public async Task<ObservableCollection<ChequeModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
         {
             string sqlTemp = $@"INSERT @cheques SELECT c.* FROM Cheques c LEFT JOIN ChequeEvents ce1 ON (c.Id = ce1.ChequeId) LEFT OUTER JOIN ChequeEvents ce2 ON (c.Id = ce2.ChequeId AND (ce1.Id < ce2.Id)) WHERE ce2.Id IS NULL
-                                { (string.IsNullOrEmpty(WhereClause) ? "" : $" AND { WhereClause }") } ORDER BY [{ OrderBy }]
-                                OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
+                                { (string.IsNullOrEmpty(WhereClause) ? "" : $" AND { WhereClause }") } 
+                                ORDER BY [{ OrderBy }] OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
             string query = string.Format(SelectChequeQuery, sqlTemp, OrderBy, Order);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
             var reader = await conn.QueryMultipleAsync(query, null);

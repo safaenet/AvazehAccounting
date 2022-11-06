@@ -7,6 +7,7 @@ using AvazehApiClient.DataAccess;
 using System.Net.Http;
 using SharedLibrary.SecurityAndSettingsModels;
 using System.Security.Claims;
+using System.Linq;
 
 namespace AvazehWpf.ViewModels
 {
@@ -19,6 +20,9 @@ namespace AvazehWpf.ViewModels
             _ = LoadKnowledgeOfTheDayAsync().ConfigureAwait(true);
             ApiProcessor = SC.GetInstance<IApiProcessor>();
             LoadSettings();
+            DispatcherTimer.Tick += DispatcherTimer_Tick;
+            DispatcherTimer.Interval = new System.TimeSpan(0, 0, 5);
+            DispatcherTimer.Start();
         }
 
         private void LoadSettings()
@@ -33,6 +37,8 @@ namespace AvazehWpf.ViewModels
             CanViewProductsAsync = ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewProductsList));
             CanViewSettingsAsync = ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanManageItself)) || ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanManageOthers));
         }
+
+        System.Windows.Threading.DispatcherTimer DispatcherTimer = new();
 
         public LoggedInUser_DTO User
         {
@@ -130,6 +136,7 @@ namespace AvazehWpf.ViewModels
         private bool canViewSettingsAsync;
         private LoggedInUser_DTO user;
         private bool showChequeNotification;
+        private System.Windows.Media.Brush chequeNotificationForeground;
 
         public bool CanViewSettingsAsync
         {
@@ -144,6 +151,27 @@ namespace AvazehWpf.ViewModels
                 showChequeNotification = value;
                 NotifyOfPropertyChange(() => ShowChequeNotification);
             }
+        }
+
+        public System.Windows.Media.Brush ChequeNotificationForeground
+        {
+            get => chequeNotificationForeground; set
+            {
+                chequeNotificationForeground = value;
+                NotifyOfPropertyChange(() => ChequeNotificationForeground);
+            }
+        }
+
+        private async void DispatcherTimer_Tick(object sender, System.EventArgs e)
+        {
+            var ccm = SC.GetInstance<IChequeCollectionManagerAsync>();
+            var list = await ccm.GetCloseCheques();
+            if (list != null && list.Count > 0)
+            {
+                ShowChequeNotification = true;
+                if (list.All(c => c.LastEventString == SharedLibrary.Enums.ChequeEventTypes.Sold.ToString())) ChequeNotificationForeground = System.Windows.Media.Brushes.Orange;
+                else ChequeNotificationForeground = System.Windows.Media.Brushes.Red;
+            } else ShowChequeNotification = false;
         }
 
         private async Task LoadKnowledgeOfTheDayAsync()
@@ -205,11 +233,10 @@ namespace AvazehWpf.ViewModels
         public async Task ViewChequesAsync()
         {
             var ccm = SC.GetInstance<IChequeCollectionManagerAsync>();
-            //var singleton = SC.GetInstance<SingletonClass>();
-            //WindowManager wm = new();
-            //var viewModel = new ChequeListViewModel(ccm, User, singleton);
-            //await wm.ShowWindowAsync(viewModel);
-            var list = await ccm.GetCloseCheques();
+            var singleton = SC.GetInstance<SingletonClass>();
+            WindowManager wm = new();
+            var viewModel = new ChequeListViewModel(ccm, User, singleton);
+            await wm.ShowWindowAsync(viewModel);
         }
 
         public async Task ViewCustomersAsync()

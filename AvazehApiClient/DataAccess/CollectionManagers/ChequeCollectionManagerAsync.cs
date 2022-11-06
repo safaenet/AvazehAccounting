@@ -86,7 +86,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
 
         public async Task<List<ChequeModel>> GetCloseCheques()
         {
-            var list = await ApiProcessor.GetCollectionAsync<List<ChequeModel>>("CloseCheques", 0);
+            var list = await ApiProcessor.GetCollectionAsync<List<ChequeModel>>("Cheque/CloseCheques", 0);
             return list;
         }
 

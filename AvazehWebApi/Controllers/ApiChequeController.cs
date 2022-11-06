@@ -57,7 +57,7 @@ namespace AvazehWebAPI.Controllers
             return items is null ? NotFound("Couldn't find any match") : items;
         }
 
-        [HttpGet("CloseCheques"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanViewChequesList))]
+        [HttpGet("CloseCheques/{Days}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanViewChequesList))]
         public async Task<ActionResult<List<ChequeModel>>> GetCloseChequesAsync(int Days)
         {
             int Id = int.Parse(User.FindFirstValue(ClaimTypes.SerialNumber));
