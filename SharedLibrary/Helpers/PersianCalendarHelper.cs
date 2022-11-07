@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
 
-namespace DataLibraryCore.Models
+namespace SharedLibrary.Helpers
 {
-    public static class PersianCalendarModel
+    public static class PersianCalendarHelper
     {
         /// <summary>
         /// Gets the current Persian date in format of "YYYY/mm/dd"
@@ -17,7 +17,7 @@ namespace DataLibraryCore.Models
         /// <summary>
         /// Gets the current Persian date + AddDays in format of "YYYY/mm/dd"
         /// </summary>
-        public static string GetCurrentPersianDate(int AddDays)
+        public static string GetPersianDate(int AddDays)
         {
             PersianCalendar pCal = new();
             DateTime now = DateTime.Now.AddDays(AddDays);
@@ -37,7 +37,7 @@ namespace DataLibraryCore.Models
         /// <summary>
         /// Gets the current Persian date + AddDays in format of "YYYYmmdd"
         /// </summary>
-        public static string GetCurrentRawPersianDate(int AddDays)
+        public static string GetRawPersianDate(int AddDays)
         {
             PersianCalendar pCal = new();
             DateTime now = DateTime.Now.AddDays(AddDays);

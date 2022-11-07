@@ -1,6 +1,5 @@
 ﻿using DataLibraryCore.DataAccess.Interfaces;
 using DataLibraryCore.DataAccess.SqlServer;
-using DataLibraryCore.Models;
 using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
 using System;

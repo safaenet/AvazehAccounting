@@ -22,6 +22,7 @@ namespace AvazehWpf.ViewModels
             LoadSettings();
             DispatcherTimer.Tick += DispatcherTimer_Tick;
             DispatcherTimer.Interval = new System.TimeSpan(0, 0, 5);
+            DispatcherTimer_Tick(new object(), new System.EventArgs());
             DispatcherTimer.Start();
         }
 
@@ -38,7 +39,7 @@ namespace AvazehWpf.ViewModels
             CanViewSettingsAsync = ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanManageItself)) || ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanManageOthers));
         }
 
-        System.Windows.Threading.DispatcherTimer DispatcherTimer = new();
+        readonly System.Windows.Threading.DispatcherTimer DispatcherTimer = new();
 
         public LoggedInUser_DTO User
         {
@@ -187,7 +188,7 @@ namespace AvazehWpf.ViewModels
                 if (KnowledgeOfTheDay.status == 200)
                 {
                     if (KnowledgeOfTheDay.result.Content != null) KnowledgeOfTheDay.result.Content = KnowledgeOfTheDay.result.Content.Replace('\n', ' ');
-                    KodAvailable = KnowledgeOfTheDay.status == 200 ? true : false;
+                    KodAvailable = KnowledgeOfTheDay.status == 200;
                 }
             }
             else KodAvailable = false;

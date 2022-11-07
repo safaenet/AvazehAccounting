@@ -130,6 +130,13 @@ namespace AvazehWpf.ViewModels
             (GetView() as Window).Close();
         }
 
+        public void FocusOnTextBox()
+        {
+            var txt = ((GetView() as Window).FindName("txtUsername") as TextBox).Text;
+            if (string.IsNullOrEmpty(txt)) ((GetView() as Window).FindName("txtUsername") as TextBox).Focus();
+            else ((GetView() as Window).FindName("txtPassword") as PasswordBox).Focus();
+        }
+
         public async Task TestDBConnectionAsync()
         {
             if (await ApiProcessor.TestDBConnectionAsync())

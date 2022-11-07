@@ -16,6 +16,7 @@ using System.IO;
 using System.Diagnostics;
 using SharedLibrary.SecurityAndSettingsModels;
 using System.Globalization;
+using SharedLibrary.Helpers;
 
 namespace AvazehWpf.ViewModels
 {
@@ -27,7 +28,7 @@ namespace AvazehWpf.ViewModels
             TDM = dManager;
             User = user;
             LoadSettings();
-            CurrentPersianDate = new PersianCalendar().GetPersianDate();
+            CurrentPersianDate = PersianCalendarHelper.GetCurrentPersianDate();
             CallBackFunc = callBack;
             Singleton = singleton;
             if (TransactionId is not null)

@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using System.Linq;
 using DataLibraryCore.DataAccess.Interfaces;
-using DataLibraryCore.Models;
 using System.Threading.Tasks;
 using SharedLibrary.SecurityAndSettingsModels;
 using System.Security.Cryptography;
@@ -9,6 +8,7 @@ using System.Text;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using SharedLibrary.Helpers;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
@@ -106,7 +106,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 IsActive = user.IsActive,
-                DateCreated = PersianCalendarModel.GetCurrentPersianDate()
+                DateCreated = PersianCalendarHelper.GetCurrentPersianDate()
             };
             var dp = new DynamicParameters();
             FillUserBaseParameters(dp, newUser);
@@ -213,8 +213,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
             if (string.IsNullOrEmpty(username)) return;
             DynamicParameters dp = new();
             dp.Add("@username", username);
-            dp.Add("@lastLoginDate", PersianCalendarModel.GetCurrentPersianDate());
-            dp.Add("@lastLoginTime", PersianCalendarModel.GetCurrentTime());
+            dp.Add("@lastLoginDate", PersianCalendarHelper.GetCurrentPersianDate());
+            dp.Add("@lastLoginTime", PersianCalendarHelper.GetCurrentTime());
             await DataAccess.SaveDataAsync(UpdateUserLastLoginDateQuery, dp);
         }
 

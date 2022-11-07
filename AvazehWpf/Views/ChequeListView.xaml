@@ -17,6 +17,7 @@
         <local:EnglishToPersianChequeEventTypeConverter x:Key="EnglishToPersianChequeEventTypeConverter"/>
         <local:ChequeEventToColorConverter x:Key="ChequeEventToColorConverter" SoldColor="{Binding User.UserSettings.ColorSoldItem}" NonSufficientFundColor="{Binding User.UserSettings.ColorNonSufficientFundItem}" CashedColor="{Binding User.UserSettings.ColorCashedItem}"/>
         <local:DateToColorConverter x:Key="DateToColorConverterForNewItem" ItemColor="{Binding User.UserSettings.ColorNewItem}" Date="{Binding CurrentPersianDate}"/>
+        <local:DueDateToColorConverter x:Key="DueDateToColorConverter" NotifColor="{Binding User.UserSettings.ColorChequeNotification}" NotifDays="{Binding User.UserSettings.ChequeNotifyDays}"/>
         <!--body content datagrid cell vertical centering-->
         <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
             <Setter Property="Template">
@@ -245,18 +246,8 @@
                     <DataGridTextColumn Header="تاریخ سررسید" Binding="{Binding DueDate, Mode=OneWay}" Width="80">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
-                                <!--<Setter Property="Background">
-                                    <Setter.Value>
-                                        <MultiBinding Converter="{StaticResource DateToColorConverter}">
-                                            <Binding Path="Settings.ChequeSettings.NotifyCloseCheques" Source="{StaticResource AppSettings}"/>
-                                            <Binding Path="DueDate"/>
-                                            <Binding Path="CurrentPersianDate" Source="{StaticResource AppSettings}"/>
-                                            <Binding Path="Settings.ChequeSettings.NotifyDays" Source="{StaticResource AppSettings}"/>
-                                            <Binding Path="Settings.ChequeSettings.NotificationColor" Source="{StaticResource AppSettings}"/>
-                                        </MultiBinding>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Foreground" Value="Black"/>-->
+                                <Setter Property="Background" Value="{Binding Path=DueDate, Converter={StaticResource DueDateToColorConverter}}"/>
+                                <Setter Property="Foreground" Value="Black"/>
                                 <Setter Property="TextAlignment" Value="Center"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>

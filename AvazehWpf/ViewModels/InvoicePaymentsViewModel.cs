@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace AvazehWpf.ViewModels
@@ -184,6 +185,11 @@ namespace AvazehWpf.ViewModels
                     SelectedPaymentItem = new();
                 }
             }
+        }
+
+        public void FocusOnPayAmountTextBox()
+        {
+            ((GetView() as Window).FindName("PayAmount") as TextBox).Focus();
         }
 
         public void SetKeyboardLayout()

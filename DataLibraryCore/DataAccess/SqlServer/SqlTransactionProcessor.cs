@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using DataLibraryCore.Models;
 using System.Data;
 using System.Linq;
 using System.Collections.ObjectModel;
@@ -12,6 +11,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using SharedLibrary.DtoModels;
 using System.Collections.Generic;
+using SharedLibrary.Helpers;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
@@ -149,8 +149,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public async Task<int> CreateItemAsync(TransactionModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
-            item.TimeCreated = PersianCalendarModel.GetCurrentTime();
+            item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
+            item.TimeCreated = PersianCalendarHelper.GetCurrentTime();
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@fileName", item.FileName);
@@ -166,8 +166,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public async Task<int> UpdateItemAsync(TransactionModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
-            item.TimeUpdated = PersianCalendarModel.GetCurrentTime();
+            item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
+            item.TimeUpdated = PersianCalendarHelper.GetCurrentTime();
             return await DataAccess.SaveDataAsync(UpdateTransactionQuery, item);
         }
 
@@ -189,8 +189,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public async Task<int> InsertTransactionItemToDatabaseAsync(TransactionItemModel item)
         {
             if (item == null || !item.IsCountStringValid) return 0;
-            item.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
-            item.TimeCreated = PersianCalendarModel.GetCurrentTime();
+            item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
+            item.TimeCreated = PersianCalendarHelper.GetCurrentTime();
             DynamicParameters dp = new();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@transactionId", item.TransactionId);
@@ -213,8 +213,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public async Task<int> UpdateTransactionItemInDatabaseAsync(TransactionItemModel item)
         {
             if (item == null || !item.IsCountStringValid) return 0;
-            item.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
-            item.TimeUpdated = PersianCalendarModel.GetCurrentTime();
+            item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
+            item.TimeUpdated = PersianCalendarHelper.GetCurrentTime();
             DynamicParameters dp = new();
             dp.Add("@id", item.Id);
             dp.Add("@title", item.Title);
@@ -244,8 +244,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
         {
             var dp = new DynamicParameters();
             dp.Add("@id", Id);
-            dp.Add("@dateUpdated", PersianCalendarModel.GetCurrentPersianDate());
-            dp.Add("@timeUpdated", PersianCalendarModel.GetCurrentTime());
+            dp.Add("@dateUpdated", PersianCalendarHelper.GetCurrentPersianDate());
+            dp.Add("@timeUpdated", PersianCalendarHelper.GetCurrentTime());
             await DataAccess.SaveDataAsync(UpdateSubItemDateAndTimeQuery, dp).ConfigureAwait(false);
         }
 

@@ -6,7 +6,7 @@
         xmlns:cal="http://www.caliburnproject.org"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:LoginViewModel}" mc:Ignorable="d"
-        cal:Message.Attach="[Event Loaded] = [Action LoadSettings]"
+        cal:Message.Attach="[Event Loaded] = [Action LoadSettings]; [Event Loaded] = [FocusOnTextBox()]"
         Title="ورود" Height="210" Width="350" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" FocusManager.FocusedElement="{Binding FocusedElement}">
     <Grid>
         <Grid.RowDefinitions>

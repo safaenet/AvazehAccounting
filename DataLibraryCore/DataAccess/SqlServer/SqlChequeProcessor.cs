@@ -10,8 +10,8 @@ using SharedLibrary.Enums;
 using SharedLibrary.Validators;
 using System.Threading.Tasks;
 using System.Globalization;
-using DataLibraryCore.Models;
 using System.Collections.Generic;
+using SharedLibrary.Helpers;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
@@ -58,7 +58,7 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public string GenerateWhereClause(string val, ChequeListQueryStatus? listQueryStatus, SqlSearchMode mode = SqlSearchMode.OR)
         {
             var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
-            var persianDate = PersianCalendarModel.GetCurrentPersianDate();
+            var persianDate = PersianCalendarHelper.GetCurrentPersianDate();
             //NotCashed : WHERE [EventType] != 2 AND [EventType] != 4
             //Cashed : WHERE [EventType] = 4
             //Sold : WHERE [EventType] = 2

@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using DataLibraryCore.Models;
 using System.Data;
 using System.Linq;
 using System.Collections.ObjectModel;
@@ -9,6 +8,7 @@ using SharedLibrary.Validators;
 using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
 using System.Threading.Tasks;
+using SharedLibrary.Helpers;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
@@ -58,8 +58,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public async Task<int> CreateItemAsync(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
-            item.TimeCreated = PersianCalendarModel.GetCurrentTime();
+            item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
+            item.TimeCreated = PersianCalendarHelper.GetCurrentTime();
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@productName", item.ProductName);
@@ -80,8 +80,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
         public async Task<int> UpdateItemAsync(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
-            item.TimeUpdated = PersianCalendarModel.GetCurrentTime();
+            item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
+            item.TimeUpdated = PersianCalendarHelper.GetCurrentTime();
             return await DataAccess.SaveDataAsync(UpdateProductQuery, item);
         }
 

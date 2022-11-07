@@ -1,5 +1,6 @@
 ﻿using AvazehApiClient.DataAccess;
 using SharedLibrary.Enums;
+using SharedLibrary.Helpers;
 using System;
 using System.Globalization;
 using System.Windows;
@@ -348,6 +349,48 @@ namespace AvazehWpf
                 case < 0:
                     if (string.IsNullOrEmpty(NegativeColor)) return DependencyProperty.UnsetValue; else return new SolidColorBrush(NegativeColor.ToColor());
             }
+            return DependencyProperty.UnsetValue;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+    }
+
+    public class DueDateToColorConverter : Freezable, IValueConverter
+    {
+        #region Overrides of Freezable    
+        protected override Freezable CreateInstanceCore()
+        {
+            return new DueDateToColorConverter();
+        }
+        #endregion
+
+        public string NotifColor
+        {
+            get { return (string)GetValue(NotifColorProperty); }
+            set { SetValue(NotifColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ItemColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty NotifColorProperty =
+            DependencyProperty.Register("NotifColor", typeof(string), typeof(DueDateToColorConverter), new PropertyMetadata(null));
+
+        public int NotifDays
+        {
+            get { return (int)GetValue(NotifDaysProperty); }
+            set { SetValue(NotifDaysProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Date.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty NotifDaysProperty =
+            DependencyProperty.Register("NotifDays", typeof(int), typeof(DueDateToColorConverter), new PropertyMetadata(2));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || string.IsNullOrEmpty(NotifColor)) return DependencyProperty.UnsetValue;
+            var today = PersianCalendarHelper.GetCurrentRawPersianDate();
+            var toDate = PersianCalendarHelper.GetRawPersianDate(NotifDays);
+            var dueDate = ((string)value).Replace("/", "");
+            if (string.Compare(dueDate, toDate) <= 0 && string.Compare(dueDate, today) >= 0) return new SolidColorBrush(NotifColor.ToColor());
             return DependencyProperty.UnsetValue;
         }
 

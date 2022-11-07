@@ -12,7 +12,7 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:InvoicePaymentsViewModel}"
         Title="Invoices" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="700" Height="400"
-        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]">
+        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]; [Event Loaded] = [FocusOnPayAmountTextBox()]">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="3"/>
@@ -117,7 +117,7 @@
                     <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                     <TextBlock TextAlignment="Center" Text="مبلغ" Margin="0,0,0,0"/>
                 </StackPanel>
-                <TextBox Text="{Binding WorkItem.PayAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="25"/>
+                <TextBox x:Name="PayAmount" Text="{Binding WorkItem.PayAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="25"/>
             </StackPanel>
 
         </Grid>

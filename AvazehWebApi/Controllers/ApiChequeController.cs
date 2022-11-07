@@ -1,12 +1,12 @@
 ﻿using AvazehWeb;
 using DataLibraryCore.DataAccess.Interfaces;
-using DataLibraryCore.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
+using SharedLibrary.Helpers;
 using SharedLibrary.SecurityAndSettingsModels;
 using System;
 using System.Collections.Generic;
@@ -64,7 +64,7 @@ namespace AvazehWebAPI.Controllers
             IUserProcessor Processor;
             Processor = Service.GetService(typeof(IUserProcessor)) as IUserProcessor;
             var settings = await Processor.GetUserSettingsAsync(Id);
-            var items = await Manager.Processor.LoadChequesByDueDate(PersianCalendarModel.GetCurrentRawPersianDate(), PersianCalendarModel.GetCurrentRawPersianDate(settings.ChequeNotifyDays));
+            var items = await Manager.Processor.LoadChequesByDueDate(PersianCalendarHelper.GetCurrentRawPersianDate(), PersianCalendarHelper.GetRawPersianDate(settings.ChequeNotifyDays));
             return items is null ? NotFound("Couldn't find any match") : items.ToList();
         }
 
