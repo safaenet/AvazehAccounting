@@ -14,7 +14,7 @@ namespace SharedLibrary.DalModels
         public string TimeUpdated { get; set; }
         public ObservableCollection<InvoiceItemModel> Items { get; set; }
         public ObservableCollection<InvoicePaymentModel> Payments { get; set; }
-        public DiscountTypes DiscountType { get; set; }
+        public DiscountTypes DiscountType { get; set; } = DiscountTypes.Amount;
         public double DiscountValue { get; set; }
         public string Descriptions { get; set; }
         public InvoiceLifeStatus LifeStatus { get; set; }
