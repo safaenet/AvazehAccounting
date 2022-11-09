@@ -38,6 +38,7 @@ namespace SharedLibrary.Validators
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty().WithMessage("{PropertyName} cannot be empty")
                 .Matches(@"([12]\d{3}\/(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01]))$").WithMessage("{PropertyName} is not valid")
+                .Must((model, field) => string.Compare(field.Replace("/", ""), model.IssueDate.Replace("/", "")) >= 0).WithMessage("تاریخ سررسید باید از تاریخ صدور بالاتر باشد")
                 .Length(10).WithMessage("{PropertyName} cannot be more than 10 characters ({TotalLength})");
 
             RuleFor(c => c.BankName)
