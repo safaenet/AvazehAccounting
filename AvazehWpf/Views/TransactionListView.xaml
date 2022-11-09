@@ -1,0 +1,190 @@
+﻿<Window x:Class="AvazehWpf.Views.TransactionListView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cal="http://www.caliburnproject.org"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:AvazehWpf" mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewmodels:TransactionListViewModel}"
+        Title="فایل ها" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
+        Width="1030" Height="650" cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="b2v"/>
+        <!--body content datagrid cell vertical centering-->
+        <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="TextBox">
+                <Setter Property="TextAlignment" Value="Center"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="Black"/>
+                <Setter Property="Margin" Value="0,2,0,2"/>
+                <Setter Property="Height" Value="25"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+            </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3"/>
+            <ColumnDefinition Width="auto" MaxWidth="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="3"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Column="2" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.Resources>
+                    <ObjectDataProvider x:Key="FinStatusItems" MethodName="GetTransactionFinStatusItems" ObjectType="{x:Type viewmodels:TransactionFinStatusItems}"/>
+                </Grid.Resources>
+                <Button IsEnabled="False" x:Name="PrintListAsync" Grid.Column="0" Height="25" Margin="0,0,5,0">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="PrinterOutline" Margin="3"/>
+                        <TextBlock Text="چاپ لیست" VerticalAlignment="Center" Margin="5,0,30,0"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="AddNewTransactionAsync" IsEnabled="{Binding CanAddNewTransaction}" Grid.Column="1" Height="25" Margin="0,0,5,0">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="NotePlusOutline" Margin="3"/>
+                        <TextBlock Text="فایل جدید" VerticalAlignment="Center" Margin="5,0,30,0"/>
+                    </StackPanel>
+                </Button>
+                <ComboBox Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Grid.Column="2" BorderThickness="2" BorderBrush="DarkGray" Height="25" VerticalContentAlignment="Center"
+                          ItemsSource="{Binding Source={StaticResource FinStatusItems}}" SelectedValuePath="Key" DisplayMemberPath="Value"
+                          SelectedValue="{Binding SelectedFinStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action SearchAsync]"/>
+                <Button x:Name="SearchAsync" Grid.Column="3" Height="25" Margin="0,0,5,0">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="DatabaseSearchOutline" Margin="3"/>
+                        <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
+                        <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="3" HorizontalAlignment="Right"/>
+                    </StackPanel>
+                </Button>
+                <TextBox x:Name="SearchText" Grid.Column="4" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandlerAsync($executionContext)]" VerticalContentAlignment="Center" Margin="0,0,3,0"/>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="PreviousPageAsync" Grid.Column="0" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="ArrowLeftCircleOutline" Margin="3"/>
+                        <TextBlock Text="صفحه قبل" VerticalAlignment="Center" Margin="30,0,30,0"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="NextPageAsync" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="صفحه بعد" VerticalAlignment="Center" Margin="30,0,30,0"/>
+                        <materialDesign:PackIcon Kind="ArrowRightCircleOutline" Margin="3" HorizontalAlignment="Right"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditTransactionAsync]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" ItemsSource="{Binding Transactions}"
+                      SelectedItem="{Binding SelectedTransaction}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" RowHeight="25"
+                      HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" FontSize="{Binding User.UserSettings.DataGridFontSize}" CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
+                      viewmodels:DataGridBehavior.DisplayRowNumber="True">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditTransactionAsync]" IsEnabled="{Binding CanViewTransactionDetails}">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="OpenInApp"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="تغییر نام" cal:Message.Attach="[Event Click] = [Action RenameTransactionAsync]" IsEnabled="{Binding CanEditTransaction}">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="Rename"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteTransactionAsync]" IsEnabled="{Binding CanDeleteTransaction}">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="DeleteOutline"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+                <DataGrid.Resources>
+                    <local:DateToColorConverter x:Key="DateToColorConverterForNewItem" ItemColor="{Binding User.UserSettings.ColorNewItem}" Date="{Binding CurrentPersianDate}"/>
+                    <local:DateToColorConverter x:Key="DateToColorConverterForUpdatedItem" ItemColor="{Binding User.UserSettings.ColorUpdatedItem}" Date="{Binding CurrentPersianDate}"/>
+                    <local:AmountToColorConverter x:Key="AmountToColorConverterForTotalBalance" BalancedColor="{Binding User.UserSettings.ColorBalancedItem}" PositiveColor="{Binding User.UserSettings.ColorDeptorItem}" NegativeColor="{Binding User.UserSettings.ColorCreditorItem}"/>
+                    <local:EnglishToPersianTransactionFinStatusConverter x:Key="EnglishToPersianTransactionFinStatusConverter"/>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="شماره" Binding="{Binding Path=Id, Mode=OneWay}" Width="50">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background" Value="{Binding Path=DateCreated, Converter={StaticResource DateToColorConverterForNewItem}}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="نام فایل" Binding="{Binding Path=FileName, Mode=OneWay}" Width="*"/>
+                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="70">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="تاریخ بروزرسانی" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="89">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background" Value="{Binding Path=DateUpdated, Converter={StaticResource DateToColorConverterForUpdatedItem}}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                                <Setter Property="TextAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="ساعت بروزرسانی" Binding="{Binding Path=TimeUpdated, Mode=OneWay}" Width="100">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="TextAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="مبلغ مثبت" Binding="{Binding Path=TotalPositiveItemsSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.5*"/>
+                    <DataGridTextColumn Header="مبلغ منفی" Binding="{Binding Path=TotalNegativeItemsSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.5*"/>
+                    <DataGridTextColumn Header="تراز کل" Binding="{Binding Path=TotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.6*"/>
+                    <DataGridTextColumn Header="وضعیت مالی" Binding="{Binding Path=TransactionFinancialStatus, Converter={StaticResource EnglishToPersianTransactionFinStatusConverter}, Mode=OneWay}" Width="75">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background" Value="{Binding Path=TotalBalance, Converter={StaticResource AmountToColorConverterForTotalBalance}}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Window>

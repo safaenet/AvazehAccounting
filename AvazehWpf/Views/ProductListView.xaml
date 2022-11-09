@@ -3,33 +3,38 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
         xmlns:cal="http://www.caliburnproject.org"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:local="clr-namespace:AvazehWpf" mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:AvazehWpf" mc:Ignorable="d"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:ProductListViewModel}"
-        fw:AcrylicWindow.Enabled="True"
-        Title="Products" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
-        Width="1100" Height="650" fw:AcrylicWindow.AcrylicWindowStyle="NoIcon">
-    <Grid fw:PointerTracker.Enabled="True">
-        <Grid.Resources>
-            <Style TargetType="TextBox">
-                <Setter Property="TextAlignment" Value="Center"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="BorderBrush" Value="Black"/>
-                <Setter Property="Margin" Value="0,2,0,2"/>
-                <Setter Property="Height" Value="25"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-            </Style>
-        </Grid.Resources>
+        Title="کالا ها" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
+        Width="1350" Height="650"
+        cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="b2v"/>
+        <local:DateToColorConverter x:Key="DateToColorConverterForNewItem" ItemColor="{Binding User.UserSettings.ColorNewItem}" Date="{Binding CurrentPersianDate}"/>
+        <local:DateToColorConverter x:Key="DateToColorConverterForUpdatedItem" ItemColor="{Binding User.UserSettings.ColorUpdatedItem}" Date="{Binding CurrentPersianDate}"/>
+        <local:ProductStatusToPersianConverter x:Key="ProductStatusToPersianConverter"/>
+        <!--body content datagrid cell vertical centering-->
+        <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3"/>
             <ColumnDefinition Width="200" MaxWidth="200"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="3"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="3"/>
@@ -42,73 +47,109 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <ScrollViewer Grid.Column="0" Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <Grid fw:PointerTracker.Enabled="True">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" MinWidth="120" Orientation="Vertical">
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
-                            <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="PackageVariantClosed" Margin="0,2,5,2"/>
-                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="Product Name" Margin="0,2,0,2"/>
+                            <StackPanel Width="70" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <materialDesign:PackIcon Kind="BoxOutline" Margin="0,0,3,0"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام کالا" Margin="0,0,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedProduct.ProductName, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200"/>
+                            <TextBox Text="{Binding SelectedProduct.ProductName, Mode=OneWay}" IsReadOnly="True" MaxLength="50" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
-                            <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="CashMultiple" Margin="0,2,5,2"/>
-                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="Buy Price" Margin="0,2,0,2"/>
+                            <StackPanel Width="80" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <materialDesign:PackIcon Kind="Money" Margin="0,0,3,0"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="قیمت خرید" Margin="0,0,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedProduct.BuyPrice, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200"/>
+                            <TextBox Text="{Binding SelectedProduct.BuyPrice, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" IsReadOnly="True" MaxLength="50" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
-                            <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="CashMultiple" Margin="0,2,5,2"/>
-                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="Sell Price" Margin="0,2,0,2"/>
+                            <StackPanel Width="80" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <materialDesign:PackIcon Kind="TagOutline" Margin="0,0,3,0"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="قیمت فروش" Margin="0,0,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedProduct.SellPrice, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200"/>
+                            <TextBox Text="{Binding SelectedProduct.SellPrice, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" IsReadOnly="True" MaxLength="50" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,10">
-                            <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="Barcode" Margin="0,2,5,2"/>
-                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="Barcode" Margin="0,2,0,2"/>
+                            <StackPanel Width="50" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <materialDesign:PackIcon Kind="Barcode" Margin="0,0,3,0"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="بارکد" Margin="0,0,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding SelectedProduct.Barcode, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200"/>
+                            <TextBox Text="{Binding SelectedProduct.Barcode, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                         </StackPanel>
+
+                        <StackPanel Orientation="Vertical" Margin="0,0,0,10">
+                            <StackPanel Width="50" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <materialDesign:PackIcon Kind="Counter" Margin="0,0,3,0"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="تعداد" Margin="0,0,0,2"/>
+                            </StackPanel>
+                            <TextBox Text="{Binding SelectedProduct.CountString, Mode=OneWay}" ToolTip="{Binding Path=SelectedProduct.CountValue}" IsReadOnly="True" Height="25" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical" Margin="0,0,0,10">
+                                <StackPanel Width="100" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 0 0 0">
+                                    <materialDesign:PackIcon Kind="CalendarAdd" Margin="0,0,3,0"/>
+                                    <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد" Margin="0,0,0,2"/>
+                                </StackPanel>
+                                <TextBox Text="{Binding SelectedProduct.DateCreated, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center" Margin="0,0,1,0"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Vertical" Margin="0,0,0,10">
+                                <StackPanel Width="100" Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <materialDesign:PackIcon Kind="CalendarCheckOutline" Margin="0,0,3,0"/>
+                                    <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ بروزرسانی" Margin="0,0,0,2"/>
+                                </StackPanel>
+                                <TextBox Text="{Binding SelectedProduct.DateUpdated, Mode=OneWay}" IsReadOnly="True" Height="25" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center" Margin="1,0,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+
                     </StackPanel>
 
-                    <DockPanel LastChildFill="True"  Grid.Row="1" DockPanel.Dock="Bottom" Margin="0,0,0,5">
+                    <DockPanel LastChildFill="True" Grid.Row="1" DockPanel.Dock="Bottom" Margin="0,0,0,5">
                         <StackPanel DockPanel.Dock = "Top" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="SemanticWeb" Margin="0,2,5,2"/>
-                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="Description Text" Margin="0,2,0,2"/>
+                            <materialDesign:PackIcon Kind="Text" Margin="0,0,3,0"/>
+                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="توضیحات" Margin="0,0,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding SelectedProduct.Descriptions, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MinHeight="50" Height="auto" VerticalContentAlignment="Top" BorderThickness="1" MaxWidth="200"/>
+                        <TextBox Text="{Binding SelectedProduct.Descriptions, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MinHeight="50" Height="auto" VerticalContentAlignment="Top" MaxWidth="200"/>
                     </DockPanel>
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="3,3,0,5">
+                        <CheckBox x:Name="ShowBuyPrice" IsEnabled="{Binding CanViewNetProfits}" FlowDirection="RightToLeft" Margin="5,0,0,0">
+                            <TextBlock Text="قیمت خرید" Margin="0,0,0,0"/>
+                        </CheckBox>
+                        <CheckBox x:Name="ShowSellPrice" FlowDirection="RightToLeft" IsChecked="True" Margin="35,0,0,0">
+                            <TextBlock Text="قیمت فروش" Margin="0,0,0,0"/>
+                        </CheckBox>
+                    </StackPanel>
                 </Grid>
             </ScrollViewer>
             <Grid Grid.Column="0" Grid.Row="1">
                 <StackPanel Orientation="Vertical">
-                    <Button cal:Message.Attach="[Event Click] = [Action AddNewProduct()]" Height="25" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,0,3">
-                        <StackPanel Width="110" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="PackageDown" Margin="3"/>
-                            <TextBlock Text="Add New" VerticalAlignment="Center"/>
+                    <Button cal:Message.Attach="[Event Click] = [Action AddNewProductAsync()]" IsEnabled="{Binding CanAddNewProduct}" Height="25" Margin="0,0,0,3" >
+                        <StackPanel Width="80" Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="BoxAddOutline" Margin="0,0,3,0"/>
+                            <TextBlock Text="کالای جدید" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action EditProduct()]" Height="25" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,0,3">
-                        <StackPanel Width="110" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Edit" Margin="3"/>
-                            <TextBlock Text="Edit" VerticalAlignment="Center"/>
+                    <Button cal:Message.Attach="[Event Click] = [Action EditProductAsync()]" IsEnabled="{Binding CanViewProductDetails}" Height="25" Margin="0,0,0,3" >
+                        <StackPanel Width="70" Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="BoxEditOutline" Margin="0,0,3,0"/>
+                            <TextBlock Text="ویرایش" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action DeleteProduct()]" Height="25" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent">
-                        <StackPanel Width="110" Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Delete" Margin="3"/>
-                            <TextBlock Text="Delete" VerticalAlignment="Center"/>
+                    <Button cal:Message.Attach="[Event Click] = [Action DeleteProductAsync()]" IsEnabled="{Binding CanDeleteProduct}" Height="25" >
+                        <StackPanel Width="60" Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="DeleteOutline" Margin="0,0,3,0"/>
+                            <TextBlock Text="حذف" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -126,15 +167,14 @@
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="Search" Grid.Column="0" Height="25" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,0,0">
+                <Button x:Name="SearchAsync" Grid.Column="0" Height="25" Margin="3,0,0,0" >
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="DatabaseSearch" Margin="3"/>
-                        <TextBlock Text="Search" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="3" HorizontalAlignment="Right"/>
+                        <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
+                        <materialDesign:PackIcon Kind="Search" Margin="3"/>
                     </StackPanel>
                 </Button>
-                <TextBox x:Name="SearchText" Grid.Column="1" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]">
-                </TextBox>
+                <TextBox x:Name="SearchText" Grid.Column="1" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandlerAsync($executionContext)]" VerticalContentAlignment="Center" Margin="3,0,3,0"/>
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -142,27 +182,67 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="PreviousPage" Height="25" HorizontalAlignment="Left" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,0,0">
+                <Button x:Name="PreviousPageAsync" Height="25" HorizontalAlignment="Left" Margin="3,0,0,0">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="ArrowLeftCircle" Margin="3"/>
-                        <TextBlock Text="Previous" VerticalAlignment="Center" Margin="30,0,30,0"/>
+                        <materialDesign:PackIcon Kind="ArrowLeftCircleOutline" Margin="3"/>
+                        <TextBlock Text="صفحه قبل" VerticalAlignment="Center" Margin="30,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,0,0">
+                <Button x:Name="NextPageAsync" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Next" VerticalAlignment="Center" Margin="30,0,30,0"/>
-                        <materialDesign:PackIcon Kind="ArrowRightCircle" Margin="3" HorizontalAlignment="Right"/>
+                        <TextBlock Text="صفحه بعد" VerticalAlignment="Center" Margin="30,0,30,0"/>
+                        <materialDesign:PackIcon Kind="ArrowRightCircleOutline" Margin="3" HorizontalAlignment="Right"/>
                     </StackPanel>
                 </Button>
             </Grid>
-            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditProduct()]" Grid.Row="2" ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False">
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditProductAsync()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" Grid.Row="2" HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver"                      
+                      SelectedItem="{Binding SelectedProduct}" AutoGenerateColumns="False" Background="Transparent" FlowDirection="RightToLeft" CanUserAddRows="False" CanUserDeleteRows="False" ItemsSource="{Binding Products}"
+                      CellStyle="{StaticResource Body_Content_DataGrid_Centering}" RowHeight="25" AlternatingRowBackground="#f7f7f7" viewmodels:DataGridBehavior.DisplayRowNumber="True" Margin="3,0,0,0">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditProductAsync]">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="OpenInApp"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteProductAsync]">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="DeleteOutline"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding Path=Id, Mode=OneWay}" Width="80"/>
-                    <DataGridTextColumn Header="Product Name" Binding="{Binding Path=ProductName, Mode=OneWay}" Width="150"/>
-                    <DataGridTextColumn Header="Buy Price" Binding="{Binding Path=BuyPrice, Mode=OneWay}" Width="150"/>
-                    <DataGridTextColumn Header="Sell Price" Binding="{Binding Path=SellPrice, Mode=OneWay}" Width="150"/>
-                    <DataGridTextColumn Header="Barcode" Binding="{Binding Path=Barcode, Mode=OneWay}" Width="150"/>
-                    <DataGridTextColumn Header="Descriprions" Binding="{Binding Path=Descriprions, Mode=OneWay}" Width="150"/>
+                    <DataGridTextColumn Header="شماره" Binding="{Binding Path=Id, Mode=OneWay}" Width="50">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background" Value="{Binding Path=DateCreated, Converter={StaticResource DateToColorConverterForNewItem}}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="نام کالا" Binding="{Binding Path=ProductName, Mode=OneWay}" Width="0.8*"/>
+                    <DataGridTextColumn Header="قیمت خرید" Binding="{Binding Path=BuyPrice, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Visibility="{Binding Source={x:Reference ShowBuyPrice}, Path=IsChecked, Converter={StaticResource b2v}}" Width="0.4*"/>
+                    <DataGridTextColumn Header="قیمت فروش" Binding="{Binding Path=SellPrice, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Visibility="{Binding Source={x:Reference ShowSellPrice}, Path=IsChecked, Converter={StaticResource b2v}}" Width="0.4*"/>
+                    <DataGridTextColumn Header="بارکد" Binding="{Binding Path=Barcode, Mode=OneWay}" Width="110"/>
+                    <DataGridTextColumn Header="تعداد" Binding="{Binding Path=CountString, Mode=OneWay}" Width="100">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="{Binding Path=CountValue, StringFormat='{}{0:#,#.##}'}" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="70"/>
+                    <DataGridTextColumn Header="تاریخ بروزرسانی" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="90">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background" Value="{Binding Path=DateUpdated, Converter={StaticResource DateToColorConverterForUpdatedItem}}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="توضیحات" Binding="{Binding Path=Descriptions, Mode=OneWay}" Width="*"/>
+                    <DataGridTextColumn Header="وضعیت" Binding="{Binding Path=IsActive, Mode=OneWay, Converter={StaticResource ProductStatusToPersianConverter}}" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

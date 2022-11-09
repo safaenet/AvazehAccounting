@@ -1,39 +1,71 @@
-﻿using Caliburn.Micro;
-using DataLibraryCore.DataAccess.SqlServer;
-using DataLibraryCore.Models;
+﻿using AvazehApiClient.DataAccess;
+using AvazehApiClient.DataAccess.Interfaces;
+using AvazehUserControlLibraryWpf;
+using Caliburn.Micro;
+using SharedLibrary.DalModels;
+using SharedLibrary.Enums;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using DataLibraryCore.DataAccess.Interfaces;
 
 namespace AvazehWpf.ViewModels
 {
     public class ChequeDetailViewModel : ViewAware
     {
-        public ChequeDetailViewModel(IChequeCollectionManager manager, ChequeModel Cheque)
+        public ChequeDetailViewModel(ICollectionManager<ChequeModel> manager, ChequeModel cheque, SingletonClass singleton, Func<Task> callBack)
         {
             Manager = manager;
-            if (Cheque != null)
+            CallBackFunc = callBack;
+            Singleton = singleton;
+            _ = LoadBankNamesForComboboxAsync().ConfigureAwait(true);
+            if (cheque is not null)
             {
-                if (Cheque.Id == 0) Cheque.IssueDate = PersianCalendarModel.GetCurrentPersianDate();
-                this.Cheque = Cheque;
-                _BackupCheque = new ChequeModel();
-                CloneCheque(Cheque, ref _BackupCheque);
+                Cheque = cheque;
+                WindowTitle = "چک " + cheque.Orderer + " به " + cheque.Drawer;
+            }
+            else
+            {
+                Cheque = new();
+                Cheque.IssueDate = pCal.GetPersianDate();
+                Cheque.DueDate = pCal.GetPersianDate();
+                WindowTitle = "چک جدید";
             }
         }
 
-        private readonly IChequeCollectionManager Manager;
+        private async Task LoadBankNamesForComboboxAsync()
+        {
+            BankNamesForComboBox = await Singleton.ReloadBankNames();
+        }
+
+        private readonly ICollectionManager<ChequeModel> Manager;
         private ChequeModel _Cheque;
-        private readonly ChequeModel _BackupCheque;
-        private bool _CancelAndClose = true;
+        private readonly Func<Task> CallBackFunc;
+        private string windowTitle;
+        private SingletonClass Singleton;
+        readonly PersianCalendar pCal = new();
+        private ObservableCollection<string> bankNamesForComboBox;
+
+        public ObservableCollection<string> BankNamesForComboBox
+        {
+            get { return bankNamesForComboBox; }
+            set { bankNamesForComboBox = value; NotifyOfPropertyChange(() => BankNamesForComboBox); }
+        }
+
+
+        public string WindowTitle
+        {
+            get { return windowTitle; }
+            set { windowTitle = value; NotifyOfPropertyChange(() => WindowTitle); }
+        }
 
         public ChequeModel Cheque
         {
-            get { return _Cheque; }
+            get => _Cheque;
             set { _Cheque = value; NotifyOfPropertyChange(() => Cheque); }
         }
 
@@ -46,21 +78,22 @@ namespace AvazehWpf.ViewModels
                 NotifyOfPropertyChange(() => Cheque);
             }
             newEvent.ChequeId = Cheque.Id;
+            newEvent.EventDate = pCal.GetPersianDate();
             Cheque.Events.Add(newEvent);
         }
 
         public void DeleteEvent()
         {
-            if (Cheque != null && Cheque.Events != null && Cheque.Events.Any()) Cheque.Events.RemoveAt(Cheque.Events.Count - 1);
+            if (Cheque == null || Cheque.Events == null || !Cheque.Events.Any()) return;
+            Cheque.Events.RemoveAt(Cheque.Events.Count - 1);
         }
 
-        public void DeleteAndClose()
+        public async Task DeleteAndCloseAsync()
         {
-            if (Cheque == null) return;
+            if (Cheque == null || Cheque.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete cheque of {Cheque.Drawer}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
-            if (Manager.Processor.DeleteItemById(Cheque.Id) == 0) MessageBox.Show($"Cheque with ID: {Cheque.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            _CancelAndClose = false;
+            if (await Manager.DeleteItemAsync(Cheque.Id) == false) MessageBox.Show($"Cheque with ID: {Cheque.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             CloseWindow();
         }
 
@@ -69,95 +102,89 @@ namespace AvazehWpf.ViewModels
             (GetView() as Window).Close();
         }
 
-        public void SaveAndNew()
+        public async Task SaveAndNewAsync()
         {
-            if (SaveToDatabase() == 0) return;
-            _CancelAndClose = false;
-            Cheque = new ChequeModel();
+            if (await SaveToDatabaseAsync() == false) return;
+            var newCheque = new ChequeModel();
+            Cheque.Clone(newCheque);
+            newCheque.Id = 0;
             WindowManager wm = new();
-            wm.ShowWindowAsync(new ChequeDetailViewModel(Manager, Cheque));
+            await wm.ShowWindowAsync(new ChequeDetailViewModel(Manager, newCheque, Singleton, CallBackFunc));
             CloseWindow();
         }
 
         public void CancelAndClose()
         {
-            _CancelAndClose = true;
             CloseWindow();
         }
 
-        public void SaveAndClose()
+        public async Task SaveAndCloseAsync()
         {
-            if (SaveToDatabase() == 0) return;
-            _CancelAndClose = false;
+            if (await SaveToDatabaseAsync() == false) return;
             CloseWindow();
         }
 
-        private int SaveToDatabase()
+        private async Task<bool> SaveToDatabaseAsync()
         {
-            if (String.IsNullOrEmpty(Cheque.IssueDate)) Cheque.IssueDate = PersianCalendarModel.GetCurrentPersianDate();
-            var validate = Manager.Processor.ValidateItem(Cheque);
+            if (Cheque == null) return false;
+            var validate = Manager.ValidateItem(Cheque);
             if (validate.IsValid)
             {
-                if (Cheque == null)
-                {
-                    var result = MessageBox.Show("Cheque is not assigned, Nothing will be saved; Close anyway ?", "Close", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                    if (result == MessageBoxResult.Yes) CloseWindow();
-                }
-                int outPut;
+                ChequeModel outPut;
                 if (Cheque.Id == 0) //It's a new Cheque
-                {
-                    outPut = Manager.Processor.CreateItem(Cheque);
-                    if (outPut == 0) MessageBox.Show($"There was a problem when saving to Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                    outPut = await Manager.CreateItemAsync(Cheque);
                 else //Update Cheque
+                    outPut = await Manager.UpdateItemAsync(Cheque);
+                if (outPut is null)
                 {
-
-                    outPut = Manager.Processor.UpdateItem(Cheque);
-                    if (outPut == 0) MessageBox.Show($"There was a problem when updating the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"There was a problem when saving to Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
                 }
-                return outPut;
+                outPut.Clone(Cheque);
+                return true;
             }
             else
             {
-                string str = "";
+                var str = "";
                 foreach (var error in validate.Errors)
                 {
                     str += error.ErrorMessage + "\n";
                 }
                 MessageBox.Show(str);
-                return 0;
+                return false;
             }
         }
 
-        private static void CloneCheque(ChequeModel From, ref ChequeModel To)
+        public async Task ClosingWindowAsync()
         {
-            if (From == null || To == null) return;
-            To.Id = From.Id;
-            To.Drawer = From.Drawer;
-            To.Orderer = From.Orderer;
-            To.PayAmount = From.PayAmount;
-            To.About = From.About;
-            To.IssueDate = From.IssueDate;
-            To.DueDate = From.DueDate;
-            To.BankName = From.BankName;
-            To.Serial = From.Serial;
-            To.Identifier = From.Identifier;
-            To.Descriptions = From.Descriptions;
-            if (From.Events != null)
-                To.Events = new(From.Events);
+            await CallBackFunc?.Invoke();
         }
 
-        public void ClosingWindow()
+        public void Window_PreviewKeyDown(object window, KeyEventArgs e)
         {
-            if (_CancelAndClose)
+            if (e.Key == Key.Escape) (GetView() as Window).Close();
+        }
+    }
+
+    public static class EventTypeItems //For ComboBoxes
+    {
+        public static Dictionary<int, string> GetPersianEventTypeItems()
+        {
+            Dictionary<int, string> choices = new();
+            for (int i = 0; i < Enum.GetNames(typeof(ChequeEventTypes)).Length; i++)
             {
-                CloneCheque(_BackupCheque, ref _Cheque);
+                if (Enum.GetName(typeof(ChequeEventTypes), i) == ChequeEventTypes.None.ToString())
+                    choices.Add((int)ChequeEventTypes.None, "هیچ");
+                else if (Enum.GetName(typeof(ChequeEventTypes), i) == ChequeEventTypes.Holding.ToString())
+                    choices.Add((int)ChequeEventTypes.Holding, "عادی");
+                else if (Enum.GetName(typeof(ChequeEventTypes), i) == ChequeEventTypes.Sold.ToString())
+                    choices.Add((int)ChequeEventTypes.Sold, "منتقل شده");
+                else if (Enum.GetName(typeof(ChequeEventTypes), i) == ChequeEventTypes.NonSufficientFund.ToString())
+                    choices.Add((int)ChequeEventTypes.NonSufficientFund, "برگشت خورده");
+                else if (Enum.GetName(typeof(ChequeEventTypes), i) == ChequeEventTypes.Cashed.ToString())
+                    choices.Add((int)ChequeEventTypes.Cashed, "وصول شده");
             }
-        }
-
-        public void ShowSel(object sender, EventArgs e)
-        {
-            //MessageBox.Show(sender.ToString());
+            return choices;
         }
     }
 }

@@ -1,13 +1,14 @@
 ﻿using DataLibraryCore.DataAccess.Interfaces;
-using DataLibraryCore.Models;
-using FluentValidation.Results;
+using SharedLibrary.DalModels;
+using SharedLibrary.Enums;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers
 {
-    public partial class ChequeCollectionManager : IChequeCollectionManager
+    public class ChequeCollectionManager : IChequeCollectionManager
     {
         public ChequeCollectionManager(IChequeProcessor processor)
         {
@@ -19,31 +20,11 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         public event EventHandler NextPageLoaded;
         public event EventHandler PreviousPageLoading;
         public event EventHandler PreviousPageLoaded;
-        public bool Initialized { get; private set; }
+        public bool Initialized { get; set; }
         public IChequeProcessor Processor { get; init; }
         public ObservableCollection<ChequeModel> Items { get; set; }
         public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
         public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
-        public long TotalChequeAmount => Items == null || Items.Count == 0 ? 0 : Items.Sum(x => x.PayAmount);
-
-        public ChequeModel GetItemFromCollectionById(int Id)
-        {
-            return Items.SingleOrDefault(i => i.Id == Id);
-        }
-        public bool DeleteItemFromCollectionById(int Id)
-        {
-            return Items.Remove(GetItemFromCollectionById(Id));
-        }
-
-        public bool DeleteItemFromDbById(int Id)
-        {
-            if (Processor.DeleteItemById(Id) > 0)
-            {
-                DeleteItemFromCollectionById(Id);
-                return true;
-            }
-            return false;
-        }
 
         private protected string _WhereClause;
         public string WhereClause
@@ -51,9 +32,10 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             get => _WhereClause;
             set
             {
+                if (_WhereClause != value)
+                    Initialized = false;
                 _WhereClause = value;
                 WhereClauseChanged?.Invoke(this, null);
-                Initialized = false;
             }
         }
 
@@ -63,12 +45,59 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
         public int CurrentPage { get; private set; }
 
         public string SearchValue { get; private set; }
+        private protected string _QueryOrderBy;
+        private protected OrderType _OrderType;
+        private protected ChequeListQueryStatus? listQueryStatus;
 
-        public int GotoPage(int PageNumber)
+        public string QueryOrderBy
+        {
+            get => _QueryOrderBy;
+            private set
+            {
+                if (QueryOrderBy != value)
+                    Initialized = false;
+                _QueryOrderBy = value;
+            }
+        }
+        public OrderType QueryOrderType
+        {
+            get => _OrderType;
+            private set
+            {
+                if (_OrderType != value)
+                    Initialized = false;
+                _OrderType = value;
+            }
+        }
+
+        public ChequeListQueryStatus? ListQueryStatus
+        {
+            get => listQueryStatus;
+            private set
+            {
+                if (ListQueryStatus != value)
+                    Initialized = false;
+                listQueryStatus = value;
+            }
+        }
+
+        public int GenerateWhereClause(string val, string OrderBy, OrderType orderType, ChequeListQueryStatus? listQueryStatus = ChequeListQueryStatus.FromNowOn, bool run = false, SqlSearchMode mode = SqlSearchMode.OR)
+        {
+            if (val == SearchValue && OrderBy == QueryOrderBy && orderType == QueryOrderType && listQueryStatus == ListQueryStatus) return 0;
+            SearchValue = val;
+            QueryOrderBy = OrderBy;
+            QueryOrderType = orderType;
+            ListQueryStatus = listQueryStatus;
+            WhereClause = Processor.GenerateWhereClause(val, listQueryStatus, mode);
+            if (run) LoadFirstPageAsync().ConfigureAwait(true);
+            return Items == null ? 0 : Items.Count;
+        }
+
+        public async Task<int> GotoPageAsync(int PageNumber)
         {
             if (!Initialized)
             {
-                TotalQueryCount = Processor.GetTotalQueryCount(WhereClause);
+                TotalQueryCount = await Processor.GetTotalQueryCountAsync(WhereClause);
                 if (TotalQueryCount == 0)
                 {
                     Items = null;
@@ -79,44 +108,36 @@ namespace DataLibraryCore.DataAccess.CollectionManagers
             if (PagesCount == 0) PageNumber = 1;
             else if (PageNumber > PagesCount) PageNumber = PagesCount;
             else if (PageNumber < 1) PageNumber = 1;
-            Items = Processor.LoadManyItems((PageNumber - 1) * PageSize, PageSize, WhereClause);
+            Items = await Processor.LoadManyItemsAsync((PageNumber - 1) * PageSize, PageSize, WhereClause, QueryOrderBy, QueryOrderType);
             CurrentPage = Items == null || Items.Count == 0 ? 0 : PageNumber;
             return Items == null ? 0 : Items.Count;
         }
-        public int LoadFirstPage()
+
+        public async Task<int> LoadFirstPageAsync()
         {
-            var result = GotoPage(1);
+            var result = await GotoPageAsync(1);
             FirstPageLoaded?.Invoke(this, null);
             return result;
         }
 
-        public int LoadPreviousPage()
+        public async Task<int> LoadPreviousPageAsync()
         {
             PageLoadEventArgs eventArgs = new();
             PreviousPageLoading?.Invoke(this, eventArgs);
             if (eventArgs.Cancel) return 0;
-            var result = GotoPage(CurrentPage - 1);
+            var result = await GotoPageAsync(CurrentPage - 1);
             PreviousPageLoaded?.Invoke(this, null);
             return result;
         }
 
-        public int LoadNextPage()
+        public async Task<int> LoadNextPageAsync()
         {
             PageLoadEventArgs eventArgs = new();
             NextPageLoading?.Invoke(this, eventArgs);
             if (eventArgs.Cancel) return 0;
-            var result = GotoPage(CurrentPage + 1);
+            var result = await GotoPageAsync(CurrentPage + 1);
             NextPageLoaded?.Invoke(this, null);
             return result;
-        }
-
-        public int GenerateWhereClause(string val, bool run = false, SqlSearchMode mode = SqlSearchMode.OR)
-        {
-            if (val == SearchValue) return 0;
-            SearchValue = val;
-            WhereClause = Processor.GenerateWhereClause(val, mode);
-            if (run) LoadFirstPage();
-            return Items == null ? 0 : Items.Count;
         }
     }
 }

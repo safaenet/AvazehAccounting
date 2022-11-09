@@ -1,21 +1,19 @@
 ﻿using Dapper;
-using DataLibraryCore.Models;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Text;
-using DataLibraryCore.DataAccess.SqlServer;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Collections.ObjectModel;
-using DataLibraryCore.Models.Validators;
 using FluentValidation.Results;
 using DataLibraryCore.DataAccess.Interfaces;
+using SharedLibrary.Validators;
+using SharedLibrary.DalModels;
+using SharedLibrary.Enums;
 using System.Threading.Tasks;
+using SharedLibrary.Helpers;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public partial class SqlProductProcessor : IProductProcessor
+    public class SqlProductProcessor<TModel, TValidator> : IGeneralProcessor<TModel>
+        where TModel : ProductModel where TValidator : ProductValidator, new()
     {
         public SqlProductProcessor(IDataAccess dataAcess)
         {
@@ -23,19 +21,45 @@ namespace DataLibraryCore.DataAccess.SqlServer
         }
 
         private readonly IDataAccess DataAccess;
-        private readonly string CreateProductQuery = @"INSERT INTO Products (ProductName, BuyPrice, SellPrice, Barcode, CountString, DateCreated, TimeCreated, Descriptions)
-            VALUES (@productName, @buyPrice, @sellPrice, @barcode, @countString, @dateCreated, @timeCreated, @descriptions);
-            SELECT @id = @@IDENTITY;";
+        private const string QueryOrderBy = "ProductName";
+        private const OrderType QueryOrderType = OrderType.ASC;
+        private readonly string CreateProductQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Products]) + 1;
+            INSERT INTO Products ([Id], ProductName, BuyPrice, SellPrice, Barcode, CountString, DateCreated, TimeCreated, Descriptions, IsActive)
+            VALUES (@newId, @productName, @buyPrice, @sellPrice, @barcode, @countString, @dateCreated, @timeCreated, @descriptions, @isActive);
+            SELECT @id = @newId;";
         private readonly string UpdateProductQuery = @"UPDATE Products SET ProductName = @productName, BuyPrice = @buyPrice, SellPrice = @sellPrice, Barcode = @barcode,
-            CountString = @countString, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, Descriptions = @descriptions
+            CountString = @countString, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, Descriptions = @descriptions, IsActive = @isActive
             WHERE Id = @id";
         private readonly string DeleteProductQuery = @"DELETE FROM Products WHERE Id = @id";
 
-        public int CreateItem(ProductModel item)
+        public string GenerateWhereClause(string val, SqlSearchMode mode)
+        {
+            var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
+            return @$"(CAST([Id] AS varchar) LIKE {criteria}
+                      {mode} [ProductName] LIKE N{criteria}
+                      {mode} CAST([BuyPrice] AS varchar) LIKE {criteria}
+                      {mode} CAST([SellPrice] AS varchar) LIKE {criteria}
+                      {mode} [Barcode] LIKE {criteria}
+                      {mode} [CountString] LIKE N{criteria}
+                      {mode} [DateCreated] LIKE {criteria}
+                      {mode} [TimeCreated] LIKE {criteria}
+                      {mode} [DateUpdated] LIKE {criteria}
+                      {mode} [TimeUpdated] LIKE {criteria}
+                      {mode} [Descriptions] LIKE N{criteria} )";
+        }
+
+        public ValidationResult ValidateItem(TModel product)
+        {
+            TValidator validator = new();
+            var result = validator.Validate(product);
+            return result;
+        }
+
+        public async Task<int> CreateItemAsync(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
-            item.TimeCreated = PersianCalendarModel.GetCurrentTime();
+            item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
+            item.TimeCreated = PersianCalendarHelper.GetCurrentTime();
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@productName", item.ProductName);
@@ -46,69 +70,48 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@dateCreated", item.DateCreated);
             dp.Add("@timeCreated", item.TimeCreated);
             dp.Add("@descriptions", item.Descriptions);
-            var AffectedCount = DataAccess.SaveData(CreateProductQuery, dp);
+            dp.Add("@isActive", item.IsActive);
+            var AffectedCount = await DataAccess.SaveDataAsync(CreateProductQuery, dp);
             var OutputId = dp.Get<int>("@id");
             if (AffectedCount > 0) item.Id = OutputId;
             return OutputId;
         }
 
-        public int UpdateItem(ProductModel item)
+        public async Task<int> UpdateItemAsync(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
-            item.TimeUpdated = PersianCalendarModel.GetCurrentTime();
-            return DataAccess.SaveData(UpdateProductQuery, item);
+            item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
+            item.TimeUpdated = PersianCalendarHelper.GetCurrentTime();
+            return await DataAccess.SaveDataAsync(UpdateProductQuery, item);
         }
 
-        public int DeleteItemById(int Id)
+        public async Task<int> DeleteItemByIdAsync(int Id)
         {
             DynamicParameters dp = new();
             dp.Add("@id", Id);
-            return DataAccess.SaveData(DeleteProductQuery, dp);
+            return await DataAccess.SaveDataAsync(DeleteProductQuery, dp);
         }
 
-        public int GetTotalQueryCount(string WhereClause)
+        public async Task<int> GetTotalQueryCountAsync(string WhereClause)
         {
             var sqlTemp = $@"SELECT COUNT([Id]) FROM Products
                                 { (string.IsNullOrEmpty(WhereClause) ? "" : " WHERE ") } { WhereClause }";
-            return DataAccess.ExecuteScalar<int, DynamicParameters>(sqlTemp, null);
+            return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
         }
 
-        public ObservableCollection<ProductModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.ASC, string OrderBy = "Id")
+        public async Task<ObservableCollection<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
         {
             string sql = $@"SET NOCOUNT ON
                             SELECT * FROM Products
                             { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
                             ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
-            return DataAccess.LoadData<ProductModel, DynamicParameters>(sql, null);
+            return await DataAccess.LoadDataAsync<TModel, DynamicParameters>(sql, null);
         }
 
-        public ProductModel LoadSingleItem(int Id)
+        public async Task<TModel> LoadSingleItemAsync(int Id)
         {
-            return LoadManyItems(0, 1, $"[Id] = { Id }").FirstOrDefault();
-        }
-
-        public string GenerateWhereClause(string val, SqlSearchMode mode = SqlSearchMode.OR)
-        {
-            var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
-            return @$"(CAST([Id] AS varchar) LIKE {criteria}
-                      {mode} [ProductName] LIKE {criteria}
-                      {mode} CAST([BuyPrice] AS varchar) LIKE {criteria}
-                      {mode} CAST([SellPrice] AS varchar) LIKE {criteria}
-                      {mode} [Barcode] LIKE {criteria}
-                      {mode} [CountString] LIKE {criteria}
-                      {mode} [DateCreated] LIKE {criteria}
-                      {mode} [TimeCreated] LIKE {criteria}
-                      {mode} [DateUpdated] LIKE {criteria}
-                      {mode} [TimeUpdated] LIKE {criteria}
-                      {mode} [Descriptions] LIKE {criteria} )";
-        }
-
-        public ValidationResult ValidateItem(ProductModel product)
-        {
-            ProductValidator validator = new();
-            var result = validator.Validate(product);
-            return result;
+            var outPut = await LoadManyItemsAsync(0, 1, $"[Id] = { Id }");
+            return outPut.FirstOrDefault();
         }
     }
 }

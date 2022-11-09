@@ -1,28 +1,37 @@
-﻿using Caliburn.Micro;
-using DataLibraryCore.DataAccess.Interfaces;
-using DataLibraryCore.DataAccess.SqlServer;
-using DataLibraryCore.Models;
+﻿using AvazehApiClient.DataAccess;
+using AvazehApiClient.DataAccess.Interfaces;
+using Caliburn.Micro;
+using SharedLibrary.DalModels;
+using SharedLibrary.Enums;
+using SharedLibrary.SecurityAndSettingsModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
+using System.Globalization;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace AvazehWpf.ViewModels
 {
-    class ChequeListViewModel : Screen
+    public class ChequeListViewModel : Screen
     {
-        public ChequeListViewModel(IChequeCollectionManager manager)
+        public ChequeListViewModel(IChequeCollectionManagerAsync manager, LoggedInUser_DTO user, SingletonClass singelton)
         {
-            _CCM = manager;
-            _SelectedCheque = new ChequeModel();
-            CCM.GotoPage(1);
+            CCM = manager;
+            User = user;
+            CurrentPersianDate = new PersianCalendar().GetPersianDate();
+            Singleton = singelton;
+            _SelectedCheque = new();
+            _ = LoadSettingsAsync().ConfigureAwait(true);
         }
 
-        private IChequeCollectionManager _CCM;
+        private IChequeCollectionManagerAsync _CCM;
+        private LoggedInUser_DTO user;
         private ChequeModel _SelectedCheque;
+        private SingletonClass Singleton;
+        public string CurrentPersianDate { get; init; }
+        public LoggedInUser_DTO User { get => user; init => user = value; }
 
         public ChequeModel SelectedCheque
         {
@@ -30,8 +39,29 @@ namespace AvazehWpf.ViewModels
             set { _SelectedCheque = value; NotifyOfPropertyChange(() => SelectedCheque); }
         }
 
+        private bool canEditChequeAsync;
+        public bool CanEditChequeAsync
+        {
+            get { return canEditChequeAsync; }
+            set { canEditChequeAsync = value; NotifyOfPropertyChange(() => CanEditChequeAsync); }
+        }
 
-        public IChequeCollectionManager CCM
+        private bool canAddNewChequeAsync;
+        public bool CanAddNewChequeAsync
+        {
+            get { return canAddNewChequeAsync; }
+            set { canAddNewChequeAsync = value; NotifyOfPropertyChange(() => CanAddNewChequeAsync); }
+        }
+
+        private bool canDeleteChequeAsync;
+        public bool CanDeleteChequeAsync
+        {
+            get { return canDeleteChequeAsync; }
+            set { canDeleteChequeAsync = value; NotifyOfPropertyChange(() => CanDeleteChequeAsync); }
+        }
+
+
+        public IChequeCollectionManagerAsync CCM
         {
             get { return _CCM; }
             set
@@ -44,7 +74,7 @@ namespace AvazehWpf.ViewModels
 
         public ObservableCollection<ChequeModel> Cheques
         {
-            get { return CCM.Items; }
+            get => CCM.Items;
             set
             {
                 CCM.Items = value;
@@ -54,57 +84,103 @@ namespace AvazehWpf.ViewModels
         }
 
         public string SearchText { get; set; }
+        public int SelectedListQueryStatus { get; set; } = 4;
 
-        public void AddNewCheque()
+        private async Task LoadSettingsAsync()
         {
-            ChequeModel newCheque = new();
+            CanAddNewChequeAsync = CCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanAddNewCheque));
+            CanEditChequeAsync = CCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewChequeDetails));
+            CanDeleteChequeAsync = CCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanDeleteCheque));
+
+            CCM.PageSize = User.UserSettings.ChequeListPageSize;
+            CCM.QueryOrderType = User.UserSettings.ChequeListQueryOrderType;
+            await SearchAsync();
+        }
+
+        public async Task AddNewChequeAsync()
+        {
             WindowManager wm = new();
-            wm.ShowDialogAsync(new ChequeDetailViewModel(CCM, newCheque));
-            if (newCheque != null) Cheques.Add(newCheque);
+            await wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, null, Singleton, RefreshPageAsync));
         }
 
-        public void PreviousPage()
+        public async Task PreviousPageAsync()
         {
-            CCM.LoadPreviousPage();
+            await CCM.LoadPreviousPageAsync();
             NotifyOfPropertyChange(() => Cheques);
         }
 
-        public void NextPage()
+        public async Task NextPageAsync()
         {
-            CCM.LoadNextPage();
+            await CCM.LoadNextPageAsync();
             NotifyOfPropertyChange(() => Cheques);
         }
 
-        public void Search()
+        public async Task RefreshPageAsync()
         {
-            CCM.GenerateWhereClause(SearchText);
+            await CCM.RefreshPage();
             NotifyOfPropertyChange(() => Cheques);
         }
 
-        public void SearchBoxKeyDownHandler(ActionExecutionContext context)
+        public async Task SearchAsync()
+        {
+            ChequeListQueryStatus? ListQueryStatus = SelectedListQueryStatus >= Enum.GetNames(typeof(ChequeListQueryStatus)).Length ? null : (ChequeListQueryStatus)SelectedListQueryStatus;
+            CCM.ListQueryStatus = ListQueryStatus;
+            CCM.SearchValue = SearchText;
+            await CCM.LoadFirstPageAsync();
+            NotifyOfPropertyChange(() => Cheques);
+        }
+
+        public async Task SearchBoxKeyDownHandlerAsync(ActionExecutionContext context)
         {
             if (context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
             {
-                Search();
+                await SearchAsync();
             }
         }
 
-        public void EditCheque()
+        public async Task EditChequeAsync()
         {
+            if (!CanEditChequeAsync || Cheques == null || Cheques.Count == 0 || SelectedCheque == null || SelectedCheque.Id == 0) return;
             WindowManager wm = new();
-            wm.ShowDialogAsync(new ChequeDetailViewModel(CCM, SelectedCheque));
-            NotifyOfPropertyChange(() => Cheques);
-            NotifyOfPropertyChange(() => SelectedCheque);
+            await wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, SelectedCheque, Singleton, RefreshPageAsync));
         }
 
-        public void DeleteCheque()
+        public async Task DeleteChequeAsync()
         {
-            if (SelectedCheque == null) return;
+            if (Cheques == null || Cheques.Count == 0 || SelectedCheque == null || SelectedCheque.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete cheque from {SelectedCheque.Drawer}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
-            var output = CCM.Processor.DeleteItemById(SelectedCheque.Id);
-            if (output > 0) Cheques.Remove(SelectedCheque);
+            var output = await CCM.DeleteItemAsync(SelectedCheque.Id);
+            if (output) Cheques.Remove(SelectedCheque);
             else MessageBox.Show($"Cheque with ID: {SelectedCheque.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public void Window_PreviewKeyDown(object window, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape) (GetView() as Window).Close();
+        }
+    }
+
+    public static class ChequeListQueryStatusItems //For ComboBoxes
+    {
+        public static Dictionary<int, string> GetChequeListQueryStatusItems()
+        {
+            Dictionary<int, string> choices = new();
+            for (int i = 0; i < Enum.GetNames(typeof(ChequeListQueryStatus)).Length; i++)
+            {
+                if (Enum.GetName(typeof(ChequeListQueryStatus), i) == ChequeListQueryStatus.NotCashed.ToString())
+                    choices.Add((int)ChequeListQueryStatus.NotCashed, "وصول نشده");
+                else if (Enum.GetName(typeof(ChequeListQueryStatus), i) == ChequeListQueryStatus.Cashed.ToString())
+                    choices.Add((int)ChequeListQueryStatus.Cashed, "وصول شده");
+                else if (Enum.GetName(typeof(ChequeListQueryStatus), i) == ChequeListQueryStatus.Sold.ToString())
+                    choices.Add((int)ChequeListQueryStatus.Sold, "منتقل شده");
+                else if (Enum.GetName(typeof(ChequeListQueryStatus), i) == ChequeListQueryStatus.NonSufficientFund.ToString())
+                    choices.Add((int)ChequeListQueryStatus.NonSufficientFund, "برگشت خورده");
+                else if (Enum.GetName(typeof(ChequeListQueryStatus), i) == ChequeListQueryStatus.FromNowOn.ToString())
+                    choices.Add((int)ChequeListQueryStatus.FromNowOn, "امروز به بعد");
+            }
+            choices.Add(Enum.GetNames(typeof(ChequeListQueryStatus)).Length, "همه");
+            return choices;
         }
     }
 }

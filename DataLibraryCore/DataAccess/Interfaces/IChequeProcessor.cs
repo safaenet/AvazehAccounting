@@ -1,18 +1,14 @@
-﻿using DataLibraryCore.Models;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
+using SharedLibrary.DalModels;
+using SharedLibrary.DtoModels;
+using SharedLibrary.Enums;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.Interfaces
 {
-    public partial interface IChequeProcessor
+    public interface IChequeProcessor : IChequeProcessorBase<ChequeModel>
     {
-        int CreateItem(ChequeModel cheque);
-        int DeleteItemById(int Id);
-        int GetTotalQueryCount(string WhereClause);
-        ObservableCollection<ChequeModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.DESC, string OrderBy = "DueDate");
-        ChequeModel LoadSingleItem(int Id);
-        int UpdateItem(ChequeModel cheque);
-        string GenerateWhereClause(string val, SqlSearchMode mode = SqlSearchMode.OR);
-        ValidationResult ValidateItem(ChequeModel cheque);
     }
 }

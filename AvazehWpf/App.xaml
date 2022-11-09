@@ -4,12 +4,8 @@
              xmlns:local="clr-namespace:AvazehWpf">
     <Application.Resources>
         <ResourceDictionary>
+            <FontFamily x:Key="mdi">./Fonts/MaterialIcons-Regular.ttf#Material Icons</FontFamily>
             <ResourceDictionary.MergedDictionaries>
-                <!--  FluentWPF Controls  -->
-                <ResourceDictionary Source="pack://application:,,,/FluentWPF;component/Styles/Controls.xaml" />
-                <!-- Material Design Controls-->
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml"/>
                 <ResourceDictionary>
                     <local:Bootstrapper x:Key="bootstrapper"/>
                 </ResourceDictionary>

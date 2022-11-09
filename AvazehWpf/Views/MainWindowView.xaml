@@ -1,0 +1,183 @@
+﻿<Window x:Class="AvazehWpf.Views.MainWindowView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cal="http://www.caliburnproject.org"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:AvazehWpf" mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
+        xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary"
+        Title="{Binding User.GeneralSettings.CompanyName}" FontFamily="Tahoma" Height="545" Width="350"
+        cal:Message.Attach="[Event Closed] = [Window_Closed()]">
+    <Window.Resources>
+        <local:NumberToVisibilityConverter x:Key="NumberToVisibilityConverter"/>
+        <BooleanToVisibilityConverter x:Key="b2v"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition Height="0.65*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid Grid.Row="0" Grid.ColumnSpan="2" Background="LightGray">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="LogoutAsync" Height="25" HorizontalAlignment="Left" Margin="2,0,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="Logout" Margin="3"/>
+                    <TextBlock Text="خروج از حساب" VerticalAlignment="Center" Margin="3,0,5,0"/>
+                </StackPanel>
+            </Button>
+            <TextBlock Text="خوش آمدید" Grid.Column="2" VerticalAlignment="Center" Margin="3,0,5,0"/>
+            <TextBlock Text="{Binding UserFullName}" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="3,0,5,0"/>
+        </Grid>
+
+        <Button Grid.Row="1" Grid.Column="0" x:Name="AddNewInvoiceAsync" Margin="2,2,2,2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="16"/>
+                </Grid.RowDefinitions>
+                <materialDesign:PackIcon Kind="PlusBoxOutline" Height="50" Width="50" Foreground="DarkBlue" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <TextBlock Grid.Row="1" Text="فاکتور جدید" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+            </Grid>
+        </Button>
+
+        <Button Grid.Row="1" Grid.Column="1" x:Name="AddNewTransactionAsync" Margin="2,2,2,2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="16"/>
+                </Grid.RowDefinitions>
+                <materialDesign:PackIcon Kind="FilePlusOutline" Height="50" Width="50" Foreground="DarkGreen" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <TextBlock Grid.Row="1" Text="فایل جدید" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+            </Grid>
+        </Button>
+
+        <Button Grid.Row="2" Grid.Column="0" x:Name="ViewInvoiceListAsync" Margin="2,2,2,2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="16"/>
+                </Grid.RowDefinitions>
+                <materialDesign:PackIcon Kind="FileDocumentBoxesOutline" Height="45" Width="45" Foreground="DarkCyan" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <TextBlock Grid.Row="1" Text="لیست فاکتورها" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+            </Grid>
+        </Button>
+
+        <Button Grid.Row="2" Grid.Column="1" x:Name="ViewTransactionListAsync" Margin="2,2,2,2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="16"/>
+                </Grid.RowDefinitions>
+                <materialDesign:PackIcon Kind="FileSearchOutline" Height="50" Width="50" Foreground="DarkGoldenrod" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <TextBlock Grid.Row="1" Text="لیست فایل ها" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+            </Grid>
+        </Button>
+
+        <Button Grid.Row="3" Grid.Column="0" x:Name="ViewChequesAsync" Margin="2,2,2,2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="16"/>
+                </Grid.RowDefinitions>
+                <Grid Margin="15,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="15"/>
+                    </Grid.ColumnDefinitions>
+                    <materialDesign:PackIcon Kind="ChequeBook" Height="50" Width="50" Foreground="DarkKhaki" Margin="0,0,0,3" HorizontalAlignment="Right" VerticalAlignment="Center" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                    <materialDesign:PackIcon Grid.Column="1" Kind="CalendarAlert" Visibility="{Binding ShowChequeNotification, Converter={StaticResource b2v}}" Height="15" Width="15" Foreground="{Binding ChequeNotificationForeground}" Margin="0,0,0,3" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Right" VerticalContentAlignment="Top"/>
+                </Grid>
+                <TextBlock Grid.Row="1" Text="چک ها" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+            </Grid>
+        </Button>
+
+        <Button Grid.Row="5" Grid.Column="0" x:Name="ViewProductsAsync" Margin="2,2,2,2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="16"/>
+                </Grid.RowDefinitions>
+                <materialDesign:PackIcon Kind="BoxOutline" Height="50" Width="50" Foreground="DarkSalmon" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <TextBlock Grid.Row="1" Text="کالا ها" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+            </Grid>
+        </Button>
+
+        <Button Grid.Row="4" Grid.Column="0" x:Name="ViewCustomersAsync" Margin="2,2,2,2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="16"/>
+                </Grid.RowDefinitions>
+                <materialDesign:PackIcon Kind="PeopleGroupOutline" Height="50" Width="50" Foreground="DarkOliveGreen" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <TextBlock Grid.Row="1" Text="مشتریان" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+            </Grid>
+        </Button>
+
+        <Button Grid.Row="3" Grid.Column="1" x:Name="TransactionShortcut1Async" Visibility="{Binding User.UserSettings.TransactionShortcut1Id, Converter={StaticResource NumberToVisibilityConverter}}" Margin="2,2,2,2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="16"/>
+                </Grid.RowDefinitions>
+                <materialDesign:PackIcon Kind="FileAccountOutline" Height="50" Width="50" Foreground="DarkMagenta" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <TextBlock Grid.Row="1" Text="{Binding User.UserSettings.TransactionShortcut1Name}" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+            </Grid>
+        </Button>
+
+        <Button Grid.Row="4" Grid.Column="1" x:Name="TransactionShortcut2Async" Visibility="{Binding User.UserSettings.TransactionShortcut2Id, Converter={StaticResource NumberToVisibilityConverter}}" Margin="2,2,2,2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="16"/>
+                </Grid.RowDefinitions>
+                <materialDesign:PackIcon Kind="FileAccountOutline" Height="50" Width="50" Foreground="DarkOrange" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <TextBlock Grid.Row="1" Text="{Binding User.UserSettings.TransactionShortcut2Name}" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+            </Grid>
+        </Button>
+
+        <Button Grid.Row="5" Grid.Column="1" x:Name="TransactionShortcut3Async" Visibility="{Binding User.UserSettings.TransactionShortcut3Id, Converter={StaticResource NumberToVisibilityConverter}}" Margin="2,2,2,2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="16"/>
+                </Grid.RowDefinitions>
+                <materialDesign:PackIcon Kind="FileAccountOutline" Height="50" Width="50" Foreground="DarkRed" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <TextBlock Grid.Row="1" Text="{Binding User.UserSettings.TransactionShortcut3Name}" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+            </Grid>
+        </Button>
+
+        <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ViewSettingsAsync" Margin="2,2,2,2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="16"/>
+                </Grid.RowDefinitions>
+                <materialDesign:PackIcon Kind="SettingsOutline" Height="25" Width="25" Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <TextBlock Grid.Row="1" Text="تنظیمات" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+            </Grid>
+        </Button>
+        <TextBox Grid.Row="7" Grid.ColumnSpan="2" Text="{Binding KnowledgeOfTheDay.result.Content}" Visibility="{Binding KodAvailable, Converter={StaticResource b2v}}"
+                 IsReadOnly="True" Height="55" HorizontalContentAlignment="Right" TextWrapping="Wrap" Background="LightGray" Margin="2,0,2,2"/>
+    </Grid>
+</Window>

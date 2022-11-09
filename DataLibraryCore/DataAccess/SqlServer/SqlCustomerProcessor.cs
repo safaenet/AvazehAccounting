@@ -1,20 +1,22 @@
 ﻿using Dapper;
-using DataLibraryCore.Models;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Text;
-using DataLibraryCore.DataAccess.SqlServer;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Collections.ObjectModel;
-using DataLibraryCore.Models.Validators;
 using FluentValidation.Results;
 using DataLibraryCore.DataAccess.Interfaces;
+using SharedLibrary.DalModels;
+using SharedLibrary.Validators;
+using SharedLibrary.Enums;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using SharedLibrary.DtoModels;
+using SharedLibrary.Helpers;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public partial class SqlCustomerProcessor : ICustomerProcessor
+    public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<TModel>
+        where TModel : CustomerModel where TSub : PhoneNumberModel where TValidator : CustomerValidator, new()
     {
         public SqlCustomerProcessor(IDataAccess dataAcess)
         {
@@ -22,13 +24,17 @@ namespace DataLibraryCore.DataAccess.SqlServer
         }
 
         private readonly IDataAccess DataAccess;
-        private readonly string CreateCustomerQuery = @"INSERT INTO Customers (FirstName, LastName, CompanyName, EmailAddress, PostAddress, DateJoined, Descriptions)
-            VALUES (@firstName, @lastName, @companyName, @emailAddress, @postAddress, @dateJoined, @descriptions);
-            SELECT @id = @@IDENTITY;";
+        private const string QueryOrderBy = "FirstName";
+        private const OrderType QueryOrderType = OrderType.ASC;
+        private readonly string CreateCustomerQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Customers]) + 1;
+            INSERT INTO Customers ([Id], FirstName, LastName, CompanyName, EmailAddress, PostAddress, DateJoined, Descriptions)
+            VALUES (@newId, @firstName, @lastName, @companyName, @emailAddress, @postAddress, @dateJoined, @descriptions);
+            SELECT @id = @newId;";
         private readonly string UpdateCustomerQuery = @"UPDATE Customers SET FirstName = @firstName, LastName = @lastName, CompanyName = @companyName,
             EmailAddress = @emailAddress, PostAddress = @postAddress, DateJoined = @dateJoined, Descriptions = @descriptions
             WHERE Id = @id";
-        private readonly string InsertPhonesQuery = @"INSERT INTO PhoneNumbers (CustomerId, PhoneNumber) VALUES (@CustomerId, @PhoneNumber)";
+        private readonly string InsertPhonesQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [PhoneNumbers]) + 1;
+            INSERT INTO PhoneNumbers ([Id], CustomerId, PhoneNumber) VALUES (@newId, @CustomerId, @PhoneNumber)";
         private readonly string SelectCustomersQuery = @"SET NOCOUNT ON
             DECLARE @customers TABLE(
 	        [Id] [int],
@@ -44,9 +50,30 @@ namespace DataLibraryCore.DataAccess.SqlServer
             SELECT * FROM PhoneNumbers WHERE CustomerId IN (SELECT c.Id FROM @customers c);";
         private readonly string DeleteCustomerQuery = @"DELETE FROM Customers WHERE Id = @id";
 
-        public int CreateItem(CustomerModel item)
+        public string GenerateWhereClause(string val, SqlSearchMode mode = SqlSearchMode.OR)
+        {
+            var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
+            return @$"(CAST([Id] AS varchar) LIKE { criteria } 
+                             {mode} [FirstName] LIKE N{ criteria } 
+                             {mode} [LastName] LIKE N{ criteria } 
+                             {mode} [CompanyName] LIKE N{ criteria } 
+                             {mode} [EmailAddress] LIKE N{ criteria } 
+                             {mode} [PostAddress] LIKE N{ criteria } 
+                             {mode} [DateJoined] LIKE { criteria }  
+                             {mode} [Descriptions] LIKE N{ criteria } )";
+        }
+
+        public ValidationResult ValidateItem(TModel customer)
+        {
+            TValidator validator = new();
+            var result = validator.Validate(customer);
+            return result;
+        }
+
+        public async Task<int> CreateItemAsync(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
+            item.DateJoined = PersianCalendarHelper.GetCurrentPersianDate();
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@firstName", item.FirstName);
@@ -56,93 +83,75 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@postAddress", item.PostAddress);
             dp.Add("@dateJoined", item.DateJoined);
             dp.Add("@descriptions", item.Descriptions);
-            var AffectedCount = DataAccess.SaveData(CreateCustomerQuery, dp);
+            var AffectedCount = await DataAccess.SaveDataAsync(CreateCustomerQuery, dp);
             var OutputId = dp.Get<int>("@id");
             if (AffectedCount > 0)
             {
                 item.Id = OutputId;
-                InsertPhoneNumbersToDatabase(item);
+                await InsertPhoneNumbersToDatabaseAsync(item).ConfigureAwait(false);
             }
             return OutputId;
         }
 
-        public int UpdateItem(CustomerModel item)
+        public async Task<int> UpdateItemAsync(TModel item)
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            var AffectedCount = DataAccess.SaveData(UpdateCustomerQuery, item);
+            if (item.DateJoined is null) item.DateJoined = PersianCalendarHelper.GetCurrentPersianDate();
+            var AffectedCount = await DataAccess.SaveDataAsync(UpdateCustomerQuery, item);
             if (AffectedCount > 0)
             {
                 string sqlPhones = $"DELETE FROM PhoneNumbers WHERE CustomerId = { item.Id }";
-                DataAccess.SaveData<DynamicParameters>(sqlPhones, null);
-                InsertPhoneNumbersToDatabase(item);
+                await DataAccess.SaveDataAsync<DynamicParameters>(sqlPhones, null).ConfigureAwait(false);
+                await InsertPhoneNumbersToDatabaseAsync(item).ConfigureAwait(false);
             }
             return AffectedCount;
         }
 
-        private int InsertPhoneNumbersToDatabase(CustomerModel customer)
+        private async Task<int> InsertPhoneNumbersToDatabaseAsync(TModel customer)
         {
             if (customer == null || customer.PhoneNumbers == null || customer.PhoneNumbers.Count == 0) return 0;
-            ObservableCollection<PhoneNumberModel> phones = new();
+            ObservableCollection<TSub> phones = new();
             foreach (var phone in customer.PhoneNumbers)
             {
                 if (!string.IsNullOrEmpty(phone.PhoneNumber) && !string.IsNullOrWhiteSpace(phone.PhoneNumber))
                 {
                     phone.CustomerId = customer.Id;
-                    phones.Add(phone);
+                    phones.Add(phone as TSub);
                 }
             }
             if (phones.Count == 0) return 0;
-            return DataAccess.SaveData(InsertPhonesQuery, phones);
+            return await DataAccess.SaveDataAsync(InsertPhonesQuery, phones).ConfigureAwait(false);
         }
 
-        public int DeleteItemById(int Id)
+        public async Task<int> DeleteItemByIdAsync(int Id)
         {
             var dp = new DynamicParameters();
             dp.Add("@id", Id);
-            return DataAccess.SaveData(DeleteCustomerQuery, dp);
+            return await DataAccess.SaveDataAsync(DeleteCustomerQuery, dp);
         }
 
-        public int GetTotalQueryCount(string WhereClause)
+        public async Task<int> GetTotalQueryCountAsync(string WhereClause)
         {
             var sqlTemp = $@"SELECT COUNT([Id]) FROM Customers
                              { (string.IsNullOrEmpty(WhereClause) ? "" : " WHERE ") } { WhereClause }";
-            return DataAccess.ExecuteScalar<int, DynamicParameters>(sqlTemp, null);
+            return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
         }
 
-        public ObservableCollection<CustomerModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.ASC, string OrderBy = "FirstName")
+        public async Task<ObservableCollection<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
         {
             var sqlInsert = $@"INSERT @customers SELECT * FROM Customers
                                { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
                                ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
             var query = string.Format(SelectCustomersQuery, sqlInsert);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
-            var reader = conn.QueryMultiple(query, null);
-            return reader.MapObservableCollectionOfCustomers();
+            var reader = await conn.QueryMultipleAsync(query, null);
+            return await reader.MapObservableCollectionOfCustomersAsync() as ObservableCollection<TModel>;
         }
 
-        public CustomerModel LoadSingleItem(int Id)
+        public async Task<TModel> LoadSingleItemAsync(int Id)
         {
-            return LoadManyItems(0, 1, $"[Id] = { Id }").FirstOrDefault();
-        }
-
-        public string GenerateWhereClause(string val, SqlSearchMode mode = SqlSearchMode.OR)
-        {
-            var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
-            return @$"(CAST([Id] AS varchar) LIKE { criteria } 
-                             {mode} [FirstName] LIKE { criteria } 
-                             {mode} [LastName] LIKE { criteria } 
-                             {mode} [CompanyName] LIKE { criteria } 
-                             {mode} [EmailAddress] LIKE { criteria } 
-                             {mode} [PostAddress] LIKE { criteria } 
-                             {mode} [DateJoined] LIKE { criteria }  
-                             {mode} [Descriptions] LIKE { criteria } )";
-        }
-
-        public ValidationResult ValidateItem(CustomerModel customer)
-        {
-            CustomerValidator validator = new();
-            var result = validator.Validate(customer);
-            return result;
+            var outPut = await LoadManyItemsAsync(0, 1, $"[Id] = { Id }");
+            return outPut.FirstOrDefault();
         }
     }
 }

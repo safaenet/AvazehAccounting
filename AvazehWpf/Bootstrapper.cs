@@ -1,12 +1,14 @@
-﻿using AvazehWpf.ViewModels;
+﻿using AvazehApiClient.DataAccess;
+using AvazehApiClient.DataAccess.CollectionManagers;
+using AvazehApiClient.DataAccess.Interfaces;
+using AvazehWpf.ViewModels;
 using Caliburn.Micro;
-using DataLibraryCore.DataAccess.CollectionManagers;
-using DataLibraryCore.DataAccess.Interfaces;
-using DataLibraryCore.DataAccess.SqlServer;
+using SharedLibrary.DalModels;
+using SharedLibrary.DtoModels;
+using SharedLibrary.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
 
 namespace AvazehWpf
@@ -21,8 +23,7 @@ namespace AvazehWpf
 
         protected override void Configure()
         {
-            Container.Instance(Container);
-            Container
+            Container.Instance(Container)
                 .Singleton<IWindowManager, WindowManager>()
                 .Singleton<IEventAggregator, EventAggregator>();
             GetType().Assembly.GetTypes()
@@ -33,17 +34,16 @@ namespace AvazehWpf
                     ViewModelType, ViewModelType.ToString(), ViewModelType));
 
             Container
-                .PerRequest<IProductCollectionManager, ProductCollectionManager>()
-                .PerRequest<ICustomerCollectionManager, CustomerCollectionManager>()
-                .PerRequest<IInvoiceCollectionManager, InvoiceCollectionManager>()
-                .PerRequest<IChequeCollectionManager, ChequeCollectionManager>()
-
-                .PerRequest<IProductProcessor, SqlProductProcessor>()
-                .PerRequest<ICustomerProcessor, SqlCustomerProcessor>()
-                .PerRequest<IInvoiceProcessor, SqlInvoiceProcessor>()
-                .PerRequest<IChequeProcessor, SqlChequeProcessor>()
-
-                .RegisterSingleton(typeof(IDataAccess), nameof(IDataAccess), typeof(SqlDataAccess));
+                .Singleton<IApiProcessor, ApiProcessor>()
+                .PerRequest<ICollectionManager<ProductModel>, ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>>()
+                .PerRequest<ICollectionManager<CustomerModel>, CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>>()
+                .PerRequest<IChequeCollectionManagerAsync, ChequeCollectionManagerAsync>()
+                .PerRequest<IInvoiceCollectionManager, InvoiceCollectionManagerAsync>()
+                .PerRequest<ITransactionCollectionManager, TransactionCollectionManagerAsync>()
+                .PerRequest<IInvoiceDetailManager, InvoiceDetailManager>()
+                .PerRequest<ITransactionDetailManager, TransactionDetailManager>()
+                .PerRequest<IAppSettingsManager, AppSettingsManager>()
+                .Singleton<SingletonClass>();
         }
 
         protected override IEnumerable<object> GetAllInstances(Type serviceType)
@@ -55,7 +55,6 @@ namespace AvazehWpf
         {
             Container.BuildUp(instance);
         }
-
         public Bootstrapper()
         {
             Initialize();
@@ -63,7 +62,8 @@ namespace AvazehWpf
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
-            DisplayRootViewFor<ProductListViewModel>();
+            _ = DisplayRootViewForAsync<LoginViewModel>();
         }
+        
     }
 }

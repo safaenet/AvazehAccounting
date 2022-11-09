@@ -1,28 +1,36 @@
-﻿using Caliburn.Micro;
-using DataLibraryCore.DataAccess.Interfaces;
-using DataLibraryCore.DataAccess.SqlServer;
-using DataLibraryCore.Models;
-using System;
-using System.Collections.Generic;
+﻿using AvazehApiClient.DataAccess;
+using AvazehApiClient.DataAccess.Interfaces;
+using Caliburn.Micro;
+using SharedLibrary.DalModels;
+using SharedLibrary.SecurityAndSettingsModels;
 using System.Collections.ObjectModel;
-using System.Text;
-using System.Timers;
+using System.Globalization;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace AvazehWpf.ViewModels
 {
     public class CustomerListViewModel : Screen
     {
-        public CustomerListViewModel(ICustomerCollectionManager manager)
+        public CustomerListViewModel(ICollectionManager<CustomerModel> manager, LoggedInUser_DTO user)
         {
-            _CCM = manager;
+            CCM = manager;
+            User = user;
+            LoadSettings();
+            CurrentPersianDate = new PersianCalendar().GetPersianDate();
             _SelectedCustomer = new();
-            CCM.GotoPage(1);
+            _ = SearchAsync().ConfigureAwait(true);
         }
 
-        private ICustomerCollectionManager _CCM;
+        private void LoadSettings()
+        {
+            CanAddNewCustomer = CCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanAddNewCustomer));
+            CanViewCustomerDetails = CCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewCustomerDetails));
+            CanDeleteCustomer = CCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanDeleteCustomer));
+        }
+
+        private ICollectionManager<CustomerModel> _CCM;
         private CustomerModel _SelectedCustomer;
 
         public CustomerModel SelectedCustomer
@@ -31,21 +39,44 @@ namespace AvazehWpf.ViewModels
             set { _SelectedCustomer = value; NotifyOfPropertyChange(() => SelectedCustomer); }
         }
 
-
-        public ICustomerCollectionManager CCM
+        public ICollectionManager<CustomerModel> CCM
         {
             get { return _CCM; }
-            set 
-            { 
+            set
+            {
                 _CCM = value;
                 NotifyOfPropertyChange(() => CCM);
                 NotifyOfPropertyChange(() => Customers);
             }
         }
 
+        public LoggedInUser_DTO User { get; init; }
+        public string CurrentPersianDate { get; init; }
+
+        private bool canAddNewCustomer;
+        public bool CanAddNewCustomer
+        {
+            get { return canAddNewCustomer; }
+            set { canAddNewCustomer = value; NotifyOfPropertyChange(() => CanAddNewCustomer); }
+        }
+
+        private bool canViewCustomerDetails;
+        public bool CanViewCustomerDetails
+        {
+            get { return canViewCustomerDetails; }
+            set { canViewCustomerDetails = value; NotifyOfPropertyChange(() => CanViewCustomerDetails); }
+        }
+
+        private bool canDeleteCustomer;
+        public bool CanDeleteCustomer
+        {
+            get { return canDeleteCustomer; }
+            set { canDeleteCustomer = value; NotifyOfPropertyChange(() => CanDeleteCustomer); }
+        }
+
         public ObservableCollection<CustomerModel> Customers
         {
-            get { return CCM.Items; }
+            get => CCM.Items;
             set
             {
                 CCM.Items = value;
@@ -56,58 +87,75 @@ namespace AvazehWpf.ViewModels
 
         public string SearchText { get; set; }
 
-        public void AddNewCustomer()
+        public async Task AddNewCustomerAsync()
         {
-            CustomerModel newCustomer = new();
+            if (!CanAddNewCustomer) return;
             WindowManager wm = new();
-            wm.ShowDialogAsync(new CustomerDetailViewModel(CCM, newCustomer));
-            if(newCustomer != null) Customers.Add(newCustomer);
+            await wm.ShowWindowAsync(new CustomerDetailViewModel(CCM, null, User, RefreshPageAsync));
         }
 
-        public void PreviousPage()
+        public async Task PreviousPageAsync()
         {
-            CCM.LoadPreviousPage();
+            await CCM.LoadPreviousPageAsync();
             NotifyOfPropertyChange(() => Customers);
         }
 
-        public void NextPage()
+        public async Task NextPageAsync()
         {
-            CCM.LoadNextPage();
+            await CCM.LoadNextPageAsync();
             NotifyOfPropertyChange(() => Customers);
         }
 
-        public void Search()
+        public async Task RefreshPageAsync()
         {
-            CCM.GenerateWhereClause(SearchText);
+            await CCM.RefreshPage();
             NotifyOfPropertyChange(() => Customers);
         }
 
-        public void SearchBoxKeyDownHandler(ActionExecutionContext context)
+        public async Task SearchAsync()
         {
-            var keyArgs = context.EventArgs as KeyEventArgs;
+            CCM.SearchValue = SearchText;
+            await CCM.LoadFirstPageAsync();
+            NotifyOfPropertyChange(() => Customers);
+        }
 
-            if (keyArgs != null && keyArgs.Key == Key.Enter)
+        public async Task SearchBoxKeyDownHandlerAsync(ActionExecutionContext context)
+        {
+            if (context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
             {
-                Search();
+                await SearchAsync();
             }
         }
 
-        public void EditCustomer()
+        public async Task EditCustomerAsync()
         {
+            if (!CanViewCustomerDetails || Customers == null || Customers.Count == 0 || SelectedCustomer == null || SelectedCustomer.Id == 0) return;
             WindowManager wm = new();
-            wm.ShowDialogAsync(new CustomerDetailViewModel(CCM, SelectedCustomer));
-            NotifyOfPropertyChange(() => Customers);
-            NotifyOfPropertyChange(() => SelectedCustomer);
+            await wm.ShowWindowAsync(new CustomerDetailViewModel(CCM, SelectedCustomer, User, RefreshPageAsync));
         }
 
-        public void DeleteCustomer()
+        public async Task DeleteCustomerAsync()
         {
-            if (SelectedCustomer == null) return;
+            if (!CanDeleteCustomer || Customers == null || Customers.Count == 0 || SelectedCustomer == null || SelectedCustomer.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete {SelectedCustomer.FullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
-            var output = CCM.Processor.DeleteItemById(SelectedCustomer.Id);
-            if (output > 0) Customers.Remove(SelectedCustomer);
+            var output = await CCM.DeleteItemAsync(SelectedCustomer.Id);
+            if (output) Customers.Remove(SelectedCustomer);
             else MessageBox.Show($"Customer with ID: {SelectedCustomer.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public void Window_PreviewKeyDown(object window, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape) (GetView() as Window).Close();
+        }
+
+        public void dg_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (Key.Delete == e.Key)
+            {
+                _ = DeleteCustomerAsync().ConfigureAwait(true);
+                e.Handled = true;
+            }
         }
     }
 }

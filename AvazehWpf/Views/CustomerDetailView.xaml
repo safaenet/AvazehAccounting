@@ -3,15 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
         xmlns:cal="http://www.caliburnproject.org"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:AvazehWpf" mc:Ignorable="d"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" fw:AcrylicWindow.Enabled="True"
-        Title="Customer" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
-        Width="460" MaxWidth="460" MinHeight="395" Height="500" fw:AcrylicWindow.AcrylicWindowStyle="NoIcon"
-        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]">
-    <Grid fw:PointerTracker.Enabled="True">
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewmodels:CustomerDetailViewModel}"
+        Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
+        Width="460" MaxWidth="460" MinHeight="395" Height="500"
+        cal:Message.Attach="[Event Closing] = [Action ClosingWindowAsync]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="3"/>
             <RowDefinition Height="auto"/>
@@ -51,44 +52,44 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical" Margin="0,0,0,10" VerticalAlignment="Top">
-                        <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="Account" Margin="0,2,5,2"/>
-                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="First Name" Margin="0,2,0,2"/>
+                    <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical" Margin="0,0,0,0" VerticalAlignment="Top">
+                        <StackPanel Width="50" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <materialDesign:PackIcon Kind="PeopleOutline" Margin="0,0,3,0"/>
+                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام" Margin="0,0,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Path=Customer.FirstName}" MaxLength="50" MaxWidth="200"/>
+                        <TextBox Text="{Binding Customer.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Vertical" Margin="0,0,0,10" VerticalAlignment="Top">
-                        <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="CardAccountDetails" Margin="0,2,5,2"/>
-                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="Last Name" Margin="0,2,0,2"/>
+                    <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Vertical" Margin="0,0,0,0" VerticalAlignment="Top">
+                        <StackPanel Width="85" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <materialDesign:PackIcon Kind="PeopleOutline" Margin="0,0,3,0"/>
+                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام خانوادگی" Margin="0,0,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Path=Customer.LastName}" MaxLength="50" MaxWidth="200"/>
+                        <TextBox Text="{Binding Customer.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Vertical" Margin="0,0,0,10">
-                        <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="Domain" Margin="0,2,5,2"/>
-                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="Company Name" Margin="0,2,0,2"/>
+                    <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Vertical" Margin="0,0,0,0">
+                        <StackPanel Width="70" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <materialDesign:PackIcon Kind="Company" Margin="0,0,3,0"/>
+                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام شرکت" Margin="0,0,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Path=Customer.CompanyName}" MaxLength="50" MaxWidth="200"/>
+                        <TextBox Text="{Binding Customer.CompanyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Vertical" Margin="0,0,0,10">
-                        <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="Email" Margin="0,2,5,2"/>
-                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="Email Address" Margin="0,2,0,2"/>
+                    <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Vertical" Margin="0,0,0,0">
+                        <StackPanel Width="45" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <materialDesign:PackIcon Kind="EmailOutline" Margin="0,0,3,0"/>
+                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="ایمیل" Margin="0,0,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Path=Customer.EmailAddress}" MaxLength="50" MaxWidth="200"/>
+                        <TextBox Text="{Binding Customer.EmailAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center"/>
                     </StackPanel>
-                    
+
                     <DockPanel Grid.Column="0" Grid.Row="4" LastChildFill="True" DockPanel.Dock="Bottom">
                         <StackPanel DockPanel.Dock = "Top" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Kind="MapMarker" Margin="0,2,5,2"/>
-                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="Post Address" Margin="0,2,0,2"/>
+                            <materialDesign:PackIcon Kind="LocationOutline" Margin="0,0,3,0"/>
+                            <TextBlock MaxWidth="200" TextAlignment="Center" Text="آدرس" Margin="0,0,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Path=Customer.PostAddress}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="30" Height="auto" VerticalContentAlignment="Top" BorderThickness="1" MaxWidth="200"/>
+                        <TextBox Text="{Binding Customer.PostAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="30" Height="auto" VerticalContentAlignment="Top" MaxWidth="200"/>
                     </DockPanel>
                 </Grid>
 
@@ -102,37 +103,37 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,0,10">
-                    <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="CardAccountDetails" Margin="0,2,5,2"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="ID" Margin="20,2,0,2"/>
+                    <StackPanel Width="60" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="HashtagBoxOutline" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره" Margin="0,0,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Path=Customer.Id}" IsReadOnly="True" MaxLength="10" MaxWidth="200"/>
+                    <TextBox Text="{Binding Customer.Id}" IsReadOnly="True" MaxLength="10" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
-                <StackPanel Grid.Row="1" Orientation="Vertical" Margin="0,0,0,10">
-                    <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="DateRange" Margin="0,2,5,2"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="Date Joined" Margin="0,2,0,2"/>
+                <StackPanel Grid.Row="1" Orientation="Vertical" Margin="0,0,0,9">
+                    <StackPanel Width="70" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="CalendarOutline" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد" Margin="0,0,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Path=Customer.DateJoined}" IsReadOnly="True" MaxLength="10" MaxWidth="200"/>
+                    <TextBox Text="{Binding Customer.DateJoined}" IsReadOnly="True" MaxLength="10" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,0,0,10">
                     <StackPanel Width="165" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="Phone" Margin="0,2,5,2"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="Phone Number(s)" Margin="0,2,0,2"/>
-                        <Button x:Name="AddNewPhoneNumber" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="5,0,0,0">
+                        <materialDesign:PackIcon Kind="PhoneOutline" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره تلفن ها" Margin="0,0,0,2"/>
+                        <Button x:Name="AddNewPhoneNumber" IsEnabled="{Binding CanEditCustomer}" Margin="5,0,0,0">
                             <materialDesign:PackIcon Kind="Plus"/>
                         </Button>
-                        <Button x:Name="DeletePhoneNumber" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="5,0,0,0">
-                            <materialDesign:PackIcon Kind="Minus"/>
+                        <Button x:Name="DeletePhoneNumber" Margin="5,0,0,0">
+                            <materialDesign:PackIcon IsEnabled="{Binding CanEditCustomer}" Kind="Minus"/>
                         </Button>
                     </StackPanel>
                     <ItemsControl ItemsSource="{Binding Customer.PhoneNumbers}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBox Text="{Binding Path=PhoneNumber}" Width="165" Margin="14,3,0,0"/>
+                                    <TextBox Text="{Binding PhoneNumber}" Width="200" MaxLength="16" Margin="14,3,0,0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -141,10 +142,10 @@
 
                 <DockPanel LastChildFill="True"  Grid.Row="3" DockPanel.Dock="Bottom">
                     <StackPanel DockPanel.Dock = "Top" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="CommentAccount" Margin="0,2,5,2"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="Description" Margin="0,2,0,2"/>
+                        <materialDesign:PackIcon Kind="Text" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="توضیحات" Margin="0,0,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Path=Customer.Descriptions}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="50" Height="auto" VerticalContentAlignment="Top" BorderThickness="1" MaxWidth="200"/>
+                    <TextBox Text="{Binding Customer.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" MinHeight="50" Height="auto" VerticalContentAlignment="Top" MaxWidth="200"/>
                 </DockPanel>
             </Grid>
         </Grid>
@@ -155,28 +156,28 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="CancelAndClose" Grid.Column="0" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,5,5,0">
-                <StackPanel Width="80" Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="Cancel" Margin="3"/>
-                    <TextBlock Text="Cancel" VerticalAlignment="Center"/>
+            <Button x:Name="CancelAndClose" Grid.Column="0" Margin="0,5,5,0">
+                <StackPanel Width="70" Orientation="Horizontal" Margin="10,0,0,0">
+                    <materialDesign:PackIcon Kind="CancelOutline" Margin="5,0,5,0"/>
+                    <TextBlock Text="انصراف" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="DeleteAndClose" Grid.Column="1" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,5,5,0">
-                <StackPanel Width="120" Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="Delete" Margin="3"/>
-                    <TextBlock Text="Delete and Close" VerticalAlignment="Center"/>
+            <Button x:Name="DeleteAndCloseAsync" IsEnabled="{Binding CanDeleteCustomer}" Grid.Column="1" Margin="0,5,5,0">
+                <StackPanel Width="110" Orientation="Horizontal" Margin="10,0,0,0">
+                    <materialDesign:PackIcon Kind="DeleteOutline" Margin="5,0,5,0"/>
+                    <TextBlock Text="حذف و بستن" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="SaveAndNew" Grid.Column="2" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,5,5,0">
-                <StackPanel Width="110" Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="ContentSaveMove" Margin="3"/>
-                    <TextBlock Text="Save and New" VerticalAlignment="Center"/>
+            <Button x:Name="SaveAndNewAsync" IsEnabled="{Binding CanEditCustomer}" Grid.Column="2" Margin="0,5,5,0">
+                <StackPanel Width="100" Orientation="Horizontal" Margin="10,0,0,0">
+                    <materialDesign:PackIcon Kind="ContentDuplicate" Margin="5,0,5,0"/>
+                    <TextBlock Text="ذخیره و جدید" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="SaveAndClose" Grid.Column="3" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,5,5,0">
-                <StackPanel Width="110" Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="ContentSaveOff" Margin="3"/>
-                    <TextBlock Text="Save and Close" VerticalAlignment="Center"/>
+            <Button x:Name="SaveAndCloseAsync" IsEnabled="{Binding CanEditCustomer}" Grid.Column="3" Margin="0,5,0,0">
+                <StackPanel Width="100" Orientation="Horizontal" Margin="10,0,0,0">
+                    <materialDesign:PackIcon Kind="ContentSaveOutline" Margin="5,0,5,0"/>
+                    <TextBlock Text="ذخیره و بستن" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
         </Grid>

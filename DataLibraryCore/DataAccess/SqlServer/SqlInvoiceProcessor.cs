@@ -1,45 +1,67 @@
 ﻿using Dapper;
-using DataLibraryCore.Models;
-using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Text;
-using DataLibraryCore.DataAccess.SqlServer;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Collections.ObjectModel;
-using DataLibraryCore.Models.Validators;
 using FluentValidation.Results;
-using System.Reflection;
-using System.ComponentModel;
 using Dapper.FluentMap.Mapping;
 using Dapper.FluentMap;
 using DataLibraryCore.DataAccess.Interfaces;
+using SharedLibrary.Enums;
+using SharedLibrary.DalModels;
+using SharedLibrary.Validators;
+using SharedLibrary.DtoModels;
+using System.Threading.Tasks;
+using SharedLibrary.Helpers;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
-    public partial class SqlInvoiceProcessor : IInvoiceProcessor
+    public class SqlInvoiceProcessor : IInvoiceProcessor
     {
         public SqlInvoiceProcessor(IDataAccess dataAcess)
         {
             DataAccess = dataAcess;
+            if (FluentMapper.EntityMaps.IsEmpty)
+            {
+                try
+                {
+                    FluentMapper.Initialize(config => config.AddMap(new CustomerModelMapper()));
+                    FluentMapper.Initialize(config => config.AddMap(new ProductModelMapper()));
+                    FluentMapper.Initialize(config => config.AddMap(new ProductUnitModelMapper()));
+                }
+                catch { }
+                
+            }
         }
 
         private readonly IDataAccess DataAccess;
-        private readonly string CreateInvoiceQuery = @"INSERT INTO Invoices (CustomerId, DateCreated, TimeCreated, DiscountType, DiscountValue, Descriptions, LifeStatus)
-            VALUES (@customerId, @dateCreated, @timeCreated, @discountType, @discountValue, @descriptions, @lifeStatus); SELECT @id = @@IDENTITY;";
+        private const string QueryOrderBy = "Id";
+        private const OrderType QueryOrderType = OrderType.DESC;
+        private readonly string CreateInvoiceQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 1) FROM [Invoices]) + 1;
+            INSERT INTO Invoices ([Id], CustomerId, DateCreated, TimeCreated, DiscountType, DiscountValue, Descriptions, LifeStatus)
+            VALUES (@newId, @customerId, @dateCreated, @timeCreated, @discountType, @discountValue, @descriptions, @lifeStatus);
+            SELECT @id = @newId;";
         private readonly string UpdateInvoiceQuery = @"UPDATE Invoices SET CustomerId = @customerId, DateCreated = @dateCreated, TimeCreated = @timeCreated,
             DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, DiscountType = @discountType,
             DiscountValue = @discountValue, Descriptions = @descriptions, LifeStatus = @lifeStatus WHERE Id = @id";
-        private readonly string InsertSubItemQuery = @"INSERT INTO InvoiceItems (InvoiceId, ProductId, BuyPrice, SellPrice, CountString, CountValue, DateCreated,
+        private readonly string InsertInvoiceItemQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [InvoiceItems]) + 1;
+            INSERT INTO InvoiceItems ([Id], InvoiceId, ProductId, BuyPrice, SellPrice, CountString, CountValue, ProductUnitId, DateCreated,
             TimeCreated, Delivered, Descriptions)
-            VALUES (@invoiceId, @productId, @buyPrice, @sellPrice, @countString, @dateCreated, @timeCreated, @delivered, @descriptions);
-            SELECT @id = @@IDENTITY;";
-        private readonly string UpdateSubItemQuery = @$"UPDATE InvoiceItems SET ProductId = @productId, BuyPrice = @buyPrice, SellPrice = @sellPrice,
-            CountString = @countString, CountValue = @countValue, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
+            VALUES (@newId, @invoiceId, @productId, @buyPrice, @sellPrice, @countString, @countValue, @productUnitId, @dateCreated, @timeCreated, @delivered, @descriptions);
+            SELECT @id = @newId;";
+        private readonly string UpdateInvoiceItemQuery = @$"UPDATE InvoiceItems SET ProductId = @productId, BuyPrice = @buyPrice, SellPrice = @sellPrice,
+            CountString = @countString, CountValue = @countValue, ProductUnitId = @productUnitId, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
             Delivered = @delivered, Descriptions = @descriptions WHERE [Id] = @id";
-        private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Invoices SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated WHERE Id = @id";
-        private readonly string DeleteSubItemQuery = @$"DELETE FROM InvoiceItems WHERE [Id] = @id";
+        private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Invoices SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated WHERE [Id] = @id";
+        private readonly string DeleteInvoiceItemQuery = @$"DELETE FROM InvoiceItems WHERE [Id] = @id";
+        private readonly string InsertInvoicePaymentQuery = @$"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [InvoicePayments]) + 1;
+            INSERT INTO InvoicePayments ([Id], InvoiceId, DateCreated, TimeCreated, PayAmount, Descriptions)
+            VALUES (@newId, @invoiceId, @dateCreated, @timeCreated, @payAmount, @descriptions);
+            SELECT @id = @newId;";
+        private readonly string UpdateInvoicePaymentQuery = @$"UPDATE InvoicePayments SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
+            PayAmount = @payAmount, Descriptions = @descriptions WHERE [Id] = @id";
+        private readonly string DeleteInvoicePaymentQuery = @$"DELETE FROM InvoicePayments WHERE [Id] = @id";
         private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON
             DECLARE @invoices TABLE(
 	        [Id] [int],
@@ -71,178 +93,34 @@ namespace DataLibraryCore.DataAccess.SqlServer
             SELECT it.Id, it.InvoiceId, it.BuyPrice, it.SellPrice, it.CountString, it.DateCreated, it.TimeCreated,
                 it.DateUpdated, it.TimeUpdated, it.Delivered, it.Descriptions, p.Id pId, p.ProductName, p.BuyPrice pBuyPrice,
                 p.SellPrice pSellPrice, p.Barcode, p.CountString pCountString, p.DateCreated pDateCreated,
-                p.TimeCreated pTimeCreated, p.DateUpdated pDateUpdated, p.TimeUpdated pTimeUpdated, p.Descriptions pDescriptions
-                FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id WHERE it.InvoiceId IN (SELECT i.Id FROM @invoices i);
+                p.TimeCreated pTimeCreated, p.DateUpdated pDateUpdated, p.TimeUpdated pTimeUpdated, p.Descriptions pDescriptions,
+                u.Id AS puId, u.UnitName
+                FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id LEFT JOIN ProductUnits u ON it.ProductUnitId = u.Id WHERE it.InvoiceId IN (SELECT i.Id FROM @invoices i) ORDER BY [Id] DESC;
             SELECT * FROM InvoicePayments WHERE InvoiceId IN (SELECT i.Id FROM @invoices i);
             SELECT * FROM PhoneNumbers WHERE CustomerId IN (SELECT i.CustomerId FROM @invoices i);";
+        private readonly string GetSingleInvoiceItemQuery = @"SELECT it.*, p.[Id] AS pId,
+                p.[ProductName], p.[BuyPrice] AS pBuyPrice, p.[SellPrice] AS pSellPrice, p.[Barcode],
+                p.[CountString] AS pCountString, p.[DateCreated] AS pDateCreated, p.[TimeCreated] AS pTimeCreated,
+                p.[DateUpdated] AS pDateUpdated, p.[TimeUpdated] AS pTimeUpdated, p.[Descriptions] AS pDescriptions,
+				u.Id AS puId, u.UnitName
+                FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id LEFT JOIN ProductUnits u ON it.ProductUnitId = u.Id WHERE it.Id = {0}";
+        private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] AS ItemName FROM Products {0} ORDER BY [ProductName]";
+        private readonly string GetProductUnitsQuery = "SELECT [Id], [UnitName] FROM ProductUnits";
+        private readonly string GetCustomerNamesQuery = "SELECT [Id], ISNULL(FirstName, '') + ' ' + ISNULL(LastName, '') AS ItemName FROM Customers {0} ORDER BY [FirstName], [LastName]";
+        private readonly string GetRecentPricesOfProductQuery = @"SELECT TOP({0}) it.SellPrice AS SellPrice, it.DateCreated AS DateSold FROM InvoiceItems it LEFT JOIN Invoices i ON it.InvoiceId = i.Id
+                                                             LEFT JOIN Customers c ON i.CustomerId = c.Id LEFT JOIN Products p ON it.ProductId = p.Id
+                                                             WHERE c.Id = {1} AND p.Id = {2} ORDER BY it.DateCreated DESC";
 
-        public int CreateItem(InvoiceModel item)
+        private async Task<int> GetInvoiceIdFromInvoiceItemId(int Id)
         {
-            if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
-            item.TimeCreated = PersianCalendarModel.GetCurrentTime();
-            var dp = new DynamicParameters();
-            dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
-            dp.Add("@customerId", item.Customer.Id);
-            dp.Add("@dateCreated", item.DateCreated);
-            dp.Add("@timeCreated", item.TimeCreated);
-            dp.Add("@discountType", item.DiscountType);
-            dp.Add("@discountValue", item.DiscountValue);
-            dp.Add("@descriptions", item.Descriptions);
-            dp.Add("@lifeStatus", item.LifeStatus);
-            var AffectedCount = DataAccess.SaveData(CreateInvoiceQuery, dp);
-            var OutputId = dp.Get<int>("@id");
-            if (AffectedCount > 0) item.Id = OutputId;
-            return OutputId;
+            var query = $"SELECT InvoiceId FROM InvoiceItems WHERE Id = { Id }";
+            return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(query, null);
         }
 
-        public int UpdateItem(InvoiceModel item)
+        private async Task<int> GetInvoiceIdFromInvoicePaymentId(int Id)
         {
-            if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
-            item.TimeUpdated = PersianCalendarModel.GetCurrentTime();
-            return DataAccess.SaveData(UpdateInvoiceQuery, item);
-        }
-
-        public int InsertSubItemToDatabase(InvoiceItemModel item)
-        {
-            if (item == null || !item.IsCountStringValid) return 0;
-            item.DateCreated = PersianCalendarModel.GetCurrentPersianDate();
-            item.TimeCreated = PersianCalendarModel.GetCurrentTime();
-            DynamicParameters dp = new();
-            dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
-            dp.Add("@invoiceId", item.InvoiceId);
-            dp.Add("@productId", item.Product.Id);
-            dp.Add("@buyPrice", item.BuyPrice);
-            dp.Add("@sellPrice", item.SellPrice);
-            dp.Add("@countString", item.CountString);
-            dp.Add("@dateCreated", item.DateCreated);
-            dp.Add("@timeCreated", item.TimeCreated);
-            dp.Add("@delivered", item.Delivered);
-            dp.Add("@descriptions", item.Descriptions);
-            var AffectedCount = DataAccess.SaveData(InsertSubItemQuery, dp);
-            if (AffectedCount > 0)
-            {
-                item.Id = dp.Get<int>("@id");
-                UpdateItemUpdateDateAndUpdateTime(item.InvoiceId);
-            }
-            return AffectedCount;
-        }
-
-        public int UpdateSubItemInDatabase(InvoiceItemModel item)
-        {
-            if (item == null || !item.IsCountStringValid) return 0;
-            item.DateUpdated = PersianCalendarModel.GetCurrentPersianDate();
-            item.TimeUpdated = PersianCalendarModel.GetCurrentTime();
-            DynamicParameters dp = new();
-            dp.Add("@productId", item.Product.Id);
-            dp.Add("@buyPrice", item.BuyPrice);
-            dp.Add("@sellPrice", item.SellPrice);
-            dp.Add("@countString", item.CountString);
-            dp.Add("@countValue", item.CountValue);
-            dp.Add("@dateUpdated", item.DateUpdated);
-            dp.Add("@timeUpdated", item.TimeUpdated);
-            dp.Add("@delivered", item.Delivered);
-            dp.Add("@descriptions", item.Descriptions);
-            var AffectedCount = DataAccess.SaveData(UpdateSubItemQuery, item);
-            if (AffectedCount > 0) UpdateItemUpdateDateAndUpdateTime(item.InvoiceId);
-            return AffectedCount;
-        }
-
-        public int DeleteSubItemFromDatabase(InvoiceItemModel item)
-        {
-            var AffectedCount = DataAccess.SaveData(DeleteSubItemQuery, item);
-            if (AffectedCount > 0) UpdateItemUpdateDateAndUpdateTime(item.InvoiceId);
-            return AffectedCount;
-        }
-
-        private void UpdateItemUpdateDateAndUpdateTime(int ID)
-        {
-            var dp = new DynamicParameters();
-            dp.Add("@id", ID);
-            dp.Add("@dateUpdated", PersianCalendarModel.GetCurrentPersianDate());
-            dp.Add("@timeUpdated", PersianCalendarModel.GetCurrentTime());
-            DataAccess.SaveData(UpdateSubItemDateAndTimeQuery, dp);
-        }
-
-        public int DeleteItemById(int Id)
-        {
-            string sql = @$"DELETE FROM Invoices WHERE Id = {Id}";
-            return DataAccess.SaveData<DynamicParameters>(sql, null);
-        }
-        public int GetTotalQueryCount(string WhereClause)
-        {
-            var sqlTemp = $@"SELECT COUNT([Id]) FROM Invoices
-                             { (string.IsNullOrEmpty(WhereClause) ? "" : " WHERE ") } { WhereClause }";
-            return DataAccess.ExecuteScalar<int, DynamicParameters>(sqlTemp, null);
-        }
-
-        public ObservableCollection<InvoiceListModel> LoadManyItems(int OffSet, int FetcheSize, string WhereClause, OrderType Order = OrderType.DESC, string OrderBy = "Id")
-        {
-            string sql = $@"--CREATE FUNCTION dbo.GetDiscountedInvoiceSum(@disType tinyint, @disVal float, @amountVal float)
-                            --RETURNS FLOAT
-                            --AS
-                            --BEGIN
-                            --RETURN  CASE
-                            --		WHEN @disType = 0 THEN @amountVal - (@disVal / 100 * @amountVal)
-                            --		WHEN @disType = 1 THEN @amountVal - @disVal
-                            --		END
-                            --END
-
-                            SET NOCOUNT ON
-                            SELECT i.Id, i.CustomerId, c.FirstName + ' ' + c.LastName CustomerFullName, i.DateCreated, i.DateUpdated,
-		                            dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) AS TotalInvoiceSum,
-		                            pays.TotalPayments, i.LifeStatus
-                            FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id
-                            
-                            LEFT JOIN (SELECT SUM(ii.[CountValue] * ii.SellPrice) AS TotalSellValue, ii.[InvoiceId]
-	                            FROM InvoiceItems ii GROUP BY ii.[InvoiceId]) sp ON i.Id=sp.InvoiceId
-                            
-                            LEFT JOIN (SELECT SUM(ips.[PayAmount]) AS TotalPayments, ips.[InvoiceId]
-	                           FROM InvoicePayments ips GROUP BY ips.[InvoiceId]) pays ON i.Id=pays.InvoiceId
-
-                            { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
-                            ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
-            return DataAccess.LoadData<InvoiceListModel, DynamicParameters>(sql, null);
-        }
-
-        public InvoiceModel LoadSingleItem(int Id)
-        {
-            var query = string.Format(LoadSingleItemQuery, Id);
-            if (FluentMapper.EntityMaps.IsEmpty)
-            {
-                FluentMapper.Initialize(config => config.AddMap(new CustomerModelMapper()));
-                FluentMapper.Initialize(config => config.AddMap(new ProductModelMapper()));
-            }
-            using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
-            return conn.QueryMultiple(query).MapToSingleInvoice();
-        }
-
-        public double GetTotalOrRestTotalBalanceOfCustomer(int CustomerId, int InvoiceId = 0)
-        {
-            string InvoiceClause = InvoiceId == 0 ? "" : $"AND [Id] <> { InvoiceId }";
-            string sqlQuery = @$"SET NOCOUNT ON
-                                 SELECT SUM(ISNULL(dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue), 0) - ISNULL(pays.TotalPayments, 0))
-                                 FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id
-                                 
-                                 LEFT JOIN (SELECT SUM(ii.[CountValue] * ii.[SellPrice]) AS TotalSellValue, ii.[InvoiceId]
-                                     FROM InvoiceItems ii GROUP BY ii.[InvoiceId]) sp ON i.Id=sp.InvoiceId
-                                 
-                                 LEFT JOIN (SELECT SUM(ips.[PayAmount]) AS TotalPayments, ips.[InvoiceId]
-                                    FROM InvoicePayments ips GROUP BY ips.[InvoiceId]) pays ON i.Id=pays.InvoiceId
-                                 WHERE i.LifeStatus = { (int)InvoiceLifeStatus.Active } AND c.Id = { CustomerId } { InvoiceClause }
-                                 GROUP BY c.Id";
-            return DataAccess.ExecuteScalar<double, DynamicParameters>(sqlQuery, null);
-        }
-
-        public Dictionary<int, string> GetProductItems()
-        {
-            Dictionary<int, string> choices = new();
-            string sql = $@"SELECT p.Id, p.ProductName FROM Products p";
-            using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
-            var items = conn.Query<ProductNamesForComboBox>(sql, null);
-            choices = items.ToDictionary(x => x.Id, x => x.ProductName);
-            return choices;
+            var query = $"SELECT InvoiceId FROM InvoicePayments WHERE Id = { Id }";
+            return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(query, null);
         }
 
         public string GenerateWhereClause(string val, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, SqlSearchMode mode = SqlSearchMode.OR)
@@ -270,15 +148,15 @@ namespace DataLibraryCore.DataAccess.SqlServer
                       {mode} i.[DateUpdated] LIKE { criteria }
                       {mode} i.[TimeUpdated] LIKE { criteria }
                       {mode} CAST(i.[DiscountValue] AS VARCHAR) LIKE { criteria }
-                      {mode} i.[Descriptions] LIKE { criteria }
+                      {mode} i.[Descriptions] LIKE N{ criteria }
 
                       {mode} CAST(c.[Id] AS VARCHAR) LIKE { criteria }
-                      {mode} c.[FirstName] + ' ' + c.[LastName] LIKE { criteria }
-                      {mode} c.[CompanyName] LIKE { criteria }
-                      {mode} c.[EmailAddress] LIKE { criteria }
-                      {mode} c.[PostAddress] LIKE { criteria }
+                      {mode} ISNULL(c.FirstName, '') + ' ' + ISNULL(c.LastName, '') LIKE N{ criteria }
+                      {mode} c.[CompanyName] LIKE N{ criteria }
+                      {mode} c.[EmailAddress] LIKE N{ criteria }
+                      {mode} c.[PostAddress] LIKE N{ criteria }
                       {mode} c.[DateJoined] LIKE { criteria }
-                      {mode} c.[Descriptions] LIKE { criteria }
+                      {mode} c.[Descriptions] LIKE N{ criteria }
 
                       {mode} CAST(sp.[TotalSellValue] AS varchar) LIKE { criteria }
                       {mode} CAST(pays.[TotalPayments] AS varchar) LIKE { criteria }
@@ -288,10 +166,283 @@ namespace DataLibraryCore.DataAccess.SqlServer
                       {(FinStatus == null ? "" : $" AND ISNULL(dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue), 0) - ISNULL(pays.TotalPayments, 0) { finStatusOperand } 0 ")}";
         }
 
-        public ValidationResult ValidateItem(InvoiceModel invoice)
+        public async Task<int> CreateItemAsync(InvoiceModel item)
+        {
+            if (item == null || !ValidateItem(item).IsValid) return 0;
+            item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
+            item.TimeCreated = PersianCalendarHelper.GetCurrentTime();
+            var dp = new DynamicParameters();
+            dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
+            dp.Add("@customerId", item.Customer.Id);
+            dp.Add("@dateCreated", item.DateCreated);
+            dp.Add("@timeCreated", item.TimeCreated);
+            dp.Add("@discountType", item.DiscountType);
+            dp.Add("@discountValue", item.DiscountValue);
+            dp.Add("@descriptions", item.Descriptions);
+            dp.Add("@lifeStatus", item.LifeStatus);
+            var AffectedCount = await DataAccess.SaveDataAsync(CreateInvoiceQuery, dp);
+            var OutputId = dp.Get<int>("@id");
+            if (AffectedCount > 0) item.Id = OutputId;
+            return OutputId;
+        }
+
+        public async Task<int> UpdateItemAsync(InvoiceModel item)
+        {
+            if (item == null || !ValidateItem(item).IsValid) return 0;
+            var dp = new DynamicParameters();
+            dp.Add("@id", item.Id);
+            dp.Add("@customerId", item.Customer.Id);
+            dp.Add("@dateCreated", item.DateCreated);
+            dp.Add("@timeCreated", item.TimeCreated);
+            dp.Add("@dateUpdated", PersianCalendarHelper.GetCurrentPersianDate());
+            dp.Add("@timeUpdated", PersianCalendarHelper.GetCurrentTime());
+            dp.Add("@discountType", item.DiscountType);
+            dp.Add("@discountValue", item.DiscountValue);
+            dp.Add("@descriptions", item.Descriptions);
+            dp.Add("@lifeStatus", item.LifeStatus);
+            return await DataAccess.SaveDataAsync(UpdateInvoiceQuery, dp);
+        }
+
+        public async Task<int> DeleteItemByIdAsync(int Id)
+        {
+            string sql = @$"DELETE FROM Invoices WHERE Id = {Id}";
+            return await DataAccess.SaveDataAsync<DynamicParameters>(sql, null);
+        }
+
+        public async Task<InvoiceItemModel> GetInvoiceItemFromDatabaseAsync(int Id)
+        {
+            var sql = string.Format(GetSingleInvoiceItemQuery, Id);
+            using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
+            var result = await conn.QueryAsync<InvoiceItemModel, ProductModel, ProductUnitModel, InvoiceItemModel>
+                (sql, (it, p, u) => { it.Product = p; it.Unit = u; return it; }, splitOn: "pId, puId");
+            return result.SingleOrDefault();
+        }
+
+        public async Task<int> InsertInvoiceItemToDatabaseAsync(InvoiceItemModel item)
+        {
+            if (item == null || !item.IsCountStringValid) return 0;
+            item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
+            item.TimeCreated = PersianCalendarHelper.GetCurrentTime();
+            DynamicParameters dp = new();
+            dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
+            dp.Add("@invoiceId", item.InvoiceId);
+            dp.Add("@productId", item.Product.Id);
+            dp.Add("@buyPrice", item.BuyPrice);
+            dp.Add("@sellPrice", item.SellPrice);
+            dp.Add("@countString", item.CountString);
+            dp.Add("@countValue", item.CountValue);
+            dp.Add("@productUnitId", item.Unit == null ? (int?)null : item.Unit.Id);
+            dp.Add("@dateCreated", item.DateCreated);
+            dp.Add("@timeCreated", item.TimeCreated);
+            dp.Add("@delivered", item.Delivered);
+            dp.Add("@descriptions", item.Descriptions);
+            var AffectedCount = await DataAccess.SaveDataAsync(InsertInvoiceItemQuery, dp);
+            if (AffectedCount > 0)
+            {
+                item.Id = dp.Get<int>("@id");
+                await UpdateItemUpdateDateAndUpdateTimeAsync(item.InvoiceId);
+            }
+            return AffectedCount;
+        }
+
+        public async Task<int> UpdateInvoiceItemInDatabaseAsync(InvoiceItemModel item)
+        {
+            if (item == null || !item.IsCountStringValid) return 0;
+            item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
+            item.TimeUpdated = PersianCalendarHelper.GetCurrentTime();
+            DynamicParameters dp = new();
+            dp.Add("@id", item.Id);
+            dp.Add("@productId", item.Product.Id);
+            dp.Add("@buyPrice", item.BuyPrice);
+            dp.Add("@sellPrice", item.SellPrice);
+            dp.Add("@countString", item.CountString);
+            dp.Add("@countValue", item.CountValue);
+            dp.Add("@productUnitId", item.Unit == null ? (int?)null : item.Unit.Id);
+            dp.Add("@dateUpdated", item.DateUpdated);
+            dp.Add("@timeUpdated", item.TimeUpdated);
+            dp.Add("@delivered", item.Delivered);
+            dp.Add("@descriptions", item.Descriptions);
+            var AffectedCount = await DataAccess.SaveDataAsync(UpdateInvoiceItemQuery, dp);
+            if (AffectedCount > 0) await UpdateItemUpdateDateAndUpdateTimeAsync(item.InvoiceId);
+            return AffectedCount;
+        }
+
+        public async Task<int> DeleteInvoiceItemFromDatabaseAsync(int ItemId)
+        {
+            var InvoiceId = await GetInvoiceIdFromInvoiceItemId(ItemId);
+            if (InvoiceId == 0) return 0;
+            var dp = new DynamicParameters();
+            dp.Add("@id", ItemId);
+            var AffectedCount = await DataAccess.SaveDataAsync(DeleteInvoiceItemQuery, dp);
+            if (AffectedCount > 0) await UpdateItemUpdateDateAndUpdateTimeAsync(InvoiceId);
+            return AffectedCount;
+        }
+
+        public async Task<InvoicePaymentModel> GetInvoicePaymentFromDatabaseAsync(int Id)
+        {
+            string GetInvoicePaymentQuery = $"SELECT * FROM InvoicePayments WHERE Id = { Id }";
+            var result = await DataAccess.LoadDataAsync<InvoicePaymentModel, DynamicParameters>(GetInvoicePaymentQuery, null);
+            return result.SingleOrDefault();
+        }
+
+        public async Task<int> InsertInvoicePaymentToDatabaseAsync(InvoicePaymentModel item)
+        {
+            if (item == null) return 0;
+            item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
+            item.TimeCreated = PersianCalendarHelper.GetCurrentTime();
+            DynamicParameters dp = new();
+            dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
+            dp.Add("@invoiceId", item.InvoiceId);
+            dp.Add("@dateCreated", item.DateCreated);
+            dp.Add("@timeCreated", item.TimeCreated);
+            dp.Add("@payAmount", item.PayAmount);
+            dp.Add("@descriptions", item.Descriptions);
+            var AffectedCount = await DataAccess.SaveDataAsync(InsertInvoicePaymentQuery, dp);
+            if (AffectedCount > 0)
+            {
+                item.Id = dp.Get<int>("@id");
+                await UpdateItemUpdateDateAndUpdateTimeAsync(item.InvoiceId);
+            }
+            return AffectedCount;
+        }
+
+        public async Task<int> UpdateInvoicePaymentInDatabaseAsync(InvoicePaymentModel item)
+        {
+            if (item == null) return 0;
+            item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
+            item.TimeUpdated = PersianCalendarHelper.GetCurrentTime();
+            DynamicParameters dp = new();
+            dp.Add("@dateUpdated", item.DateUpdated);
+            dp.Add("@timeUpdated", item.TimeUpdated);
+            dp.Add("@payAmount", item.PayAmount);
+            dp.Add("@descriptions", item.Descriptions);
+            var AffectedCount = await DataAccess.SaveDataAsync(UpdateInvoicePaymentQuery, item);
+            if (AffectedCount > 0) await UpdateItemUpdateDateAndUpdateTimeAsync(item.InvoiceId);
+            return AffectedCount;
+        }
+
+        public async Task<int> DeleteInvoicePaymentFromDatabaseAsync(int PaymentId)
+        {
+            var InvoiceId = await GetInvoiceIdFromInvoicePaymentId(PaymentId);
+            if (InvoiceId == 0) return 0;
+            DynamicParameters dp = new();
+            dp.Add("@id", PaymentId);
+            var AffectedCount = await DataAccess.SaveDataAsync(DeleteInvoicePaymentQuery, dp);
+            if (AffectedCount > 0) await UpdateItemUpdateDateAndUpdateTimeAsync(InvoiceId);
+            return AffectedCount;
+        }
+
+        private async Task UpdateItemUpdateDateAndUpdateTimeAsync(int Id)
+        {
+            var dp = new DynamicParameters();
+            dp.Add("@id", Id);
+            dp.Add("@dateUpdated", PersianCalendarHelper.GetCurrentPersianDate());
+            dp.Add("@timeUpdated", PersianCalendarHelper.GetCurrentTime());
+            await DataAccess.SaveDataAsync(UpdateSubItemDateAndTimeQuery, dp).ConfigureAwait(false);
+        }
+
+        public async Task<int> GetTotalQueryCountAsync(string WhereClause)
+        {
+            var sqlTemp = $@"SELECT COUNT(i.[Id]) FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id
+                LEFT JOIN (SELECT SUM(ii.[CountValue] * ii.SellPrice) AS TotalSellValue, ii.[InvoiceId]
+	            FROM InvoiceItems ii GROUP BY ii.[InvoiceId]) sp ON i.Id=sp.InvoiceId
+                LEFT JOIN (SELECT SUM(ips.[PayAmount]) AS TotalPayments, ips.[InvoiceId]
+	            FROM InvoicePayments ips GROUP BY ips.[InvoiceId]) pays ON i.Id=pays.InvoiceId
+                { (string.IsNullOrEmpty(WhereClause) ? "" : " WHERE ") } { WhereClause }";
+            return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
+        }
+
+        public async Task<ObservableCollection<InvoiceListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+        {
+            string sql = $@"SET NOCOUNT ON
+                            SELECT i.Id, i.CustomerId, ISNULL(c.FirstName, '') + ' ' + ISNULL(c.LastName, '') CustomerFullName, i.DateCreated, i.TimeCreated, i.DateUpdated, i.TimeUpdated,
+		                            dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) AS TotalInvoiceSum,
+		                            pays.TotalPayments, i.LifeStatus
+                            FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id
+                            
+                            LEFT JOIN (SELECT SUM(ii.[CountValue] * ii.SellPrice) AS TotalSellValue, ii.[InvoiceId]
+	                            FROM InvoiceItems ii GROUP BY ii.[InvoiceId]) sp ON i.Id = sp.InvoiceId
+                            
+                            LEFT JOIN (SELECT SUM(ips.[PayAmount]) AS TotalPayments, ips.[InvoiceId]
+	                           FROM InvoicePayments ips GROUP BY ips.[InvoiceId]) pays ON i.Id = pays.InvoiceId
+
+                            { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
+                            ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
+            return await DataAccess.LoadDataAsync<InvoiceListModel, DynamicParameters>(sql, null);
+        }
+
+        public async Task<InvoiceModel> LoadSingleItemAsync(int Id)
+        {
+            var query = string.Format(LoadSingleItemQuery, Id);
+            using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
+            var outPut = await conn.QueryMultipleAsync(query);
+            return outPut.MapToSingleInvoice();
+        }
+
+        public async Task<double> GetTotalOrRestTotalBalanceOfCustomerAsync(int CustomerId, int InvoiceId = 0)
+        {
+            var InvoiceClause = InvoiceId == 0 ? "" : $"AND i.[Id] <> { InvoiceId }";
+            var sqlQuery = @$"SET NOCOUNT ON
+                              SELECT SUM(dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) - ISNULL(pays.TotalPayments, 0))
+                              FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id
+                              
+                              LEFT JOIN (SELECT SUM(ii.[CountValue] * ii.[SellPrice]) AS TotalSellValue, ii.[InvoiceId]
+                                  FROM InvoiceItems ii GROUP BY ii.[InvoiceId]) sp ON i.Id=sp.InvoiceId
+                              
+                              LEFT JOIN (SELECT SUM(ips.[PayAmount]) AS TotalPayments, ips.[InvoiceId]
+                                 FROM InvoicePayments ips GROUP BY ips.[InvoiceId]) pays ON i.Id=pays.InvoiceId
+                              WHERE i.LifeStatus = { (int)InvoiceLifeStatus.Active } AND c.Id = { CustomerId } { InvoiceClause }
+                              GROUP BY c.Id";
+            return await DataAccess.ExecuteScalarAsync<double, DynamicParameters>(sqlQuery, null);
+        }
+
+        public async Task<List<ItemsForComboBox>> GetProductItemsAsync(string SearchText = null)
+        {
+            var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [ProductName] LIKE '%{ SearchText }%'";
+            if (string.IsNullOrEmpty(where)) where = " WHERE IsActive = 1"; else where += " AND IsActive = 1";
+            var sql = string.Format(GetProductItemsQuery, where);
+            var items = await DataAccess.LoadDataAsync<ItemsForComboBox, DynamicParameters>(sql, null);
+            return items?.ToList();
+        }
+
+        public async Task<List<ProductUnitModel>> GetProductUnitsAsync()
+        {
+            var result = await DataAccess.LoadDataAsync<ProductUnitModel, DynamicParameters>(GetProductUnitsQuery, null);
+            return result?.ToList();
+        }
+
+        public async Task<List<ItemsForComboBox>> GetCustomerNamesAsync(string SearchText)
+        {
+            var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [FirstName] + ' ' + [LastName] LIKE '%{ SearchText }%'";
+            var sql = string.Format(GetCustomerNamesQuery, where);
+            var items = await DataAccess.LoadDataAsync<ItemsForComboBox, DynamicParameters>(sql, null);
+            return items?.ToList();
+        }
+
+        public async Task<ObservableCollection<RecentSellPriceModel>> GetRecentSellPricesAsync(int MaxRecord, int CustomerId, int ProductId)
+        {
+            var sql = string.Format(GetRecentPricesOfProductQuery, MaxRecord, CustomerId, ProductId);
+            return await DataAccess.LoadDataAsync<RecentSellPriceModel, DynamicParameters>(sql, null);
+        }
+
+        public ValidationResult ValidateItem(InvoiceModel item)
         {
             InvoiceValidator validator = new();
-            var result = validator.Validate(invoice);
+            var result = validator.Validate(item);
+            return result;
+        }
+
+        public ValidationResult ValidateItem(InvoiceItemModel item)
+        {
+            InvoiceItemValidator validator = new();
+            var result = validator.Validate(item);
+            return result;
+        }
+
+        public ValidationResult ValidateItem(InvoicePaymentModel item)
+        {
+            InvoicePaymentValidator validator = new();
+            var result = validator.Validate(item);
             return result;
         }
     }
@@ -317,6 +468,13 @@ namespace DataLibraryCore.DataAccess.SqlServer
             Map(x => x.DateUpdated).ToColumn("pDateUpdated");
             Map(x => x.TimeUpdated).ToColumn("pTimeUpdated");
             Map(x => x.Descriptions).ToColumn("pDescriptions");
+        }
+    }
+    internal class ProductUnitModelMapper : EntityMap<ProductUnitModel>
+    {
+        public ProductUnitModelMapper()
+        {
+            Map(x => x.Id).ToColumn("puId");
         }
     }
 }

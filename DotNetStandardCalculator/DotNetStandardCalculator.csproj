@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+    <Authors>Jamie Roos</Authors>
+    <Company>Jamie Roos</Company>
+    <Description>A library to solve mathmatical calculations given in string format.</Description>
+    <PackageLicenseUrl>https://github.com/Rooster212/DotNetStandardCalculator/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Rooster212/DotNetStandardCalculator</PackageProjectUrl>
+    <Copyright>Copyright © Jamie Roos 2017</Copyright>
+    <NeutralLanguage />
+    <RepositoryUrl></RepositoryUrl>
+    <RepositoryType></RepositoryType>
+  </PropertyGroup>
+
+</Project>

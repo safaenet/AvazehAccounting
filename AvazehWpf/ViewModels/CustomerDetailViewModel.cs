@@ -1,48 +1,84 @@
-﻿using Caliburn.Micro;
-using DataLibraryCore.DataAccess.SqlServer;
-using DataLibraryCore.Models;
+﻿using AvazehApiClient.DataAccess;
+using AvazehApiClient.DataAccess.Interfaces;
+using Caliburn.Micro;
+using SharedLibrary.DalModels;
+using SharedLibrary.SecurityAndSettingsModels;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using DataLibraryCore.DataAccess.Interfaces;
 
 namespace AvazehWpf.ViewModels
 {
     public class CustomerDetailViewModel : ViewAware
     {
-        public CustomerDetailViewModel(ICustomerCollectionManager manager, CustomerModel Customer)
+        public CustomerDetailViewModel(ICollectionManager<CustomerModel> manager, CustomerModel customer, LoggedInUser_DTO user, Func<Task> callBack)
         {
             Manager = manager;
-            if (Customer != null)
+            User = user;
+            CallBackFunc = callBack;
+            LoadSettings();
+            if (customer is not null)
             {
-                if (Customer.Id == 0) Customer.DateJoined = PersianCalendarModel.GetCurrentPersianDate();
-                this.Customer = Customer;
-                _BackupCustomer = new CustomerModel();
-                CloneCustomer(Customer, ref _BackupCustomer);
+                Customer = customer;
+                WindowTitle = customer.FullName + " - مشتری";
+                Customer.Clone(customerBackup);
+            }
+            else
+            {
+                Customer = new();
+                WindowTitle = "مشتری جدید";
             }
         }
 
-        private readonly ICustomerCollectionManager Manager;
+        private void LoadSettings()
+        {
+            CanEditCustomer = Manager.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanEditCustomer));
+            CanDeleteCustomer = Manager.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanDeleteCustomer));
+        }
+
+        private readonly ICollectionManager<CustomerModel> Manager;
         private CustomerModel _Customer;
-        private CustomerModel _BackupCustomer;
-        private bool _CancelAndClose = true;
+        private Func<Task> CallBackFunc;
+        private string windowTitle;
+        private CustomerModel customerBackup;
+
+        public string WindowTitle
+        {
+            get { return windowTitle; }
+            set { windowTitle = value; NotifyOfPropertyChange(() => WindowTitle); }
+        }
 
         public CustomerModel Customer
         {
-            get { return _Customer; }
+            get => _Customer;
             set { _Customer = value; NotifyOfPropertyChange(() => Customer); }
         }
-        
+
+        public LoggedInUser_DTO User { get; init; }
+
+        private bool canEditCustomer;
+        public bool CanEditCustomer
+        {
+            get { return canEditCustomer; }
+            set { canEditCustomer = value; NotifyOfPropertyChange(() => CanEditCustomer); }
+        }
+        private bool canDeleteCustomer;
+        public bool CanDeleteCustomer
+        {
+            get { return canDeleteCustomer; }
+            set { canDeleteCustomer = value; NotifyOfPropertyChange(() => CanDeleteCustomer); }
+        }
+
         public void AddNewPhoneNumber()
         {
-            PhoneNumberModel newPhone = new PhoneNumberModel();
+            if (!CanEditCustomer) return;
+            if (Customer == null) Customer = new();
+            PhoneNumberModel newPhone = new();
             if (Customer.PhoneNumbers == null)
             {
-                Customer.PhoneNumbers = new System.Collections.ObjectModel.ObservableCollection<PhoneNumberModel>();
+                Customer.PhoneNumbers = new();
                 NotifyOfPropertyChange(() => Customer);
             }
             newPhone.CustomerId = Customer.Id;
@@ -51,17 +87,18 @@ namespace AvazehWpf.ViewModels
 
         public void DeletePhoneNumber()
         {
-            if(Customer == null || Customer.PhoneNumbers == null || !Customer.PhoneNumbers.Any()) return;
+            if (!CanEditCustomer) return;
+            if (Customer == null || Customer.PhoneNumbers == null || !Customer.PhoneNumbers.Any()) return;
             Customer.PhoneNumbers.RemoveAt(Customer.PhoneNumbers.Count - 1);
         }
 
-        public void DeleteAndClose()
+        public async Task DeleteAndCloseAsync()
         {
-            if (Customer == null) return;
+            if (!CanDeleteCustomer) return;
+            if (Customer == null || Customer.Id == 0) CloseWindow();
             var result = MessageBox.Show("Are you sure ?", $"Delete {Customer.FullName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
-            if (Manager.Processor.DeleteItemById(Customer.Id) == 0) MessageBox.Show($"Customer with ID: {Customer.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            _CancelAndClose = false;
+            if (await Manager.DeleteItemAsync(Customer.Id) == false) MessageBox.Show($"Customer with ID: {Customer.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             CloseWindow();
         }
 
@@ -70,94 +107,68 @@ namespace AvazehWpf.ViewModels
             (GetView() as Window).Close();
         }
 
-        public void SaveAndNew()
+        public async Task SaveAndNewAsync()
         {
-            if (SaveToDatabase() == 0) return;
-            _CancelAndClose = false;
-            Customer = new CustomerModel();
-            WindowManager wm = new WindowManager();
-            wm.ShowWindowAsync(new CustomerDetailViewModel(Manager, Customer));
+            if (!CanEditCustomer) return;
+            if (await SaveToDatabaseAsync() == false) return;
+            var newCustomer = new CustomerModel();
+            WindowManager wm = new();
+            await wm.ShowWindowAsync(new CustomerDetailViewModel(Manager, newCustomer, User, CallBackFunc));
             CloseWindow();
         }
 
         public void CancelAndClose()
         {
-            _CancelAndClose = true;
+            if (Customer != null && Customer.Id != 0) Customer = customerBackup;
             CloseWindow();
         }
 
-
-        public void SaveAndClose()
+        public async Task SaveAndCloseAsync()
         {
-            if (SaveToDatabase() == 0) return;
-            _CancelAndClose = false;
+            if (!CanEditCustomer) return;
+            if (await SaveToDatabaseAsync() == false) return;
             CloseWindow();
         }
 
-        private int SaveToDatabase()
+        private async Task<bool> SaveToDatabaseAsync()
         {
-            if (string.IsNullOrEmpty(Customer.DateJoined)) Customer.DateJoined = PersianCalendarModel.GetCurrentPersianDate();
-            var validate = Manager.Processor.ValidateItem(Customer);
+            var validate = Manager.ValidateItem(Customer);
             if (validate.IsValid)
             {
-                int outPut = 0;
-                if (Customer == null)
-                {
-                    var result = MessageBox.Show("Customer is not assigned, Nothing will be saved; Close anyway ?", "Close", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                    if (result == MessageBoxResult.Yes) CloseWindow();
-                }
+                CustomerModel outPut;
                 if (Customer.Id == 0) //It's a new Customer
-                {
-                    outPut = Manager.Processor.CreateItem(Customer);
-                    if (outPut == 0) MessageBox.Show($"There was a problem when saving to Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                    outPut = await Manager.CreateItemAsync(Customer);
                 else //Update Customer
+                    outPut = await Manager.UpdateItemAsync(Customer);
+                if (outPut is null)
                 {
-                    
-                    outPut = Manager.Processor.UpdateItem(Customer);
-                    if (outPut == 0) MessageBox.Show($"There was a problem when updating the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"There was a problem when saving to Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
                 }
-                return outPut;
+                outPut.Clone(Customer);
+                return true;
             }
             else
             {
-                string str = "";
+                var str = "";
                 foreach (var error in validate.Errors)
                 {
                     str += error.ErrorMessage + "\n";
                 }
                 MessageBox.Show(str);
-                return 0;
+                return false;
             }
         }
 
-        private void CloneCustomer(CustomerModel From, ref CustomerModel To)
+        public async Task ClosingWindowAsync()
         {
-            if (From == null || To == null) return;
-            To.CompanyName = From.CompanyName;
-            To.DateJoined = From.DateJoined;
-            To.Descriptions = From.Descriptions;
-            To.EmailAddress = From.EmailAddress;
-            To.FirstName = From.FirstName;
-            To.Id = From.Id;
-            To.LastName = From.LastName;
-            if (From.PhoneNumbers != null)
-            {
-                To.PhoneNumbers = new System.Collections.ObjectModel.ObservableCollection<PhoneNumberModel>();
-                foreach (var phone in From.PhoneNumbers)
-                {
-                    To.PhoneNumbers.Add(phone);
-                }
-            }
-            To.PostAddress = From.PostAddress;
+            if (CallBackFunc != null)
+                await CallBackFunc?.Invoke();
         }
 
-        public void ClosingWindow()
+        public void Window_PreviewKeyDown(object window, KeyEventArgs e)
         {
-            if(_CancelAndClose)
-            {
-                CloneCustomer(_BackupCustomer, ref _Customer);
-            }
+            if (e.Key == Key.Escape) (GetView() as Window).Close();
         }
     }
 }

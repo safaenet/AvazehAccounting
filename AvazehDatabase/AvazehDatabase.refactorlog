@@ -112,4 +112,256 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="TimeCreated" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="7f7f840b-8055-4e7b-a571-37d1e5c1488d" ChangeDateTime="03/24/2022 08:08:48">
+    <Property Name="ElementName" Value="[dbo].[ProductUnits].[ProductId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ProductUnits]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Unit" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a395f123-73f5-4a7f-a933-13bf5623520f" ChangeDateTime="03/24/2022 08:09:23">
+    <Property Name="ElementName" Value="[dbo].[ProductUnits].[Unit]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ProductUnits]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UnitName" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0578521a-23a7-4179-90f0-151bbe98787d" ChangeDateTime="03/24/2022 08:38:07">
+    <Property Name="ElementName" Value="[dbo].[InvoiceItems].[ProductUnit]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[InvoiceItems]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ProductUnitId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4f305acf-70e3-4542-adeb-3897cc3ca273" ChangeDateTime="04/10/2022 19:17:22">
+    <Property Name="ElementName" Value="[dbo].[InvoicePayments].[Description]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[InvoicePayments]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Descriptions" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2bcb8416-4a20-4484-8fb9-5ff43b33d031" ChangeDateTime="04/15/2022 12:43:33">
+    <Property Name="ElementName" Value="[dbo].[TransactionItems].[IsInput]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[TransactionItems]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="IsMinus" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4786e023-a4c1-4935-8fbd-f195b7a0bd94" ChangeDateTime="09/25/2022 13:05:04">
+    <Property Name="ElementName" Value="[dbo].[UserSettings].[DataGridBalancedItemColor]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserSettings]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DataGrid" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="74154d6b-ce06-4005-aa2b-a7558dcdb3b7" ChangeDateTime="09/25/2022 13:06:07">
+    <Property Name="ElementName" Value="[dbo].[UserSettings].[DataGrid]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserSettings]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DataGridDeletedItemColor" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7ae411ed-dbe8-43f8-bf61-b253fd06c522" ChangeDateTime="09/25/2022 13:08:46">
+    <Property Name="ElementName" Value="[dbo].[UserSettings].[DataGridNewItemColor]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserSettings]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ColorDataGridNewItemColor" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="19706a23-c0ed-4c8e-854e-ee29111b4c24" ChangeDateTime="09/25/2022 13:24:35">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanEdit]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanEditCheques" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b08df1cb-88f5-4bbc-a76a-2f1b205815e7" ChangeDateTime="09/25/2022 13:25:45">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanViewTransactions]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanViewTransactionList" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4fb83a74-9243-4dfc-82f2-6e8b9c595181" ChangeDateTime="09/25/2022 13:25:49">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanViewInvoices]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanViewInvoiceList" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="07049899-0231-48a5-9f9c-3e63aae16f83" ChangeDateTime="09/25/2022 13:34:52">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanChangePassword]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanChangeUserSettings" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4757ac77-0488-429b-965a-2f43b689e9dc" ChangeDateTime="09/25/2022 13:55:03">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanAddNewUser]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanAddUser" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="cc75d1f2-aa0a-4618-bf12-d3cf3a429354" ChangeDateTime="09/25/2022 13:58:22">
+    <Property Name="ElementName" Value="[dbo].[UserSettings].[TransactionShortcut1]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserSettings]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="TransactionShortcut1Id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5c5b4860-eed1-4deb-8a81-c29708bdae25" ChangeDateTime="09/25/2022 13:58:25">
+    <Property Name="ElementName" Value="[dbo].[UserSettings].[TransactionShortcut2]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserSettings]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="TransactionShortcut2Id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="347c1ade-bd99-4902-ab10-8b8924651596" ChangeDateTime="09/25/2022 13:58:28">
+    <Property Name="ElementName" Value="[dbo].[UserSettings].[TransactionShortcut3]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserSettings]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="TransactionShortcut3Id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="39d37a6a-af19-4b96-9372-81eae198f19e" ChangeDateTime="09/25/2022 14:00:47">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanChangeUserSettings]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanChangeItsSettings" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="cf6f5694-301b-4398-9fa9-d8a0902b952c" ChangeDateTime="09/25/2022 14:02:04">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanSeeNetProfits]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanViewNetProfits" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a0232a82-5f7d-4222-acea-397a08dd1ba7" ChangeDateTime="09/25/2022 17:56:15">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanChangePassword]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanChangeItsPassword" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="502d06bc-c8d7-44ac-9868-81b12e51057a" ChangeDateTime="09/25/2022 18:26:31">
+    <Property Name="ElementName" Value="[dbo].[UserSettings].[ColorChequeSoldItemColor]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserSettings]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ColorSoldItemColor" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a6d87f64-106a-4651-97d6-ea90561d38f0" ChangeDateTime="09/25/2022 18:26:36">
+    <Property Name="ElementName" Value="[dbo].[UserSettings].[ColorChequeNonSufficientFundItem]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserSettings]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ColorNonSufficientFundItem" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="76dcdcc3-7b34-4685-8b1e-9fe0b7e9bb8e" ChangeDateTime="09/25/2022 18:26:39">
+    <Property Name="ElementName" Value="[dbo].[UserSettings].[ColorChequeCashedItem]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserSettings]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ColorCashedItem" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9b5a2008-bf53-4a61-b27f-af2e9ef7dec7" ChangeDateTime="09/26/2022 17:01:56">
+    <Property Name="ElementName" Value="[dbo].[Products].[IsActive]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Products]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="IsDisabled" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2a5ba19e-8231-428f-bc7a-792cd7875847" ChangeDateTime="09/26/2022 17:02:23">
+    <Property Name="ElementName" Value="[dbo].[Products].[IsDisabled]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Products]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="IsActive" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="04fd5e6d-40c2-4d77-99ea-9dc7ec31ded0" ChangeDateTime="09/28/2022 13:47:27">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanViewCustomers]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanViewCustomersList" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="03936759-6ed5-436e-97f2-55dca7d57926" ChangeDateTime="09/28/2022 13:47:50">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanViewProducts]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanViewProductsList" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="15d86087-2fff-431a-a36c-b382e3e26075" ChangeDateTime="09/28/2022 13:48:23">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanViewCheques]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanViewChequesList" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2495bdac-a2c0-46a7-af8e-12cb8886fbad" ChangeDateTime="09/28/2022 13:48:46">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanEditCustomers]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanEditCustomer" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="588f308c-55d3-4263-a874-04c3473d3957" ChangeDateTime="09/28/2022 13:48:48">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanEditProducts]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanEditProduct" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="65e665aa-7e50-4ea2-ae90-6189d7434c74" ChangeDateTime="09/28/2022 13:48:49">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanEditInvoices]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanEditInvoice" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="bf2db997-fc3d-422e-aee9-f66689361d5e" ChangeDateTime="09/28/2022 13:48:53">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanEditTransactions]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanEditTransaction" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c2c88364-56fe-4956-be5e-ed04291c5987" ChangeDateTime="09/28/2022 13:48:55">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanEditCheques]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanEditCheque" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="baa9e1f4-78d5-49ca-b598-967df47b80be" ChangeDateTime="09/28/2022 14:00:42">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanChangeItsSettings]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanManageItself" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d3ea0108-0cf7-4a27-95a9-c84b1e33f035" ChangeDateTime="09/28/2022 14:00:47">
+    <Property Name="ElementName" Value="[dbo].[UserPermissions].[CanChangeItsPassword]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserPermissions]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CanManageOthers" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="35b7bad9-07a0-4039-8ea6-8d5ed750f9e0" ChangeDateTime="09/28/2022 22:27:54">
+    <Property Name="ElementName" Value="[dbo].[UserSettings].[TransactionPageSize]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserSettings]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="TransactionListPageSize" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="de00a46d-384f-434c-b7a2-4df59e019280" ChangeDateTime="09/29/2022 13:14:39">
+    <Property Name="ElementName" Value="[dbo].[UserSettings].[ColorSoldItemColor]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserSettings]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ColorSoldItem" />
+  </Operation>
 </Operations>

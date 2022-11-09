@@ -4,18 +4,31 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
         xmlns:cal="http://www.caliburnproject.org"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:AvazehWpf" mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:InvoiceListViewModel}"
-        xmlns:dlc="clr-namespace:DataLibraryCore.Models;assembly=DataLibraryCore"
-        fw:AcrylicWindow.Enabled="True"
-        Title="Invoices" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
-        Width="1030" Height="650" fw:AcrylicWindow.AcrylicWindowStyle="NoIcon">
-    <Grid fw:PointerTracker.Enabled="True">
+        Title="فاکتور ها" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
+        Width="1030" Height="650"
+        cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
+    <Window.Resources>
+        <local:EnglishInvoiceStatusToPersianConverter x:Key="EnglishInvoiceStatusToPersianConverter"/>
+        <!--body content datagrid cell vertical centering-->
+        <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid Visibility="{Binding GeneralSettings.CanViewInvoices}">
         <Grid.Resources>
             <Style TargetType="TextBox">
                 <Setter Property="TextAlignment" Value="Center"/>
@@ -31,7 +44,6 @@
             <ColumnDefinition Width="3"/>
             <ColumnDefinition Width="auto" MaxWidth="200"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="3"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="3"/>
@@ -51,40 +63,46 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.Resources>
-                    <ObjectDataProvider x:Key="FinStatusItems" MethodName="GetFinStatusItems" ObjectType="{x:Type viewmodels:FinStatusAndLifeStatusItems}"/>
-                    <ObjectDataProvider x:Key="LifeStatusItems" MethodName="GetLifeStatusItems" ObjectType="{x:Type viewmodels:FinStatusAndLifeStatusItems}"/>
+                    <ObjectDataProvider x:Key="FinStatusItems" MethodName="GetInvoiceFinStatusItems" ObjectType="{x:Type viewmodels:InvoiceFinStatusAndLifeStatusItems}"/>
+                    <ObjectDataProvider x:Key="LifeStatusItems" MethodName="GetInvoiceLifeStatusItems" ObjectType="{x:Type viewmodels:InvoiceFinStatusAndLifeStatusItems}"/>
                 </Grid.Resources>
-                <Button x:Name="PrintList" Grid.Column="0" Height="25" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,5,0">
+                <Button x:Name="GetReportAsync" Grid.Column="0" Height="25" Margin="0,0,5,0" IsEnabled="False">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Printer" Margin="3"/>
-                        <TextBlock Text="Print List" VerticalAlignment="Center" Margin="5,0,30,0"/>
+                        <materialDesign:PackIcon Kind="ReportBoxOutline" Margin="3"/>
+                        <TextBlock Text="گزارش گیری" VerticalAlignment="Center" Margin="5,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <Button Grid.Column="1" Height="25" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,5,0">
+                <Button x:Name="PrintListAsync" Grid.Column="1" Height="25" Margin="0,0,5,0" IsEnabled="False">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="NotePlus" Margin="3"/>
-                        <TextBlock Text="New Invoice" VerticalAlignment="Center" Margin="5,0,30,0"/>
+                        <materialDesign:PackIcon Kind="PrinterOutline" Margin="3"/>
+                        <TextBlock Text="چاپ لیست" VerticalAlignment="Center" Margin="5,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <ComboBox fw:RevealElement.BorderOpacity="100" BorderThickness="1" BorderBrush="Black" Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" Grid.Column="2"
+                <Button x:Name="AddNewInvoiceAsync" IsEnabled="{Binding CanAddNewInvoice}" Grid.Column="2" Height="25" Margin="0,0,5,0">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="NotePlusOutline" Margin="3"/>
+                        <TextBlock Text="فاکتور جدید" VerticalAlignment="Center" Margin="5,0,30,0"/>
+                    </StackPanel>
+                </Button>
+                <ComboBox Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" Grid.Column="3" BorderThickness="2" BorderBrush="DarkGray" Height="25" VerticalContentAlignment="Center"
                           ItemsSource="{Binding Source={StaticResource FinStatusItems}}" SelectedValuePath="Key" DisplayMemberPath="Value"
-                          SelectedValue="{Binding SelectedFinStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action Search]"/>
-                <ComboBox fw:RevealElement.BorderOpacity="100" BorderThickness="1" BorderBrush="Black" Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" Grid.Column="3"
+                          SelectedValue="{Binding SelectedFinStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action SearchAsync]"/>
+                <ComboBox Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="85" Grid.Column="4" BorderThickness="2" BorderBrush="DarkGray" Height="25" VerticalContentAlignment="Center"
                           ItemsSource="{Binding Source={StaticResource LifeStatusItems}}" SelectedValuePath="Key" DisplayMemberPath="Value"
-                          SelectedValue="{Binding SelectedLifeStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action Search]"/>
-                <Button x:Name="Search" Grid.Column="4" Height="25" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,0,0">
+                          SelectedValue="{Binding SelectedLifeStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action SearchAsync]"/>
+                <Button x:Name="SearchAsync" Grid.Column="5" Height="25" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="DatabaseSearch" Margin="3"/>
-                        <TextBlock Text="Search" VerticalAlignment="Center" Margin="30,0,30,0"/>
+                        <materialDesign:PackIcon Kind="DatabaseSearchOutline" Margin="3"/>
+                        <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="3" HorizontalAlignment="Right"/>
                     </StackPanel>
                 </Button>
-                <TextBox x:Name="SearchText" Grid.Column="5" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandler($executionContext)]">
-                </TextBox>
+                <TextBox x:Name="SearchText" Grid.Column="6" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandlerAsync($executionContext)]; [Event GotFocus] = [Action SetKeyboardLayout]" VerticalContentAlignment="Center" Margin="0,0,3,0"/>
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -92,33 +110,132 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="PreviousPage" Height="25" HorizontalAlignment="Left" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,0,0">
+                <Button x:Name="PreviousPageAsync" Grid.Column="0" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="ArrowLeftCircle" Margin="3"/>
-                        <TextBlock Text="Previous" VerticalAlignment="Center" Margin="30,0,30,0"/>
+                        <materialDesign:PackIcon Kind="ArrowLeftCircleOutline" Margin="3"/>
+                        <TextBlock Text="صفحه قبل" VerticalAlignment="Center" Margin="30,0,30,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="NextPage" Grid.Column="2" Height="25" HorizontalAlignment="Right" fw:PointerTracker.Enabled="True" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,0,0,0">
+                <Button x:Name="NextPageAsync" Grid.Column="2" Height="25" HorizontalAlignment="Right" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Next" VerticalAlignment="Center" Margin="30,0,30,0"/>
-                        <materialDesign:PackIcon Kind="ArrowRightCircle" Margin="3" HorizontalAlignment="Right"/>
+                        <TextBlock Text="صفحه بعد" VerticalAlignment="Center" Margin="30,0,30,0"/>
+                        <materialDesign:PackIcon Kind="ArrowRightCircleOutline" Margin="3" HorizontalAlignment="Right"/>
                     </StackPanel>
                 </Button>
             </Grid>
-            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditInvoice]" Grid.Row="2" ItemsSource="{Binding Invoices}" SelectedItem="{Binding SelectedInvoice}" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False">
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditInvoiceAsync]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
+                      Grid.Row="2" HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" ItemsSource="{Binding Invoices}" RowHeight="25" FontSize="{Binding User.UserSettings.DataGridFontSize}"
+                      SelectedItem="{Binding SelectedInvoice}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False"
+                      CellStyle="{StaticResource Body_Content_DataGrid_Centering}">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="باز کردن" IsEnabled="{Binding CanViewInvoiceDetails}" cal:Message.Attach="[Event Click] = [Action EditInvoiceAsync]">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="OpenInApp"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="چاپ" IsEnabled="{Binding CanPrintInvoice}">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="PrinterOutline"/>
+                            </MenuItem.Icon>
+                            <MenuItem Header="فاکتور فروش بدون سربرگ" cal:Message.Attach="[Event Click] = [Action PrintInvoiceAsync(11)]">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="ReceiptOutline"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <Separator />
+                            <MenuItem Header="فاکتور فروش بدون سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoiceAsync(12)]">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="ReceiptOutline"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="فاکتور فروش با سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoiceAsync(13)]">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="ReceiptOutline"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <Separator />
+                            <MenuItem Header="پیش فاکتور بدون سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoiceAsync(21)]">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="InvoiceOutline"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="پیش فاکتور با سربرگ رسمی" cal:Message.Attach="[Event Click] = [Action PrintInvoiceAsync(22)]">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="InvoiceOutline"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </MenuItem>
+                        <MenuItem Header="نمایش پرداختها" IsEnabled="{Binding CanViewInvoiceDetails}" cal:Message.Attach="[Event Click] = [Action ViewPaymentsAsync]">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="Payment"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="نمایش همه فاکتورها با این نام" cal:Message.Attach="[Event Click] = [Action ShowCustomerInvoicesAsync]">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="SearchPlusOutline"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="نمایش همه" cal:Message.Attach="[Event Click] = [Action ShowAllInvoicesAsync]">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="ShowOutline"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="حذف" IsEnabled="{Binding CanDeleteInvoice}" cal:Message.Attach="[Event Click] = [Action DeleteInvoiceAsync]">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="DeleteOutline"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+                <DataGrid.Resources>
+                    <local:DateToColorConverter x:Key="DateToColorConverterForNewItem" ItemColor="{Binding User.UserSettings.ColorNewItem}" Date="{Binding CurrentPersianDate}"/>
+                    <local:DateToColorConverter x:Key="DateToColorConverterForUpdatedItem" ItemColor="{Binding User.UserSettings.ColorUpdatedItem}" Date="{Binding CurrentPersianDate}"/>
+                    <local:AmountToColorConverter x:Key="AmountToColorConverterForTotalBalance" BalancedColor="{Binding User.UserSettings.ColorBalancedItem}" PositiveColor="{Binding User.UserSettings.ColorDeptorItem}" NegativeColor="{Binding User.UserSettings.ColorCreditorItem}"/>
+                    <local:EnglishToPersianInvoiceFinStatusConverter x:Key="EnglishToPersianInvoiceFinStatusConverter"/>
+                    <ObjectDataProvider x:Key="UserColorSettings" MethodName="GetColorSettings" ObjectInstance="{x:Type viewmodels:InvoiceListViewModel}"/>
+                </DataGrid.Resources>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding Path=Id, Mode=OneWay}" Width="50"/>
-                    <DataGridTextColumn Header="Customer Name" Binding="{Binding Path=CustomerFullName, Mode=OneWay}" Width="150"/>
-                    <DataGridTextColumn Header="Date Created" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="110"/>
-                    <DataGridTextColumn Header="Date Updated" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="120"/>
-                    <DataGridTextColumn Header="Sum Amount" Binding="{Binding Path=TotalInvoiceSum, Mode=OneWay}" Width="120"/>
-                    <DataGridTextColumn Header="Sum Payments" Binding="{Binding Path=TotalPayments, Mode=OneWay}" Width="120"/>
-                    <DataGridTextColumn Header="Life Status" Binding="{Binding Path=LifeStatus, Mode=OneWay}" Width="100"/>
-                    <DataGridTextColumn Header="Total Balance" Binding="{Binding Path=TotalBalance, Mode=OneWay}" Width="120"/>
-                    <DataGridTextColumn Header="Financial Status" Binding="{Binding Path=InvoiceFinancialStatus, Mode=OneWay}" Width="125"/>
+                    <DataGridTextColumn Header="شماره" Binding="{Binding Path=Id, Mode=OneWay}" Width="50">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background" Value="{Binding Path=DateCreated, Converter={StaticResource DateToColorConverterForNewItem}}"/>
+                                <Setter Property="Foreground" Value="#FF000000"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="نام مشتری" Binding="{Binding Path=CustomerFullName, Mode=OneWay}" Width="*"/>
+                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="70">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="تاریخ بروزرسانی" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="89">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background" Value="{Binding Path=DateUpdated, Converter={StaticResource DateToColorConverterForUpdatedItem}}"/>
+                                <Setter Property="Foreground" Value="#FF000000"/>
+                                <Setter Property="TextAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="ساعت بروزرسانی" Binding="{Binding Path=TimeUpdated, Mode=OneWay}" Width="100"/>
+                    <DataGridTextColumn Header="جمع فاکتور" Binding="{Binding Path=TotalInvoiceSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.6*"/>
+                    <DataGridTextColumn Header="جمع پرداخت ها" Binding="{Binding Path=TotalPayments, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.6*"/>
+                    <DataGridTextColumn Header="نوع فاکتور" Binding="{Binding Path=LifeStatus, Converter={StaticResource EnglishInvoiceStatusToPersianConverter}, Mode=OneWay}" Width="57"/>
+                    <DataGridTextColumn Header="تراز کل" Binding="{Binding Path=TotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.6*"/>
+                    <DataGridTextColumn Header="وضعیت مالی" Binding="{Binding Path=InvoiceFinancialStatus, Converter={StaticResource EnglishToPersianInvoiceFinStatusConverter}, Mode=OneWay}" Width="80">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Background" Value="{Binding TotalBalance, Converter={StaticResource AmountToColorConverterForTotalBalance}}"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-
     </Grid>
 </Window>

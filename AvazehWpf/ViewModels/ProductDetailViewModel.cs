@@ -1,48 +1,78 @@
-﻿using Caliburn.Micro;
-using DataLibraryCore.DataAccess.SqlServer;
-using DataLibraryCore.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
+﻿using AvazehApiClient.DataAccess.Interfaces;
+using Caliburn.Micro;
+using SharedLibrary.DalModels;
 using System.Windows;
-using System.Windows.Controls;
+using AvazehApiClient.DataAccess;
+using System.Threading.Tasks;
+using System;
 using System.Windows.Input;
-using DataLibraryCore.DataAccess.Interfaces;
+using SharedLibrary.SecurityAndSettingsModels;
 
 namespace AvazehWpf.ViewModels
 {
     public class ProductDetailViewModel : ViewAware
     {
-        public ProductDetailViewModel(IProductCollectionManager manager, ProductModel Product)
+        public ProductDetailViewModel(ICollectionManager<ProductModel> manager, ProductModel product, LoggedInUser_DTO user, Func<Task> callBack)
         {
             Manager = manager;
-            if (Product != null)
+            User = user;
+            CallBackFunc = callBack;
+            LoadSettings();
+            if (product is not null)
             {
-                this.Product = Product;
-                _BackupProduct = new ProductModel();
-                CloneProduct(Product, ref _BackupProduct);
+                Product = product;
+                WindowTitle = product.ProductName + " - کالا"; ;
+            }
+            else
+            {
+                Product = new();
+                WindowTitle = "کالای جدید";
             }
         }
 
-        private readonly IProductCollectionManager Manager;
+        private void LoadSettings()
+        {
+            CanEditProduct = Manager.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanEditProduct));
+            CanDeleteProduct = Manager.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanDeleteProduct));
+        }
+
+        private readonly ICollectionManager<ProductModel> Manager;
+        public LoggedInUser_DTO User { get; init; }
         private ProductModel _Product;
-        private ProductModel _BackupProduct;
-        private bool _CancelAndClose = true;
+        //private ProductModel _BackupProduct;
+        private Func<Task> CallBackFunc;
+        private string windowTitle;
+
+        public string WindowTitle
+        {
+            get { return windowTitle; }
+            set { windowTitle = value; NotifyOfPropertyChange(() => WindowTitle); }
+        }
 
         public ProductModel Product
         {
-            get { return _Product; }
+            get => _Product;
             set { _Product = value; NotifyOfPropertyChange(() => Product); }
         }
-
-        public void DeleteAndClose()
+        private bool canEditProduct;
+        public bool CanEditProduct
         {
-            if (Product == null) return;
+            get { return canEditProduct; }
+            set { canEditProduct = value; NotifyOfPropertyChange(() => CanEditProduct); }
+        }
+        private bool canDeleteProduct;
+        public bool CanDeleteProduct
+        {
+            get { return canDeleteProduct; }
+            set { canDeleteProduct = value; NotifyOfPropertyChange(() => CanDeleteProduct); }
+        }
+
+        public async Task DeleteAndCloseAsync()
+        {
+            if (!CanDeleteProduct || Product == null || Product.Id == 0) return;
             var result = MessageBox.Show("Are you sure ?", $"Delete {Product.ProductName}", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (result == MessageBoxResult.No) return;
-            if (Manager.Processor.DeleteItemById(Product.Id) == 0) MessageBox.Show($"Product with ID: {Product.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            _CancelAndClose = false;
+            if (await Manager.DeleteItemAsync(Product.Id) == false) MessageBox.Show($"Product with ID: {Product.Id} was not found in the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             CloseWindow();
         }
 
@@ -51,53 +81,46 @@ namespace AvazehWpf.ViewModels
             (GetView() as Window).Close();
         }
 
-        public void SaveAndNew()
+        public async Task SaveAndNewAsync()
         {
-            if (SaveToDatabase() == 0) return;
-            _CancelAndClose = false;
-            Product = new ProductModel();
+            if (!CanEditProduct) return;
+            if (await SaveToDatabaseAsync() == false) return;
+            var newProduct = new ProductModel();
             WindowManager wm = new();
-            wm.ShowWindowAsync(new ProductDetailViewModel(Manager, Product));
+            await wm.ShowWindowAsync(new ProductDetailViewModel(Manager, newProduct, User, CallBackFunc));
             CloseWindow();
         }
 
         public void CancelAndClose()
         {
-            _CancelAndClose = true;
             CloseWindow();
         }
 
-
-        public void SaveAndClose()
+        public async Task SaveAndCloseAsync()
         {
-            if (SaveToDatabase() == 0) return;
-            _CancelAndClose = false;
+            if (!CanEditProduct) return;
+            if (await SaveToDatabaseAsync() == false) return;
             CloseWindow();
         }
 
-        private int SaveToDatabase()
+        private async Task<bool> SaveToDatabaseAsync()
         {
-            var validate = Manager.Processor.ValidateItem(Product);
+            if (!CanEditProduct || Product == null) return false;
+            var validate = Manager.ValidateItem(Product);
             if (validate.IsValid)
             {
-                if (Product == null)
-                {
-                    var result = MessageBox.Show("Product is not assigned, Nothing will be saved; Close anyway ?", "Close", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                    if (result == MessageBoxResult.Yes) CloseWindow();
-                }
-                int outPut;
+                ProductModel outPut;
                 if (Product.Id == 0) //It's a new Product
-                {
-                    outPut = Manager.Processor.CreateItem(Product);
-                    if (outPut == 0) MessageBox.Show($"There was a problem when saving to Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                    outPut = await Manager.CreateItemAsync(Product);
                 else //Update Product
+                    outPut = await Manager.UpdateItemAsync(Product);
+                if (outPut is null)
                 {
-
-                    outPut = Manager.Processor.UpdateItem(Product);
-                    if (outPut == 0) MessageBox.Show($"There was a problem when updating the Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"There was a problem when saving to Database", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
                 }
-                return outPut;
+                outPut.Clone(Product);
+                return true;
             }
             else
             {
@@ -107,27 +130,18 @@ namespace AvazehWpf.ViewModels
                     str += error.ErrorMessage + "\n";
                 }
                 MessageBox.Show(str);
-                return 0;
+                return false;
             }
         }
 
-        private static void CloneProduct(ProductModel From, ref ProductModel To)
+        public async Task ClosingWindowAsync()
         {
-            if (From == null || To == null) return;
-            To.Id = From.Id;
-            To.ProductName = From.ProductName;
-            To.BuyPrice = From.BuyPrice;
-            To.SellPrice = From.SellPrice;
-            To.Barcode = From.Barcode;
-            To.Descriptions = From.Descriptions;
+            await CallBackFunc?.Invoke();
         }
 
-        public void ClosingWindow()
+        public void Window_PreviewKeyDown(object window, KeyEventArgs e)
         {
-            if (_CancelAndClose)
-            {
-                CloneProduct(_BackupProduct, ref _Product);
-            }
+            if (e.Key == Key.Escape) (GetView() as Window).Close();
         }
     }
 }

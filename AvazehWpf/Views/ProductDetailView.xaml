@@ -3,18 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
         xmlns:cal="http://www.caliburnproject.org"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:AvazehWpf" mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:ProductDetailViewModel}"
-        fw:AcrylicWindow.Enabled="True"
-        Title="Product" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
-        Width="460" Height="363" ResizeMode="NoResize" fw:AcrylicWindow.AcrylicWindowStyle="NoIcon"
-        cal:Message.Attach="[Event Closing] = [Action ClosingWindow]">
-    <Grid fw:PointerTracker.Enabled="True">
+        Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
+        Width="460" Height="363" ResizeMode="NoResize"
+        cal:Message.Attach="[Event Closing] = [Action ClosingWindowAsync]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
+    <Grid>
         <Grid.Resources>
             <Style TargetType="TextBox">
                 <Setter Property="TextAlignment" Value="Center"/>
@@ -45,91 +43,141 @@
             </Grid.ColumnDefinitions>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,0,10" VerticalAlignment="Top">
-                    <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="Package" Margin="0,2,5,2"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="ID" Margin="20,2,0,2"/>
+                <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,0,0" VerticalAlignment="Top">
+                    <StackPanel Width="55" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="HashtagBoxOutline"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره" Margin="5,0,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.Id}" IsReadOnly="True" MaxWidth="200"/>
-                </StackPanel>
-                
-                <StackPanel Grid.Row="1"  Orientation="Vertical" Margin="0,0,0,10">
-                    <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="PackageVariantClosed" Margin="0,2,5,2"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="Product Name" Margin="0,2,0,2"/>
-                    </StackPanel>
-                    <TextBox Text="{Binding Product.ProductName}" MaxLength="100" MaxWidth="200"/>
+                    <TextBox Text="{Binding Product.Id}" IsReadOnly="True" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
-                <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,0,0,10">
-                    <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="CashMultiple" Margin="0,2,5,2"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="Buy Price" Margin="0,2,0,2"/>
+                <StackPanel Grid.Row="1"  Orientation="Vertical" Margin="0,0,0,0">
+                    <StackPanel Width="60" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="BoxOutline" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام کالا" Margin="0,0,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.BuyPrice}" MaxWidth="200"/>
+                    <TextBox Text="{Binding Product.ProductName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="100" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
-                <StackPanel Grid.Row="3" Orientation="Vertical" Margin="0,0,0,10">
-                    <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="CashMultiple" Margin="0,2,5,2"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="Sell Price" Margin="0,2,0,2"/>
+                <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,0,0,0">
+                    <StackPanel Width="75" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Money" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="قیمت خرید" Margin="0,0,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.SellPrice}" MaxWidth="200"/>
+                    <TextBox Text="{Binding Product.BuyPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
-                <StackPanel Grid.Row="4" Orientation="Vertical" Margin="0,0,0,10">
-                    <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="Barcode" Margin="0,2,0,2"/>
-                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="Barcode" Margin="15,2,0,2"/>
+                <StackPanel Grid.Row="3" Orientation="Vertical" Margin="0,0,0,0">
+                    <StackPanel Width="80" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="TagOutline" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="قیمت فروش" Margin="0,0,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Product.Barcode}" MaxLength="15" MaxWidth="200"/>
+                    <TextBox Text="{Binding Product.SellPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" MaxWidth="200" VerticalContentAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="4" Orientation="Vertical" Margin="0,0,0,0">
+                    <StackPanel Width="50" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Barcode" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="بارکد" Margin="3,0,0,2"/>
+                    </StackPanel>
+                    <TextBox Text="{Binding Product.Barcode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="15" MaxWidth="200" VerticalContentAlignment="Center"/>
+                </StackPanel>
+                <CheckBox Content="فعال" IsChecked="{Binding Product.IsActive, Mode=TwoWay}" Grid.Row="5" Margin="15,5,5,5"/>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,10,0">
+                    <StackPanel Width="50" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Counter" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="تعداد" Margin="0,0,0,2"/>
+                    </StackPanel>
+                    <TextBox Text="{Binding Product.CountString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding Product.CountValue}" VerticalContentAlignment="Center"/>
+                </StackPanel>
+
+                <DockPanel Grid.Row="1" LastChildFill="True" DockPanel.Dock="Bottom" Margin="0,0,10,10">
+                    <StackPanel DockPanel.Dock = "Top" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Text" Margin="0,0,3,0"/>
+                        <TextBlock TextAlignment="Center" Text="توضیحات" Margin="0,0,0,2"/>
+                    </StackPanel>
+                    <TextBox Text="{Binding Product.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" MinHeight="50" Height="auto" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top"/>
+                </DockPanel>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
+                    <StackPanel Width="120" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="CalendarAdd" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد: " Margin="5,0,0,2"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding Product.DateCreated}" TextAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,0,0,10">
+                    <StackPanel Width="120" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="FileDocumentBoxTickOutline" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="ساعت ایجاد: " Margin="5,2,0,2"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding Product.TimeCreated}" TextAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,0,0,10">
+                    <StackPanel Width="120" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="CalendarCheckOutline" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ بروزرسانی: " Margin="5,0,0,2"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding Product.DateUpdated}" TextAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,0,0,10">
+                    <StackPanel Width="120" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="BoxTimeOutline" Margin="0,0,3,0"/>
+                        <TextBlock MaxWidth="200" TextAlignment="Center" Text="ساعت بروزرسانی: " Margin="5,2,0,2"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding Product.TimeUpdated}" TextAlignment="Center"/>
                 </StackPanel>
             </Grid>
-            <DockPanel Grid.Column="1" LastChildFill="True" DockPanel.Dock="Bottom" Margin="0,0,10,10">
-                <StackPanel DockPanel.Dock = "Top" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <materialDesign:PackIcon Kind="SemanticWeb" Margin="0,2,5,2"/>
-                    <TextBlock TextAlignment="Center" Text="Description" Margin="0,2,0,2"/>
-                </StackPanel>
-                <TextBox Text="{Binding Product.Descriptions}" TextWrapping="Wrap" MinHeight="50" Height="auto" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top" BorderThickness="1"/>
-            </DockPanel>
         </Grid>
 
-        <Grid Grid.Row="2" Grid.Column="1"> <!--For buttons-->
+        <Grid Grid.Row="2" Grid.Column="1">
+            <!--For buttons-->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="CancelAndClose" Grid.Column="0" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,5,5,0">
-                <StackPanel Width="80" Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="Cancel" Margin="3"/>
-                    <TextBlock Text="Cancel" VerticalAlignment="Center"/>
+            <Button x:Name="CancelAndClose" Grid.Column="0" Margin="0,5,5,0">
+                <StackPanel Width="70" Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="CancelOutline" Margin="5,0,5,0"/>
+                    <TextBlock Text="انصراف" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="DeleteAndClose" Grid.Column="1" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,5,5,0">
-                <StackPanel Width="120" Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="Delete" Margin="3"/>
-                    <TextBlock Text="Delete and Close" VerticalAlignment="Center"/>
-                </StackPanel>
-            </Button>
-            <Button x:Name="SaveAndNew" Grid.Column="2" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,5,5,0">
+            <Button x:Name="DeleteAndCloseAsync" IsEnabled="{Binding CanDeleteProduct}" Grid.Column="1" Margin="0,5,5,0">
                 <StackPanel Width="110" Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="ContentSaveMove" Margin="3"/>
-                    <TextBlock Text="Save and New" VerticalAlignment="Center"/>
+                    <materialDesign:PackIcon Kind="DeleteOutline" Margin="5,0,5,0"/>
+                    <TextBlock Text="حذف و بستن" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button x:Name="SaveAndClose" Grid.Column="3" Style="{StaticResource ButtonRevealStyle}" Background="Transparent" Margin="0,5,5,0">
+            <Button x:Name="SaveAndNewAsync" IsEnabled="{Binding CanEditProduct}" Grid.Column="2" Margin="0,5,5,0">
                 <StackPanel Width="110" Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="ContentSaveOff" Margin="3"/>
-                    <TextBlock Text="Save and Close" VerticalAlignment="Center"/>
+                    <materialDesign:PackIcon Kind="ContentDuplicate" Margin="5,0,5,0"/>
+                    <TextBlock Text="ذخیره و جدید" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <Button x:Name="SaveAndCloseAsync" IsEnabled="{Binding CanEditProduct}" Grid.Column="3" Margin="0,5,5,0">
+                <StackPanel Width="110" Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="ContentSaveOutline" Margin="5,0,5,0"/>
+                    <TextBlock Text="ذخیره و بستن" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
         </Grid>

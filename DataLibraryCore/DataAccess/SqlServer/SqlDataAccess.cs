@@ -1,12 +1,7 @@
 ﻿using Dapper;
-using System;
-using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using DataLibraryCore.Models;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -14,12 +9,28 @@ namespace DataLibraryCore.DataAccess.SqlServer
 {
     public class SqlDataAccess : Interfaces.IDataAccess
     {
-        public string GetConnectionString(string DB = "secondary") => SettingsDataAccess.AppConfiguration().GetConnectionString(DB);
+        public string GetConnectionString(string DB = "default") => SettingsDataAccess.AppConfiguration().GetConnectionString(DB);
 
-        public ObservableCollection<T> LoadData<T, U>(string sql, U param)
+        private bool TestConnection()
         {
             using IDbConnection conn = new SqlConnection(GetConnectionString());
-            return conn.Query<T>(sql, param).AsObservable();
+            System.Data.Common.DbConnectionStringBuilder csb = new();
+            try
+            {
+                csb.ConnectionString = GetConnectionString();
+                conn.Open();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> TestConnectionAsync()
+        {
+            var task = Task.Run(() => TestConnection());
+            return await task;
         }
 
         public async Task<ObservableCollection<T>> LoadDataAsync<T, U>(string sql, U param)
@@ -28,28 +39,23 @@ namespace DataLibraryCore.DataAccess.SqlServer
             return await conn.QueryAsync<T>(sql, param).AsObservableAsync();
         }
 
-        public int SaveData<T>(string sql, T data)
-        {
-            using IDbConnection conn = new SqlConnection(GetConnectionString());
-            return conn.Execute(sql, data);
-        }
-
         public async Task<int> SaveDataAsync<T>(string sql, T data)
         {
             using IDbConnection conn = new SqlConnection(GetConnectionString());
-            return await conn.ExecuteAsync(sql, data);
-        }
-
-        public T ExecuteScalar<T, U>(string sql, U param)
-        {
-            using IDbConnection conn = new SqlConnection(GetConnectionString());
-            return conn.ExecuteScalar<T>(sql, param);
+            var result = await conn.ExecuteAsync(sql, data);
+            return result;
         }
 
         public async Task<T> ExecuteScalarAsync<T, U>(string sql, U param)
         {
             using IDbConnection conn = new SqlConnection(GetConnectionString());
             return await conn.ExecuteScalarAsync<T>(sql, param);
+        }
+
+        public async Task<T> QuerySingleOrDefaultAsync<T, U>(string sql, U param)
+        {
+            using IDbConnection conn = new SqlConnection(GetConnectionString());
+            return await conn.QuerySingleOrDefaultAsync<T>(sql, param);
         }
     }
 }
