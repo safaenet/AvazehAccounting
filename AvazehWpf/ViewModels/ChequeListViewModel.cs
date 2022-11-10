@@ -29,7 +29,7 @@ namespace AvazehWpf.ViewModels
         private IChequeCollectionManagerAsync _CCM;
         private LoggedInUser_DTO user;
         private ChequeModel _SelectedCheque;
-        private SingletonClass Singleton;
+        private readonly SingletonClass Singleton;
         public string CurrentPersianDate { get; init; }
         public LoggedInUser_DTO User { get => user; init => user = value; }
 
@@ -132,7 +132,15 @@ namespace AvazehWpf.ViewModels
 
         public async Task SearchBoxKeyDownHandlerAsync(ActionExecutionContext context)
         {
-            if (context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
+            if (!User.UserSettings.SearchWhenTyping && context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
+            {
+                await SearchAsync();
+            }
+        }
+
+        public async Task SearchBoxTextChangedHandlerAsync()
+        {
+            if (User.UserSettings.SearchWhenTyping)
             {
                 await SearchAsync();
             }

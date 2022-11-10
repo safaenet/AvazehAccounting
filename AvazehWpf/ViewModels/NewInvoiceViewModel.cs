@@ -85,11 +85,11 @@ namespace AvazehWpf.ViewModels
 
         public void CustomerNames_KeyUp(KeyEventArgs e)
         {
-            if (CustomerNamesForComboBox == null || CustomerNamesForComboBox.ToList().Find(x => x.ItemName.StartsWith(CustomerInput)) == null) IsCustomerInputDropDownOpen = false;
+            if (CustomerNamesForComboBox == null || CustomerNamesForComboBox.ToList().Find(x => x.ItemName.StartsWith(CustomerInput ?? string.Empty)) == null) IsCustomerInputDropDownOpen = false;
             else IsCustomerInputDropDownOpen = true;
 
-            //if (e.Key == Key.Enter) IsCustomerInputDropDownOpen = false;
-            //e.Handled = true;
+            if (e.Key == Key.Enter) IsCustomerInputDropDownOpen = false;
+            e.Handled = true;
         }
 
         public void CloseWindow()

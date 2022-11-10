@@ -382,6 +382,11 @@ namespace AvazehApiClient.DataAccess
             To.TransactionShortcut2Name = From.TransactionShortcut2Name;
             To.TransactionShortcut3Name = From.TransactionShortcut3Name;
             To.AskToAddNotExistingProduct = From.AskToAddNotExistingProduct;
+            To.SearchWhenTyping = From.SearchWhenTyping;
+            To.CustomerListPageSize = From.CustomerListPageSize;
+            To.CustomerListQueryOrderType = From.CustomerListQueryOrderType;
+            To.ProductListPageSize = From.ProductListPageSize;
+            To.ProductListQueryOrderType= From.ProductListQueryOrderType;
             return To;
         }
 

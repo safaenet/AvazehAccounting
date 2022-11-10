@@ -193,6 +193,8 @@
                                 <RowDefinition Height="35"/>
                                 <RowDefinition Height="35"/>
                                 <RowDefinition Height="35"/>
+                                <RowDefinition Height="35"/>
+                                <RowDefinition Height="35"/>
                             </Grid.RowDefinitions>
 
                             <Grid Grid.Row="0" Margin="5" Height="25" FlowDirection="RightToLeft">
@@ -285,11 +287,48 @@
                                     <ComboBoxItem Content="نزولی"/>
                                 </ComboBox>
                             </Grid>
+                            <Grid Grid.Row="5" Margin="5" Height="25" FlowDirection="RightToLeft">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="تعداد مشتری ها در هر صفحه" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <xctk:IntegerUpDown Text="{Binding UserSettings.CustomerListPageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
+                                <Separator Grid.Column="2" Grid.Row="0" Margin="3,0,3,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+                                <TextBlock Grid.Column="4" Text="نحوه مرتب سازی مشتری ها" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <ComboBox Text="{Binding UserSettings.CustomerListQueryOrderType, Converter={StaticResource PersianOrderStringToEnglishOrderStringConverter},Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="5" VerticalContentAlignment="Center" Width="70">
+                                    <ComboBoxItem Content="صعودی"/>
+                                    <ComboBoxItem Content="نزولی"/>
+                                </ComboBox>
+                            </Grid>
+                            <Grid Grid.Row="6" Margin="5" Height="25" FlowDirection="RightToLeft">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="تعداد کالا ها در هر صفحه" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <xctk:IntegerUpDown Text="{Binding UserSettings.ProductListPageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" Width="50"/>
+                                <Separator Grid.Column="2" Grid.Row="0" Margin="3,0,3,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+                                <TextBlock Grid.Column="4" Text="نحوه مرتب سازی کالا ها" VerticalAlignment="Center" Margin="25,0,5,0"/>
+                                <ComboBox Text="{Binding UserSettings.ProductListQueryOrderType, Converter={StaticResource PersianOrderStringToEnglishOrderStringConverter},Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="5" VerticalContentAlignment="Center" Width="70">
+                                    <ComboBoxItem Content="صعودی"/>
+                                    <ComboBoxItem Content="نزولی"/>
+                                </ComboBox>
+                            </Grid>
                         </Grid>
                     </TabItem>
                     <TabItem Header="بقیه">
                         <Grid Background="#FFE5E5E5">
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
@@ -318,8 +357,17 @@
                                 <Separator Grid.Column="1" Margin="25,0,0,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                                 <CheckBox IsChecked="{Binding UserSettings.AskToAddNotExistingProduct, Mode=TwoWay}" Grid.Column="3" Content="سوال اضافه کردن اقلام ناموجود فاکتور" FlowDirection="RightToLeft" VerticalContentAlignment="Center" Margin="5"/>
                             </Grid>
-                            <Separator Grid.Row="2" Margin="0,5,0,5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
-                            <Grid Grid.Row="3" FlowDirection="RightToLeft">
+                            <Grid Grid.Row="2" Margin="5" Height="25" FlowDirection="RightToLeft">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox IsChecked="{Binding UserSettings.SearchWhenTyping, Mode=TwoWay}" Grid.Column="0" Content="جستجو در هنگام تایپ" FlowDirection="RightToLeft" VerticalContentAlignment="Center" Margin="5"/>
+                            </Grid>
+                            <Separator Grid.Row="3" Margin="0,5,0,5" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+                            <Grid Grid.Row="4" FlowDirection="RightToLeft">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="20"/>
                                     <RowDefinition Height="35"/>
@@ -338,7 +386,7 @@
                                     <ComboBox ItemsSource="{Binding TransactionItemsForComboBox}" SelectedItem="{Binding SelectedTransactionItem1, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="ItemName" IsEditable="False" Grid.Column="3" VerticalContentAlignment="Center"/>
                                 </Grid>
                             </Grid>
-                            <Grid Grid.Row="4" FlowDirection="RightToLeft">
+                            <Grid Grid.Row="5" FlowDirection="RightToLeft">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="20"/>
                                     <RowDefinition Height="35"/>
@@ -357,7 +405,7 @@
                                     <ComboBox ItemsSource="{Binding TransactionItemsForComboBox}" SelectedItem="{Binding SelectedTransactionItem2, Mode=TwoWay}" SelectedValuePath="Id" DisplayMemberPath="ItemName" IsEditable="False" Grid.Column="3" VerticalContentAlignment="Center"/>
                                 </Grid>
                             </Grid>
-                            <Grid Grid.Row="5" FlowDirection="RightToLeft">
+                            <Grid Grid.Row="6" FlowDirection="RightToLeft">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="20"/>
                                     <RowDefinition Height="35"/>

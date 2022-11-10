@@ -377,11 +377,19 @@ namespace AvazehWpf.ViewModels
         {
             if (e.Key == Key.Enter)
             {
-                if (((window as Window).FindName("SearchText") as TextBox).IsFocused)
+                if (!User.UserSettings.SearchWhenTyping && ((window as Window).FindName("SearchText") as TextBox).IsFocused)
                 {
                     await SearchAsync();
                 }
                 else await AddOrUpdateItemAsync();
+            }
+        }
+
+        public async Task SearchBoxTextChangedHandlerAsync()
+        {
+            if (User.UserSettings.SearchWhenTyping)
+            {
+                await SearchAsync();
             }
         }
 

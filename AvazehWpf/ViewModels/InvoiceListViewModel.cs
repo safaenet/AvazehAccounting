@@ -173,7 +173,15 @@ namespace AvazehWpf.ViewModels
 
         public async Task SearchBoxKeyDownHandlerAsync(ActionExecutionContext context)
         {
-            if (context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
+            if (!User.UserSettings.SearchWhenTyping && context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
+            {
+                await SearchAsync();
+            }
+        }
+
+        public async Task SearchBoxTextChangedHandlerAsync()
+        {
+            if (User.UserSettings.SearchWhenTyping)
             {
                 await SearchAsync();
             }

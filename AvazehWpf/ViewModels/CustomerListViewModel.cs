@@ -28,6 +28,9 @@ namespace AvazehWpf.ViewModels
             CanAddNewCustomer = CCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanAddNewCustomer));
             CanViewCustomerDetails = CCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewCustomerDetails));
             CanDeleteCustomer = CCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanDeleteCustomer));
+
+            CCM.PageSize = User.UserSettings.CustomerListPageSize;
+            CCM.QueryOrderType = User.UserSettings.CustomerListQueryOrderType;
         }
 
         private ICollectionManager<CustomerModel> _CCM;
@@ -121,7 +124,15 @@ namespace AvazehWpf.ViewModels
 
         public async Task SearchBoxKeyDownHandlerAsync(ActionExecutionContext context)
         {
-            if (context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
+            if (!User.UserSettings.SearchWhenTyping && context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
+            {
+                await SearchAsync();
+            }
+        }
+
+        public async Task SearchBoxTextChangedHandlerAsync()
+        {
+            if (User.UserSettings.SearchWhenTyping)
             {
                 await SearchAsync();
             }

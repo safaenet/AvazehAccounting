@@ -165,7 +165,7 @@
                         <materialDesign:PackIcon Kind="Search" Margin="3"/>
                     </StackPanel>
                 </Button>
-                <TextBox x:Name="SearchText" Grid.Column="1" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandlerAsync($executionContext)]" VerticalContentAlignment="Center" Margin="3,0,3,0">
+                <TextBox x:Name="SearchText" Grid.Column="1" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandlerAsync($executionContext)]; [Event TextChanged] = [Action SearchBoxTextChangedHandlerAsync]" VerticalContentAlignment="Center" Margin="3,0,3,0">
                 </TextBox>
             </Grid>
             <Grid Grid.Row="1">

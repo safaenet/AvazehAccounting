@@ -38,13 +38,13 @@ namespace DataLibraryCore.DataAccess.SqlServer
             ColorBalancedItem, ColorDeptorItem, ColorCreditorItem, ColorInactiveItem, ColorArchivedItem, ColorDeletedItem, ColorNegativeProfit, ColorPositiveItem, ColorNegativeItem,
             DataGridFontSize, ChequeListPageSize, ChequeListQueryOrderType, ChequeNotifyDays, ChequeNotify, InvoicePageSize, InvoiceListQueryOrderType, InvoiceDetailQueryOrderType,
             TransactionListPageSize, TransactionDetailPageSize, TransactionListQueryOrderType, TransactionDetailQueryOrderType, AutoSelectPersianLanguage, TransactionShortcut1Id, TransactionShortcut2Id, TransactionShortcut3Id,
-            TransactionShortcut1Name, TransactionShortcut2Name, TransactionShortcut3Name, AskToAddNotExistingProduct)
+            TransactionShortcut1Name, TransactionShortcut2Name, TransactionShortcut3Name, AskToAddNotExistingProduct, SearchWhenTyping, CustomerListPageSize, CustomerListQueryOrderType, ProductListPageSize, ProductListQueryOrderType)
             
             VALUES (@newId, @colorNewItem, @colorSoldItem, @colorNonSufficientFundItem, @colorCashedItem, @colorChequeNotification, @colorUpdatedItem,
             @colorBalancedItem, @colorDeptorItem, @colorCreditorItem, @colorInactiveItem, @colorArchivedItem, @colorDeletedItem, @colorNegativeProfit, @colorPositiveItem, @colorNegativeItem,
             @dataGridFontSize, @chequeListPageSize, @chequeListQueryOrderType, @chequeNotifyDays, @chequeNotify, @invoicePageSize, @invoiceListQueryOrderType, @invoiceDetailQueryOrderType,
             @transactionListPageSize, @transactionDetailPageSize, @transactionListQueryOrderType, @transactionDetailQueryOrderType, @autoSelectPersianLanguage, @transactionShortcut1Id, @transactionShortcut2Id, @transactionShortcut3Id,
-            @transactionShortcut1Name, @transactionShortcut2Name, @transactionShortcut3Name, @askToAddNotExistingProduct);
+            @transactionShortcut1Name, @transactionShortcut2Name, @transactionShortcut3Name, @askToAddNotExistingProduct, @searchWhenTyping, @customerListPageSize, @customerListQueryOrderType, @productListPageSize, @productListQueryOrderType);
             SELECT @id = @newId;";
 
         private static readonly string UpdateUserInfoQueryWithPassword = @"UPDATE UserInfo SET Username = @username, PasswordHash = @passwordHash, PasswordSalt = @passwordSalt, FirstName = @firstName, LastName = @lastName, IsActive = @isActive WHERE [Id] = @id;";
@@ -67,7 +67,8 @@ namespace DataLibraryCore.DataAccess.SqlServer
             TransactionDetailQueryOrderType = @transactionDetailQueryOrderType, AutoSelectPersianLanguage = @autoSelectPersianLanguage,
             TransactionShortcut1Id = @transactionShortcut1Id, TransactionShortcut2Id = @transactionShortcut2Id, TransactionShortcut3Id = transactionShortcut3Id,
             TransactionShortcut1Name = @transactionShortcut1Name, TransactionShortcut2Name = @transactionShortcut2Name, TransactionShortcut3Name = @transactionShortcut3Name,
-            AskToAddNotExistingProduct = @askToAddNotExistingProduct WHERE [Id] = @id;";
+            AskToAddNotExistingProduct = @askToAddNotExistingProduct, SearchWhenTyping = @searchWhenTyping, CustomerListPageSize = @customerListPageSize, CustomerListQueryOrderType = @customerListQueryOrderType,
+            ProductListPageSize = @productListPageSize, ProductListQueryOrderType = @productListQueryOrderType WHERE [Id] = @id;";
         private readonly string SelectUserInfoBase = @"SELECT [Id], [Username], FirstName, LastName, DateCreated, LastLoginDate, LastLoginTime, IsActive FROM UserInfo WHERE Username = @username";
         private readonly string SelectUserPermissions = @"SELECT * FROM UserPermissions WHERE [Id] = @id";
         private readonly string SelectUserSettings = @"SELECT * FROM UserSettings WHERE [Id] = @id";
@@ -307,6 +308,11 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@transactionShortcut2Name", Settings.TransactionShortcut2Name);
             dp.Add("@transactionShortcut3Name", Settings.TransactionShortcut3Name);
             dp.Add("@askToAddNotExistingProduct", Settings.AskToAddNotExistingProduct);
+            dp.Add("@searchWhenTyping", Settings.SearchWhenTyping);
+            dp.Add("@customerListPageSize", Settings.CustomerListPageSize);
+            dp.Add("@customerListQueryOrderType", Settings.CustomerListQueryOrderType);
+            dp.Add("@productListPageSize", Settings.ProductListPageSize);
+            dp.Add("@productListQueryOrderType", Settings.ProductListQueryOrderType);
         }
     }
 }

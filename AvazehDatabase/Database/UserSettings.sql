@@ -36,8 +36,12 @@
     [TransactionShortcut1Name] NVARCHAR(50) NULL DEFAULT 'میانبر یک', 
     [TransactionShortcut2Name] NVARCHAR(50) NULL DEFAULT 'میانبر دو', 
     [TransactionShortcut3Name] NVARCHAR(50) NULL DEFAULT 'میانبر سه', 
-    [AskToAddNotExistingProduct] BIT NOT NULL DEFAULT 1, 
-        
+    [AskToAddNotExistingProduct] BIT NOT NULL DEFAULT 1,         
+    [SearchWhenTyping] BIT NOT NULL, 
+    [CustomerListPageSize] INT NOT NULL DEFAULT 100, 
+    [CustomerListQueryOrderType] NVARCHAR(5) NOT NULL DEFAULT 'DESC', 
+    [ProductListPageSize] INT NOT NULL DEFAULT 100, 
+    [ProductListQueryOrderType] NVARCHAR(5) NOT NULL DEFAULT 'DESC', 
     CONSTRAINT [FK_UserInfo_ToUserSettings] FOREIGN KEY ([Id]) REFERENCES [UserInfo]([Id]) ON DELETE CASCADE
 )
 GO

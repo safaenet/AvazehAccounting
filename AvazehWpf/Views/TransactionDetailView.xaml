@@ -244,7 +244,7 @@
                         <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="0"/>
                     </StackPanel>
                 </Button>
-                <TextBox x:Name="SearchText" Grid.Column="5" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]" VerticalContentAlignment="Center" Margin="0,0,3,0"/>
+                <TextBox x:Name="SearchText" Grid.Column="5" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]; [Event TextChanged] = [Action SearchBoxTextChangedHandlerAsync]" VerticalContentAlignment="Center" Margin="0,0,3,0"/>
             </Grid>
             <Separator Grid.Row="1" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
             <Grid Grid.Row="2">

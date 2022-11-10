@@ -35,7 +35,7 @@ namespace AvazehApiClient.DataAccess.CollectionManagers
         public string QueryOrderBy { get; set; } = "FirstName";
         public OrderType QueryOrderType { get; set; } = OrderType.ASC;
 
-        public int PageSize { get; set; } = 50;
+        public int PageSize { get; set; } = 100;
         public int PagesCount { get; private set; }
         public int CurrentPage { get; private set; }
         public TDalModel GetItemFromCollectionById(int Id)

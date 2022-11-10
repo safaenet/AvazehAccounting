@@ -29,6 +29,9 @@ namespace AvazehWpf.ViewModels
             CanViewProductDetails = PCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewCustomerDetails));
             CanDeleteProduct = PCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanDeleteCustomer));
             CanViewNetProfits = PCM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanViewNetProfits));
+
+            PCM.PageSize = User.UserSettings.ProductListPageSize;
+            PCM.QueryOrderType = User.UserSettings.ProductListQueryOrderType;
         }
 
         private ICollectionManager<ProductModel> _PCM;
@@ -128,7 +131,15 @@ namespace AvazehWpf.ViewModels
 
         public async Task SearchBoxKeyDownHandlerAsync(ActionExecutionContext context)
         {
-            if (context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
+            if (!User.UserSettings.SearchWhenTyping && context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
+            {
+                await SearchAsync();
+            }
+        }
+
+        public async Task SearchBoxTextChangedHandlerAsync()
+        {
+            if (User.UserSettings.SearchWhenTyping)
             {
                 await SearchAsync();
             }
