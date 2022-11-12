@@ -173,6 +173,8 @@ namespace AvazehWpf.ViewModels
                 if (list.All(c => c.LastEventString == SharedLibrary.Enums.ChequeEventTypes.Sold.ToString())) ChequeNotificationForeground = System.Windows.Media.Brushes.Orange;
                 else ChequeNotificationForeground = System.Windows.Media.Brushes.Red;
             } else ShowChequeNotification = false;
+            DispatcherTimer.Stop();
+            DispatcherTimer.Start();
         }
 
         private async Task LoadKnowledgeOfTheDayAsync()
