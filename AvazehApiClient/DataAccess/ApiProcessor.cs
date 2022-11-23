@@ -40,9 +40,15 @@ namespace AvazehApiClient.DataAccess
         {
             var Url = $"Auth/TestConnection";
             //ApiClient.Timeout
-            var response = await ApiClient.GetAsync(Url);
-            if (response.IsSuccessStatusCode && (await response.Content.ReadAsAsync<bool>()))
-                return true;
+            try
+            {
+                var response = await ApiClient.GetAsync(Url);
+                if (response.IsSuccessStatusCode && (await response.Content.ReadAsAsync<bool>())) return true;
+            }
+            catch
+            {
+                return false;
+            }
             return false;
         }
 

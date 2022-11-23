@@ -8,6 +8,7 @@ using System.Net.Http;
 using SharedLibrary.SecurityAndSettingsModels;
 using System.Security.Claims;
 using System.Linq;
+using System.Timers;
 
 namespace AvazehWpf.ViewModels
 {
@@ -20,10 +21,33 @@ namespace AvazehWpf.ViewModels
             _ = LoadKnowledgeOfTheDayAsync().ConfigureAwait(true);
             ApiProcessor = SC.GetInstance<IApiProcessor>();
             LoadSettings();
-            DispatcherTimer.Tick += DispatcherTimer_Tick;
-            DispatcherTimer.Interval = new System.TimeSpan(0, 0, 5);
-            DispatcherTimer_Tick(new object(), new System.EventArgs());
-            DispatcherTimer.Start();
+            timer.Elapsed += Timer_Elapsed;
+            timer.Interval = 5 * 1000;
+            timer.AutoReset = true;
+            //Timer_Elapsed(new object(), new ElapsedEventArgs());
+            timer.Start();
+        }
+
+        private async void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            timer.Stop();
+            
+            DbConnectOK = await ApiProcessor.TestDBConnectionAsync();
+            if (!DbConnectOK)
+            {
+                timer.Start();
+                return;
+            }
+            var ccm = SC.GetInstance<IChequeCollectionManagerAsync>();
+            var list = await ccm.GetCloseCheques();
+            if (list != null && list.Count > 0)
+            {
+                ShowChequeNotification = true;
+                if (list.All(c => c.LastEventString == SharedLibrary.Enums.ChequeEventTypes.Sold.ToString())) ChequeNotificationForeground = System.Windows.Media.Brushes.Orange;
+                else ChequeNotificationForeground = System.Windows.Media.Brushes.Red;
+            }
+            else ShowChequeNotification = false;
+            timer.Start();
         }
 
         private void LoadSettings()
@@ -39,7 +63,7 @@ namespace AvazehWpf.ViewModels
             CanViewSettingsAsync = ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanManageItself)) || ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanManageOthers));
         }
 
-        readonly System.Windows.Threading.DispatcherTimer DispatcherTimer = new();
+        readonly Timer timer = new();
 
         public LoggedInUser_DTO User
         {
@@ -138,6 +162,7 @@ namespace AvazehWpf.ViewModels
         private LoggedInUser_DTO user;
         private bool showChequeNotification;
         private System.Windows.Media.Brush chequeNotificationForeground;
+        private bool DbConnectOK;
 
         public bool CanViewSettingsAsync
         {
@@ -161,20 +186,6 @@ namespace AvazehWpf.ViewModels
                 chequeNotificationForeground = value;
                 NotifyOfPropertyChange(() => ChequeNotificationForeground);
             }
-        }
-
-        private async void DispatcherTimer_Tick(object sender, System.EventArgs e)
-        {
-            var ccm = SC.GetInstance<IChequeCollectionManagerAsync>();
-            var list = await ccm.GetCloseCheques();
-            if (list != null && list.Count > 0)
-            {
-                ShowChequeNotification = true;
-                if (list.All(c => c.LastEventString == SharedLibrary.Enums.ChequeEventTypes.Sold.ToString())) ChequeNotificationForeground = System.Windows.Media.Brushes.Orange;
-                else ChequeNotificationForeground = System.Windows.Media.Brushes.Red;
-            } else ShowChequeNotification = false;
-            DispatcherTimer.Stop();
-            DispatcherTimer.Start();
         }
 
         private async Task LoadKnowledgeOfTheDayAsync()
