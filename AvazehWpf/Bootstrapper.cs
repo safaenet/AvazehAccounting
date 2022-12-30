@@ -78,7 +78,7 @@ namespace AvazehWpf
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
-            _ = DisplayRootViewForAsync<LoginViewModel>();
+            _ = DisplayRootViewFor<LoginViewModel>();
         }
         
     }
