@@ -9,6 +9,8 @@ using SharedLibrary.SecurityAndSettingsModels;
 using System.Security.Claims;
 using System.Linq;
 using System.Timers;
+using System;
+using Serilog;
 
 namespace AvazehWpf.ViewModels
 {
@@ -31,22 +33,29 @@ namespace AvazehWpf.ViewModels
         private async void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             timer.Stop();
-            
-            DbConnectOK = await ApiProcessor.TestDBConnectionAsync();
-            if (!DbConnectOK)
+
+            try
             {
-                timer.Start();
-                return;
+                DbConnectOK = await ApiProcessor.TestDBConnectionAsync();
+                if (!DbConnectOK)
+                {
+                    timer.Start();
+                    return;
+                }
+                var ccm = SC.GetInstance<IChequeCollectionManagerAsync>();
+                var list = await ccm.GetCloseCheques();
+                if (list != null && list.Count > 0)
+                {
+                    ShowChequeNotification = true;
+                    if (list.All(c => c.LastEventString == SharedLibrary.Enums.ChequeEventTypes.Sold.ToString())) ChequeNotificationForeground = System.Windows.Media.Brushes.Orange;
+                    else ChequeNotificationForeground = System.Windows.Media.Brushes.Red;
+                }
+                else ShowChequeNotification = false;
             }
-            var ccm = SC.GetInstance<IChequeCollectionManagerAsync>();
-            var list = await ccm.GetCloseCheques();
-            if (list != null && list.Count > 0)
+            catch (Exception ex)
             {
-                ShowChequeNotification = true;
-                if (list.All(c => c.LastEventString == SharedLibrary.Enums.ChequeEventTypes.Sold.ToString())) ChequeNotificationForeground = System.Windows.Media.Brushes.Orange;
-                else ChequeNotificationForeground = System.Windows.Media.Brushes.Red;
+                Log.Error(ex, "MainWindowViewModel");
             }
-            else ShowChequeNotification = false;
             timer.Start();
         }
 
