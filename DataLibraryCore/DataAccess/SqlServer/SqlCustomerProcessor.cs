@@ -9,33 +9,33 @@ using SharedLibrary.DalModels;
 using SharedLibrary.Validators;
 using SharedLibrary.Enums;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using SharedLibrary.DtoModels;
 using SharedLibrary.Helpers;
+using Serilog;
+using System;
 
-namespace DataLibraryCore.DataAccess.SqlServer
+namespace DataLibraryCore.DataAccess.SqlServer;
+
+public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<TModel>
+    where TModel : CustomerModel where TSub : PhoneNumberModel where TValidator : CustomerValidator, new()
 {
-    public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<TModel>
-        where TModel : CustomerModel where TSub : PhoneNumberModel where TValidator : CustomerValidator, new()
+    public SqlCustomerProcessor(IDataAccess dataAcess)
     {
-        public SqlCustomerProcessor(IDataAccess dataAcess)
-        {
-            DataAccess = dataAcess;
-        }
+        DataAccess = dataAcess;
+    }
 
-        private readonly IDataAccess DataAccess;
-        private const string QueryOrderBy = "FirstName";
-        private const OrderType QueryOrderType = OrderType.ASC;
-        private readonly string CreateCustomerQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Customers]) + 1;
+    private readonly IDataAccess DataAccess;
+    private const string QueryOrderBy = "FirstName";
+    private const OrderType QueryOrderType = OrderType.ASC;
+    private readonly string CreateCustomerQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Customers]) + 1;
             INSERT INTO Customers ([Id], FirstName, LastName, CompanyName, EmailAddress, PostAddress, DateJoined, Descriptions)
             VALUES (@newId, @firstName, @lastName, @companyName, @emailAddress, @postAddress, @dateJoined, @descriptions);
             SELECT @id = @newId;";
-        private readonly string UpdateCustomerQuery = @"UPDATE Customers SET FirstName = @firstName, LastName = @lastName, CompanyName = @companyName,
+    private readonly string UpdateCustomerQuery = @"UPDATE Customers SET FirstName = @firstName, LastName = @lastName, CompanyName = @companyName,
             EmailAddress = @emailAddress, PostAddress = @postAddress, DateJoined = @dateJoined, Descriptions = @descriptions
             WHERE Id = @id";
-        private readonly string InsertPhonesQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [PhoneNumbers]) + 1;
+    private readonly string InsertPhonesQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [PhoneNumbers]) + 1;
             INSERT INTO PhoneNumbers ([Id], CustomerId, PhoneNumber) VALUES (@newId, @CustomerId, @PhoneNumber)";
-        private readonly string SelectCustomersQuery = @"SET NOCOUNT ON
+    private readonly string SelectCustomersQuery = @"SET NOCOUNT ON
             DECLARE @customers TABLE(
 	        [Id] [int],
 	        [FirstName] [nvarchar](50),
@@ -48,9 +48,11 @@ namespace DataLibraryCore.DataAccess.SqlServer
             {0}
             SELECT * FROM @customers ORDER BY [Id] ASC;
             SELECT * FROM PhoneNumbers WHERE CustomerId IN (SELECT c.Id FROM @customers c);";
-        private readonly string DeleteCustomerQuery = @"DELETE FROM Customers WHERE Id = @id";
+    private readonly string DeleteCustomerQuery = @"DELETE FROM Customers WHERE Id = @id";
 
-        public string GenerateWhereClause(string val, SqlSearchMode mode = SqlSearchMode.OR)
+    public string GenerateWhereClause(string val, SqlSearchMode mode = SqlSearchMode.OR)
+    {
+        try
         {
             var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
             return @$"(CAST([Id] AS varchar) LIKE { criteria } 
@@ -62,15 +64,31 @@ namespace DataLibraryCore.DataAccess.SqlServer
                              {mode} [DateJoined] LIKE { criteria }  
                              {mode} [Descriptions] LIKE N{ criteria } )";
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlCustomerProcessor");
+        }
+        return null;
+    }
 
-        public ValidationResult ValidateItem(TModel customer)
+    public ValidationResult ValidateItem(TModel customer)
+    {
+        try
         {
             TValidator validator = new();
             var result = validator.Validate(customer);
             return result;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlCustomerProcessor");
+        }
+        return null;
+    }
 
-        public async Task<int> CreateItemAsync(TModel item)
+    public async Task<int> CreateItemAsync(TModel item)
+    {
+        try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             item.DateJoined = PersianCalendarHelper.GetCurrentPersianDate();
@@ -92,8 +110,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             }
             return OutputId;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlCustomerProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> UpdateItemAsync(TModel item)
+    public async Task<int> UpdateItemAsync(TModel item)
+    {
+        try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             if (item.DateJoined is null) item.DateJoined = PersianCalendarHelper.GetCurrentPersianDate();
@@ -106,8 +132,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             }
             return AffectedCount;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlCustomerProcessor");
+        }
+        return 0;
+    }
 
-        private async Task<int> InsertPhoneNumbersToDatabaseAsync(TModel customer)
+    private async Task<int> InsertPhoneNumbersToDatabaseAsync(TModel customer)
+    {
+        try
         {
             if (customer == null || customer.PhoneNumbers == null || customer.PhoneNumbers.Count == 0) return 0;
             ObservableCollection<TSub> phones = new();
@@ -122,22 +156,46 @@ namespace DataLibraryCore.DataAccess.SqlServer
             if (phones.Count == 0) return 0;
             return await DataAccess.SaveDataAsync(InsertPhonesQuery, phones).ConfigureAwait(false);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlCustomerProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> DeleteItemByIdAsync(int Id)
+    public async Task<int> DeleteItemByIdAsync(int Id)
+    {
+        try
         {
             var dp = new DynamicParameters();
             dp.Add("@id", Id);
             return await DataAccess.SaveDataAsync(DeleteCustomerQuery, dp);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlCustomerProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> GetTotalQueryCountAsync(string WhereClause)
+    public async Task<int> GetTotalQueryCountAsync(string WhereClause)
+    {
+        try
         {
             var sqlTemp = $@"SELECT COUNT([Id]) FROM Customers
                              { (string.IsNullOrEmpty(WhereClause) ? "" : " WHERE ") } { WhereClause }";
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlCustomerProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<ObservableCollection<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    public async Task<ObservableCollection<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    {
+        try
         {
             var sqlInsert = $@"INSERT @customers SELECT * FROM Customers
                                { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
@@ -147,11 +205,24 @@ namespace DataLibraryCore.DataAccess.SqlServer
             var reader = await conn.QueryMultipleAsync(query, null);
             return await reader.MapObservableCollectionOfCustomersAsync() as ObservableCollection<TModel>;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlCustomerProcessor");
+        }
+        return null;
+    }
 
-        public async Task<TModel> LoadSingleItemAsync(int Id)
+    public async Task<TModel> LoadSingleItemAsync(int Id)
+    {
+        try
         {
             var outPut = await LoadManyItemsAsync(0, 1, $"[Id] = { Id }");
             return outPut.FirstOrDefault();
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlCustomerProcessor");
+        }
+        return null;
     }
 }

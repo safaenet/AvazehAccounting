@@ -14,55 +14,59 @@ using SharedLibrary.Validators;
 using SharedLibrary.DtoModels;
 using System.Threading.Tasks;
 using SharedLibrary.Helpers;
+using System;
+using Serilog;
 
-namespace DataLibraryCore.DataAccess.SqlServer
+namespace DataLibraryCore.DataAccess.SqlServer;
+
+public class SqlInvoiceProcessor : IInvoiceProcessor
 {
-    public class SqlInvoiceProcessor : IInvoiceProcessor
+    public SqlInvoiceProcessor(IDataAccess dataAcess)
     {
-        public SqlInvoiceProcessor(IDataAccess dataAcess)
+        DataAccess = dataAcess;
+        if (FluentMapper.EntityMaps.IsEmpty)
         {
-            DataAccess = dataAcess;
-            if (FluentMapper.EntityMaps.IsEmpty)
+            try
             {
-                try
-                {
-                    FluentMapper.Initialize(config => config.AddMap(new CustomerModelMapper()));
-                    FluentMapper.Initialize(config => config.AddMap(new ProductModelMapper()));
-                    FluentMapper.Initialize(config => config.AddMap(new ProductUnitModelMapper()));
-                }
-                catch { }
-                
+                FluentMapper.Initialize(config => config.AddMap(new CustomerModelMapper()));
+                FluentMapper.Initialize(config => config.AddMap(new ProductModelMapper()));
+                FluentMapper.Initialize(config => config.AddMap(new ProductUnitModelMapper()));
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in SqlInvoiceProcessor");
             }
         }
+    }
 
-        private readonly IDataAccess DataAccess;
-        private const string QueryOrderBy = "Id";
-        private const OrderType QueryOrderType = OrderType.DESC;
-        private readonly string CreateInvoiceQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 1) FROM [Invoices]) + 1;
+    private readonly IDataAccess DataAccess;
+    private const string QueryOrderBy = "Id";
+    private const OrderType QueryOrderType = OrderType.DESC;
+    private readonly string CreateInvoiceQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 1) FROM [Invoices]) + 1;
             INSERT INTO Invoices ([Id], CustomerId, DateCreated, TimeCreated, DiscountType, DiscountValue, Descriptions, LifeStatus)
             VALUES (@newId, @customerId, @dateCreated, @timeCreated, @discountType, @discountValue, @descriptions, @lifeStatus);
             SELECT @id = @newId;";
-        private readonly string UpdateInvoiceQuery = @"UPDATE Invoices SET CustomerId = @customerId, DateCreated = @dateCreated, TimeCreated = @timeCreated,
+    private readonly string UpdateInvoiceQuery = @"UPDATE Invoices SET CustomerId = @customerId, DateCreated = @dateCreated, TimeCreated = @timeCreated,
             DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, DiscountType = @discountType,
             DiscountValue = @discountValue, Descriptions = @descriptions, LifeStatus = @lifeStatus WHERE Id = @id";
-        private readonly string InsertInvoiceItemQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [InvoiceItems]) + 1;
+    private readonly string InsertInvoiceItemQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [InvoiceItems]) + 1;
             INSERT INTO InvoiceItems ([Id], InvoiceId, ProductId, BuyPrice, SellPrice, CountString, CountValue, ProductUnitId, DateCreated,
             TimeCreated, Delivered, Descriptions)
             VALUES (@newId, @invoiceId, @productId, @buyPrice, @sellPrice, @countString, @countValue, @productUnitId, @dateCreated, @timeCreated, @delivered, @descriptions);
             SELECT @id = @newId;";
-        private readonly string UpdateInvoiceItemQuery = @$"UPDATE InvoiceItems SET ProductId = @productId, BuyPrice = @buyPrice, SellPrice = @sellPrice,
+    private readonly string UpdateInvoiceItemQuery = @$"UPDATE InvoiceItems SET ProductId = @productId, BuyPrice = @buyPrice, SellPrice = @sellPrice,
             CountString = @countString, CountValue = @countValue, ProductUnitId = @productUnitId, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
             Delivered = @delivered, Descriptions = @descriptions WHERE [Id] = @id";
-        private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Invoices SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated WHERE [Id] = @id";
-        private readonly string DeleteInvoiceItemQuery = @$"DELETE FROM InvoiceItems WHERE [Id] = @id";
-        private readonly string InsertInvoicePaymentQuery = @$"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [InvoicePayments]) + 1;
+    private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Invoices SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated WHERE [Id] = @id";
+    private readonly string DeleteInvoiceItemQuery = @$"DELETE FROM InvoiceItems WHERE [Id] = @id";
+    private readonly string InsertInvoicePaymentQuery = @$"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [InvoicePayments]) + 1;
             INSERT INTO InvoicePayments ([Id], InvoiceId, DateCreated, TimeCreated, PayAmount, Descriptions)
             VALUES (@newId, @invoiceId, @dateCreated, @timeCreated, @payAmount, @descriptions);
             SELECT @id = @newId;";
-        private readonly string UpdateInvoicePaymentQuery = @$"UPDATE InvoicePayments SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
+    private readonly string UpdateInvoicePaymentQuery = @$"UPDATE InvoicePayments SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
             PayAmount = @payAmount, Descriptions = @descriptions WHERE [Id] = @id";
-        private readonly string DeleteInvoicePaymentQuery = @$"DELETE FROM InvoicePayments WHERE [Id] = @id";
-        private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON
+    private readonly string DeleteInvoicePaymentQuery = @$"DELETE FROM InvoicePayments WHERE [Id] = @id";
+    private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON
             DECLARE @invoices TABLE(
 	        [Id] [int],
             [CustomerId] [int],
@@ -98,32 +102,50 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id LEFT JOIN ProductUnits u ON it.ProductUnitId = u.Id WHERE it.InvoiceId IN (SELECT i.Id FROM @invoices i) ORDER BY [Id] DESC;
             SELECT * FROM InvoicePayments WHERE InvoiceId IN (SELECT i.Id FROM @invoices i);
             SELECT * FROM PhoneNumbers WHERE CustomerId IN (SELECT i.CustomerId FROM @invoices i);";
-        private readonly string GetSingleInvoiceItemQuery = @"SELECT it.*, p.[Id] AS pId,
+    private readonly string GetSingleInvoiceItemQuery = @"SELECT it.*, p.[Id] AS pId,
                 p.[ProductName], p.[BuyPrice] AS pBuyPrice, p.[SellPrice] AS pSellPrice, p.[Barcode],
                 p.[CountString] AS pCountString, p.[DateCreated] AS pDateCreated, p.[TimeCreated] AS pTimeCreated,
                 p.[DateUpdated] AS pDateUpdated, p.[TimeUpdated] AS pTimeUpdated, p.[Descriptions] AS pDescriptions,
 				u.Id AS puId, u.UnitName
                 FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id LEFT JOIN ProductUnits u ON it.ProductUnitId = u.Id WHERE it.Id = {0}";
-        private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] AS ItemName FROM Products {0} ORDER BY [ProductName]";
-        private readonly string GetProductUnitsQuery = "SELECT [Id], [UnitName] FROM ProductUnits";
-        private readonly string GetCustomerNamesQuery = "SELECT [Id], ISNULL(FirstName, '') + ' ' + ISNULL(LastName, '') AS ItemName FROM Customers {0} ORDER BY [FirstName], [LastName]";
-        private readonly string GetRecentPricesOfProductQuery = @"SELECT TOP({0}) it.SellPrice AS SellPrice, it.DateCreated AS DateSold FROM InvoiceItems it LEFT JOIN Invoices i ON it.InvoiceId = i.Id
+    private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] AS ItemName FROM Products {0} ORDER BY [ProductName]";
+    private readonly string GetProductUnitsQuery = "SELECT [Id], [UnitName] FROM ProductUnits";
+    private readonly string GetCustomerNamesQuery = "SELECT [Id], ISNULL(FirstName, '') + ' ' + ISNULL(LastName, '') AS ItemName FROM Customers {0} ORDER BY [FirstName], [LastName]";
+    private readonly string GetRecentPricesOfProductQuery = @"SELECT TOP({0}) it.SellPrice AS SellPrice, it.DateCreated AS DateSold FROM InvoiceItems it LEFT JOIN Invoices i ON it.InvoiceId = i.Id
                                                              LEFT JOIN Customers c ON i.CustomerId = c.Id LEFT JOIN Products p ON it.ProductId = p.Id
                                                              WHERE c.Id = {1} AND p.Id = {2} ORDER BY it.DateCreated DESC";
 
-        private async Task<int> GetInvoiceIdFromInvoiceItemId(int Id)
+    private async Task<int> GetInvoiceIdFromInvoiceItemId(int Id)
+    {
+        try
         {
             var query = $"SELECT InvoiceId FROM InvoiceItems WHERE Id = { Id }";
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(query, null);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return 0;
+    }
 
-        private async Task<int> GetInvoiceIdFromInvoicePaymentId(int Id)
+    private async Task<int> GetInvoiceIdFromInvoicePaymentId(int Id)
+    {
+        try
         {
             var query = $"SELECT InvoiceId FROM InvoicePayments WHERE Id = { Id }";
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(query, null);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return 0;
+    }
 
-        public string GenerateWhereClause(string val, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, SqlSearchMode mode = SqlSearchMode.OR)
+    public string GenerateWhereClause(string val, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, SqlSearchMode mode = SqlSearchMode.OR)
+    {
+        try
         {
             string finStatusOperand = "";
             switch (FinStatus)
@@ -165,8 +187,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
                       {(LifeStatus == null ? "" : $" AND i.[LifeStatus] = { (int)LifeStatus } ")}
                       {(FinStatus == null ? "" : $" AND ISNULL(dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue), 0) - ISNULL(pays.TotalPayments, 0) { finStatusOperand } 0 ")}";
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return null;
+    }
 
-        public async Task<int> CreateItemAsync(InvoiceModel item)
+    public async Task<int> CreateItemAsync(InvoiceModel item)
+    {
+        try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
@@ -185,8 +215,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             if (AffectedCount > 0) item.Id = OutputId;
             return OutputId;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> UpdateItemAsync(InvoiceModel item)
+    public async Task<int> UpdateItemAsync(InvoiceModel item)
+    {
+        try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             var dp = new DynamicParameters();
@@ -202,14 +240,30 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@lifeStatus", item.LifeStatus);
             return await DataAccess.SaveDataAsync(UpdateInvoiceQuery, dp);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> DeleteItemByIdAsync(int Id)
+    public async Task<int> DeleteItemByIdAsync(int Id)
+    {
+        try
         {
             string sql = @$"DELETE FROM Invoices WHERE Id = {Id}";
             return await DataAccess.SaveDataAsync<DynamicParameters>(sql, null);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<InvoiceItemModel> GetInvoiceItemFromDatabaseAsync(int Id)
+    public async Task<InvoiceItemModel> GetInvoiceItemFromDatabaseAsync(int Id)
+    {
+        try
         {
             var sql = string.Format(GetSingleInvoiceItemQuery, Id);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
@@ -217,8 +271,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 (sql, (it, p, u) => { it.Product = p; it.Unit = u; return it; }, splitOn: "pId, puId");
             return result.SingleOrDefault();
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return null;
+    }
 
-        public async Task<int> InsertInvoiceItemToDatabaseAsync(InvoiceItemModel item)
+    public async Task<int> InsertInvoiceItemToDatabaseAsync(InvoiceItemModel item)
+    {
+        try
         {
             if (item == null || !item.IsCountStringValid) return 0;
             item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
@@ -244,8 +306,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             }
             return AffectedCount;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> UpdateInvoiceItemInDatabaseAsync(InvoiceItemModel item)
+    public async Task<int> UpdateInvoiceItemInDatabaseAsync(InvoiceItemModel item)
+    {
+        try
         {
             if (item == null || !item.IsCountStringValid) return 0;
             item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
@@ -266,8 +336,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             if (AffectedCount > 0) await UpdateItemUpdateDateAndUpdateTimeAsync(item.InvoiceId);
             return AffectedCount;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> DeleteInvoiceItemFromDatabaseAsync(int ItemId)
+    public async Task<int> DeleteInvoiceItemFromDatabaseAsync(int ItemId)
+    {
+        try
         {
             var InvoiceId = await GetInvoiceIdFromInvoiceItemId(ItemId);
             if (InvoiceId == 0) return 0;
@@ -277,15 +355,31 @@ namespace DataLibraryCore.DataAccess.SqlServer
             if (AffectedCount > 0) await UpdateItemUpdateDateAndUpdateTimeAsync(InvoiceId);
             return AffectedCount;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<InvoicePaymentModel> GetInvoicePaymentFromDatabaseAsync(int Id)
+    public async Task<InvoicePaymentModel> GetInvoicePaymentFromDatabaseAsync(int Id)
+    {
+        try
         {
             string GetInvoicePaymentQuery = $"SELECT * FROM InvoicePayments WHERE Id = { Id }";
             var result = await DataAccess.LoadDataAsync<InvoicePaymentModel, DynamicParameters>(GetInvoicePaymentQuery, null);
             return result.SingleOrDefault();
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return null;
+    }
 
-        public async Task<int> InsertInvoicePaymentToDatabaseAsync(InvoicePaymentModel item)
+    public async Task<int> InsertInvoicePaymentToDatabaseAsync(InvoicePaymentModel item)
+    {
+        try
         {
             if (item == null) return 0;
             item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
@@ -305,8 +399,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             }
             return AffectedCount;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> UpdateInvoicePaymentInDatabaseAsync(InvoicePaymentModel item)
+    public async Task<int> UpdateInvoicePaymentInDatabaseAsync(InvoicePaymentModel item)
+    {
+        try
         {
             if (item == null) return 0;
             item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
@@ -320,8 +422,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             if (AffectedCount > 0) await UpdateItemUpdateDateAndUpdateTimeAsync(item.InvoiceId);
             return AffectedCount;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> DeleteInvoicePaymentFromDatabaseAsync(int PaymentId)
+    public async Task<int> DeleteInvoicePaymentFromDatabaseAsync(int PaymentId)
+    {
+        try
         {
             var InvoiceId = await GetInvoiceIdFromInvoicePaymentId(PaymentId);
             if (InvoiceId == 0) return 0;
@@ -331,8 +441,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             if (AffectedCount > 0) await UpdateItemUpdateDateAndUpdateTimeAsync(InvoiceId);
             return AffectedCount;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return 0;
+    }
 
-        private async Task UpdateItemUpdateDateAndUpdateTimeAsync(int Id)
+    private async Task UpdateItemUpdateDateAndUpdateTimeAsync(int Id)
+    {
+        try
         {
             var dp = new DynamicParameters();
             dp.Add("@id", Id);
@@ -340,8 +458,15 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@timeUpdated", PersianCalendarHelper.GetCurrentTime());
             await DataAccess.SaveDataAsync(UpdateSubItemDateAndTimeQuery, dp).ConfigureAwait(false);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+    }
 
-        public async Task<int> GetTotalQueryCountAsync(string WhereClause)
+    public async Task<int> GetTotalQueryCountAsync(string WhereClause)
+    {
+        try
         {
             var sqlTemp = $@"SELECT COUNT(i.[Id]) FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id
                 LEFT JOIN (SELECT SUM(ii.[CountValue] * ii.SellPrice) AS TotalSellValue, ii.[InvoiceId]
@@ -351,8 +476,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
                 { (string.IsNullOrEmpty(WhereClause) ? "" : " WHERE ") } { WhereClause }";
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<ObservableCollection<InvoiceListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    public async Task<ObservableCollection<InvoiceListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    {
+        try
         {
             string sql = $@"SET NOCOUNT ON
                             SELECT i.Id, i.CustomerId, ISNULL(c.FirstName, '') + ' ' + ISNULL(c.LastName, '') CustomerFullName, i.DateCreated, i.TimeCreated, i.DateUpdated, i.TimeUpdated,
@@ -370,16 +503,32 @@ namespace DataLibraryCore.DataAccess.SqlServer
                             ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
             return await DataAccess.LoadDataAsync<InvoiceListModel, DynamicParameters>(sql, null);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return null;
+    }
 
-        public async Task<InvoiceModel> LoadSingleItemAsync(int Id)
+    public async Task<InvoiceModel> LoadSingleItemAsync(int Id)
+    {
+        try
         {
             var query = string.Format(LoadSingleItemQuery, Id);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
             var outPut = await conn.QueryMultipleAsync(query);
             return outPut.MapToSingleInvoice();
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return null;
+    }
 
-        public async Task<double> GetTotalOrRestTotalBalanceOfCustomerAsync(int CustomerId, int InvoiceId = 0)
+    public async Task<double> GetTotalOrRestTotalBalanceOfCustomerAsync(int CustomerId, int InvoiceId = 0)
+    {
+        try
         {
             var InvoiceClause = InvoiceId == 0 ? "" : $"AND i.[Id] <> { InvoiceId }";
             var sqlQuery = @$"SET NOCOUNT ON
@@ -395,8 +544,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
                               GROUP BY c.Id";
             return await DataAccess.ExecuteScalarAsync<double, DynamicParameters>(sqlQuery, null);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<List<ItemsForComboBox>> GetProductItemsAsync(string SearchText = null)
+    public async Task<List<ItemsForComboBox>> GetProductItemsAsync(string SearchText = null)
+    {
+        try
         {
             var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [ProductName] LIKE '%{ SearchText }%'";
             if (string.IsNullOrEmpty(where)) where = " WHERE IsActive = 1"; else where += " AND IsActive = 1";
@@ -404,60 +561,123 @@ namespace DataLibraryCore.DataAccess.SqlServer
             var items = await DataAccess.LoadDataAsync<ItemsForComboBox, DynamicParameters>(sql, null);
             return items?.ToList();
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return null;
+    }
 
-        public async Task<List<ProductUnitModel>> GetProductUnitsAsync()
+    public async Task<List<ProductUnitModel>> GetProductUnitsAsync()
+    {
+        try
         {
             var result = await DataAccess.LoadDataAsync<ProductUnitModel, DynamicParameters>(GetProductUnitsQuery, null);
             return result?.ToList();
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return null;
+    }
 
-        public async Task<List<ItemsForComboBox>> GetCustomerNamesAsync(string SearchText)
+    public async Task<List<ItemsForComboBox>> GetCustomerNamesAsync(string SearchText)
+    {
+        try
         {
             var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [FirstName] + ' ' + [LastName] LIKE '%{ SearchText }%'";
             var sql = string.Format(GetCustomerNamesQuery, where);
             var items = await DataAccess.LoadDataAsync<ItemsForComboBox, DynamicParameters>(sql, null);
             return items?.ToList();
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return null;
+    }
 
-        public async Task<ObservableCollection<RecentSellPriceModel>> GetRecentSellPricesAsync(int MaxRecord, int CustomerId, int ProductId)
+    public async Task<ObservableCollection<RecentSellPriceModel>> GetRecentSellPricesAsync(int MaxRecord, int CustomerId, int ProductId)
+    {
+        try
         {
             var sql = string.Format(GetRecentPricesOfProductQuery, MaxRecord, CustomerId, ProductId);
             return await DataAccess.LoadDataAsync<RecentSellPriceModel, DynamicParameters>(sql, null);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return null;
+    }
 
-        public ValidationResult ValidateItem(InvoiceModel item)
+    public ValidationResult ValidateItem(InvoiceModel item)
+    {
+        try
         {
             InvoiceValidator validator = new();
             var result = validator.Validate(item);
             return result;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return null;
+    }
 
-        public ValidationResult ValidateItem(InvoiceItemModel item)
+    public ValidationResult ValidateItem(InvoiceItemModel item)
+    {
+        try
         {
             InvoiceItemValidator validator = new();
             var result = validator.Validate(item);
             return result;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return null;
+    }
 
-        public ValidationResult ValidateItem(InvoicePaymentModel item)
+    public ValidationResult ValidateItem(InvoicePaymentModel item)
+    {
+        try
         {
             InvoicePaymentValidator validator = new();
             var result = validator.Validate(item);
             return result;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return null;
     }
+}
 
-    internal class CustomerModelMapper : EntityMap<CustomerModel>
+internal class CustomerModelMapper : EntityMap<CustomerModel>
+{
+    public CustomerModelMapper()
     {
-        public CustomerModelMapper()
+        try
         {
             Map(x => x.Id).ToColumn("CustId");
             Map(x => x.Descriptions).ToColumn("CustDescriptions");
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
     }
-    internal class ProductModelMapper : EntityMap<ProductModel>
+}
+internal class ProductModelMapper : EntityMap<ProductModel>
+{
+    public ProductModelMapper()
     {
-        public ProductModelMapper()
+        try
         {
             Map(x => x.Id).ToColumn("pId");
             Map(x => x.BuyPrice).ToColumn("pBuyPrice");
@@ -469,12 +689,23 @@ namespace DataLibraryCore.DataAccess.SqlServer
             Map(x => x.TimeUpdated).ToColumn("pTimeUpdated");
             Map(x => x.Descriptions).ToColumn("pDescriptions");
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
     }
-    internal class ProductUnitModelMapper : EntityMap<ProductUnitModel>
+}
+internal class ProductUnitModelMapper : EntityMap<ProductUnitModel>
+{
+    public ProductUnitModelMapper()
     {
-        public ProductUnitModelMapper()
+        try
         {
             Map(x => x.Id).ToColumn("puId");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
         }
     }
 }

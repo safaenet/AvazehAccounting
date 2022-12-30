@@ -1,2 +1,6 @@
 2022-12-30 12:51:41.027 +03:30 [INF] Logger started
 2022-12-30 12:51:46.372 +03:30 [INF] Logger started
+2022-12-30 12:58:18.189 +03:30 [INF] Logger started.
+2022-12-30 12:58:28.061 +03:30 [INF] Logger started.
+2022-12-30 12:58:59.674 +03:30 [INF] Logger started.
+2022-12-30 13:00:00.423 +03:30 [INF] Logger started.

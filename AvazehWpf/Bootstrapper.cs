@@ -3,6 +3,8 @@ using AvazehApiClient.DataAccess.CollectionManagers;
 using AvazehApiClient.DataAccess.Interfaces;
 using AvazehWpf.ViewModels;
 using Caliburn.Micro;
+using Serilog;
+using Serilog.Events;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Validators;
@@ -23,27 +25,41 @@ namespace AvazehWpf
 
         protected override void Configure()
         {
-            Container.Instance(Container)
-                .Singleton<IWindowManager, WindowManager>()
-                .Singleton<IEventAggregator, EventAggregator>();
-            GetType().Assembly.GetTypes()
-                .Where(type => type.IsClass)
-                .Where(type => type.Name.EndsWith("ViewModel"))
-                .ToList()
-                .ForEach(ViewModelType => Container.RegisterPerRequest(
-                    ViewModelType, ViewModelType.ToString(), ViewModelType));
+            Log.Logger = new LoggerConfiguration()
+                    .MinimumLevel.Debug()
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                    .Enrich.FromLogContext()
+                    .WriteTo.File(@"log\LogFile.txt")
+                    .CreateLogger();
 
-            Container
-                .Singleton<IApiProcessor, ApiProcessor>()
-                .PerRequest<ICollectionManager<ProductModel>, ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>>()
-                .PerRequest<ICollectionManager<CustomerModel>, CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>>()
-                .PerRequest<IChequeCollectionManagerAsync, ChequeCollectionManagerAsync>()
-                .PerRequest<IInvoiceCollectionManager, InvoiceCollectionManagerAsync>()
-                .PerRequest<ITransactionCollectionManager, TransactionCollectionManagerAsync>()
-                .PerRequest<IInvoiceDetailManager, InvoiceDetailManager>()
-                .PerRequest<ITransactionDetailManager, TransactionDetailManager>()
-                .PerRequest<IAppSettingsManager, AppSettingsManager>()
-                .Singleton<SingletonClass>();
+            try
+            {
+                Container.Instance(Container)
+                    .Singleton<IWindowManager, WindowManager>()
+                    .Singleton<IEventAggregator, EventAggregator>();
+                GetType().Assembly.GetTypes()
+                    .Where(type => type.IsClass)
+                    .Where(type => type.Name.EndsWith("ViewModel"))
+                    .ToList()
+                    .ForEach(ViewModelType => Container.RegisterPerRequest(
+                        ViewModelType, ViewModelType.ToString(), ViewModelType));
+
+                Container
+                    .Singleton<IApiProcessor, ApiProcessor>()
+                    .PerRequest<ICollectionManager<ProductModel>, ProductCollectionManagerAsync<ProductModel, ProductModel_DTO_Create_Update, ProductValidator>>()
+                    .PerRequest<ICollectionManager<CustomerModel>, CustomerCollectionManagerAsync<CustomerModel, CustomerModel_DTO_Create_Update, CustomerValidator>>()
+                    .PerRequest<IChequeCollectionManagerAsync, ChequeCollectionManagerAsync>()
+                    .PerRequest<IInvoiceCollectionManager, InvoiceCollectionManagerAsync>()
+                    .PerRequest<ITransactionCollectionManager, TransactionCollectionManagerAsync>()
+                    .PerRequest<IInvoiceDetailManager, InvoiceDetailManager>()
+                    .PerRequest<ITransactionDetailManager, TransactionDetailManager>()
+                    .PerRequest<IAppSettingsManager, AppSettingsManager>()
+                    .Singleton<SingletonClass>();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in Bootstrapper");
+            }
         }
 
         protected override IEnumerable<object> GetAllInstances(Type serviceType)

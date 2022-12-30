@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace DataLibraryCore.DataAccess
 {
@@ -12,11 +13,19 @@ namespace DataLibraryCore.DataAccess
         public static IConfiguration AppConfiguration()
         {
             IConfiguration conf;
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Environment.CurrentDirectory)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-            conf = builder.Build();
-            return conf;
+            try
+            {
+                var builder = new ConfigurationBuilder()
+                    .SetBasePath(Environment.CurrentDirectory)
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                conf = builder.Build();
+                return conf;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error when loading configuration");
+            }
+            return null;
         }
     }
 }

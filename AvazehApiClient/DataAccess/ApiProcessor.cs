@@ -1,4 +1,5 @@
 ﻿using AvazehApiClient.DataAccess.Interfaces;
+using Serilog;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
@@ -38,134 +39,270 @@ namespace AvazehApiClient.DataAccess
 
         public async Task<bool> TestDBConnectionAsync()
         {
-            var Url = $"Auth/TestConnection";
-            //ApiClient.Timeout
             try
             {
-                var response = await ApiClient.GetAsync(Url);
-                if (response.IsSuccessStatusCode && (await response.Content.ReadAsAsync<bool>())) return true;
-            }
-            catch
-            {
+                var Url = $"Auth/TestConnection";
+                //ApiClient.Timeout
+                try
+                {
+                    var response = await ApiClient.GetAsync(Url);
+                    if (response.IsSuccessStatusCode && (await response.Content.ReadAsAsync<bool>())) return true;
+                }
+                catch
+                {
+                    return false;
+                }
                 return false;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in ApiProcessor");
             }
             return false;
         }
 
         public bool IsInRole(string role)
         {
-            if(string.IsNullOrEmpty(Token)) return false;
-            var handler = new JwtSecurityTokenHandler();
-            var jwtSecurityToken = handler.ReadJwtToken(Token);
-            var result = jwtSecurityToken.Claims.Where(claim => claim.Type == System.Security.Claims.ClaimTypes.Role && claim.Value == role).Any();
-            return result;
+            try
+            {
+                if (string.IsNullOrEmpty(Token)) return false;
+                var handler = new JwtSecurityTokenHandler();
+                var jwtSecurityToken = handler.ReadJwtToken(Token);
+                var result = jwtSecurityToken.Claims.Where(claim => claim.Type == System.Security.Claims.ClaimTypes.Role && claim.Value == role).Any();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in ApiProcessor");
+            }
+            return false;
         }
 
         public string GetRoleValue(string roleType)
         {
-            if(string.IsNullOrEmpty(Token)) return null;
-            var handler = new JwtSecurityTokenHandler();
-            var jwtSecurityToken = handler.ReadJwtToken(Token);
-            var result = jwtSecurityToken.Claims.Where(claim => claim.Type == roleType).FirstOrDefault().Value;
-            return result;
+            try
+            {
+                if (string.IsNullOrEmpty(Token)) return null;
+                var handler = new JwtSecurityTokenHandler();
+                var jwtSecurityToken = handler.ReadJwtToken(Token);
+                var result = jwtSecurityToken.Claims.Where(claim => claim.Type == roleType).FirstOrDefault().Value;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in ApiProcessor");
+            }
+            return null;
         }
 
         public async Task<T> GetCollectionAsync<T>(string Key, string OrderBy, OrderType orderType, int Page = 1, string SearchText = "", int PageSize = 50, bool ForceLoad = false) where T : class
         {
-            var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&Page={Page}&SearchText={SearchText}&PageSize={PageSize}&ForceLoad={ForceLoad}";
-            var response = await ApiClient.GetAsync(Url);
-            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+            try
+            {
+                var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&Page={Page}&SearchText={SearchText}&PageSize={PageSize}&ForceLoad={ForceLoad}";
+                var response = await ApiClient.GetAsync(Url);
+                return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in ApiProcessor");
+            }
+            return default;
         }
 
         public async Task<T> GetCollectionAsync<T>(string Key, string SearchText) where T : class //Mostly used for Load Product items in invoice details page.
         {
-            var Url = $"{Key}?SearchText={SearchText}";
-            var response = await ApiClient.GetAsync(Url);
-            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+            try
+            {
+                var Url = $"{Key}?SearchText={SearchText}";
+                var response = await ApiClient.GetAsync(Url);
+                return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in ApiProcessor");
+            }
+            return default;
         }
 
         public async Task<T> GetCollectionAsync<T>(string Key, int Id) where T : class
         {
-            var Url = $"{Key}/{Id}";
-            var response = await ApiClient.GetAsync(Url);
-            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+            try
+            {
+                var Url = $"{Key}/{Id}";
+                var response = await ApiClient.GetAsync(Url);
+                return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in ApiProcessor");
+            }
+            return default;
         }
 
         public async Task<T> GetCollectionAsync<T>(string Key, int Id1, int Id2, int Id3) where T : class //Mostly used for Load Product recent prices in invoice details page.
         {
-            var Url = $"{Key}/{Id1}/{Id2}/{Id3}";
-            var response = await ApiClient.GetAsync(Url);
-            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+            try
+            {
+                var Url = $"{Key}/{Id1}/{Id2}/{Id3}";
+                var response = await ApiClient.GetAsync(Url);
+                return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in ApiProcessor");
+            }
+            return default;
         }
 
         public async Task<bool> GetBooleanAsync(string Key)
         {
-            var Url = $"{Key}";
-            var response = await ApiClient.GetAsync(Url);
-            return await response.Content.ReadAsAsync<bool>();
+            try
+            {
+                var Url = $"{Key}";
+                var response = await ApiClient.GetAsync(Url);
+                return await response.Content.ReadAsAsync<bool>();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in ApiProcessor");
+            }
+            return false;
         }
 
         public async Task<T> GetInvoiceCollectionAsync<T>(string Key, string OrderBy, OrderType orderType, int Page = 1, string SearchText = "", InvoiceLifeStatus? LifeStatus = null, InvoiceFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false) where T : class
         {
-            var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&Page={Page}&SearchText={SearchText}&LifeStatus={LifeStatus}&FinStatus={FinStatus}&PageSize={PageSize}&ForceLoad={ForceLoad}";
-            var response = await ApiClient.GetAsync(Url);
-            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+            try
+            {
+                var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&Page={Page}&SearchText={SearchText}&LifeStatus={LifeStatus}&FinStatus={FinStatus}&PageSize={PageSize}&ForceLoad={ForceLoad}";
+                var response = await ApiClient.GetAsync(Url);
+                return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in ApiProcessor");
+            }
+            return default;
         }
 
         public async Task<T> GetTransactionCollectionAsync<T>(string Key, string OrderBy, OrderType orderType, int Page = 1, string SearchText = "", TransactionFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false) where T : class
         {
-            var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&Page={Page}&SearchText={SearchText}&FinStatus={FinStatus}&PageSize={PageSize}&ForceLoad={ForceLoad}";
-            var response = await ApiClient.GetAsync(Url);
-            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+            try
+            {
+                var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&Page={Page}&SearchText={SearchText}&FinStatus={FinStatus}&PageSize={PageSize}&ForceLoad={ForceLoad}";
+                var response = await ApiClient.GetAsync(Url);
+                return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in ApiProcessor");
+            }
+            return default;
         }
 
         public async Task<ItemsCollection_DTO<ChequeModel>> GetChequeCollectionAsync(string Key, string OrderBy, OrderType orderType, ChequeListQueryStatus? listQueryStatus = ChequeListQueryStatus.FromNowOn, int Page = 1, string SearchText = "", int PageSize = 50, bool ForceLoad = false)
         {
-            var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&listQueryStatus={listQueryStatus}&Page={Page}&SearchText={SearchText}&PageSize={PageSize}&ForceLoad={ForceLoad}";
-            var response = await ApiClient.GetAsync(Url);
-            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<ItemsCollection_DTO<ChequeModel>>() : null;
+            try
+            {
+                var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&listQueryStatus={listQueryStatus}&Page={Page}&SearchText={SearchText}&PageSize={PageSize}&ForceLoad={ForceLoad}";
+                var response = await ApiClient.GetAsync(Url);
+                return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<ItemsCollection_DTO<ChequeModel>>() : null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in ApiProcessor");
+            }
+            return null;
         }
 
         public async Task<T> GetItemAsync<T>(string Key, string Id) where T : class
         {
-            var Url = $"{Key}/{Id}";
-            var response = await ApiClient.GetAsync(Url);
-            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+            try
+            {
+                var Url = $"{Key}/{Id}";
+                var response = await ApiClient.GetAsync(Url);
+                return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in ApiProcessor");
+            }
+            return default;
         }
 
         public async Task<U> CreateItemAsync<T, U>(string Key, T model) where U : class
         {
-            var Url = $"{Key}";
-            var response = await ApiClient.PostAsJsonAsync(Url, model);
-            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<U>() : null;
+            try
+            {
+                var Url = $"{Key}";
+                var response = await ApiClient.PostAsJsonAsync(Url, model);
+                return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<U>() : null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in ApiProcessor");
+            }
+            return default;
         }
 
         public async Task<U> UpdateItemAsync<T, U>(string Key, int Id, T model) where U : class
         {
-            var Url = $"{Key}/{Id}";
-            var response = await ApiClient.PutAsJsonAsync(Url, model);
-            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<U>() : null;
+            try
+            {
+                var Url = $"{Key}/{Id}";
+                var response = await ApiClient.PutAsJsonAsync(Url, model);
+                return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<U>() : null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in ApiProcessor");
+            }
+            return default;
         }
 
         public async Task<bool> DeleteItemAsync(string Key, int Id)
         {
-            var Url = $"{Key}?Id={Id}";
-            var response = await ApiClient.DeleteAsync(Url);
-            return response.IsSuccessStatusCode;
+            try
+            {
+                var Url = $"{Key}?Id={Id}";
+                var response = await ApiClient.DeleteAsync(Url);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in ApiProcessor");
+            }
+            return false;
         }
 
         public async Task<T?> GetValueOrNullAsync<T>(string Key, int Id1, int Id2) where T : struct
         {
-            var Url = $"{Key}/{Id1}/{Id2}";
-            var response = await ApiClient.GetAsync(Url);
-            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+            try
+            {
+                var Url = $"{Key}/{Id1}/{Id2}";
+                var response = await ApiClient.GetAsync(Url);
+                return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in ApiProcessor");
+            }
+            return null;
         }
 
         public async Task<double> GetValueOrZeroAsync<T>(string Key, int Id1, int Id2)
         {
-            var Url = $"{Key}/{Id1}/{Id2}";
-            var response = await ApiClient.GetAsync(Url);
-            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<double>() : 0;
+            try
+            {
+                var Url = $"{Key}/{Id1}/{Id2}";
+                var response = await ApiClient.GetAsync(Url);
+                return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<double>() : 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in ApiProcessor");
+            }
+            return 0;
         }
     }
 }

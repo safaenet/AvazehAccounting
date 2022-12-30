@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using SharedLibrary.Helpers;
+using Serilog;
 
 namespace DataLibraryCore.DataAccess.SqlServer
 {
@@ -81,142 +82,253 @@ namespace DataLibraryCore.DataAccess.SqlServer
 
         public async Task<bool> TestDBConnectionAsync()
         {
-            var result = await DataAccess.TestConnectionAsync();
-            return result;
+            try
+            {
+                var result = await DataAccess.TestConnectionAsync();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in SqlUserProcessor");
+            }
+            return false;
         }
 
         public async Task<ObservableCollection<UserInfoBaseModel>> GetUsersAsync()
         {
-            var list =  await DataAccess.LoadDataAsync<UserInfoBaseModel, DynamicParameters>(GetUsersListQuery, null);
-            return list;
+            try
+            {
+                var list = await DataAccess.LoadDataAsync<UserInfoBaseModel, DynamicParameters>(GetUsersListQuery, null);
+                return list;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in SqlUserProcessor");
+            }
+            return null;
         }
 
         public async Task<int> GetCountOfAdminUsersAsync()
         {
-            var count =  await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(GetCountOfAdminUsersQuery, null);
-            return count;
+            try
+            {
+                var count = await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(GetCountOfAdminUsersQuery, null);
+                return count;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in SqlUserProcessor");
+            }
+            return 0;
         }
 
         public async Task<UserInfoBaseModel> CreateUserAsync(User_DTO_CreateUpdate user)
         {
-            if (user == null || string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password) || user.Password.Length < 4 || user.Permissions == null || user.Settings == null) return null;
-            CreatePasswordHash(user.Password, out byte[] PasswordHash, out byte[] PasswordSalt);
-            UserInfoBaseModel newUser = new()
+            try
             {
-                Username = user.Username,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                IsActive = user.IsActive,
-                DateCreated = PersianCalendarHelper.GetCurrentPersianDate()
-            };
-            var dp = new DynamicParameters();
-            FillUserBaseParameters(dp, newUser);
-            FillUserPermissionParameters(dp, user.Permissions);
-            FillUserSettingsParameters(dp, user.Settings);
-            dp.Add("@passwordHash", PasswordHash, System.Data.DbType.Binary);
-            dp.Add("@passwordSalt", PasswordSalt, System.Data.DbType.Binary);
-            dp.Add("@dateCreated", newUser.DateCreated);
-            dp.Add("@id", 0, System.Data.DbType.Int32, System.Data.ParameterDirection.Output);
+                if (user == null || string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password) || user.Password.Length < 4 || user.Permissions == null || user.Settings == null) return null;
+                CreatePasswordHash(user.Password, out byte[] PasswordHash, out byte[] PasswordSalt);
+                UserInfoBaseModel newUser = new()
+                {
+                    Username = user.Username,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    IsActive = user.IsActive,
+                    DateCreated = PersianCalendarHelper.GetCurrentPersianDate()
+                };
+                var dp = new DynamicParameters();
+                FillUserBaseParameters(dp, newUser);
+                FillUserPermissionParameters(dp, user.Permissions);
+                FillUserSettingsParameters(dp, user.Settings);
+                dp.Add("@passwordHash", PasswordHash, System.Data.DbType.Binary);
+                dp.Add("@passwordSalt", PasswordSalt, System.Data.DbType.Binary);
+                dp.Add("@dateCreated", newUser.DateCreated);
+                dp.Add("@id", 0, System.Data.DbType.Int32, System.Data.ParameterDirection.Output);
 
-            var AffectedCount = await DataAccess.SaveDataAsync(CreateUserQuery, dp);
-            newUser.Id = dp.Get<int>("@id");
-            if (AffectedCount > 0) return newUser; else return null;
+                var AffectedCount = await DataAccess.SaveDataAsync(CreateUserQuery, dp);
+                newUser.Id = dp.Get<int>("@id");
+                if (AffectedCount > 0) return newUser; else return null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in SqlUserProcessor");
+            }
+            return null;
         }
 
         public async Task<bool> VerifyUserAsync(UserLogin_DTO user)
         {
-            if (string.IsNullOrEmpty(user.Username)) return false;
-            DynamicParameters dp = new();
-            dp.Add("@username", user.Username);
-            var PasswordHash = await DataAccess.QuerySingleOrDefaultAsync<byte[], DynamicParameters>(GetPasswordHash, dp);
-            var PasswordSalt = await DataAccess.QuerySingleOrDefaultAsync<byte[], DynamicParameters>(GetPasswordSalt, dp);
-            if (PasswordHash == null || PasswordSalt == null) return false;
-            return VerifyPasswordHash(user.Password, PasswordHash, PasswordSalt);
+            try
+            {
+                if (string.IsNullOrEmpty(user.Username)) return false;
+                DynamicParameters dp = new();
+                dp.Add("@username", user.Username);
+                var PasswordHash = await DataAccess.QuerySingleOrDefaultAsync<byte[], DynamicParameters>(GetPasswordHash, dp);
+                var PasswordSalt = await DataAccess.QuerySingleOrDefaultAsync<byte[], DynamicParameters>(GetPasswordSalt, dp);
+                if (PasswordHash == null || PasswordSalt == null) return false;
+                return VerifyPasswordHash(user.Password, PasswordHash, PasswordSalt);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in SqlUserProcessor");
+            }
+            return false;
         }
 
         private static bool VerifyPasswordHash(string password, byte[] oldPasswordHash, byte[] oldPasswordSalt)
         {
-            using var hmac = new HMACSHA512(oldPasswordSalt);
-            var ComputedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            return ComputedHash.SequenceEqual(oldPasswordHash);
+            try
+            {
+                using var hmac = new HMACSHA512(oldPasswordSalt);
+                var ComputedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return ComputedHash.SequenceEqual(oldPasswordHash);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in SqlUserProcessor");
+            }
+            return false;
         }
 
         public async Task<UserInfoBaseModel> GetUserInfoBaseAsync(string Username)
         {
-            if (string.IsNullOrEmpty(Username)) return null;
-            DynamicParameters dp = new();
-            dp.Add("@username", Username);
-            var userInfoBase = await DataAccess.QuerySingleOrDefaultAsync<UserInfoBaseModel, DynamicParameters>(SelectUserInfoBase, dp);
-            return userInfoBase;
+            try
+            {
+                if (string.IsNullOrEmpty(Username)) return null;
+                DynamicParameters dp = new();
+                dp.Add("@username", Username);
+                var userInfoBase = await DataAccess.QuerySingleOrDefaultAsync<UserInfoBaseModel, DynamicParameters>(SelectUserInfoBase, dp);
+                return userInfoBase;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in SqlUserProcessor");
+            }
+            return null;
         }
 
         public async Task<UserPermissionsModel> GetUserPermissionsAsync(int Id)
         {
-            DynamicParameters dp = new();
-            dp.Add("@id", Id);
-            var Permissions = await DataAccess.QuerySingleOrDefaultAsync<UserPermissionsModel, DynamicParameters>(SelectUserPermissions, dp);
-            return Permissions;
+            try
+            {
+                DynamicParameters dp = new();
+                dp.Add("@id", Id);
+                var Permissions = await DataAccess.QuerySingleOrDefaultAsync<UserPermissionsModel, DynamicParameters>(SelectUserPermissions, dp);
+                return Permissions;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in SqlUserProcessor");
+            }
+            return null;
         }
 
         public async Task<UserSettingsModel> GetUserSettingsAsync(int Id)
         {
-            DynamicParameters dp = new();
-            dp.Add("@id", Id);
-            var Settings = await DataAccess.QuerySingleOrDefaultAsync<UserSettingsModel, DynamicParameters>(SelectUserSettings, dp);
-            return Settings;
+            try
+            {
+                DynamicParameters dp = new();
+                dp.Add("@id", Id);
+                var Settings = await DataAccess.QuerySingleOrDefaultAsync<UserSettingsModel, DynamicParameters>(SelectUserSettings, dp);
+                return Settings;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in SqlUserProcessor");
+            }
+            return null;
         }
 
         public async Task<UserInfoBaseModel> UpdateUserInfoAsync(UserInfoBaseModel user, bool ChangePassword = false, string NewPassword = null)
         {
-            if (user == null) return null;
-            var dp = new DynamicParameters();
-            if (ChangePassword)
+            try
             {
-                CreatePasswordHash(NewPassword, out byte[] PasswordHash, out byte[] PasswordSalt);
-                dp.Add("@passwordHash", PasswordHash);
-                dp.Add("@passwordSalt", PasswordSalt);
+                if (user == null) return null;
+                var dp = new DynamicParameters();
+                if (ChangePassword)
+                {
+                    CreatePasswordHash(NewPassword, out byte[] PasswordHash, out byte[] PasswordSalt);
+                    dp.Add("@passwordHash", PasswordHash);
+                    dp.Add("@passwordSalt", PasswordSalt);
+                }
+                FillUserBaseParameters(dp, user);
+                dp.Add("@id", user.Id);
+                var AffectedCount = await DataAccess.SaveDataAsync(ChangePassword ? UpdateUserInfoQueryWithPassword : UpdateUserInfoQueryWithoutPassword, dp);
+                if (AffectedCount > 0) return user; else return null;
             }
-            FillUserBaseParameters(dp, user);
-            dp.Add("@id", user.Id);
-            var AffectedCount = await DataAccess.SaveDataAsync(ChangePassword ? UpdateUserInfoQueryWithPassword : UpdateUserInfoQueryWithoutPassword, dp);
-            if (AffectedCount > 0) return user; else return null;
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in SqlUserProcessor");
+            }
+            return null;
         }
 
         public async Task<UserPermissionsModel> UpdateUserPermissionsAsync(int Id, UserPermissionsModel userPermissions)
         {
-            if (userPermissions == null) return null;
-            var dp = new DynamicParameters();
-            dp.Add("@id", Id);
-            FillUserPermissionParameters(dp, userPermissions);
-            var AffectedCount = await DataAccess.SaveDataAsync(UpdateUserPermissionsQuery, dp);
-            if (AffectedCount > 0) return userPermissions; else return null;
+            try
+            {
+                if (userPermissions == null) return null;
+                var dp = new DynamicParameters();
+                dp.Add("@id", Id);
+                FillUserPermissionParameters(dp, userPermissions);
+                var AffectedCount = await DataAccess.SaveDataAsync(UpdateUserPermissionsQuery, dp);
+                if (AffectedCount > 0) return userPermissions; else return null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in SqlUserProcessor");
+            }
+            return null;
         }
 
         public async Task<UserSettingsModel> UpdateUserSettingsAsync(int Id, UserSettingsModel userSettings)
         {
-            if (userSettings == null) return null;
-            var dp = new DynamicParameters();
-            dp.Add("@id", Id);
-            FillUserSettingsParameters(dp, userSettings);
-            var AffectedCount = await DataAccess.SaveDataAsync(UpdateUserSettingsQuery, dp);
-            if (AffectedCount > 0) return userSettings; else return null;
+            try
+            {
+                if (userSettings == null) return null;
+                var dp = new DynamicParameters();
+                dp.Add("@id", Id);
+                FillUserSettingsParameters(dp, userSettings);
+                var AffectedCount = await DataAccess.SaveDataAsync(UpdateUserSettingsQuery, dp);
+                if (AffectedCount > 0) return userSettings; else return null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in SqlUserProcessor");
+            }
+            return null;
         }
 
         public async Task<int> DeleteUserAsync(int Id)
         {
-            DynamicParameters dp = new();
-            dp.Add("@id", Id);
-            return await DataAccess.SaveDataAsync(DeleteUserFromDB, dp);
+            try
+            {
+                DynamicParameters dp = new();
+                dp.Add("@id", Id);
+                return await DataAccess.SaveDataAsync(DeleteUserFromDB, dp);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in SqlUserProcessor");
+            }
+            return 0;
         }
 
         public async Task UpdateUserLastLoginDateAsync(string username)
         {
-            if (string.IsNullOrEmpty(username)) return;
-            DynamicParameters dp = new();
-            dp.Add("@username", username);
-            dp.Add("@lastLoginDate", PersianCalendarHelper.GetCurrentPersianDate());
-            dp.Add("@lastLoginTime", PersianCalendarHelper.GetCurrentTime());
-            await DataAccess.SaveDataAsync(UpdateUserLastLoginDateQuery, dp);
+            try
+            {
+                if (string.IsNullOrEmpty(username)) return;
+                DynamicParameters dp = new();
+                dp.Add("@username", username);
+                dp.Add("@lastLoginDate", PersianCalendarHelper.GetCurrentPersianDate());
+                dp.Add("@lastLoginTime", PersianCalendarHelper.GetCurrentTime());
+                await DataAccess.SaveDataAsync(UpdateUserLastLoginDateQuery, dp);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error in SqlUserProcessor");
+            }
         }
 
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)

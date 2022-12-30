@@ -9,30 +9,34 @@ using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
 using System.Threading.Tasks;
 using SharedLibrary.Helpers;
+using System;
+using Serilog;
 
-namespace DataLibraryCore.DataAccess.SqlServer
+namespace DataLibraryCore.DataAccess.SqlServer;
+
+public class SqlProductProcessor<TModel, TValidator> : IGeneralProcessor<TModel>
+    where TModel : ProductModel where TValidator : ProductValidator, new()
 {
-    public class SqlProductProcessor<TModel, TValidator> : IGeneralProcessor<TModel>
-        where TModel : ProductModel where TValidator : ProductValidator, new()
+    public SqlProductProcessor(IDataAccess dataAcess)
     {
-        public SqlProductProcessor(IDataAccess dataAcess)
-        {
-            DataAccess = dataAcess;
-        }
+        DataAccess = dataAcess;
+    }
 
-        private readonly IDataAccess DataAccess;
-        private const string QueryOrderBy = "ProductName";
-        private const OrderType QueryOrderType = OrderType.ASC;
-        private readonly string CreateProductQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Products]) + 1;
+    private readonly IDataAccess DataAccess;
+    private const string QueryOrderBy = "ProductName";
+    private const OrderType QueryOrderType = OrderType.ASC;
+    private readonly string CreateProductQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Products]) + 1;
             INSERT INTO Products ([Id], ProductName, BuyPrice, SellPrice, Barcode, CountString, DateCreated, TimeCreated, Descriptions, IsActive)
             VALUES (@newId, @productName, @buyPrice, @sellPrice, @barcode, @countString, @dateCreated, @timeCreated, @descriptions, @isActive);
             SELECT @id = @newId;";
-        private readonly string UpdateProductQuery = @"UPDATE Products SET ProductName = @productName, BuyPrice = @buyPrice, SellPrice = @sellPrice, Barcode = @barcode,
+    private readonly string UpdateProductQuery = @"UPDATE Products SET ProductName = @productName, BuyPrice = @buyPrice, SellPrice = @sellPrice, Barcode = @barcode,
             CountString = @countString, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, Descriptions = @descriptions, IsActive = @isActive
             WHERE Id = @id";
-        private readonly string DeleteProductQuery = @"DELETE FROM Products WHERE Id = @id";
+    private readonly string DeleteProductQuery = @"DELETE FROM Products WHERE Id = @id";
 
-        public string GenerateWhereClause(string val, SqlSearchMode mode)
+    public string GenerateWhereClause(string val, SqlSearchMode mode)
+    {
+        try
         {
             var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
             return @$"(CAST([Id] AS varchar) LIKE {criteria}
@@ -47,15 +51,31 @@ namespace DataLibraryCore.DataAccess.SqlServer
                       {mode} [TimeUpdated] LIKE {criteria}
                       {mode} [Descriptions] LIKE N{criteria} )";
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlProductProcessor");
+        }
+        return null;
+    }
 
-        public ValidationResult ValidateItem(TModel product)
+    public ValidationResult ValidateItem(TModel product)
+    {
+        try
         {
             TValidator validator = new();
             var result = validator.Validate(product);
             return result;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlProductProcessor");
+        }
+        return null;
+    }
 
-        public async Task<int> CreateItemAsync(TModel item)
+    public async Task<int> CreateItemAsync(TModel item)
+    {
+        try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
@@ -76,30 +96,62 @@ namespace DataLibraryCore.DataAccess.SqlServer
             if (AffectedCount > 0) item.Id = OutputId;
             return OutputId;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlProductProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> UpdateItemAsync(TModel item)
+    public async Task<int> UpdateItemAsync(TModel item)
+    {
+        try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
             item.TimeUpdated = PersianCalendarHelper.GetCurrentTime();
             return await DataAccess.SaveDataAsync(UpdateProductQuery, item);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlProductProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> DeleteItemByIdAsync(int Id)
+    public async Task<int> DeleteItemByIdAsync(int Id)
+    {
+        try
         {
             DynamicParameters dp = new();
             dp.Add("@id", Id);
             return await DataAccess.SaveDataAsync(DeleteProductQuery, dp);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlProductProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> GetTotalQueryCountAsync(string WhereClause)
+    public async Task<int> GetTotalQueryCountAsync(string WhereClause)
+    {
+        try
         {
             var sqlTemp = $@"SELECT COUNT([Id]) FROM Products
                                 { (string.IsNullOrEmpty(WhereClause) ? "" : " WHERE ") } { WhereClause }";
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlProductProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<ObservableCollection<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    public async Task<ObservableCollection<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    {
+        try
         {
             string sql = $@"SET NOCOUNT ON
                             SELECT * FROM Products
@@ -107,11 +159,24 @@ namespace DataLibraryCore.DataAccess.SqlServer
                             ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
             return await DataAccess.LoadDataAsync<TModel, DynamicParameters>(sql, null);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlProductProcessor");
+        }
+        return null;
+    }
 
-        public async Task<TModel> LoadSingleItemAsync(int Id)
+    public async Task<TModel> LoadSingleItemAsync(int Id)
+    {
+        try
         {
             var outPut = await LoadManyItemsAsync(0, 1, $"[Id] = { Id }");
             return outPut.FirstOrDefault();
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlProductProcessor");
+        }
+        return null;
     }
 }

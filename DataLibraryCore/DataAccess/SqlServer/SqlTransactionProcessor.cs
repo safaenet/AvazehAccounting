@@ -12,46 +12,59 @@ using System.Data.SqlClient;
 using SharedLibrary.DtoModels;
 using System.Collections.Generic;
 using SharedLibrary.Helpers;
+using System;
+using Serilog;
 
-namespace DataLibraryCore.DataAccess.SqlServer
+namespace DataLibraryCore.DataAccess.SqlServer;
+
+public class SqlTransactionProcessor : ITransactionProcessor
 {
-    public class SqlTransactionProcessor : ITransactionProcessor
+    public SqlTransactionProcessor(IDataAccess dataAcess)
     {
-        public SqlTransactionProcessor(IDataAccess dataAcess)
-        {
-            DataAccess = dataAcess;
-        }
+        DataAccess = dataAcess;
+    }
 
-        private readonly IDataAccess DataAccess;
-        private const string QueryOrderBy = "Id";
-        private const OrderType QueryOrderType = OrderType.ASC;
-        private readonly string CreateTransactionQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Transactions]) + 1;
+    private readonly IDataAccess DataAccess;
+    private const string QueryOrderBy = "Id";
+    private const OrderType QueryOrderType = OrderType.ASC;
+    private readonly string CreateTransactionQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Transactions]) + 1;
             INSERT INTO Transactions ([Id], FileName, DateCreated, TimeCreated, Descriptions)
             VALUES (@newId, @fileName, @dateCreated, @timeCreated, @descriptions);
             SELECT @id = @newId;";
-        private readonly string UpdateTransactionQuery = @"UPDATE Transactions SET FileName = @fileName, DateCreated = @dateCreated, TimeCreated = @timeCreated, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
+    private readonly string UpdateTransactionQuery = @"UPDATE Transactions SET FileName = @fileName, DateCreated = @dateCreated, TimeCreated = @timeCreated, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
             Descriptions = @descriptions WHERE Id = @id";
-        private readonly string DeleteTransactionQuery = @"DELETE FROM Transactions WHERE Id = @id";
-        private readonly string GetSingleTransactionItemQuery = "SELECT * FROM TransactionItems WHERE [Id] = {0}";
-        private readonly string InsertTransactionItemQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [TransactionItems]) + 1;
+    private readonly string DeleteTransactionQuery = @"DELETE FROM Transactions WHERE Id = @id";
+    private readonly string GetSingleTransactionItemQuery = "SELECT * FROM TransactionItems WHERE [Id] = {0}";
+    private readonly string InsertTransactionItemQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [TransactionItems]) + 1;
             INSERT INTO TransactionItems ([Id], TransactionId, Title, Amount, CountString, CountValue, DateCreated, TimeCreated, Descriptions)
             VALUES (@newId, @transactionId, @title, @amount, @countString, @countValue, @dateCreated, @timeCreated, @descriptions);
             SELECT @id = @newId;";
-        private readonly string UpdateTransactionItemQuery = @"UPDATE TransactionItems SET Title = @title, Amount = @amount,
+    private readonly string UpdateTransactionItemQuery = @"UPDATE TransactionItems SET Title = @title, Amount = @amount,
             CountString = @countString, CountValue = @countValue, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, Descriptions = @descriptions WHERE [Id] = @id";
-        private readonly string DeleteTransactionItemQuery = @$"DELETE FROM TransactionItems WHERE [Id] = @id";
-        private readonly string GetProductItemsQuery = "SELECT [ProductName] AS ItemName FROM Products {0} UNION SELECT [Title] AS ItemName FROM TransactionItems WHERE 1=1 {1} {2} ORDER BY ItemName";
-        private readonly string GetTransactionNamesQuery = "SELECT [Id], [FileName] AS ItemName FROM Transactions {0}";
-        private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Transactions SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated WHERE [Id] = @id";
-        private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON SELECT * FROM Transactions t WHERE t.[Id] = {0} ORDER BY t.[Id] DESC";
+    private readonly string DeleteTransactionItemQuery = @$"DELETE FROM TransactionItems WHERE [Id] = @id";
+    private readonly string GetProductItemsQuery = "SELECT [ProductName] AS ItemName FROM Products {0} UNION SELECT [Title] AS ItemName FROM TransactionItems WHERE 1=1 {1} {2} ORDER BY ItemName";
+    private readonly string GetTransactionNamesQuery = "SELECT [Id], [FileName] AS ItemName FROM Transactions {0}";
+    private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Transactions SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated WHERE [Id] = @id";
+    private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON SELECT * FROM Transactions t WHERE t.[Id] = {0} ORDER BY t.[Id] DESC";
 
-        private async Task<int> GetTransactionIdFromTransactionItemId(int Id)
+    private async Task<int> GetTransactionIdFromTransactionItemId(int Id)
+    {
+        try
         {
+
             var query = $"SELECT TransactionId FROM TransactionItems WHERE Id = { Id }";
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(query, null);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return 0;
+    }
 
-        public string GenerateWhereClause(string val, TransactionFinancialStatus? FinStatus, SqlSearchMode mode) //Used for TransactionList
+    public string GenerateWhereClause(string val, TransactionFinancialStatus? FinStatus, SqlSearchMode mode) //Used for TransactionList
+    {
+        try
         {
             string finStatusOperand = "";
             switch (FinStatus)
@@ -81,8 +94,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
                       { (FinStatus == null ? "" : $" AND ISNULL(pos.TotalVal, 0) + ISNULL(neg.TotalVal, 0) { finStatusOperand } 0 ")}
             ";
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return null;
+    }
 
-        public string GenerateTransactionItemWhereClause(string val, TransactionFinancialStatus? FinStatus, SqlSearchMode mode) //Used for TransactionItemList
+    public string GenerateTransactionItemWhereClause(string val, TransactionFinancialStatus? FinStatus, SqlSearchMode mode) //Used for TransactionItemList
+    {
+        try
         {
             string finStatusOperand = "";
             switch (FinStatus)
@@ -113,15 +134,31 @@ namespace DataLibraryCore.DataAccess.SqlServer
                       { (FinStatus == null ? "" : $" AND ISNULL(([Amount] * [CountValue]), 0) { finStatusOperand } 0 ")}
             ";
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return null;
+    }
 
-        public ValidationResult ValidateItem(TransactionModel transaction)
+    public ValidationResult ValidateItem(TransactionModel transaction)
+    {
+        try
         {
             TransactionValidator validator = new();
             var result = validator.Validate(transaction);
             return result;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return null;
+    }
 
-        public async Task<List<ItemsForComboBox>> GetProductItemsAsync(string SearchText = null, int TransactionId = 0)
+    public async Task<List<ItemsForComboBox>> GetProductItemsAsync(string SearchText = null, int TransactionId = 0)
+    {
+        try
         {
             var where1 = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [ProductName] LIKE '%{ SearchText }%' AND IsActive = 1";
             var where2 = string.IsNullOrEmpty(SearchText) ? "" : $" AND [Title] LIKE '%{ SearchText }%'";
@@ -130,23 +167,47 @@ namespace DataLibraryCore.DataAccess.SqlServer
             var items = await DataAccess.LoadDataAsync<ItemsForComboBox, DynamicParameters>(sql, null);
             return items?.ToList();
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return null;
+    }
 
-        public async Task<List<ItemsForComboBox>> GetTransactionNamesAsync(string SearchText = null)
+    public async Task<List<ItemsForComboBox>> GetTransactionNamesAsync(string SearchText = null)
+    {
+        try
         {
             var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [Id] <> { SearchText }";
             var sql = string.Format(GetTransactionNamesQuery, where);
             var items = await DataAccess.LoadDataAsync<ItemsForComboBox, DynamicParameters>(sql, null);
             return items?.ToList();
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return null;
+    }
 
-        public ValidationResult ValidateItem(TransactionItemModel item)
+    public ValidationResult ValidateItem(TransactionItemModel item)
+    {
+        try
         {
             TransactionItemValidator validator = new();
             var result = validator.Validate(item);
             return result;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return null;
+    }
 
-        public async Task<int> CreateItemAsync(TransactionModel item)
+    public async Task<int> CreateItemAsync(TransactionModel item)
+    {
+        try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
@@ -162,31 +223,63 @@ namespace DataLibraryCore.DataAccess.SqlServer
             if (AffectedCount > 0) item.Id = OutputId;
             return OutputId;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> UpdateItemAsync(TransactionModel item)
+    public async Task<int> UpdateItemAsync(TransactionModel item)
+    {
+        try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
             item.TimeUpdated = PersianCalendarHelper.GetCurrentTime();
             return await DataAccess.SaveDataAsync(UpdateTransactionQuery, item);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> DeleteItemByIdAsync(int Id)
+    public async Task<int> DeleteItemByIdAsync(int Id)
+    {
+        try
         {
             DynamicParameters dp = new();
             dp.Add("@id", Id);
             return await DataAccess.SaveDataAsync(DeleteTransactionQuery, dp);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<TransactionItemModel> GetTransactionItemFromDatabaseAsync(int Id)
+    public async Task<TransactionItemModel> GetTransactionItemFromDatabaseAsync(int Id)
+    {
+        try
         {
             var sql = string.Format(GetSingleTransactionItemQuery, Id);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
             var result = await conn.QueryAsync<TransactionItemModel>(sql);
             return result.SingleOrDefault();
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return null;
+    }
 
-        public async Task<int> InsertTransactionItemToDatabaseAsync(TransactionItemModel item)
+    public async Task<int> InsertTransactionItemToDatabaseAsync(TransactionItemModel item)
+    {
+        try
         {
             if (item == null || !item.IsCountStringValid) return 0;
             item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
@@ -209,8 +302,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             }
             return AffectedCount;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> UpdateTransactionItemInDatabaseAsync(TransactionItemModel item)
+    public async Task<int> UpdateTransactionItemInDatabaseAsync(TransactionItemModel item)
+    {
+        try
         {
             if (item == null || !item.IsCountStringValid) return 0;
             item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
@@ -228,8 +329,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             if (AffectedCount > 0) await UpdateItemUpdateDateAndUpdateTimeAsync(item.TransactionId);
             return AffectedCount;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> DeleteTransactionItemFromDatabaseAsync(int ItemId)
+    public async Task<int> DeleteTransactionItemFromDatabaseAsync(int ItemId)
+    {
+        try
         {
             var InvoiceId = await GetTransactionIdFromTransactionItemId(ItemId);
             if (InvoiceId == 0) return 0;
@@ -239,8 +348,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             if (AffectedCount > 0) await UpdateItemUpdateDateAndUpdateTimeAsync(InvoiceId);
             return AffectedCount;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return 0;
+    }
 
-        private async Task UpdateItemUpdateDateAndUpdateTimeAsync(int Id)
+    private async Task UpdateItemUpdateDateAndUpdateTimeAsync(int Id)
+    {
+        try
         {
             var dp = new DynamicParameters();
             dp.Add("@id", Id);
@@ -248,8 +365,15 @@ namespace DataLibraryCore.DataAccess.SqlServer
             dp.Add("@timeUpdated", PersianCalendarHelper.GetCurrentTime());
             await DataAccess.SaveDataAsync(UpdateSubItemDateAndTimeQuery, dp).ConfigureAwait(false);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+    }
 
-        public async Task<int> GetTotalQueryCountAsync(string WhereClause)
+    public async Task<int> GetTotalQueryCountAsync(string WhereClause)
+    {
+        try
         {
             var sqlTemp = $@"SELECT COUNT(t.Id) FROM Transactions t LEFT JOIN (
                             SELECT ti.TransactionId, SUM(ti.Amount * ti.CountValue) AS TotalVal FROM TransactionItems ti WHERE (ti.Amount * ti.CountValue) > 0 GROUP BY ti.TransactionId) AS pos ON t.Id = pos.TransactionId
@@ -258,15 +382,31 @@ namespace DataLibraryCore.DataAccess.SqlServer
                                 { (string.IsNullOrEmpty(WhereClause) ? "" : " WHERE ") } { WhereClause }";
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> GetTotalTransactionItemQueryCountAsync(string WhereClause, int Id)
+    public async Task<int> GetTotalTransactionItemQueryCountAsync(string WhereClause, int Id)
+    {
+        try
         {
             var sqlTemp = $@"SELECT COUNT([Id]) FROM TransactionItems WHERE [TransactionId] = { Id }
                                 { (string.IsNullOrEmpty(WhereClause) ? "" : " AND ") } { WhereClause }";
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<ObservableCollection<TransactionListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    public async Task<ObservableCollection<TransactionListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    {
+        try
         {
             string sql = $@"SET NOCOUNT ON
                             SELECT t.Id, t.[FileName], t.DateCreated, t.TimeCreated, t.DateUpdated, t.TimeUpdated, t.Descriptions, ISNULL(pos.TotalVal, 0) AS TotalPositiveItemsSum, ISNULL(neg.TotalVal, 0) AS TotalNegativeItemsSum
@@ -279,16 +419,32 @@ namespace DataLibraryCore.DataAccess.SqlServer
                             ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
             return await DataAccess.LoadDataAsync<TransactionListModel, DynamicParameters>(sql, null);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return null;
+    }
 
-        public async Task<ObservableCollection<TransactionItemModel>> LoadManyTransactionItemsAsync(int OffSet, int FetcheSize, string WhereClause, int Id, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    public async Task<ObservableCollection<TransactionItemModel>> LoadManyTransactionItemsAsync(int OffSet, int FetcheSize, string WhereClause, int Id, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    {
+        try
         {
             string sql = $@"SELECT * FROM TransactionItems WHERE [TransactionId] = { Id }
                             { (string.IsNullOrEmpty(WhereClause) ? "" : $" AND { WhereClause }") }
                             ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
             return await DataAccess.LoadDataAsync<TransactionItemModel, DynamicParameters>(sql, null);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return null;
+    }
 
-        public async Task<TransactionModel> LoadSingleItemAsync(int Id)
+    public async Task<TransactionModel> LoadSingleItemAsync(int Id)
+    {
+        try
         {
             var query = string.Format(LoadSingleItemQuery, Id);
             var result = await DataAccess.LoadDataAsync<TransactionModel, DynamicParameters>(query, null);
@@ -300,17 +456,38 @@ namespace DataLibraryCore.DataAccess.SqlServer
             }
             return output;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return null;
+    }
 
-        public async Task<double> LoadTotalPositive(int Id)
+    public async Task<double> LoadTotalPositive(int Id)
+    {
+        try
         {
             var sql = $"SELECT ISNULL(SUM([Amount]*[CountValue]), 0) FROM TransactionItems WHERE ([Amount]*[CountValue]) > 0 AND TransactionId = { Id }";
             return await DataAccess.ExecuteScalarAsync<double, DynamicParameters>(sql, null);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<double> LoadTotalNegative(int Id)
+    public async Task<double> LoadTotalNegative(int Id)
+    {
+        try
         {
             var sql = $"SELECT ISNULL(SUM([Amount]*[CountValue]), 0) FROM TransactionItems WHERE ([Amount]*[CountValue]) < 0 AND TransactionId = { Id }";
             return await DataAccess.ExecuteScalarAsync<double, DynamicParameters>(sql, null);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlTransactionProcessor");
+        }
+        return 0;
     }
 }

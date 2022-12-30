@@ -9,34 +9,35 @@ using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
 using SharedLibrary.Validators;
 using System.Threading.Tasks;
-using System.Globalization;
 using System.Collections.Generic;
 using SharedLibrary.Helpers;
+using System;
+using Serilog;
 
-namespace DataLibraryCore.DataAccess.SqlServer
+namespace DataLibraryCore.DataAccess.SqlServer;
+
+public class SqlChequeProcessor : IChequeProcessor
+//where TModel : ChequeModel where TSub : ChequeEventModel where TValidator : ChequeValidator, new()
 {
-    public class SqlChequeProcessor : IChequeProcessor
-        //where TModel : ChequeModel where TSub : ChequeEventModel where TValidator : ChequeValidator, new()
+    public SqlChequeProcessor(IDataAccess dataAcess)
     {
-        public SqlChequeProcessor(IDataAccess dataAcess)
-        {
-            DataAccess = dataAcess;
-        }
+        DataAccess = dataAcess;
+    }
 
-        private readonly IDataAccess DataAccess;
-        private const string QueryOrderBy = "DueDate";
-        private const OrderType QueryOrderType = OrderType.DESC;
-        private readonly string CreateChequeQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Cheques]) + 1;
+    private readonly IDataAccess DataAccess;
+    private const string QueryOrderBy = "DueDate";
+    private const OrderType QueryOrderType = OrderType.DESC;
+    private readonly string CreateChequeQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Cheques]) + 1;
             INSERT INTO Cheques ([Id], Drawer, Orderer, PayAmount, About, IssueDate, DueDate, BankName, Serial, Identifier, Descriptions)
             VALUES (@newId, @drawer, @orderer, @payAmount, @about, @issueDate, @dueDate, @bankName, @serial, @identifier, @descriptions);
             SELECT @id = @newId;";
-        private readonly string UpdateChequeQuery = @"UPDATE Cheques SET Drawer = @drawer, Orderer = @orderer, PayAmount = @payAmount, About = @about, IssueDate = @issueDate,
+    private readonly string UpdateChequeQuery = @"UPDATE Cheques SET Drawer = @drawer, Orderer = @orderer, PayAmount = @payAmount, About = @about, IssueDate = @issueDate,
             DueDate = @dueDate, BankName = @bankName, Serial = @serial, Identifier = @identifier, Descriptions = @descriptions
             WHERE Id = @id";
-        private readonly string InsertEventsQuery = @$"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [ChequeEvents]) + 1;
+    private readonly string InsertEventsQuery = @$"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [ChequeEvents]) + 1;
             INSERT INTO ChequeEvents ([Id], ChequeId, EventDate, EventType, EventText)
             VALUES (@newId, @ChequeId, @EventDate, @EventType, @EventText)";
-        private readonly string SelectChequeQuery = @"SET NOCOUNT ON
+    private readonly string SelectChequeQuery = @"SET NOCOUNT ON
             DECLARE @cheques TABLE(
 	        [Id] [int],
 	        [Drawer] [nvarchar](50),
@@ -52,10 +53,12 @@ namespace DataLibraryCore.DataAccess.SqlServer
             {0}
             SELECT * FROM @cheques ORDER BY {1} {2};
             SELECT * FROM ChequeEvents WHERE ChequeId IN (SELECT c.Id FROM @cheques c);";
-        private readonly string DeleteChequeQuery = @"DELETE FROM Cheques WHERE [Id] = @id";
-        private readonly string LoadBanknamesQuery = "SELECT DISTINCT [BankName] FROM [Cheques]";        
+    private readonly string DeleteChequeQuery = @"DELETE FROM Cheques WHERE [Id] = @id";
+    private readonly string LoadBanknamesQuery = "SELECT DISTINCT [BankName] FROM [Cheques]";
 
-        public string GenerateWhereClause(string val, ChequeListQueryStatus? listQueryStatus, SqlSearchMode mode = SqlSearchMode.OR)
+    public string GenerateWhereClause(string val, ChequeListQueryStatus? listQueryStatus, SqlSearchMode mode = SqlSearchMode.OR)
+    {
+        try
         {
             var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
             var persianDate = PersianCalendarHelper.GetCurrentPersianDate();
@@ -85,15 +88,31 @@ namespace DataLibraryCore.DataAccess.SqlServer
                       {mode} c.[Identifier] LIKE { criteria }
                       {mode} c.[Descriptions] LIKE N{ criteria } ) { queryStatusCriteria }";
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in IChequeProcessor");
+        }
+        return null;
+    }
 
-        public ValidationResult ValidateItem(ChequeModel cheque)
+    public ValidationResult ValidateItem(ChequeModel cheque)
+    {
+        try
         {
             ChequeValidator validator = new();
             var result = validator.Validate(cheque);
             return result;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in IChequeProcessor");
+        }
+        return null;
+    }
 
-        public async Task<int> CreateItemAsync(ChequeModel item)
+    public async Task<int> CreateItemAsync(ChequeModel item)
+    {
+        try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             var dp = new DynamicParameters();
@@ -117,8 +136,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             }
             return OutputId;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in IChequeProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> UpdateItemAsync(ChequeModel item)
+    public async Task<int> UpdateItemAsync(ChequeModel item)
+    {
+        try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             var AffectedCount = await DataAccess.SaveDataAsync(UpdateChequeQuery, item);
@@ -130,8 +157,16 @@ namespace DataLibraryCore.DataAccess.SqlServer
             }
             return AffectedCount;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in IChequeProcessor");
+        }
+        return 0;
+    }
 
-        private async Task<int> InsertChequeEventsToDatabaseAsync(ChequeModel cheque)
+    private async Task<int> InsertChequeEventsToDatabaseAsync(ChequeModel cheque)
+    {
+        try
         {
             if (cheque == null || cheque.Events == null || cheque.Events.Count == 0) return 0;
             ObservableCollection<ChequeEventModel> events = new();
@@ -146,35 +181,75 @@ namespace DataLibraryCore.DataAccess.SqlServer
             if (events.Count == 0) return 0;
             return await DataAccess.SaveDataAsync(InsertEventsQuery, events).ConfigureAwait(false);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in IChequeProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<int> DeleteItemByIdAsync(int Id)
+    public async Task<int> DeleteItemByIdAsync(int Id)
+    {
+        try
         {
             var dp = new DynamicParameters();
             dp.Add("@id", Id);
             return await DataAccess.SaveDataAsync(DeleteChequeQuery, dp);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in IChequeProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<List<string>> GetBanknames()
+    public async Task<List<string>> GetBanknames()
+    {
+        try
         {
             var result = await DataAccess.LoadDataAsync<string, DynamicParameters>(LoadBanknamesQuery, null);
             return result.ToList();
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in IChequeProcessor");
+        }
+        return null;
+    }
 
-        public async Task<ObservableCollection<ChequeModel>> LoadChequesByDueDate(string FromDate, string ToDate)
+    public async Task<ObservableCollection<ChequeModel>> LoadChequesByDueDate(string FromDate, string ToDate)
+    {
+        try
         {
             string LoadCloseChequesQuery = $" CAST(REPLACE(c.DueDate,'/','') AS bigint) <= CAST('{ ToDate }' AS bigint) AND CAST(REPLACE(c.DueDate,'/','') AS bigint) >= CAST('{ FromDate }' AS bigint) ";
             var result = await LoadManyItemsAsync(0, int.MaxValue, LoadCloseChequesQuery);
             return result;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in IChequeProcessor");
+        }
+        return null;
+    }
 
-        public async Task<int> GetTotalQueryCountAsync(string WhereClause)
+    public async Task<int> GetTotalQueryCountAsync(string WhereClause)
+    {
+        try
         {
             var sqlTemp = $@"SELECT COUNT(c.Id) FROM Cheques c LEFT JOIN ChequeEvents ce1 ON (c.Id = ce1.ChequeId) LEFT OUTER JOIN ChequeEvents ce2 ON (c.Id = ce2.ChequeId AND (ce1.Id < ce2.Id)) WHERE ce2.Id IS NULL
                              { (string.IsNullOrEmpty(WhereClause) ? "" : " AND ") } { WhereClause }";
             return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in IChequeProcessor");
+        }
+        return 0;
+    }
 
-        public async Task<ObservableCollection<ChequeModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    public async Task<ObservableCollection<ChequeModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    {
+        try
         {
             string sqlTemp = $@"INSERT @cheques SELECT c.* FROM Cheques c LEFT JOIN ChequeEvents ce1 ON (c.Id = ce1.ChequeId) LEFT OUTER JOIN ChequeEvents ce2 ON (c.Id = ce2.ChequeId AND (ce1.Id < ce2.Id)) WHERE ce2.Id IS NULL
                                 { (string.IsNullOrEmpty(WhereClause) ? "" : $" AND { WhereClause }") } 
@@ -190,11 +265,24 @@ namespace DataLibraryCore.DataAccess.SqlServer
                       );
             return await Mapped;
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in IChequeProcessor");
+        }
+        return null;
+    }
 
-        public async Task<ChequeModel> LoadSingleItemAsync(int Id)
+    public async Task<ChequeModel> LoadSingleItemAsync(int Id)
+    {
+        try
         {
             var outPut = await LoadManyItemsAsync(0, 1, $"[Id] = { Id }");
             return outPut.FirstOrDefault();
         }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in IChequeProcessor");
+        }
+        return null;
     }
 }
