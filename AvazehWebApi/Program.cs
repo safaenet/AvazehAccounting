@@ -8,3 +8,4 @@ Log.Logger = new LoggerConfiguration()
                     .WriteTo.File(@"log\LogFile.txt")
                     .WriteTo.Console()
                     .CreateLogger();
+Log.Information("Logger started");
