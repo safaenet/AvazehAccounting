@@ -93,7 +93,7 @@
                 <ColumnDefinition Width="3"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="AddOrUpdateItemAsync" IsDefault="True" Grid.Column="1" TabIndex="7" Width="40" Margin="0,0,3,0">
-                <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Width="30" Height="30"/>
+                <materialDesign:PackIcon Kind="ArrowLeftBottomBold" TabIndex="3" Width="30" Height="30"/>
             </Button>
 
             <StackPanel IsEnabled="False" Grid.Column="2" Width="200" Orientation="Vertical" Margin="0,0,3,0">
@@ -101,7 +101,7 @@
                     <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                     <TextBlock TextAlignment="Center" Text="ثبت در" Margin="0,0,0,0"/>
                 </StackPanel>
-                <ComboBox Height="25" VerticalContentAlignment="Center" TabIndex="4"/>
+                <ComboBox Height="25" VerticalContentAlignment="Center" TabIndex="2"/>
             </StackPanel>
 
             <StackPanel Grid.Column="3" Orientation="Vertical" Margin="0,0,3,0">
@@ -109,7 +109,7 @@
                     <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                     <TextBlock TextAlignment="Center" Text="توضیحات" Margin="0,0,0,0"/>
                 </StackPanel>
-                <TextBox Text="{Binding WorkItem.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="25"/>
+                <TextBox Text="{Binding WorkItem.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]" TabIndex="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="25"/>
             </StackPanel>
 
             <StackPanel Grid.Column="4" Width="130" Orientation="Vertical" Margin="0,0,0,0">
@@ -117,11 +117,11 @@
                     <materialDesign:PackIcon Kind="Account" Margin="0,0,0,0"/>
                     <TextBlock TextAlignment="Center" Text="مبلغ" Margin="0,0,0,0"/>
                 </StackPanel>
-                <TextBox x:Name="PayAmount" Text="{Binding WorkItem.PayAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="25"/>
+                <TextBox x:Name="PayAmount" Text="{Binding WorkItem.PayAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" TabIndex="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="25"/>
             </StackPanel>
 
         </Grid>
-        <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditItem()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]"
+        <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditItem()]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" TabIndex="4"
             ItemsSource="{Binding Invoice.Payments}" SelectedItem="{Binding SelectedPaymentItem, Mode=TwoWay}" Grid.Row="3" Margin="0,3,0,0"
             FlowDirection="RightToLeft" AutoGenerateColumns="False" IsTabStop="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="All" RowHeaderWidth="35">
             <DataGrid.Resources>
