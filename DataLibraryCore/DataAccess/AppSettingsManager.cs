@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace DataLibraryCore.DataAccess
@@ -38,15 +39,27 @@ namespace DataLibraryCore.DataAccess
                 await WriteSettingsFileToDisk(new AppSettingsModel());
         }
 
-        private async Task WriteSettingsFileToDisk(AppSettingsModel settings)
+        private static async Task WriteSettingsFileToDisk(AppSettingsModel settings)
         {
             try
             {
+                //if (settings == null) settings = new();
+                //XmlSerializer xmlSerializer = new(settings.GetType());
+                //StringWriter stringWriter = new();
+                //xmlSerializer.Serialize(stringWriter, settings);
+                //await File.WriteAllTextAsync(SettingsFileName, stringWriter.ToString());
+
                 if (settings == null) settings = new();
+                XmlWriterSettings xmlWriterSettings = new()
+                {
+                    Indent = true
+                };
                 XmlSerializer xmlSerializer = new(settings.GetType());
                 StringWriter stringWriter = new();
-                xmlSerializer.Serialize(stringWriter, settings);
-                await File.WriteAllTextAsync(SettingsFileName, stringWriter.ToString());
+                XmlWriter xmlWriter = XmlWriter.Create(stringWriter, xmlWriterSettings);
+                xmlSerializer.Serialize(xmlWriter, settings);
+                await xmlWriter.FlushAsync();
+                //await File.WriteAllTextAsync(SettingsFileName, stringWriter.ToString());
             }
             catch (Exception ex)
             {
