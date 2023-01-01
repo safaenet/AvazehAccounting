@@ -13,6 +13,7 @@ using SharedLibrary.DalModels;
 using SharedLibrary.Validators;
 using System.Text;
 using Swashbuckle.AspNetCore.Filters;
+using System;
 
 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Debug()
@@ -20,100 +21,78 @@ Log.Logger = new LoggerConfiguration()
                     .Enrich.FromLogContext()
                     .WriteTo.File(@"log\LogFile.txt")
                     .CreateLogger();
-
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddSwaggerGen(options =>
+try
 {
-    options.AddSecurityDefinition("oauth2", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    var builder = WebApplication.CreateBuilder(args);
+    builder.Services.AddSwaggerGen(options =>
     {
-        Description = "Standard authorization",
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Name = "Authorization",
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
+        options.AddSecurityDefinition("oauth2", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+        {
+            Description = "Standard authorization",
+            In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+            Name = "Authorization",
+            Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
+        });
+        options.OperationFilter<SecurityRequirementsOperationFilter>();
     });
-    options.OperationFilter<SecurityRequirementsOperationFilter>();
-});
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new()
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
     {
-        ValidateLifetime = true,
-        ValidateIssuer = false,
-        ValidateAudience = false,
+        options.TokenValidationParameters = new()
+        {
+            ValidateLifetime = true,
+            ValidateIssuer = false,
+            ValidateAudience = false,
         //ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         //ValidIssuer = builder.Configuration["Jwt:Issuer"],
         //ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-    };
-});
+        };
+    });
 
-// Add services to the container.
-builder.Services
-                .AddScoped<IUserProcessor, SqlUserProcessor>()
-                .AddScoped<IGeneralProcessor<ProductModel>, SqlProductProcessor<ProductModel, ProductValidator>>()
-                .AddScoped<IGeneralProcessor<CustomerModel>, SqlCustomerProcessor<CustomerModel, PhoneNumberModel, CustomerValidator>>()
-                .AddScoped<IChequeProcessor, SqlChequeProcessor>()
-                .AddScoped<IInvoiceProcessor, SqlInvoiceProcessor>()
-                .AddScoped<ITransactionProcessor, SqlTransactionProcessor>()
-                .AddScoped<IAppSettingsManager, AppSettingsManager>()
-                .AddSingleton<IDataAccess, SqlDataAccess>()
+    // Add services to the container.
+    builder.Services
+                    .AddScoped<IUserProcessor, SqlUserProcessor>()
+                    .AddScoped<IGeneralProcessor<ProductModel>, SqlProductProcessor<ProductModel, ProductValidator>>()
+                    .AddScoped<IGeneralProcessor<CustomerModel>, SqlCustomerProcessor<CustomerModel, PhoneNumberModel, CustomerValidator>>()
+                    .AddScoped<IChequeProcessor, SqlChequeProcessor>()
+                    .AddScoped<IInvoiceProcessor, SqlInvoiceProcessor>()
+                    .AddScoped<ITransactionProcessor, SqlTransactionProcessor>()
+                    .AddScoped<IAppSettingsManager, AppSettingsManager>()
+                    .AddSingleton<IDataAccess, SqlDataAccess>()
 
-                .AddScoped(typeof(IGeneralCollectionManager<ProductModel, IGeneralProcessor<ProductModel>>), typeof(ProductCollectionManager))
-                .AddScoped(typeof(IGeneralCollectionManager<CustomerModel, IGeneralProcessor<CustomerModel>>), typeof(CustomerCollectionManager))
-                .AddScoped(typeof(IChequeCollectionManager), typeof(ChequeCollectionManager))
+                    .AddScoped(typeof(IGeneralCollectionManager<ProductModel, IGeneralProcessor<ProductModel>>), typeof(ProductCollectionManager))
+                    .AddScoped(typeof(IGeneralCollectionManager<CustomerModel, IGeneralProcessor<CustomerModel>>), typeof(CustomerCollectionManager))
+                    .AddScoped(typeof(IChequeCollectionManager), typeof(ChequeCollectionManager))
 
-                .AddScoped<IInvoiceCollectionManager, InvoiceCollectionManager>()
-                .AddScoped<ITransactionCollectionManager, TransactionCollectionManager>()
-                .AddScoped<ITransactionItemCollectionManager, TransactionItemCollectionManager>();
+                    .AddScoped<IInvoiceCollectionManager, InvoiceCollectionManager>()
+                    .AddScoped<ITransactionCollectionManager, TransactionCollectionManager>()
+                    .AddScoped<ITransactionItemCollectionManager, TransactionItemCollectionManager>();
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddControllers();
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
 
-var app = builder.Build();
+    var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.UseHttpsRedirection();
+
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.MapControllers();
+
+    app.Run();
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
-
-
-//using Microsoft.AspNetCore.Hosting;
-//using Microsoft.Extensions.Configuration;
-//using Microsoft.Extensions.Hosting;
-//using Microsoft.Extensions.Logging;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Threading.Tasks;
-
-//namespace AvazehWeb
-//{
-//    public class Program
-//    {
-//        public static void Main(string[] args)
-//        {
-//            CreateHostBuilder(args).Build().Run();
-//        }
-
-//        public static IHostBuilder CreateHostBuilder(string[] args) =>
-//            Host.CreateDefaultBuilder(args)
-//                .ConfigureWebHostDefaults(webBuilder =>
-//                {
-//                    webBuilder.UseStartup<Startup>();
-//                });
-//    }
-//}
+catch (Exception ex)
+{
+    Log.Error(ex, "Error in Program.cs");
+}
