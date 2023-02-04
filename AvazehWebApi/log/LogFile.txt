@@ -1,0 +1,389 @@
+2023-02-04 10:44:40.476 +03:30 [ERR] Error in AppSettingsManager
+System.InvalidOperationException: Set XmlWriterSettings.Async to true if you want to use Async Methods.
+   at System.Xml.XmlEncodedRawTextWriter.CheckAsyncCall()
+   at System.Xml.XmlEncodedRawTextWriter.FlushAsync()
+   at System.Xml.XmlWellFormedWriter.FlushAsync()
+   at DataLibraryCore.DataAccess.AppSettingsManager.WriteSettingsFileToDisk(AppSettingsModel settings) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\AppSettingsManager.cs:line 62
+2023-02-04 10:44:53.518 +03:30 [ERR] Error in SqlDataAccess
+System.Data.SqlClient.SqlException (0x80131904): Violation of PRIMARY KEY constraint 'PK__UserDesc__3214EC071E9E147B'. Cannot insert duplicate key in object 'dbo.UserDescriptions'. The duplicate key value is (494).
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader()
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQuery(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.ExecuteMultiImplAsync(IDbConnection cnn, CommandDefinition command, IEnumerable multiExec) in /_/Dapper/SqlMapper.Async.cs:line 624
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.SaveDataAsync[T](String sql, T data) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 66
+ClientConnectionId:f02d7c3a-fc32-4875-8114-20fb1aa948d3
+Error Number:2627,State:1,Class:14
+2023-02-04 10:44:53.594 +03:30 [ERR] Error in AppSettingsManager
+System.InvalidOperationException: Set XmlWriterSettings.Async to true if you want to use Async Methods.
+   at System.Xml.XmlEncodedRawTextWriter.CheckAsyncCall()
+   at System.Xml.XmlEncodedRawTextWriter.FlushAsync()
+   at System.Xml.XmlWellFormedWriter.FlushAsync()
+   at DataLibraryCore.DataAccess.AppSettingsManager.WriteSettingsFileToDisk(AppSettingsModel settings) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\AppSettingsManager.cs:line 62
+2023-02-04 11:06:03.725 +03:30 [ERR] Error in AppSettingsManager
+System.InvalidOperationException: Set XmlWriterSettings.Async to true if you want to use Async Methods.
+   at System.Xml.XmlEncodedRawTextWriter.CheckAsyncCall()
+   at System.Xml.XmlEncodedRawTextWriter.FlushAsync()
+   at System.Xml.XmlWellFormedWriter.FlushAsync()
+   at DataLibraryCore.DataAccess.AppSettingsManager.WriteSettingsFileToDisk(AppSettingsModel settings) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\AppSettingsManager.cs:line 62
+2023-02-04 11:06:23.657 +03:30 [ERR] Error in SqlDataAccess
+System.Data.SqlClient.SqlException (0x80131904): Cannot insert the value NULL into column 'DescriptionText', table 'AvazehDB_Test.dbo.UserDescriptions'; column does not allow nulls. INSERT fails.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader()
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQuery(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.ExecuteMultiImplAsync(IDbConnection cnn, CommandDefinition command, IEnumerable multiExec) in /_/Dapper/SqlMapper.Async.cs:line 624
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.SaveDataAsync[T](String sql, T data) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 66
+ClientConnectionId:efc43300-8214-4fe0-b837-76c11c5ea26f
+Error Number:515,State:2,Class:16
+2023-02-04 11:06:23.729 +03:30 [ERR] Error in AppSettingsManager
+System.InvalidOperationException: Set XmlWriterSettings.Async to true if you want to use Async Methods.
+   at System.Xml.XmlEncodedRawTextWriter.CheckAsyncCall()
+   at System.Xml.XmlEncodedRawTextWriter.FlushAsync()
+   at System.Xml.XmlWellFormedWriter.FlushAsync()
+   at DataLibraryCore.DataAccess.AppSettingsManager.WriteSettingsFileToDisk(AppSettingsModel settings) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\AppSettingsManager.cs:line 62
+2023-02-04 11:09:59.720 +03:30 [ERR] Error in AppSettingsManager
+System.IO.FileNotFoundException: Could not find file 'D:\Users\Safa\Source\Repos\AvazehAccounting\AvazehWebApi\bin\Debug\net6.0\appsettings.xml'.
+File name: 'D:\Users\Safa\Source\Repos\AvazehAccounting\AvazehWebApi\bin\Debug\net6.0\appsettings.xml'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategy(FileStream fileStream, String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, Int64 preallocationSize)
+   at System.IO.File.AsyncStreamReader(String path, Encoding encoding)
+   at System.IO.File.InternalReadAllTextAsync(String path, Encoding encoding, CancellationToken cancellationToken)
+   at DataLibraryCore.DataAccess.AppSettingsManager.LoadAllSettingsAsync() in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\AppSettingsManager.cs:line 80
+2023-02-04 11:13:12.611 +03:30 [ERR] Error in AppSettingsManager
+System.IO.FileNotFoundException: Could not find file 'D:\Users\Safa\Source\Repos\AvazehAccounting\AvazehWebApi\bin\Debug\net6.0\appsettings.xml'.
+File name: 'D:\Users\Safa\Source\Repos\AvazehAccounting\AvazehWebApi\bin\Debug\net6.0\appsettings.xml'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategy(FileStream fileStream, String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, Int64 preallocationSize)
+   at System.IO.File.AsyncStreamReader(String path, Encoding encoding)
+   at System.IO.File.InternalReadAllTextAsync(String path, Encoding encoding, CancellationToken cancellationToken)
+   at DataLibraryCore.DataAccess.AppSettingsManager.LoadAllSettingsAsync() in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\AppSettingsManager.cs:line 80
+2023-02-04 11:16:13.230 +03:30 [ERR] Error in AppSettingsManager
+System.IO.FileNotFoundException: Could not find file 'D:\Users\Safa\Source\Repos\AvazehAccounting\AvazehWebApi\bin\Debug\net6.0\appsettings.xml'.
+File name: 'D:\Users\Safa\Source\Repos\AvazehAccounting\AvazehWebApi\bin\Debug\net6.0\appsettings.xml'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategy(FileStream fileStream, String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, Int64 preallocationSize)
+   at System.IO.File.AsyncStreamReader(String path, Encoding encoding)
+   at System.IO.File.InternalReadAllTextAsync(String path, Encoding encoding, CancellationToken cancellationToken)
+   at DataLibraryCore.DataAccess.AppSettingsManager.LoadAllSettingsAsync() in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\AppSettingsManager.cs:line 80
+2023-02-04 11:16:37.817 +03:30 [ERR] Error in AppSettingsManager
+System.InvalidOperationException: Set XmlWriterSettings.Async to true if you want to use Async Methods.
+   at System.Xml.XmlEncodedRawTextWriter.CheckAsyncCall()
+   at System.Xml.XmlEncodedRawTextWriter.FlushAsync()
+   at System.Xml.XmlWellFormedWriter.FlushAsync()
+   at DataLibraryCore.DataAccess.AppSettingsManager.WriteSettingsFileToDisk(AppSettingsModel settings) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\AppSettingsManager.cs:line 63
+2023-02-04 11:16:37.817 +03:30 [ERR] Error in AppSettingsManager
+System.InvalidOperationException: Set XmlWriterSettings.Async to true if you want to use Async Methods.
+   at System.Xml.XmlEncodedRawTextWriter.CheckAsyncCall()
+   at System.Xml.XmlEncodedRawTextWriter.FlushAsync()
+   at System.Xml.XmlWellFormedWriter.FlushAsync()
+   at DataLibraryCore.DataAccess.AppSettingsManager.WriteSettingsFileToDisk(AppSettingsModel settings) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\AppSettingsManager.cs:line 63
+2023-02-04 11:16:48.167 +03:30 [ERR] Error in AppSettingsManager
+System.InvalidOperationException: Set XmlWriterSettings.Async to true if you want to use Async Methods.
+   at System.Xml.XmlEncodedRawTextWriter.CheckAsyncCall()
+   at System.Xml.XmlEncodedRawTextWriter.FlushAsync()
+   at System.Xml.XmlWellFormedWriter.FlushAsync()
+   at DataLibraryCore.DataAccess.AppSettingsManager.WriteSettingsFileToDisk(AppSettingsModel settings) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\AppSettingsManager.cs:line 63
+2023-02-04 11:16:48.640 +03:30 [ERR] Error in AppSettingsManager
+System.InvalidOperationException: Set XmlWriterSettings.Async to true if you want to use Async Methods.
+   at System.Xml.XmlEncodedRawTextWriter.CheckAsyncCall()
+   at System.Xml.XmlEncodedRawTextWriter.FlushAsync()
+   at System.Xml.XmlWellFormedWriter.FlushAsync()
+   at DataLibraryCore.DataAccess.AppSettingsManager.WriteSettingsFileToDisk(AppSettingsModel settings) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\AppSettingsManager.cs:line 63
+2023-02-04 11:16:48.676 +03:30 [ERR] Error in AppSettingsManager
+System.IO.FileNotFoundException: Could not find file 'D:\Users\Safa\Source\Repos\AvazehAccounting\AvazehWebApi\bin\Debug\net6.0\appsettings.xml'.
+File name: 'D:\Users\Safa\Source\Repos\AvazehAccounting\AvazehWebApi\bin\Debug\net6.0\appsettings.xml'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategy(FileStream fileStream, String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, Int64 preallocationSize)
+   at System.IO.File.AsyncStreamReader(String path, Encoding encoding)
+   at System.IO.File.InternalReadAllTextAsync(String path, Encoding encoding, CancellationToken cancellationToken)
+   at DataLibraryCore.DataAccess.AppSettingsManager.LoadAllSettingsAsync() in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\AppSettingsManager.cs:line 79
+2023-02-04 11:25:38.849 +03:30 [ERR] Error in AppSettingsManager
+System.IO.IOException: The process cannot access the file 'D:\Users\Safa\Source\Repos\AvazehAccounting\AvazehWebApi\bin\Debug\net6.0\appsettings.xml' because it is being used by another process.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategy(FileStream fileStream, String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, Int64 preallocationSize)
+   at System.IO.File.AsyncStreamWriter(String path, Encoding encoding, Boolean append)
+   at System.IO.File.WriteAllTextAsync(String path, String contents, Encoding encoding, CancellationToken cancellationToken)
+   at System.IO.File.WriteAllTextAsync(String path, String contents, CancellationToken cancellationToken)
+   at DataLibraryCore.DataAccess.AppSettingsManager.WriteSettingsFileToDisk(AppSettingsModel settings) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\AppSettingsManager.cs:line 51
+2023-02-04 11:27:55.351 +03:30 [ERR] Error in AppSettingsManager
+System.IO.IOException: The process cannot access the file 'D:\Users\Safa\Source\Repos\AvazehAccounting\AvazehWebApi\bin\Debug\net6.0\appsettings.xml' because it is being used by another process.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategy(FileStream fileStream, String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, Int64 preallocationSize)
+   at System.IO.File.AsyncStreamWriter(String path, Encoding encoding, Boolean append)
+   at System.IO.File.WriteAllTextAsync(String path, String contents, Encoding encoding, CancellationToken cancellationToken)
+   at System.IO.File.WriteAllTextAsync(String path, String contents, CancellationToken cancellationToken)
+   at DataLibraryCore.DataAccess.AppSettingsManager.WriteSettingsFileToDisk(AppSettingsModel settings) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\AppSettingsManager.cs:line 65
+2023-02-04 11:27:58.017 +03:30 [ERR] Error in AppSettingsManager
+System.InvalidOperationException: There is an error in XML document (1, 1).
+ ---> System.Xml.XmlException: Data at the root level is invalid. Line 1, position 1.
+   at System.Xml.XmlTextReaderImpl.Throw(Exception e)
+   at System.Xml.XmlTextReaderImpl.Throw(String res, String arg)
+   at System.Xml.XmlTextReaderImpl.ParseRootLevelWhitespace()
+   at System.Xml.XmlTextReaderImpl.ParseDocumentContent()
+   at System.Xml.XmlTextReaderImpl.Read()
+   at System.Xml.XmlTextReader.Read()
+   at System.Xml.XmlReader.MoveToContent()
+   at Microsoft.Xml.Serialization.GeneratedAssembly.XmlSerializationReaderAppSettingsModel.Read7_AppSettingsModel()
+   --- End of inner exception stack trace ---
+   at System.Xml.Serialization.XmlSerializer.Deserialize(XmlReader xmlReader, String encodingStyle, XmlDeserializationEvents events)
+   at System.Xml.Serialization.XmlSerializer.Deserialize(TextReader textReader)
+   at DataLibraryCore.DataAccess.AppSettingsManager.LoadAllSettingsAsync() in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\AppSettingsManager.cs:line 82
+2023-02-04 11:30:45.849 +03:30 [ERR] Error in AppSettingsManager
+System.IO.FileNotFoundException: Could not find file 'D:\Users\Safa\Source\Repos\AvazehAccounting\AvazehWebApi\bin\Debug\net6.0\appsettings.xml'.
+File name: 'D:\Users\Safa\Source\Repos\AvazehAccounting\AvazehWebApi\bin\Debug\net6.0\appsettings.xml'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategy(FileStream fileStream, String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, Int64 preallocationSize)
+   at System.IO.File.AsyncStreamReader(String path, Encoding encoding)
+   at System.IO.File.InternalReadAllTextAsync(String path, Encoding encoding, CancellationToken cancellationToken)
+   at DataLibraryCore.DataAccess.AppSettingsManager.LoadAllSettingsAsync() in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\AppSettingsManager.cs:line 81
+2023-02-04 11:38:39.081 +03:30 [ERR] Error in AppSettingsManager
+System.IO.IOException: The process cannot access the file 'D:\Users\Safa\Source\Repos\AvazehAccounting\AvazehWebApi\bin\Debug\net6.0\appsettings.xml' because it is being used by another process.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategy(FileStream fileStream, String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, Int64 preallocationSize)
+   at System.IO.File.AsyncStreamWriter(String path, Encoding encoding, Boolean append)
+   at System.IO.File.WriteAllTextAsync(String path, String contents, Encoding encoding, CancellationToken cancellationToken)
+   at System.IO.File.WriteAllTextAsync(String path, String contents, CancellationToken cancellationToken)
+   at DataLibraryCore.DataAccess.AppSettingsManager.WriteSettingsFileToDisk(AppSettingsModel settings) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\AppSettingsManager.cs:line 51
+2023-02-04 11:40:18.395 +03:30 [ERR] Error in SqlDataAccess
+System.Data.SqlClient.SqlException (0x80131904): Violation of PRIMARY KEY constraint 'PK__UserDesc__3214EC071E9E147B'. Cannot insert duplicate key in object 'dbo.UserDescriptions'. The duplicate key value is (494).
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader()
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQuery(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.ExecuteMultiImplAsync(IDbConnection cnn, CommandDefinition command, IEnumerable multiExec) in /_/Dapper/SqlMapper.Async.cs:line 624
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.SaveDataAsync[T](String sql, T data) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 66
+ClientConnectionId:4825ec5a-adcf-4097-af73-fef76d5a87a9
+Error Number:2627,State:1,Class:14
+2023-02-04 11:41:34.552 +03:30 [ERR] Error in SqlDataAccess
+System.Data.SqlClient.SqlException (0x80131904): Violation of PRIMARY KEY constraint 'PK__UserDesc__3214EC071E9E147B'. Cannot insert duplicate key in object 'dbo.UserDescriptions'. The duplicate key value is (494).
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader()
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQuery(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.ExecuteMultiImplAsync(IDbConnection cnn, CommandDefinition command, IEnumerable multiExec) in /_/Dapper/SqlMapper.Async.cs:line 624
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.SaveDataAsync[T](String sql, T data) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 66
+ClientConnectionId:0328dfe7-dfbc-4e8a-9528-79fa949342b4
+Error Number:2627,State:1,Class:14
+2023-02-04 11:41:34.892 +03:30 [ERR] Error in SqlDataAccess
+System.Data.SqlClient.SqlException (0x80131904): The DELETE statement conflicted with the REFERENCE constraint "FK_Invoices_ProductUnits". The conflict occurred in database "AvazehDB_Test", table "dbo.InvoiceItems", column 'ProductUnitId'.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader()
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQuery(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.ExecuteMultiImplAsync(IDbConnection cnn, CommandDefinition command, IEnumerable multiExec) in /_/Dapper/SqlMapper.Async.cs:line 624
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.SaveDataAsync[T](String sql, T data) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 66
+ClientConnectionId:0328dfe7-dfbc-4e8a-9528-79fa949342b4
+Error Number:547,State:0,Class:16
+2023-02-04 11:44:28.726 +03:30 [ERR] Error in SqlDataAccess
+System.Data.SqlClient.SqlException (0x80131904): Cannot insert the value NULL into column 'DescriptionText', table 'AvazehDB_Test.dbo.UserDescriptions'; column does not allow nulls. INSERT fails.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader()
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQuery(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.ExecuteMultiImplAsync(IDbConnection cnn, CommandDefinition command, IEnumerable multiExec) in /_/Dapper/SqlMapper.Async.cs:line 624
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.SaveDataAsync[T](String sql, T data) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 66
+ClientConnectionId:1ad5295d-e17c-431d-a399-172e0dc3b32a
+Error Number:515,State:2,Class:16
+2023-02-04 11:44:29.107 +03:30 [ERR] Error in SqlDataAccess
+System.Data.SqlClient.SqlException (0x80131904): The DELETE statement conflicted with the REFERENCE constraint "FK_Invoices_ProductUnits". The conflict occurred in database "AvazehDB_Test", table "dbo.InvoiceItems", column 'ProductUnitId'.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader()
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQuery(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.ExecuteMultiImplAsync(IDbConnection cnn, CommandDefinition command, IEnumerable multiExec) in /_/Dapper/SqlMapper.Async.cs:line 624
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.SaveDataAsync[T](String sql, T data) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 66
+ClientConnectionId:1ad5295d-e17c-431d-a399-172e0dc3b32a
+Error Number:547,State:0,Class:16
+2023-02-04 11:44:34.307 +03:30 [ERR] Error in SqlDataAccess
+System.Data.SqlClient.SqlException (0x80131904): Cannot insert the value NULL into column 'DescriptionText', table 'AvazehDB_Test.dbo.UserDescriptions'; column does not allow nulls. INSERT fails.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader()
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQuery(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.ExecuteMultiImplAsync(IDbConnection cnn, CommandDefinition command, IEnumerable multiExec) in /_/Dapper/SqlMapper.Async.cs:line 624
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.SaveDataAsync[T](String sql, T data) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 66
+ClientConnectionId:1ad5295d-e17c-431d-a399-172e0dc3b32a
+Error Number:515,State:2,Class:16
+2023-02-04 11:44:34.591 +03:30 [ERR] Error in SqlDataAccess
+System.Data.SqlClient.SqlException (0x80131904): The DELETE statement conflicted with the REFERENCE constraint "FK_Invoices_ProductUnits". The conflict occurred in database "AvazehDB_Test", table "dbo.InvoiceItems", column 'ProductUnitId'.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader()
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQuery(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.ExecuteMultiImplAsync(IDbConnection cnn, CommandDefinition command, IEnumerable multiExec) in /_/Dapper/SqlMapper.Async.cs:line 624
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.SaveDataAsync[T](String sql, T data) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 66
+ClientConnectionId:1ad5295d-e17c-431d-a399-172e0dc3b32a
+Error Number:547,State:0,Class:16
+2023-02-04 11:47:33.442 +03:30 [ERR] Error in SqlDataAccess
+System.Data.SqlClient.SqlException (0x80131904): The DELETE statement conflicted with the REFERENCE constraint "FK_Invoices_ProductUnits". The conflict occurred in database "AvazehDB_Test", table "dbo.InvoiceItems", column 'ProductUnitId'.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader()
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQuery(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.ExecuteMultiImplAsync(IDbConnection cnn, CommandDefinition command, IEnumerable multiExec) in /_/Dapper/SqlMapper.Async.cs:line 624
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.SaveDataAsync[T](String sql, T data) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 66
+ClientConnectionId:f5ef78c5-5dbc-486a-8a1a-d2e69c5e0648
+Error Number:547,State:0,Class:16
+2023-02-04 11:47:34.679 +03:30 [ERR] Error in SqlDataAccess
+System.Data.SqlClient.SqlException (0x80131904): The DELETE statement conflicted with the REFERENCE constraint "FK_Invoices_ProductUnits". The conflict occurred in database "AvazehDB_Test", table "dbo.InvoiceItems", column 'ProductUnitId'.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader()
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQuery(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.ExecuteMultiImplAsync(IDbConnection cnn, CommandDefinition command, IEnumerable multiExec) in /_/Dapper/SqlMapper.Async.cs:line 624
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.SaveDataAsync[T](String sql, T data) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 66
+ClientConnectionId:f5ef78c5-5dbc-486a-8a1a-d2e69c5e0648
+Error Number:547,State:0,Class:16
+2023-02-04 11:47:39.676 +03:30 [ERR] Error in SqlDataAccess
+System.Data.SqlClient.SqlException (0x80131904): Cannot insert the value NULL into column 'DescriptionText', table 'AvazehDB_Test.dbo.UserDescriptions'; column does not allow nulls. INSERT fails.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader()
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQuery(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.ExecuteMultiImplAsync(IDbConnection cnn, CommandDefinition command, IEnumerable multiExec) in /_/Dapper/SqlMapper.Async.cs:line 624
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.SaveDataAsync[T](String sql, T data) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 66
+ClientConnectionId:f5ef78c5-5dbc-486a-8a1a-d2e69c5e0648
+Error Number:515,State:2,Class:16
+2023-02-04 11:47:39.940 +03:30 [ERR] Error in SqlDataAccess
+System.Data.SqlClient.SqlException (0x80131904): The DELETE statement conflicted with the REFERENCE constraint "FK_Invoices_ProductUnits". The conflict occurred in database "AvazehDB_Test", table "dbo.InvoiceItems", column 'ProductUnitId'.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader()
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQuery(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.ExecuteMultiImplAsync(IDbConnection cnn, CommandDefinition command, IEnumerable multiExec) in /_/Dapper/SqlMapper.Async.cs:line 624
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.SaveDataAsync[T](String sql, T data) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 66
+ClientConnectionId:f5ef78c5-5dbc-486a-8a1a-d2e69c5e0648
+Error Number:547,State:0,Class:16
+2023-02-04 11:47:41.635 +03:30 [ERR] Error in SqlDataAccess
+System.Data.SqlClient.SqlException (0x80131904): The DELETE statement conflicted with the REFERENCE constraint "FK_Invoices_ProductUnits". The conflict occurred in database "AvazehDB_Test", table "dbo.InvoiceItems", column 'ProductUnitId'.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader()
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQuery(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.ExecuteMultiImplAsync(IDbConnection cnn, CommandDefinition command, IEnumerable multiExec) in /_/Dapper/SqlMapper.Async.cs:line 624
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.SaveDataAsync[T](String sql, T data) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 66
+ClientConnectionId:f5ef78c5-5dbc-486a-8a1a-d2e69c5e0648
+Error Number:547,State:0,Class:16

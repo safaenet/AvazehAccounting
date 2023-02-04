@@ -22,12 +22,12 @@ namespace DataLibraryCore.DataAccess
             DataAccess = new SqlDataAccess();
         }
 
-        private readonly string SettingsFileName = AppDomain.CurrentDomain.BaseDirectory + "appsettings.xml";
+        private static string SettingsFileName = AppDomain.CurrentDomain.BaseDirectory + "appsettings.xml";
         private readonly IDataAccess DataAccess;
         private readonly string GetUserDescriptionsQuery = "SELECT [Id], [DescriptionTitle], [DescriptionText] From UserDescriptions";
         private readonly string GetProductUnitsQuery = "SELECT [Id], [UnitName] From ProductUnits";
-        private readonly string InsertUserDescriptionsQuery = @"DELETE FROM UserDescriptions; DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [PhoneNumbers]) + 1;
-            INSERT INTO UserDescriptions ([Id], DescriptionTitle, DescriptionText) VALUES (@newId, @descriptionTitle, @descriptionText)";
+        private readonly string DeleteAllUserDescriptionsCmd = "DELETE FROM UserDescriptions;";
+        private readonly string InsertUserDescriptionsQuery = @"INSERT INTO UserDescriptions ([Id], DescriptionTitle, DescriptionText) VALUES (@id, @descriptionTitle, @descriptionText)";
         private readonly string InsertProductUnits = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [ProductUnits]) + 1;
             INSERT INTO ProductUnits ([Id], [UnitName]) VALUES (@newId, @unitName)";
         private readonly string UpdateProductUnits = "Update ProductUnits SET [UnitName] = @unitName WHERE [Id] = @id";
@@ -43,23 +43,26 @@ namespace DataLibraryCore.DataAccess
         {
             try
             {
-                //if (settings == null) settings = new();
-                //XmlSerializer xmlSerializer = new(settings.GetType());
-                //StringWriter stringWriter = new();
-                //xmlSerializer.Serialize(stringWriter, settings);
-                //await File.WriteAllTextAsync(SettingsFileName, stringWriter.ToString());
-
                 if (settings == null) settings = new();
-                XmlWriterSettings xmlWriterSettings = new()
-                {
-                    Indent = true
-                };
                 XmlSerializer xmlSerializer = new(settings.GetType());
                 StringWriter stringWriter = new();
-                XmlWriter xmlWriter = XmlWriter.Create(stringWriter, xmlWriterSettings);
-                xmlSerializer.Serialize(xmlWriter, settings);
-                await xmlWriter.FlushAsync();
-                //await File.WriteAllTextAsync(SettingsFileName, stringWriter.ToString());
+                xmlSerializer.Serialize(stringWriter, settings);
+                await File.WriteAllTextAsync(SettingsFileName, stringWriter.ToString());
+
+                //if (settings == null) settings = new();
+                //XmlWriterSettings xmlWriterSettings = new()
+                //{
+                //    Indent = true,
+                //    Async = true
+                //};
+                //XmlSerializer xmlSerializer = new(settings.GetType());
+                //StringWriter stringWriter = new();
+                //XmlWriter xmlWriter = XmlWriter.Create(stringWriter, xmlWriterSettings);
+
+                //xmlSerializer.Serialize(xmlWriter, settings);
+                //await xmlWriter.FlushAsync();
+                //xmlWriter.Close();
+                //await File.WriteAllTextAsync(SettingsFileName, xmlWriter);
             }
             catch (Exception ex)
             {
@@ -77,11 +80,11 @@ namespace DataLibraryCore.DataAccess
                 string xmlString = await File.ReadAllTextAsync(SettingsFileName);
                 StringReader stringReader = new StringReader(xmlString);
                 settings = xmlSerializer.Deserialize(stringReader) as AppSettingsModel;
+                if (settings.PrintSettings == null) settings.PrintSettings = new();
+                if (settings.GeneralSettings == null) settings.GeneralSettings = new();
                 if (settings != null && settings.PrintSettings != null) settings.PrintSettings.UserDescriptions = await GetUserDescriptionsAsync();
                 if (settings != null && settings.GeneralSettings != null) settings.GeneralSettings.ProductUnits = await GetProductUnitsAsync();
                 if (settings == null) settings = new();
-                if (settings.PrintSettings == null) settings.PrintSettings = new();
-                if (settings.GeneralSettings == null) settings.GeneralSettings = new();
                 return settings;
             }
             catch (Exception ex)
@@ -136,7 +139,14 @@ namespace DataLibraryCore.DataAccess
 
         private async Task<int> InsertUserDescriptionsToDatabaseAsync(List<UserDescriptionModel> descriptions)
         {
-            if (descriptions != null && descriptions.Count > 0) return await DataAccess.SaveDataAsync(InsertUserDescriptionsQuery, descriptions);
+            if (descriptions != null && descriptions.Count > 0)
+            {
+                _ = await DataAccess.SaveDataAsync<DynamicParameters>(DeleteAllUserDescriptionsCmd, null);
+                int id = 1;
+                foreach (var item in descriptions)
+                    item.Id = id++;
+                return await DataAccess.SaveDataAsync(InsertUserDescriptionsQuery, descriptions);
+            }
             return 0;
         }
 
