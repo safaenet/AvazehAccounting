@@ -140,6 +140,7 @@ namespace AvazehWpf.ViewModels
         public async Task AddOrUpdateItemAsync()
         {
             if (!CanEditTransaction || Transaction == null || WorkItem == null) return;
+            CanEditTransaction = false;
             WorkItem.TransactionId = Transaction.Id;
             var validate = TDM.ValidateItem(WorkItem);
             if (validate.IsValid)
@@ -190,6 +191,7 @@ namespace AvazehWpf.ViewModels
             }
             WorkItem = new();
             selectedItem_Backup = new();
+            CanEditTransaction = true;
             NotifyOfPropertyChange(() => Transaction.Items);
             NotifyOfPropertyChange(() => Transaction);
             FocusOnProductsCombobox();

@@ -76,6 +76,7 @@ namespace AvazehWpf.ViewModels
         public ObservableCollection<ItemsForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
         public ObservableCollection<ProductUnitModel> ProductUnits { get => productUnits; set { productUnits = value; NotifyOfPropertyChange(() => ProductUnits); } }
         public ObservableCollection<RecentSellPriceModel> RecentSellPrices { get => recentSellPrices; set { recentSellPrices = value; NotifyOfPropertyChange(() => RecentSellPrices); } }
+
         private bool showNetProfits;
         public bool ShowNetProfits
         {
@@ -125,6 +126,7 @@ namespace AvazehWpf.ViewModels
         }
 
         private bool canPrintInvoice;
+
         public bool CanPrintInvoice
         {
             get { return canPrintInvoice; }
@@ -217,7 +219,8 @@ namespace AvazehWpf.ViewModels
         public async Task AddOrUpdateItemAsync()
         {
             if (!CanEditInvoice || Invoice == null) return;
-            var enableBarcodeReader = ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanUseBarcodeReader));            
+            CanEditInvoice = false;
+            var enableBarcodeReader = ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanUseBarcodeReader));
             var pcm = SC.GetInstance<ICollectionManager<ProductModel>>();
             if (SelectedProductItem == null && ProductInput != null && ProductInput.Length > 0 && EdittingItem == false) //Search by Entered text
             {
@@ -318,6 +321,7 @@ namespace AvazehWpf.ViewModels
             SelectedProductItem = null;
             ProductInput = "";
             ReloadCustomerTotalBalance();
+            CanEditInvoice = true;
             NotifyOfPropertyChange(() => Invoice.Items);
             NotifyOfPropertyChange(() => Invoice);
             FocusOnProductsCombobox();
@@ -403,7 +407,7 @@ namespace AvazehWpf.ViewModels
 
         public async Task SaveInvoiceChangesAsync()
         {
-            if(!CanEditInvoice) return;
+            if (!CanEditInvoice) return;
             Invoice.DiscountType = (DiscountTypes)SelectedDiscountType;
             var result = await ICM.UpdateItemAsync(Invoice);
             if (result == null)
