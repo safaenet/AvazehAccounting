@@ -207,7 +207,6 @@ public class TransactionDetailViewModel : ViewAware
         var EdittedItem = Transaction.Items.FirstOrDefault(x => x.Id == item.Id);
         if (ResultItem != null) ResultItem.Clone(EdittedItem);
         Transaction.DateUpdated = EdittedItem.DateUpdated;
-        Transaction.TimeUpdated = EdittedItem.TimeUpdated;
         if (selectedItem_Backup.TotalValue > 0)
         {
             Transaction.TotalPositiveItemsSum -= selectedItem_Backup.TotalValue;
@@ -276,7 +275,6 @@ public class TransactionDetailViewModel : ViewAware
             return;
         }
         Transaction.DateUpdated = result.DateUpdated;
-        Transaction.TimeUpdated = result.TimeUpdated;
         RefreshDataGrid();
         CanSaveTransactionChanges = false;
     }

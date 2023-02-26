@@ -121,7 +121,7 @@ public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<
         try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            if (item.DateJoined is null) item.DateJoined = DateTime.Now;
+            //if (item.DateJoined is null) item.DateJoined = DateTime.Now;
             var AffectedCount = await DataAccess.SaveDataAsync(UpdateCustomerQuery, item);
             if (AffectedCount > 0)
             {

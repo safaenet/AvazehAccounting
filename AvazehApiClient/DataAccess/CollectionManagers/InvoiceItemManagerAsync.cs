@@ -37,7 +37,6 @@ public partial class InvoiceDetailManager : IInvoiceDetailManager
         var result = await ApiProcessor.UpdateItemAsync<InvoiceItemModel_DTO_Create_Update, InvoiceItemModel>(KeyItem, item.Id, newItem);
         if (result is null) return null;
         result.DateCreated = item.DateCreated;
-        result.TimeCreated = item.TimeCreated;
         return result;
     }
 

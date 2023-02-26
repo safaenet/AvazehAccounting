@@ -10,6 +10,6 @@ public class TransactionItemForPrintModel
     public string CountString { get; set; }
     public double TotalPrice { get; set; }
     public DateTime DateCreated { get; set; }
-    public DateTime DateUpdated { get; set; }
+    public DateTime? DateUpdated { get; set; }
     public string Descriptions { get; set; }
 }

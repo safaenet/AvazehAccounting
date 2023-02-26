@@ -14,7 +14,7 @@ public class InvoiceItemModel
     public string CountString { get; set; } = "1";
     public ProductUnitModel Unit { get; set; }
     public DateTime DateCreated { get; set; }
-    public DateTime DateUpdated { get; set; }
+    public DateTime? DateUpdated { get; set; }
     public bool Delivered { get; set; }
     public string Descriptions { get; set; }
     public double CountValue => StandardCalculator.CalculateFromString(CountString);

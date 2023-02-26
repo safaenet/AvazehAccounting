@@ -12,7 +12,7 @@ public class ProductModel
     public string Barcode { get; set; }
     public string CountString { get; set; } = "0";
     public DateTime DateCreated { get; set; }
-    public DateTime DateUpdated { get; set; }
+    public DateTime? DateUpdated { get; set; }
     public string Descriptions { get; set; }
     public bool IsActive { get; set; } = true;
     public double CountValue => StandardCalculator.CalculateFromString(CountString);

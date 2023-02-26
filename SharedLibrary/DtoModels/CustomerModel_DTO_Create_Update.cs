@@ -28,7 +28,7 @@ public class CustomerModel_DTO_Create_Update
 
     [Display(Name = "Post Address", Prompt = "Post Address. Max length is 100 characters")]
     public string PostAddress { get; set; }
-    public DateTime? DateJoined { get; set; }
+    public DateTime DateJoined { get; set; }
 
     public ObservableCollection<PhoneNumberModel> PhoneNumbers { get; set; }
 

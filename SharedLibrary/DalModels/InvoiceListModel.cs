@@ -12,7 +12,7 @@ public class InvoiceListModel
     public int CustomerId { get; set; }
     public string CustomerFullName { get; set; }
     public DateTime DateCreated { get; set; }
-    public DateTime DateUpdated { get; set; }
+    public DateTime? DateUpdated { get; set; }
     public double TotalInvoiceSum { get; set; }
     public double TotalPayments { get; set; }
     public InvoiceLifeStatus LifeStatus { get; set; }

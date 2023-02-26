@@ -10,7 +10,7 @@ public class InvoiceModel
     public int Id { get; set; }
     public CustomerModel Customer { get; set; }
     public DateTime DateCreated { get; set; }
-    public DateTime DateUpdated { get; set; }
+    public DateTime? DateUpdated { get; set; }
     public ObservableCollection<InvoiceItemModel> Items { get; set; }
     public ObservableCollection<InvoicePaymentModel> Payments { get; set; }
     public DiscountTypes DiscountType { get; set; } = DiscountTypes.Amount;

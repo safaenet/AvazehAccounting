@@ -10,7 +10,7 @@ public class TransactionModel
     public int Id { get; set; }
     public string FileName { get; set; }
     public DateTime DateCreated { get; set; }
-    public DateTime DateUpdated { get; set; }
+    public DateTime? DateUpdated { get; set; }
     public ObservableCollection<TransactionItemModel> Items { get; set; }
     public string Descriptions { get; set; }
 

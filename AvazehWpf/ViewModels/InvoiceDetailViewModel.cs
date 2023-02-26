@@ -520,7 +520,7 @@ public class InvoiceDetailViewModel : ViewAware
         var recents = await IDM.GetRecentSellPrices(1, Invoice.Customer.Id, WorkItem.Product.Id);
         if (recents != null && recents.Count > 0) RecentSellPrices = recents;
         if (RecentSellPrices == null) RecentSellPrices = new();
-        RecentSellPrices.Add(new RecentSellPriceModel { SellPrice = WorkItem.Product.SellPrice, DateSold = "اکنون" });
+        RecentSellPrices.Add(new RecentSellPriceModel { SellPrice = WorkItem.Product.SellPrice, DateSold = DateTime.Now });
         NotifyOfPropertyChange(() => WorkItem.Product);
         NotifyOfPropertyChange(() => Invoice.Items);
         NotifyOfPropertyChange(() => WorkItem);
