@@ -9,126 +9,125 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace AvazehWpf.ViewModels
+namespace AvazehWpf.ViewModels;
+
+public class NewTransactionViewModel : ViewAware
 {
-    public class NewTransactionViewModel : ViewAware
+    public NewTransactionViewModel(SingletonClass singleton, int? TransactionId, ITransactionCollectionManager icManager, Func<Task> callBack, LoggedInUser_DTO user, SimpleContainer sc)
     {
-        public NewTransactionViewModel(SingletonClass singleton, int? TransactionId, ITransactionCollectionManager icManager, Func<Task> callBack, LoggedInUser_DTO user, SimpleContainer sc)
+        TCM = icManager;
+        User = user;
+        SC = sc;
+        Singleton = singleton;
+        TransactionID = TransactionId;
+        CallBack = callBack;
+        if (TransactionID == null)
         {
-            TCM = icManager;
-            User = user;
-            SC = sc;
-            Singleton = singleton;
-            TransactionID = TransactionId;
-            CallBack = callBack;
-            if (TransactionID == null)
-            {
-                ButtonTitle = "Add";
-                WindowTitle = "فایل جدید";
-            }
-            else
-            {
-                ButtonTitle = "Update";
-                _ = LoadSelectedItemAsync().ConfigureAwait(true);
-            }
+            ButtonTitle = "Add";
+            WindowTitle = "فایل جدید";
         }
-        public ITransactionCollectionManager TCM { get; set; }
-        private SingletonClass Singleton;
-        private SimpleContainer SC;
-        private LoggedInUser_DTO User;
-        private readonly int? TransactionID;
-        private string transactionName;
-        private string buttonTitle;
-        private Func<Task> CallBack;
-        private string windowTitle;
-
-        public string WindowTitle
+        else
         {
-            get { return windowTitle; }
-            set { windowTitle = value; NotifyOfPropertyChange(() => WindowTitle); }
+            ButtonTitle = "Update";
+            _ = LoadSelectedItemAsync().ConfigureAwait(true);
         }
+    }
+    public ITransactionCollectionManager TCM { get; set; }
+    private SingletonClass Singleton;
+    private SimpleContainer SC;
+    private LoggedInUser_DTO User;
+    private readonly int? TransactionID;
+    private string transactionName;
+    private string buttonTitle;
+    private Func<Task> CallBack;
+    private string windowTitle;
+
+    public string WindowTitle
+    {
+        get { return windowTitle; }
+        set { windowTitle = value; NotifyOfPropertyChange(() => WindowTitle); }
+    }
 
 
-        public string ButtonTitle
+    public string ButtonTitle
+    {
+        get { return buttonTitle; }
+        set { buttonTitle = value; NotifyOfPropertyChange(() => ButtonTitle); }
+    }
+
+    public string TransactionInput
+    {
+        get => transactionName;
+        set { transactionName = value; NotifyOfPropertyChange(() => TransactionInput); }
+    }
+
+    public void CloseWindow()
+    {
+        (GetView() as Window).Close();
+    }
+
+    public async Task AddOrUpdateTransactionAsync()
+    {
+        if (string.IsNullOrEmpty(TransactionInput))
         {
-            get { return buttonTitle; }
-            set { buttonTitle = value; NotifyOfPropertyChange(() => ButtonTitle); }
+            MessageBox.Show("نام فایل را وارد کنید", TransactionInput, MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
         }
-
-        public string TransactionInput
+        if (TransactionID is null) //Add new
         {
-            get => transactionName;
-            set { transactionName = value; NotifyOfPropertyChange(() => TransactionInput); }
-        }
-
-        public void CloseWindow()
-        {
-            (GetView() as Window).Close();
-        }
-
-        public async Task AddOrUpdateTransactionAsync()
-        {
-            if (string.IsNullOrEmpty(TransactionInput))
+            TransactionModel t = new();
+            t.FileName = TransactionInput;
+            var newTransaction = await TCM.CreateItemAsync(t);
+            if (newTransaction != null)
             {
-                MessageBox.Show("نام فایل را وارد کنید", TransactionInput, MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-            if (TransactionID is null) //Add new
-            {
-                TransactionModel t = new();
-                t.FileName = TransactionInput;
-                var newTransaction = await TCM.CreateItemAsync(t);
-                if (newTransaction != null)
-                {
-                    WindowManager wm = new();
-                    var tdm = SC.GetInstance<ITransactionDetailManager>();
-                    await wm.ShowWindowAsync(new TransactionDetailViewModel(TCM, tdm, User, Singleton, newTransaction.Id, null));
-                    CloseWindow();
-                }
-                else MessageBox.Show("خطا هنگام ایجاد فایل جدید", TransactionInput, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            else //Update Owner
-            {
-                int id = (int)TransactionID;
-                var transaction = await TCM.GetItemById(id);
-                if (transaction == null)
-                {
-                    MessageBox.Show("Cannot find such transaction.");
-                    return;
-                }
-                if (MessageBox.Show("آیا نام فایل تغییر کند؟", "تغییر نام", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.No) return;
-                transaction.FileName = TransactionInput;
-                await TCM.UpdateItemAsync(transaction);
+                WindowManager wm = new();
+                var tdm = SC.GetInstance<ITransactionDetailManager>();
+                await wm.ShowWindowAsync(new TransactionDetailViewModel(TCM, tdm, User, Singleton, newTransaction.Id, null));
                 CloseWindow();
             }
+            else MessageBox.Show("خطا هنگام ایجاد فایل جدید", TransactionInput, MessageBoxButton.OK, MessageBoxImage.Error);
         }
-
-        private async Task LoadSelectedItemAsync()
+        else //Update Owner
         {
-            var transaction = await TCM.GetItemById((int)TransactionID);
-            TransactionInput = transaction.FileName;
-            WindowTitle = transaction.FileName + " - تغییر نام";
+            int id = (int)TransactionID;
+            var transaction = await TCM.GetItemById(id);
+            if (transaction == null)
+            {
+                MessageBox.Show("Cannot find such transaction.");
+                return;
+            }
+            if (MessageBox.Show("آیا نام فایل تغییر کند؟", "تغییر نام", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.No) return;
+            transaction.FileName = TransactionInput;
+            await TCM.UpdateItemAsync(transaction);
+            CloseWindow();
         }
+    }
 
-        public void WindowLoaded()
-        {
-            ((GetView() as Window).FindName("NewTransactionInput") as TextBox).Focus();
-        }
+    private async Task LoadSelectedItemAsync()
+    {
+        var transaction = await TCM.GetItemById((int)TransactionID);
+        TransactionInput = transaction.FileName;
+        WindowTitle = transaction.FileName + " - تغییر نام";
+    }
 
-        public async Task ClosingWindowAsync()
-        {
-            if (CallBack != null) await CallBack?.Invoke();
-        }
+    public void WindowLoaded()
+    {
+        ((GetView() as Window).FindName("NewTransactionInput") as TextBox).Focus();
+    }
 
-        public void Window_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Escape) (GetView() as Window).Close();
-        }
+    public async Task ClosingWindowAsync()
+    {
+        if (CallBack != null) await CallBack?.Invoke();
+    }
 
-        public void SetKeyboardLayout()
-        {
-            if (User.UserSettings.AutoSelectPersianLanguage)
-                ExtensionsAndStatics.ChangeLanguageToPersian();
-        }
+    public void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape) (GetView() as Window).Close();
+    }
+
+    public void SetKeyboardLayout()
+    {
+        if (User.UserSettings.AutoSelectPersianLanguage)
+            ExtensionsAndStatics.ChangeLanguageToPersian();
     }
 }

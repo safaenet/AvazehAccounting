@@ -210,13 +210,11 @@ public class SqlTransactionProcessor : ITransactionProcessor
         try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
-            item.TimeCreated = PersianCalendarHelper.GetCurrentTime();
+            item.DateCreated = DateTime.Now;
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@fileName", item.FileName);
             dp.Add("@dateCreated", item.DateCreated);
-            dp.Add("@timeCreated", item.TimeCreated);
             dp.Add("@descriptions", item.Descriptions);
             var AffectedCount = await DataAccess.SaveDataAsync(CreateTransactionQuery, dp);
             var OutputId = dp.Get<int>("@id");
@@ -235,8 +233,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
         try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
-            item.TimeUpdated = PersianCalendarHelper.GetCurrentTime();
+            item.DateUpdated = DateTime.Now;
             return await DataAccess.SaveDataAsync(UpdateTransactionQuery, item);
         }
         catch (Exception ex)
@@ -282,8 +279,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
         try
         {
             if (item == null || !item.IsCountStringValid) return 0;
-            item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
-            item.TimeCreated = PersianCalendarHelper.GetCurrentTime();
+            item.DateCreated = DateTime.Now;
             DynamicParameters dp = new();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@transactionId", item.TransactionId);
@@ -292,7 +288,6 @@ public class SqlTransactionProcessor : ITransactionProcessor
             dp.Add("@countString", item.CountString);
             dp.Add("@countValue", item.CountValue);
             dp.Add("@dateCreated", item.DateCreated);
-            dp.Add("@timeCreated", item.TimeCreated);
             dp.Add("@descriptions", item.Descriptions);
             var AffectedCount = await DataAccess.SaveDataAsync(InsertTransactionItemQuery, dp);
             if (AffectedCount > 0)
@@ -314,8 +309,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
         try
         {
             if (item == null || !item.IsCountStringValid) return 0;
-            item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
-            item.TimeUpdated = PersianCalendarHelper.GetCurrentTime();
+            item.DateUpdated = DateTime.Now;
             DynamicParameters dp = new();
             dp.Add("@id", item.Id);
             dp.Add("@title", item.Title);
@@ -323,7 +317,6 @@ public class SqlTransactionProcessor : ITransactionProcessor
             dp.Add("@countString", item.CountString);
             dp.Add("@countValue", item.CountValue);
             dp.Add("@dateUpdated", item.DateUpdated);
-            dp.Add("@timeUpdated", item.TimeUpdated);
             dp.Add("@descriptions", item.Descriptions);
             var AffectedCount = await DataAccess.SaveDataAsync(UpdateTransactionItemQuery, dp);
             if (AffectedCount > 0) await UpdateItemUpdateDateAndUpdateTimeAsync(item.TransactionId);

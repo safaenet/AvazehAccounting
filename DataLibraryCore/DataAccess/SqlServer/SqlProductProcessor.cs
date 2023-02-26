@@ -78,8 +78,7 @@ public class SqlProductProcessor<TModel, TValidator> : IGeneralProcessor<TModel>
         try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
-            item.TimeCreated = PersianCalendarHelper.GetCurrentTime();
+            item.DateCreated = DateTime.Now;
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@productName", item.ProductName);
@@ -88,7 +87,6 @@ public class SqlProductProcessor<TModel, TValidator> : IGeneralProcessor<TModel>
             dp.Add("@barcode", item.Barcode);
             dp.Add("@countString", item.CountString);
             dp.Add("@dateCreated", item.DateCreated);
-            dp.Add("@timeCreated", item.TimeCreated);
             dp.Add("@descriptions", item.Descriptions);
             dp.Add("@isActive", item.IsActive);
             var AffectedCount = await DataAccess.SaveDataAsync(CreateProductQuery, dp);
@@ -108,8 +106,7 @@ public class SqlProductProcessor<TModel, TValidator> : IGeneralProcessor<TModel>
         try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
-            item.TimeUpdated = PersianCalendarHelper.GetCurrentTime();
+            item.DateUpdated = DateTime.Now;
             return await DataAccess.SaveDataAsync(UpdateProductQuery, item);
         }
         catch (Exception ex)

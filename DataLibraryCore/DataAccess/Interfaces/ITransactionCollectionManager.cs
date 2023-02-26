@@ -1,12 +1,7 @@
 ﻿using SharedLibrary.DalModels;
-using SharedLibrary.Enums;
-using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 
-namespace DataLibraryCore.DataAccess.Interfaces
+namespace DataLibraryCore.DataAccess.Interfaces;
+
+public interface ITransactionCollectionManager : ITransactionCollectionManagerBase<TransactionListModel>
 {
-    public interface ITransactionCollectionManager : ITransactionCollectionManagerBase<TransactionListModel>
-    {
-    }
 }

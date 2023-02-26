@@ -9,7 +9,6 @@ using SharedLibrary.DalModels;
 using SharedLibrary.Validators;
 using SharedLibrary.Enums;
 using System.Threading.Tasks;
-using SharedLibrary.Helpers;
 using Serilog;
 using System;
 
@@ -91,7 +90,7 @@ public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<
         try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateJoined = PersianCalendarHelper.GetCurrentPersianDate();
+            item.DateJoined = DateTime.Now;
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@firstName", item.FirstName);
@@ -122,7 +121,7 @@ public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<
         try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            if (item.DateJoined is null) item.DateJoined = PersianCalendarHelper.GetCurrentPersianDate();
+            if (item.DateJoined is null) item.DateJoined = DateTime.Now;
             var AffectedCount = await DataAccess.SaveDataAsync(UpdateCustomerQuery, item);
             if (AffectedCount > 0)
             {

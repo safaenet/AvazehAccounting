@@ -1,16 +1,12 @@
 ﻿using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace AvazehApiClient.DataAccess.Interfaces
+namespace AvazehApiClient.DataAccess.Interfaces;
+
+public interface IChequeCollectionManagerAsync : ICollectionManager<ChequeModel>
 {
-    public interface IChequeCollectionManagerAsync : ICollectionManager<ChequeModel>
-    {
-        ChequeListQueryStatus? ListQueryStatus { get; set; }
-        Task<List<ChequeModel>> GetCloseCheques();
-    }
+    ChequeListQueryStatus? ListQueryStatus { get; set; }
+    Task<List<ChequeModel>> GetCloseCheques();
 }

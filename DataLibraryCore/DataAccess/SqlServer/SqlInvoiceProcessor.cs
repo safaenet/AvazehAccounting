@@ -199,13 +199,11 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
-            item.TimeCreated = PersianCalendarHelper.GetCurrentTime();
+            item.DateCreated = DateTime.Now;
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@customerId", item.Customer.Id);
             dp.Add("@dateCreated", item.DateCreated);
-            dp.Add("@timeCreated", item.TimeCreated);
             dp.Add("@discountType", item.DiscountType);
             dp.Add("@discountValue", item.DiscountValue);
             dp.Add("@descriptions", item.Descriptions);
@@ -231,7 +229,6 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
             dp.Add("@id", item.Id);
             dp.Add("@customerId", item.Customer.Id);
             dp.Add("@dateCreated", item.DateCreated);
-            dp.Add("@timeCreated", item.TimeCreated);
             dp.Add("@dateUpdated", PersianCalendarHelper.GetCurrentPersianDate());
             dp.Add("@timeUpdated", PersianCalendarHelper.GetCurrentTime());
             dp.Add("@discountType", item.DiscountType);
@@ -283,8 +280,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         try
         {
             if (item == null || !item.IsCountStringValid) return 0;
-            item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
-            item.TimeCreated = PersianCalendarHelper.GetCurrentTime();
+            item.DateCreated = DateTime.Now;
             DynamicParameters dp = new();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@invoiceId", item.InvoiceId);
@@ -295,7 +291,6 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
             dp.Add("@countValue", item.CountValue);
             dp.Add("@productUnitId", item.Unit == null ? (int?)null : item.Unit.Id);
             dp.Add("@dateCreated", item.DateCreated);
-            dp.Add("@timeCreated", item.TimeCreated);
             dp.Add("@delivered", item.Delivered);
             dp.Add("@descriptions", item.Descriptions);
             var AffectedCount = await DataAccess.SaveDataAsync(InsertInvoiceItemQuery, dp);
@@ -318,8 +313,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         try
         {
             if (item == null || !item.IsCountStringValid) return 0;
-            item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
-            item.TimeUpdated = PersianCalendarHelper.GetCurrentTime();
+            item.DateUpdated = DateTime.Now;
             DynamicParameters dp = new();
             dp.Add("@id", item.Id);
             dp.Add("@productId", item.Product.Id);
@@ -329,7 +323,6 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
             dp.Add("@countValue", item.CountValue);
             dp.Add("@productUnitId", item.Unit == null ? (int?)null : item.Unit.Id);
             dp.Add("@dateUpdated", item.DateUpdated);
-            dp.Add("@timeUpdated", item.TimeUpdated);
             dp.Add("@delivered", item.Delivered);
             dp.Add("@descriptions", item.Descriptions);
             var AffectedCount = await DataAccess.SaveDataAsync(UpdateInvoiceItemQuery, dp);
@@ -382,13 +375,11 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         try
         {
             if (item == null) return 0;
-            item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
-            item.TimeCreated = PersianCalendarHelper.GetCurrentTime();
+            item.DateCreated = DateTime.Now;
             DynamicParameters dp = new();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@invoiceId", item.InvoiceId);
             dp.Add("@dateCreated", item.DateCreated);
-            dp.Add("@timeCreated", item.TimeCreated);
             dp.Add("@payAmount", item.PayAmount);
             dp.Add("@descriptions", item.Descriptions);
             var AffectedCount = await DataAccess.SaveDataAsync(InsertInvoicePaymentQuery, dp);
@@ -411,11 +402,9 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         try
         {
             if (item == null) return 0;
-            item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
-            item.TimeUpdated = PersianCalendarHelper.GetCurrentTime();
+            item.DateUpdated = DateTime.Now;
             DynamicParameters dp = new();
             dp.Add("@dateUpdated", item.DateUpdated);
-            dp.Add("@timeUpdated", item.TimeUpdated);
             dp.Add("@payAmount", item.PayAmount);
             dp.Add("@descriptions", item.Descriptions);
             var AffectedCount = await DataAccess.SaveDataAsync(UpdateInvoicePaymentQuery, item);
@@ -684,9 +673,7 @@ internal class ProductModelMapper : EntityMap<ProductModel>
             Map(x => x.SellPrice).ToColumn("pSellPrice");
             Map(x => x.CountString).ToColumn("pCountString");
             Map(x => x.DateCreated).ToColumn("pDateCreated");
-            Map(x => x.TimeCreated).ToColumn("pTimeCreated");
             Map(x => x.DateUpdated).ToColumn("pDateUpdated");
-            Map(x => x.TimeUpdated).ToColumn("pTimeUpdated");
             Map(x => x.Descriptions).ToColumn("pDescriptions");
         }
         catch (Exception ex)

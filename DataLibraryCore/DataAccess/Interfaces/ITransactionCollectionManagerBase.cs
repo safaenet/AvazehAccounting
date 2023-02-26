@@ -1,15 +1,10 @@
-﻿using SharedLibrary.DalModels;
-using SharedLibrary.Enums;
-using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+﻿using SharedLibrary.Enums;
 
-namespace DataLibraryCore.DataAccess.Interfaces
+namespace DataLibraryCore.DataAccess.Interfaces;
+
+public interface ITransactionCollectionManagerBase<TModel> : ICollectionManagerBase<TModel>
 {
-    public interface ITransactionCollectionManagerBase<TModel> : ICollectionManagerBase<TModel>
-    {
-        ITransactionProcessor Processor { get; init; }
-        TransactionFinancialStatus? FinStatus { get; }
-        int GenerateWhereClause(string val, string OrderBy, OrderType orderType, TransactionFinancialStatus? finStatus, bool run = false, SqlSearchMode mode = SqlSearchMode.OR);
-    }
+    ITransactionProcessor Processor { get; init; }
+    TransactionFinancialStatus? FinStatus { get; }
+    int GenerateWhereClause(string val, string OrderBy, OrderType orderType, TransactionFinancialStatus? finStatus, bool run = false, SqlSearchMode mode = SqlSearchMode.OR);
 }

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace SharedLibrary.DalModels;
 
-namespace SharedLibrary.DalModels
+public class PhoneNumberModel
 {
-    public class PhoneNumberModel
-    {
-        public int CustomerId { get; set; }
-        public string PhoneNumber { get; set; }
-    }
+    public int CustomerId { get; set; }
+    public string PhoneNumber { get; set; }
 }

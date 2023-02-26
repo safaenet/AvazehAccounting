@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace AvazehApiClient.DataAccess.CollectionManagers
+namespace AvazehApiClient.DataAccess.CollectionManagers;
+
+public class PageLoadEventArgs : EventArgs
 {
-    public class PageLoadEventArgs : EventArgs
-    {
-        public bool Cancel { get; set; }
-    }
+    public bool Cancel { get; set; }
 }
