@@ -7,10 +7,8 @@
     [SellPrice] BIGINT NOT NULL , 
     [CountString] NVARCHAR(50) NOT NULL,
     [CountValue] FLOAT NOT NULL,
-    [DateCreated] CHAR(10) NOT NULL, 
-    [TimeCreated] CHAR(8) NOT NULL, 
-    [DateUpdated] CHAR(10) NULL, 
-    [TimeUpdated] CHAR(8) NULL, 
+    [DateCreated] DATETIME NOT NULL, 
+    [DateUpdated] DATETIME NULL, 
     [Delivered] BIT NOT NULL , 
     [Descriptions] NVARCHAR(50) NULL,
     [ProductUnitId] INT NULL

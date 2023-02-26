@@ -2,7 +2,7 @@
 (
 	[Id] INT NOT NULL PRIMARY KEY, 
     [ChequeId] INT NOT NULL,
-    [EventDate] CHAR(10) NOT NULL,
+    [EventDate] DATETIME NOT NULL,
     [EventType] TINYINT NOT NULL,
     [EventText] NVARCHAR(50) NULL
 

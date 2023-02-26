@@ -6,7 +6,7 @@
 	[CompanyName] NVARCHAR(50) NULL,
     [EmailAddress] NVARCHAR(50) NULL, 
     [PostAddress] NTEXT NULL, 
-    [DateJoined] CHAR(10) NULL, 
+    [DateJoined] DATETIME NULL, 
     [Descriptions] NTEXT NULL
     
 	CHECK ([EmailAddress] LIKE '%_@_%._%'), 
