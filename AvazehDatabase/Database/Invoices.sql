@@ -7,5 +7,6 @@
     [DiscountType] TINYINT NULL DEFAULT 0, 
     [DiscountValue] FLOAT NULL DEFAULT 0, 
     [Descriptions] NTEXT NULL, 
-    [LifeStatus] TINYINT NOT NULL 
+    [LifeStatus] TINYINT NOT NULL,
+    [PrevInvoiceId] INT NULL
 )
