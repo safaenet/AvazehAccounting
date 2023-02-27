@@ -333,7 +333,7 @@ public static class Extensions
 
     public static ObservableCollection<T> AsObservable<T>(this IEnumerable<T> collection)
     {
-        if (collection is not null) return new ObservableCollection<T>();
+        if (collection is not null) return new ObservableCollection<T>(collection);
         return null;
     }
 

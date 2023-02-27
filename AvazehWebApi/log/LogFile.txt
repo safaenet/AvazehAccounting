@@ -613,3 +613,17 @@ System.Data.DataException: Error parsing column 5 (IssueDate=1401/10/08 - String
    at Dapper.SqlMapper.GridReader.ReadBufferedAsync[T](Int32 index, Func`2 deserializer) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 244
    at DataLibraryCore.DataAccess.Statics.MapObservableCollectionOfChequesAsync[TFirst,TSecond,TKey](GridReader reader, Func`2 firstKey, Func`2 secondKey, Action`2 addChildren) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\Statics.cs:line 95
    at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 266
+2023-02-27 15:09:57.700 +03:30 [ERR] Error in IChequeProcessor
+System.Data.DataException: Error parsing column 5 (IssueDate=1401/10/08 - String)
+ ---> System.InvalidCastException: Invalid cast from 'System.String' to 'System.DateOnly'.
+   at System.Convert.DefaultToType(IConvertible value, Type targetType, IFormatProvider provider)
+   at System.String.System.IConvertible.ToType(Type type, IFormatProvider provider)
+   at System.Convert.ChangeType(Object value, Type conversionType, IFormatProvider provider)
+   at Deserialize423adf2d-a57d-4edb-8362-cc39d32960ad(IDataReader )
+   --- End of inner exception stack trace ---
+   at Dapper.SqlMapper.ThrowDataException(Exception ex, Int32 index, IDataReader reader, Object value) in /_/Dapper/SqlMapper.cs:line 3706
+   at Deserialize423adf2d-a57d-4edb-8362-cc39d32960ad(IDataReader )
+   at Dapper.SqlMapper.GridReader.ReadBufferedAsync[T](Int32 index, Func`2 deserializer) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 236
+   at Dapper.SqlMapper.GridReader.ReadBufferedAsync[T](Int32 index, Func`2 deserializer) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 244
+   at DataLibraryCore.DataAccess.Statics.MapObservableCollectionOfChequesAsync[TFirst,TSecond,TKey](GridReader reader, Func`2 firstKey, Func`2 secondKey, Action`2 addChildren) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\Statics.cs:line 95
+   at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 266
