@@ -79,7 +79,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
 	        [CompanyName] [nvarchar](50),
 	        [EmailAddress] [nvarchar](50),
 	        [PostAddress] [ntext],
-	        [DateJoined] [char](10),
+	        [DateJoined] [datetime],
 	        [CustDescriptions] [ntext])
 
             INSERT @invoices

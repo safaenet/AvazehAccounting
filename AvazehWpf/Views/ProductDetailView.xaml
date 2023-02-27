@@ -118,14 +118,14 @@
                     <TextBox Text="{Binding Product.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" MinHeight="50" Height="auto" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top"/>
                 </DockPanel>
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
-                    <StackPanel Width="120" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <StackPanel Width="80" Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="CalendarAdd" Margin="0,0,3,0"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد: " Margin="5,0,0,2"/>
                     </StackPanel>
                     <TextBlock Text="{Binding Product.DateCreated, Converter={StaticResource DateTimeToPersianDateTimeConverter}}" TextAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,0,0,10">
-                    <StackPanel Width="120" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <StackPanel Width="108" Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="CalendarCheckOutline" Margin="0,0,3,0"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ بروزرسانی: " Margin="5,0,0,2"/>
                     </StackPanel>

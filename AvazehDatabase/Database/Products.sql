@@ -7,7 +7,7 @@
     [Barcode] NVARCHAR(15) NULL, 
     [CountString] NVARCHAR(50) NULL,
     [DateCreated] DATETIME NOT NULL, 
-    [DateUpdated] CHAR(10) NULL, 
+    [DateUpdated] DATETIME NULL, 
     [Descriptions] NTEXT NULL, 
     [IsActive] BIT NOT NULL DEFAULT 1 
 )

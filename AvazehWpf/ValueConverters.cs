@@ -291,6 +291,7 @@ public class DateToColorConverter : Freezable, IValueConverter //Used
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value == null || string.IsNullOrEmpty(ItemColor)) return DependencyProperty.UnsetValue;
+        if ((DateTime)value < DateTime.Parse("2000/01/01")) return DependencyProperty.UnsetValue;
         if (((DateTime)value).ToPersianDate() == Date) return new SolidColorBrush(ItemColor.ToColor());
         return DependencyProperty.UnsetValue;
     }
@@ -489,6 +490,7 @@ public class DateTimeToPersianDateConverter : IValueConverter //Used
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value == null) return DependencyProperty.UnsetValue;
+        if ((DateTime)value < DateTime.Parse("2000/01/01")) return DependencyProperty.UnsetValue;
         return ((DateTime)value).ToPersianDate();
     }
 
@@ -503,6 +505,7 @@ public class DateTimeToPersianDateTimeConverter : IValueConverter //Used
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value == null) return DependencyProperty.UnsetValue;
+        if ((DateTime)value < DateTime.Parse("2000/01/01")) return DependencyProperty.UnsetValue;
         return ((DateTime)value).ToPersianDateTime();
     }
 
@@ -517,6 +520,7 @@ public class DateTimeToTimeOnlyConverter : IValueConverter //Used
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value == null) return DependencyProperty.UnsetValue;
+        if ((DateTime)value < DateTime.Parse("2000/01/01")) return DependencyProperty.UnsetValue;
         return ((DateTime)value).ToTime();
     }
 

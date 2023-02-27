@@ -62,7 +62,7 @@ public static class PersianCalendarHelper
 
     public static string ToTime(this DateTime datetime)
     {
-        return $"{ datetime:'HH:mm:ss'}";
+        return datetime.ToString("HH:mm");
     }
 
     public static DateOnly? ToGregorianDate(this string persianDate)
