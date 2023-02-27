@@ -7,8 +7,8 @@ public interface IDataAccess
 {
     Task<bool> TestConnectionAsync();
     string GetConnectionString(string DB = "default");
-    Task<List<T>> LoadDataAsync<T, U>(string sql, U param);
-    Task<List<T>> LoadDataAsync<T>(string sql);
+    Task<IEnumerable<T>> LoadDataAsync<T, U>(string sql, U param);
+    Task<IEnumerable<T>> LoadDataAsync<T>(string sql);
     Task<int> SaveDataAsync<T>(string sql, T data);
     Task<int> SaveDataAsync(string sql);
     Task<T> ExecuteScalarAsync<T, U>(string sql, U param);

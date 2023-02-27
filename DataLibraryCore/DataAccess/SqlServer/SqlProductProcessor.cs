@@ -1,14 +1,12 @@
 ﻿using Dapper;
 using System.Data;
 using System.Linq;
-using System.Collections.ObjectModel;
 using FluentValidation.Results;
 using DataLibraryCore.DataAccess.Interfaces;
 using SharedLibrary.Validators;
 using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
 using System.Threading.Tasks;
-using SharedLibrary.Helpers;
 using System;
 using Serilog;
 using System.Collections.Generic;
@@ -147,7 +145,7 @@ public class SqlProductProcessor<TModel, TValidator> : IGeneralProcessor<TModel>
         return 0;
     }
 
-    public async Task<List<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    public async Task<IEnumerable<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
     {
         try
         {

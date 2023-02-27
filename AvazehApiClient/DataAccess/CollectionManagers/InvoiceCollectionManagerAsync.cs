@@ -90,7 +90,7 @@ public class InvoiceCollectionManagerAsync : IInvoiceCollectionManager
         PageLoading?.Invoke(this, eventArgs);
         if (eventArgs.Cancel) return 0;
         var collection = await ApiProcessor.GetInvoiceCollectionAsync<ItemsCollection_DTO<InvoiceListModel>>(Key, QueryOrderBy, QueryOrderType, PageNumber, SearchValue, LifeStatus, FinStatus, PageSize, Refresh);
-        Items = collection?.Items;
+        Items = collection?.Items.AsObservable();
         CurrentPage = collection is null ? 0 : collection.CurrentPage;
         PagesCount = collection is null ? 0 : collection.PagesCount;
         PageLoaded?.Invoke(this, null);

@@ -7,6 +7,7 @@ using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.SecurityAndSettingsModels;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AvazehWebAPI.Controllers;
@@ -34,8 +35,8 @@ public class InvoiceItemController : ControllerBase
     public async Task<ActionResult<List<RecentSellPriceModel>>> GetItemAsync(int MaxRecord, int CustomerId, int ProductId) //Used for getting recent sell prices.
     {
         var items = await Processor.GetRecentSellPricesAsync(MaxRecord, CustomerId, ProductId);
-        if (items is null || items.Count == 0) return NotFound("Couldn't find specific Item");
-        return items;
+        if (items is null || items.Count() == 0) return NotFound("Couldn't find specific Item");
+        return items.ToList();
     }
 
     [HttpPost, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanEditInvoice))]

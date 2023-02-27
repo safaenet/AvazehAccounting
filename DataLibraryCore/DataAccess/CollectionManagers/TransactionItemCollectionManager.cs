@@ -23,9 +23,9 @@ public class TransactionItemCollectionManager : ITransactionItemCollectionManage
     public bool Initialized { get; set; }
     public ITransactionProcessor Processor { get; init; }
 
-    public List<TransactionItemModel> Items { get; set; }
-    public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
-    public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
+    public IEnumerable<TransactionItemModel> Items { get; set; }
+    public int? MinID => Items == null || Items.Count() == 0 ? null : Items.Min(x => x.Id);
+    public int? MaxID => Items == null || Items.Count() == 0 ? null : Items.Max(x => x.Id);
     public int TransactionId { get; set; }
 
     private protected string _WhereClause;
@@ -82,7 +82,7 @@ public class TransactionItemCollectionManager : ITransactionItemCollectionManage
         QueryOrderType = orderType;
         WhereClause = Processor.GenerateTransactionItemWhereClause(val, finStatus, mode);
         if (run) LoadFirstPageAsync().ConfigureAwait(true);
-        return Items == null ? 0 : Items.Count;
+        return Items == null ? 0 : Items.Count();
     }
 
     public async Task<int> GotoPageAsync(int PageNumber)
@@ -101,8 +101,8 @@ public class TransactionItemCollectionManager : ITransactionItemCollectionManage
         else if (PageNumber > PagesCount) PageNumber = PagesCount;
         else if (PageNumber < 1) PageNumber = 1;
         Items = await Processor.LoadManyTransactionItemsAsync((PageNumber - 1) * PageSize, PageSize, WhereClause, TransactionId, QueryOrderBy, QueryOrderType);
-        CurrentPage = Items == null || Items.Count == 0 ? 0 : PageNumber;
-        return Items == null ? 0 : Items.Count;
+        CurrentPage = Items == null || Items.Count() == 0 ? 0 : PageNumber;
+        return Items == null ? 0 : Items.Count();
     }
 
     public async Task<int> LoadFirstPageAsync()

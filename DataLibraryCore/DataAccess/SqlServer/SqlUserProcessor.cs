@@ -94,7 +94,7 @@ public class SqlUserProcessor : IUserProcessor
         return false;
     }
 
-    public async Task<List<UserInfoBaseModel>> GetUsersAsync()
+    public async Task<IEnumerable<UserInfoBaseModel>> GetUsersAsync()
     {
         try
         {

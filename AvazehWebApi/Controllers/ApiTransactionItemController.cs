@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AvazehWebAPI.Controllers;
@@ -27,7 +28,7 @@ public class TransactionItemController : ControllerBase
         Manager.PageSize = PageSize;
         if (ForceLoad) Manager.Initialized = false;
         await Manager.GotoPageAsync(Page);
-        if (Manager.Items == null || Manager.Items.Count == 0) return NotFound("List is empty");
+        if (Manager.Items == null || Manager.Items.Count() == 0) return NotFound("List is empty");
         return Manager.AsDto();
     }
 

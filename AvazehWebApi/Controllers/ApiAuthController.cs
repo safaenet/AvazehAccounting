@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace AvazehWebAPI.Controllers;
 
@@ -90,7 +91,7 @@ public class AuthController : Controller
     {
         List<UserInfoBaseModel> users = new();
         if (User.IsInRole(nameof(UserPermissionsModel.CanManageOthers)))
-            users = await UserProcessor.GetUsersAsync();
+            users = (await UserProcessor.GetUsersAsync()).ToList();
         else
         {
             var username = User.FindFirstValue(ClaimTypes.NameIdentifier);

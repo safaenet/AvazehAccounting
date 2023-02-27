@@ -22,9 +22,9 @@ public class CustomerCollectionManager : IGeneralCollectionManager<CustomerModel
     public event EventHandler PreviousPageLoaded;
     public bool Initialized { get; set; }
     public IGeneralProcessor<CustomerModel> Processor { get; init; }
-    public List<CustomerModel> Items { get; set; }
-    public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
-    public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
+    public IEnumerable<CustomerModel> Items { get; set; }
+    public int? MinID => Items == null || Items.Count() == 0 ? null : Items.Min(x => x.Id);
+    public int? MaxID => Items == null || Items.Count() == 0 ? null : Items.Max(x => x.Id);
 
     private protected string _WhereClause;
     public string WhereClause
@@ -77,7 +77,7 @@ public class CustomerCollectionManager : IGeneralCollectionManager<CustomerModel
         QueryOrderType = orderType;
         WhereClause = Processor.GenerateWhereClause(val, mode);
         if (run) LoadFirstPageAsync().ConfigureAwait(true);
-        return Items == null ? 0 : Items.Count;
+        return Items == null ? 0 : Items.Count();
     }
 
     public async Task<int> GotoPageAsync(int PageNumber)
@@ -96,8 +96,8 @@ public class CustomerCollectionManager : IGeneralCollectionManager<CustomerModel
         else if (PageNumber > PagesCount) PageNumber = PagesCount;
         else if (PageNumber < 1) PageNumber = 1;
         Items = await Processor.LoadManyItemsAsync((PageNumber - 1) * PageSize, PageSize, WhereClause, QueryOrderBy, QueryOrderType);
-        CurrentPage = Items == null || Items.Count == 0 ? 0 : PageNumber;
-        return Items == null ? 0 : Items.Count;
+        CurrentPage = Items == null || Items.Count() == 0 ? 0 : PageNumber;
+        return Items == null ? 0 : Items.Count();
     }
 
     public async Task<int> LoadFirstPageAsync()

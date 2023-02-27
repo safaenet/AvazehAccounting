@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using System.Data;
 using System.Linq;
-using System.Collections.ObjectModel;
 using FluentValidation.Results;
 using DataLibraryCore.DataAccess.Interfaces;
 using SharedLibrary.Validators;
@@ -156,7 +155,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
         return null;
     }
 
-    public async Task<List<ItemsForComboBox>> GetProductItemsAsync(string SearchText = null, int TransactionId = 0)
+    public async Task<IEnumerable<ItemsForComboBox>> GetProductItemsAsync(string SearchText = null, int TransactionId = 0)
     {
         try
         {
@@ -165,7 +164,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
             var where3 = TransactionId == 0 ? "" : $" AND [TransactionId] = { TransactionId }";
             var sql = string.Format(GetProductItemsQuery, where1, where2, where3);
             var items = await DataAccess.LoadDataAsync<ItemsForComboBox>(sql);
-            return items?.ToList();
+            return items;
         }
         catch (Exception ex)
         {
@@ -174,14 +173,14 @@ public class SqlTransactionProcessor : ITransactionProcessor
         return null;
     }
 
-    public async Task<List<ItemsForComboBox>> GetTransactionNamesAsync(string SearchText = null)
+    public async Task<IEnumerable<ItemsForComboBox>> GetTransactionNamesAsync(string SearchText = null)
     {
         try
         {
             var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [Id] <> { SearchText }";
             var sql = string.Format(GetTransactionNamesQuery, where);
             var items = await DataAccess.LoadDataAsync<ItemsForComboBox>(sql);
-            return items?.ToList();
+            return items;
         }
         catch (Exception ex)
         {
@@ -397,7 +396,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
         return 0;
     }
 
-    public async Task<List<TransactionListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    public async Task<IEnumerable<TransactionListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
     {
         try
         {
@@ -419,7 +418,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
         return null;
     }
 
-    public async Task<List<TransactionItemModel>> LoadManyTransactionItemsAsync(int OffSet, int FetcheSize, string WhereClause, int Id, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    public async Task<IEnumerable<TransactionItemModel>> LoadManyTransactionItemsAsync(int OffSet, int FetcheSize, string WhereClause, int Id, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
     {
         try
         {

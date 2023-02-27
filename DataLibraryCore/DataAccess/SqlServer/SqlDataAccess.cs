@@ -44,12 +44,12 @@ public class SqlDataAccess : Interfaces.IDataAccess
         return false;
     }
 
-    public async Task<List<T>> LoadDataAsync<T, U>(string sql, U param)
+    public async Task<IEnumerable<T>> LoadDataAsync<T, U>(string sql, U param)
     {
         try
         {
             using IDbConnection conn = new SqlConnection(GetConnectionString());
-            return (await conn.QueryAsync<T>(sql, param)).AsList();
+            return (await conn.QueryAsync<T>(sql, param));
         }
         catch (Exception ex)
         {
@@ -58,12 +58,12 @@ public class SqlDataAccess : Interfaces.IDataAccess
         return null;
     }
 
-    public async Task<List<T>> LoadDataAsync<T>(string sql)
+    public async Task<IEnumerable<T>> LoadDataAsync<T>(string sql)
     {
         try
         {
             using IDbConnection conn = new SqlConnection(GetConnectionString());
-            return (await conn.QueryAsync<T>(sql)).AsList();
+            return (await conn.QueryAsync<T>(sql));
         }
         catch (Exception ex)
         {

@@ -7,5 +7,5 @@ namespace DataLibraryCore.DataAccess.Interfaces;
 public interface IGeneralProcessor<TModel> : IProcessorBase<TModel>
 {
     string GenerateWhereClause(string val, SqlSearchMode mode);
-    Task<List<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy, OrderType Order);
+    Task<IEnumerable<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy, OrderType Order);
 }

@@ -471,7 +471,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         return 0;
     }
 
-    public async Task<List<InvoiceListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    public async Task<IEnumerable<InvoiceListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
     {
         try
         {
@@ -539,7 +539,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         return 0;
     }
 
-    public async Task<List<ItemsForComboBox>> GetProductItemsAsync(string SearchText = null)
+    public async Task<IEnumerable<ItemsForComboBox>> GetProductItemsAsync(string SearchText = null)
     {
         try
         {
@@ -547,7 +547,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
             if (string.IsNullOrEmpty(where)) where = " WHERE IsActive = 1"; else where += " AND IsActive = 1";
             var sql = string.Format(GetProductItemsQuery, where);
             var items = await DataAccess.LoadDataAsync<ItemsForComboBox>(sql);
-            return items?.ToList();
+            return items;
         }
         catch (Exception ex)
         {
@@ -556,12 +556,12 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         return null;
     }
 
-    public async Task<List<ProductUnitModel>> GetProductUnitsAsync()
+    public async Task<IEnumerable<ProductUnitModel>> GetProductUnitsAsync()
     {
         try
         {
             var result = await DataAccess.LoadDataAsync<ProductUnitModel>(GetProductUnitsQuery);
-            return result?.ToList();
+            return result;
         }
         catch (Exception ex)
         {
@@ -570,14 +570,14 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         return null;
     }
 
-    public async Task<List<ItemsForComboBox>> GetCustomerNamesAsync(string SearchText)
+    public async Task<IEnumerable<ItemsForComboBox>> GetCustomerNamesAsync(string SearchText)
     {
         try
         {
             var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [FirstName] + ' ' + [LastName] LIKE '%{ SearchText }%'";
             var sql = string.Format(GetCustomerNamesQuery, where);
             var items = await DataAccess.LoadDataAsync<ItemsForComboBox>(sql);
-            return items?.ToList();
+            return items;
         }
         catch (Exception ex)
         {
@@ -586,7 +586,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         return null;
     }
 
-    public async Task<List<RecentSellPriceModel>> GetRecentSellPricesAsync(int MaxRecord, int CustomerId, int ProductId)
+    public async Task<IEnumerable<RecentSellPriceModel>> GetRecentSellPricesAsync(int MaxRecord, int CustomerId, int ProductId)
     {
         try
         {

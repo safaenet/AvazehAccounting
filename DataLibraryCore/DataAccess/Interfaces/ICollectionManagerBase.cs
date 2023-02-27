@@ -14,7 +14,7 @@ public interface ICollectionManagerBase<TModel>
     event EventHandler PreviousPageLoaded;
     int CurrentPage { get; }
     bool Initialized { get; set; }
-    List<TModel> Items { get; set; }
+    IEnumerable<TModel> Items { get; set; }
     int? MaxID { get; }
     int? MinID { get; }
     int PagesCount { get; }

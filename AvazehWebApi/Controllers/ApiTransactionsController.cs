@@ -8,6 +8,7 @@ using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
 using SharedLibrary.SecurityAndSettingsModels;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AvazehWebAPI.Controllers;
@@ -31,7 +32,7 @@ public class TransactionsController : ControllerBase
         Manager.PageSize = PageSize;
         if (ForceLoad) Manager.Initialized = false;
         await Manager.GotoPageAsync(Page);
-        if (Manager.Items == null || Manager.Items.Count == 0) return NotFound("List is empty");
+        if (Manager.Items == null || Manager.Items.Count() == 0) return NotFound("List is empty");
         return Manager.AsDto();
     }
 
@@ -46,14 +47,14 @@ public class TransactionsController : ControllerBase
     public async Task<ActionResult<List<ItemsForComboBox>>> GetProductItemsAsync(int Id)
     {
         var items = await Manager.Processor.GetProductItemsAsync(null, Id);
-        return items is null ? NotFound("Couldn't find any match") : items;
+        return items is null ? NotFound("Couldn't find any match") : items.ToList();
     }
 
     [HttpGet("TransactionNames"), Authorize]
     public async Task<ActionResult<List<ItemsForComboBox>>> GetTransactionNamesAsync(string SearchText)
     {
         var items = await Manager.Processor.GetTransactionNamesAsync(SearchText);
-        return items is null ? NotFound("Couldn't find any match") : items;
+        return items is null ? NotFound("Couldn't find any match") : items.ToList();
     }
 
     [HttpPost, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanAddNewTransaction))]

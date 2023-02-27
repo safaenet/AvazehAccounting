@@ -8,6 +8,7 @@ using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
 using SharedLibrary.SecurityAndSettingsModels;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AvazehWebAPI.Controllers;
@@ -31,7 +32,7 @@ public class InvoicesController : ControllerBase
         Manager.PageSize = PageSize;
         if (ForceLoad) Manager.Initialized = false;
         await Manager.GotoPageAsync(Page);
-        if (Manager.Items == null || Manager.Items.Count == 0) return NotFound("List is empty");
+        if (Manager.Items == null || Manager.Items.Count() == 0) return NotFound("List is empty");
         return Manager.AsDto();
     }
 
@@ -46,21 +47,21 @@ public class InvoicesController : ControllerBase
     public async Task<ActionResult<List<ItemsForComboBox>>> GetProductItemsAsync(string SearchText)
     {
         var items = await Manager.Processor.GetProductItemsAsync(SearchText);
-        return items is null ? NotFound("Couldn't find any match") : items;
+        return items is null ? NotFound("Couldn't find any match") : items.ToList();
     }
 
     [HttpGet("ProductUnits"), Authorize]
     public async Task<ActionResult<List<ProductUnitModel>>> GetProductUnitsAsync(string SearchText)
     {
         var items = await Manager.Processor.GetProductUnitsAsync();
-        return items is null ? NotFound("List is Empty") : items;
+        return items is null ? NotFound("List is Empty") : items.ToList();
     }
 
     [HttpGet("CustomerNames"), Authorize]
     public async Task<ActionResult<List<ItemsForComboBox>>> GetCustomerNamesAsync(string SearchText)
     {
         var items = await Manager.Processor.GetCustomerNamesAsync(SearchText);
-        return items is null ? NotFound("Couldn't find any match") : items;
+        return items is null ? NotFound("Couldn't find any match") : items.ToList();
     }
 
     [HttpGet("CustomerBalance/{CustomerId}/{InvoiceId}"), Authorize]

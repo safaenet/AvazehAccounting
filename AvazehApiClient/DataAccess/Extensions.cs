@@ -5,6 +5,8 @@ using System.Globalization;
 using System.Threading.Tasks;
 using System.Linq;
 using SharedLibrary.SecurityAndSettingsModels;
+using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 namespace AvazehApiClient.DataAccess;
 
@@ -327,6 +329,12 @@ public static class Extensions
     {
         var now = System.DateTime.Now;
         return string.Format("{0:0000}/{1:00}/{2:00}", pCal.GetYear(now), pCal.GetMonth(now), pCal.GetDayOfMonth(now));
+    }
+
+    public static ObservableCollection<T> AsObservable<T>(this IEnumerable<T> collection)
+    {
+        if (collection is not null) return new ObservableCollection<T>();
+        return null;
     }
 
     public static UserSettingsModel Clone(this UserSettingsModel From)

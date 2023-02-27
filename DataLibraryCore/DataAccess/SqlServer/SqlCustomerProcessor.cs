@@ -193,7 +193,7 @@ public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<
         return 0;
     }
 
-    public async Task<List<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    public async Task<IEnumerable<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
     {
         try
         {

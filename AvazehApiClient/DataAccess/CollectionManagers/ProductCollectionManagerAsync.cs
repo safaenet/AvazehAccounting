@@ -87,7 +87,7 @@ public class ProductCollectionManagerAsync<TDalModel, TDtoModel, TValidator> : I
         PageLoading?.Invoke(this, eventArgs);
         if (eventArgs.Cancel) return 0;
         var collection = await ApiProcessor.GetCollectionAsync<ItemsCollection_DTO<TDalModel>>(Key, QueryOrderBy, QueryOrderType, PageNumber, SearchValue, PageSize, Refresh);
-        Items = collection?.Items;
+        Items = collection?.Items.AsObservable();
         CurrentPage = collection is null ? 0 : collection.CurrentPage;
         PagesCount = collection is null ? 0 : collection.PagesCount;
         PageLoaded?.Invoke(this, null);
