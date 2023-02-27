@@ -2,10 +2,10 @@
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System;
 using Serilog;
+using System.Collections.Generic;
 
 namespace DataLibraryCore.DataAccess.SqlServer;
 
@@ -24,7 +24,7 @@ public class SqlDataAccess : Interfaces.IDataAccess
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Error in SqlDataAccess");
+            Log.Error(ex, $"Error in {System.Reflection.MethodBase.GetCurrentMethod().DeclaringType}");
             return false;
         }
         return true;
@@ -39,21 +39,35 @@ public class SqlDataAccess : Interfaces.IDataAccess
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Error in SqlDataAccess");
+            Log.Error(ex, $"Error in {System.Reflection.MethodBase.GetCurrentMethod().DeclaringType}");
         }
         return false;
     }
 
-    public async Task<ObservableCollection<T>> LoadDataAsync<T, U>(string sql, U param)
+    public async Task<List<T>> LoadDataAsync<T, U>(string sql, U param)
     {
         try
         {
             using IDbConnection conn = new SqlConnection(GetConnectionString());
-            return await conn.QueryAsync<T>(sql, param).AsObservableAsync();
+            return (await conn.QueryAsync<T>(sql, param)).AsList();
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Error in SqlDataAccess");
+            Log.Error(ex, $"Error in {System.Reflection.MethodBase.GetCurrentMethod().DeclaringType}");
+        }
+        return null;
+    }
+
+    public async Task<List<T>> LoadDataAsync<T>(string sql)
+    {
+        try
+        {
+            using IDbConnection conn = new SqlConnection(GetConnectionString());
+            return (await conn.QueryAsync<T>(sql)).AsList();
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, $"Error in {System.Reflection.MethodBase.GetCurrentMethod().DeclaringType}");
         }
         return null;
     }
@@ -68,7 +82,22 @@ public class SqlDataAccess : Interfaces.IDataAccess
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Error in SqlDataAccess");
+            Log.Error(ex, $"Error in {System.Reflection.MethodBase.GetCurrentMethod().DeclaringType}");
+        }
+        return 0;
+    }
+
+    public async Task<int> SaveDataAsync(string sql)
+    {
+        try
+        {
+            using IDbConnection conn = new SqlConnection(GetConnectionString());
+            var result = await conn.ExecuteAsync(sql);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, $"Error in {System.Reflection.MethodBase.GetCurrentMethod().DeclaringType}");
         }
         return 0;
     }
@@ -82,7 +111,21 @@ public class SqlDataAccess : Interfaces.IDataAccess
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Error in SqlDataAccess");
+            Log.Error(ex, $"Error in {System.Reflection.MethodBase.GetCurrentMethod().DeclaringType}");
+        }
+        return default;
+    }
+
+    public async Task<T> ExecuteScalarAsync<T>(string sql)
+    {
+        try
+        {
+            using IDbConnection conn = new SqlConnection(GetConnectionString());
+            return await conn.ExecuteScalarAsync<T>(sql);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, $"Error in {System.Reflection.MethodBase.GetCurrentMethod().DeclaringType}");
         }
         return default;
     }
@@ -96,7 +139,7 @@ public class SqlDataAccess : Interfaces.IDataAccess
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Error in SqlDataAccess");
+            Log.Error(ex, $"Error in {System.Reflection.MethodBase.GetCurrentMethod().DeclaringType}");
         }
         return default;
     }

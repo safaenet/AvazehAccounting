@@ -67,12 +67,12 @@ internal static class Statics
         return invoices;
     }
 
-    internal async static Task<ObservableCollection<CustomerModel>> MapObservableCollectionOfCustomersAsync
+    internal async static Task<List<CustomerModel>> MapObservableCollectionOfCustomersAsync
     (
         this SqlMapper.GridReader reader
     )
     {
-        var first = await reader.ReadAsync<CustomerModel>().AsObservableAsync();
+        var first = (await reader.ReadAsync<CustomerModel>()).AsList();
         var task = await reader.ReadAsync<PhoneNumberModel>();
         var childMap = task
             .GroupBy(s => s.CustomerId)
@@ -84,7 +84,7 @@ internal static class Statics
         return first;
     }
 
-    internal async static Task<ObservableCollection<TFirst>> MapObservableCollectionOfChequesAsync<TFirst, TSecond, TKey>
+    internal async static Task<List<TFirst>> MapObservableCollectionOfChequesAsync<TFirst, TSecond, TKey>
     (
         this SqlMapper.GridReader reader,
         Func<TFirst, TKey> firstKey,
@@ -92,7 +92,7 @@ internal static class Statics
         Action<TFirst, IEnumerable<TSecond>> addChildren
     )
     {
-        var first = new ObservableCollection<TFirst>(await reader.ReadAsync<TFirst>());
+        var first = new List<TFirst>(await reader.ReadAsync<TFirst>());
         var task = await reader.ReadAsync<TSecond>();
         var childMap = task.GroupBy(s => secondKey(s))
             .ToDictionary(g => g.Key, g => g.AsEnumerable());
@@ -105,11 +105,6 @@ internal static class Statics
             }
         }
         return first;
-    }
-
-    internal static async Task<ObservableCollection<T>> AsObservableAsync<T>(this Task<IEnumerable<T>> collection)
-    {
-        return await Task.FromResult(new ObservableCollection<T>(collection.Result));
     }
 
     public static TransactionModel MapToSingleTransaction(this SqlMapper.GridReader reader)

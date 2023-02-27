@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.SecurityAndSettingsModels;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AvazehWebAPI.Controllers;
@@ -31,7 +31,7 @@ public class InvoiceItemController : ControllerBase
     }
 
     [HttpGet("{MaxRecord}/{CustomerId}/{ProductId}"), Authorize]
-    public async Task<ActionResult<ObservableCollection<RecentSellPriceModel>>> GetItemAsync(int MaxRecord, int CustomerId, int ProductId) //Used for getting recent sell prices.
+    public async Task<ActionResult<List<RecentSellPriceModel>>> GetItemAsync(int MaxRecord, int CustomerId, int ProductId) //Used for getting recent sell prices.
     {
         var items = await Processor.GetRecentSellPricesAsync(MaxRecord, CustomerId, ProductId);
         if (items is null || items.Count == 0) return NotFound("Couldn't find specific Item");

@@ -9,6 +9,7 @@ using System;
 using System.Collections.ObjectModel;
 using SharedLibrary.Helpers;
 using Serilog;
+using System.Collections.Generic;
 
 namespace DataLibraryCore.DataAccess.SqlServer;
 
@@ -93,11 +94,11 @@ public class SqlUserProcessor : IUserProcessor
         return false;
     }
 
-    public async Task<ObservableCollection<UserInfoBaseModel>> GetUsersAsync()
+    public async Task<List<UserInfoBaseModel>> GetUsersAsync()
     {
         try
         {
-            var list = await DataAccess.LoadDataAsync<UserInfoBaseModel, DynamicParameters>(GetUsersListQuery, null);
+            var list = await DataAccess.LoadDataAsync<UserInfoBaseModel>(GetUsersListQuery);
             return list;
         }
         catch (Exception ex)
@@ -111,7 +112,7 @@ public class SqlUserProcessor : IUserProcessor
     {
         try
         {
-            var count = await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(GetCountOfAdminUsersQuery, null);
+            var count = await DataAccess.ExecuteScalarAsync<int>(GetCountOfAdminUsersQuery);
             return count;
         }
         catch (Exception ex)

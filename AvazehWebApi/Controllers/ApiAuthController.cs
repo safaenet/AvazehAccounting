@@ -86,9 +86,9 @@ public class AuthController : Controller
     }
 
     [HttpGet("UserInfoBases"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{nameof(UserPermissionsModel.CanManageItself)}, {nameof(UserPermissionsModel.CanManageOthers)}")]
-    public async Task<ActionResult<ObservableCollection<UserInfoBaseModel>>> GetItemsAsync()
+    public async Task<ActionResult<List<UserInfoBaseModel>>> GetItemsAsync()
     {
-        ObservableCollection<UserInfoBaseModel> users = new();
+        List<UserInfoBaseModel> users = new();
         if (User.IsInRole(nameof(UserPermissionsModel.CanManageOthers)))
             users = await UserProcessor.GetUsersAsync();
         else

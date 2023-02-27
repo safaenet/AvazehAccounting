@@ -53,7 +53,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
         {
 
             var query = $"SELECT TransactionId FROM TransactionItems WHERE Id = { Id }";
-            return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(query, null);
+            return await DataAccess.ExecuteScalarAsync<int>(query);
         }
         catch (Exception ex)
         {
@@ -164,7 +164,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
             var where2 = string.IsNullOrEmpty(SearchText) ? "" : $" AND [Title] LIKE '%{ SearchText }%'";
             var where3 = TransactionId == 0 ? "" : $" AND [TransactionId] = { TransactionId }";
             var sql = string.Format(GetProductItemsQuery, where1, where2, where3);
-            var items = await DataAccess.LoadDataAsync<ItemsForComboBox, DynamicParameters>(sql, null);
+            var items = await DataAccess.LoadDataAsync<ItemsForComboBox>(sql);
             return items?.ToList();
         }
         catch (Exception ex)
@@ -180,7 +180,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
         {
             var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [Id] <> { SearchText }";
             var sql = string.Format(GetTransactionNamesQuery, where);
-            var items = await DataAccess.LoadDataAsync<ItemsForComboBox, DynamicParameters>(sql, null);
+            var items = await DataAccess.LoadDataAsync<ItemsForComboBox>(sql);
             return items?.ToList();
         }
         catch (Exception ex)
@@ -373,7 +373,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
                             LEFT JOIN (SELECT ti.TransactionId, SUM(ti.Amount * ti.CountValue) AS TotalVal FROM TransactionItems ti WHERE (ti.Amount * ti.CountValue) < 0 GROUP BY ti.TransactionId 
                             ) AS neg ON t.Id = neg.TransactionId
                                 { (string.IsNullOrEmpty(WhereClause) ? "" : " WHERE ") } { WhereClause }";
-            return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
+            return await DataAccess.ExecuteScalarAsync<int>(sqlTemp);
         }
         catch (Exception ex)
         {
@@ -388,7 +388,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
         {
             var sqlTemp = $@"SELECT COUNT([Id]) FROM TransactionItems WHERE [TransactionId] = { Id }
                                 { (string.IsNullOrEmpty(WhereClause) ? "" : " AND ") } { WhereClause }";
-            return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
+            return await DataAccess.ExecuteScalarAsync<int>(sqlTemp);
         }
         catch (Exception ex)
         {
@@ -397,7 +397,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
         return 0;
     }
 
-    public async Task<ObservableCollection<TransactionListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    public async Task<List<TransactionListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
     {
         try
         {
@@ -410,7 +410,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
 
                             { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
                             ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
-            return await DataAccess.LoadDataAsync<TransactionListModel, DynamicParameters>(sql, null);
+            return await DataAccess.LoadDataAsync<TransactionListModel>(sql);
         }
         catch (Exception ex)
         {
@@ -419,14 +419,14 @@ public class SqlTransactionProcessor : ITransactionProcessor
         return null;
     }
 
-    public async Task<ObservableCollection<TransactionItemModel>> LoadManyTransactionItemsAsync(int OffSet, int FetcheSize, string WhereClause, int Id, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    public async Task<List<TransactionItemModel>> LoadManyTransactionItemsAsync(int OffSet, int FetcheSize, string WhereClause, int Id, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
     {
         try
         {
             string sql = $@"SELECT * FROM TransactionItems WHERE [TransactionId] = { Id }
                             { (string.IsNullOrEmpty(WhereClause) ? "" : $" AND { WhereClause }") }
                             ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
-            return await DataAccess.LoadDataAsync<TransactionItemModel, DynamicParameters>(sql, null);
+            return await DataAccess.LoadDataAsync<TransactionItemModel>(sql);
         }
         catch (Exception ex)
         {
@@ -440,7 +440,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
         try
         {
             var query = string.Format(LoadSingleItemQuery, Id);
-            var result = await DataAccess.LoadDataAsync<TransactionModel, DynamicParameters>(query, null);
+            var result = await DataAccess.LoadDataAsync<TransactionModel>(query);
             var output = result.SingleOrDefault();
             if (output != null)
             {
@@ -461,7 +461,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
         try
         {
             var sql = $"SELECT ISNULL(SUM([Amount]*[CountValue]), 0) FROM TransactionItems WHERE ([Amount]*[CountValue]) > 0 AND TransactionId = { Id }";
-            return await DataAccess.ExecuteScalarAsync<double, DynamicParameters>(sql, null);
+            return await DataAccess.ExecuteScalarAsync<double>(sql);
         }
         catch (Exception ex)
         {
@@ -475,7 +475,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
         try
         {
             var sql = $"SELECT ISNULL(SUM([Amount]*[CountValue]), 0) FROM TransactionItems WHERE ([Amount]*[CountValue]) < 0 AND TransactionId = { Id }";
-            return await DataAccess.ExecuteScalarAsync<double, DynamicParameters>(sql, null);
+            return await DataAccess.ExecuteScalarAsync<double>(sql);
         }
         catch (Exception ex)
         {

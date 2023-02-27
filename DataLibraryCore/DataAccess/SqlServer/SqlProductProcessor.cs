@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using SharedLibrary.Helpers;
 using System;
 using Serilog;
+using System.Collections.Generic;
 
 namespace DataLibraryCore.DataAccess.SqlServer;
 
@@ -137,7 +138,7 @@ public class SqlProductProcessor<TModel, TValidator> : IGeneralProcessor<TModel>
         {
             var sqlTemp = $@"SELECT COUNT([Id]) FROM Products
                                 { (string.IsNullOrEmpty(WhereClause) ? "" : " WHERE ") } { WhereClause }";
-            return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
+            return await DataAccess.ExecuteScalarAsync<int>(sqlTemp);
         }
         catch (Exception ex)
         {
@@ -146,7 +147,7 @@ public class SqlProductProcessor<TModel, TValidator> : IGeneralProcessor<TModel>
         return 0;
     }
 
-    public async Task<ObservableCollection<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    public async Task<List<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
     {
         try
         {
@@ -154,7 +155,7 @@ public class SqlProductProcessor<TModel, TValidator> : IGeneralProcessor<TModel>
                             SELECT * FROM Products
                             { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
                             ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
-            return await DataAccess.LoadDataAsync<TModel, DynamicParameters>(sql, null);
+            return await DataAccess.LoadDataAsync<TModel>(sql);
         }
         catch (Exception ex)
         {

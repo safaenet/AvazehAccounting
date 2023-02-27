@@ -22,7 +22,7 @@ public class AppSettingsManager : IAppSettingsManager
         DataAccess = new SqlDataAccess();
     }
 
-    private static string SettingsFileName = AppDomain.CurrentDomain.BaseDirectory + "appsettings.xml";
+    private static readonly string SettingsFileName = AppDomain.CurrentDomain.BaseDirectory + "appsettings.xml";
     private readonly IDataAccess DataAccess;
     private readonly string GetUserDescriptionsQuery = "SELECT [Id], [DescriptionTitle], [DescriptionText] From UserDescriptions";
     private readonly string GetProductUnitsQuery = "SELECT [Id], [UnitName] From ProductUnits";
@@ -33,7 +33,7 @@ public class AppSettingsManager : IAppSettingsManager
     private readonly string UpdateProductUnits = "Update ProductUnits SET [UnitName] = @unitName WHERE [Id] = @id";
     private readonly string DeleteProductUnits = "Delete ProductUnits WHERE [Id] = @id";
 
-    private async Task CheckSettingsFile()
+    private static async Task CheckSettingsFile()
     {
         if (!File.Exists(SettingsFileName))
             await WriteSettingsFileToDisk(new AppSettingsModel());
@@ -127,13 +127,13 @@ public class AppSettingsManager : IAppSettingsManager
 
     private async Task<List<UserDescriptionModel>> GetUserDescriptionsAsync()
     {
-        var items = await DataAccess.LoadDataAsync<UserDescriptionModel, DynamicParameters>(GetUserDescriptionsQuery, null);
+        var items = await DataAccess.LoadDataAsync<UserDescriptionModel>(GetUserDescriptionsQuery);
         return items.AsList();
     }
 
     private async Task<List<ProductUnitModel>> GetProductUnitsAsync()
     {
-        var items = await DataAccess.LoadDataAsync<ProductUnitModel, DynamicParameters>(GetProductUnitsQuery, null);
+        var items = await DataAccess.LoadDataAsync<ProductUnitModel>(GetProductUnitsQuery);
         return items.AsList();
     }
 
@@ -141,7 +141,7 @@ public class AppSettingsManager : IAppSettingsManager
     {
         if (descriptions != null && descriptions.Count > 0)
         {
-            _ = await DataAccess.SaveDataAsync<DynamicParameters>(DeleteAllUserDescriptionsCmd, null);
+            _ = await DataAccess.SaveDataAsync(DeleteAllUserDescriptionsCmd);
             int id = 1;
             foreach (var item in descriptions)
                 item.Id = id++;

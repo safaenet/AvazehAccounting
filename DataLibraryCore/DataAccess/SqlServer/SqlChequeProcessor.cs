@@ -207,7 +207,7 @@ public class SqlChequeProcessor : IChequeProcessor
     {
         try
         {
-            var result = await DataAccess.LoadDataAsync<string, DynamicParameters>(LoadBanknamesQuery, null);
+            var result = await DataAccess.LoadDataAsync<string>(LoadBanknamesQuery);
             return result.ToList();
         }
         catch (Exception ex)
@@ -217,7 +217,7 @@ public class SqlChequeProcessor : IChequeProcessor
         return null;
     }
 
-    public async Task<ObservableCollection<ChequeModel>> LoadChequesByDueDate(string FromDate, string ToDate)
+    public async Task<List<ChequeModel>> LoadChequesByDueDate(string FromDate, string ToDate)
     {
         try
         {
@@ -238,7 +238,7 @@ public class SqlChequeProcessor : IChequeProcessor
         {
             var sqlTemp = $@"SELECT COUNT(c.Id) FROM Cheques c LEFT JOIN ChequeEvents ce1 ON (c.Id = ce1.ChequeId) LEFT OUTER JOIN ChequeEvents ce2 ON (c.Id = ce2.ChequeId AND (ce1.Id < ce2.Id)) WHERE ce2.Id IS NULL
                              { (string.IsNullOrEmpty(WhereClause) ? "" : " AND ") } { WhereClause }";
-            return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
+            return await DataAccess.ExecuteScalarAsync<int>(sqlTemp);
         }
         catch (Exception ex)
         {
@@ -247,7 +247,7 @@ public class SqlChequeProcessor : IChequeProcessor
         return 0;
     }
 
-    public async Task<ObservableCollection<ChequeModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    public async Task<List<ChequeModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
     {
         try
         {

@@ -11,6 +11,7 @@ using SharedLibrary.Enums;
 using System.Threading.Tasks;
 using Serilog;
 using System;
+using System.Collections.Generic;
 
 namespace DataLibraryCore.DataAccess.SqlServer;
 
@@ -183,7 +184,7 @@ public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<
         {
             var sqlTemp = $@"SELECT COUNT([Id]) FROM Customers
                              { (string.IsNullOrEmpty(WhereClause) ? "" : " WHERE ") } { WhereClause }";
-            return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
+            return await DataAccess.ExecuteScalarAsync<int>(sqlTemp);
         }
         catch (Exception ex)
         {
@@ -192,7 +193,7 @@ public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<
         return 0;
     }
 
-    public async Task<ObservableCollection<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    public async Task<List<TModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
     {
         try
         {
@@ -202,7 +203,7 @@ public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<
             var query = string.Format(SelectCustomersQuery, sqlInsert);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
             var reader = await conn.QueryMultipleAsync(query, null);
-            return await reader.MapObservableCollectionOfCustomersAsync() as ObservableCollection<TModel>;
+            return await reader.MapObservableCollectionOfCustomersAsync() as List<TModel>;
         }
         catch (Exception ex)
         {

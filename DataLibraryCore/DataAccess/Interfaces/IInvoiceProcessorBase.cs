@@ -3,7 +3,6 @@ using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.Interfaces;
@@ -20,11 +19,11 @@ public interface IInvoiceProcessorBase<TModel> : IProcessorBase<TModel>
     Task<int> InsertInvoiceItemToDatabaseAsync(InvoiceItemModel item);
     Task<List<ProductUnitModel>> GetProductUnitsAsync();
     Task<List<ItemsForComboBox>> GetCustomerNamesAsync(string SearchText);
-    Task<ObservableCollection<InvoiceListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy, OrderType Order);
+    Task<List<InvoiceListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy, OrderType Order);
     Task<int> UpdateInvoiceItemInDatabaseAsync(InvoiceItemModel item);
     Task<InvoicePaymentModel> GetInvoicePaymentFromDatabaseAsync(int Id);
     Task<int> InsertInvoicePaymentToDatabaseAsync(InvoicePaymentModel item);
     Task<int> UpdateInvoicePaymentInDatabaseAsync(InvoicePaymentModel item);
     Task<int> DeleteInvoicePaymentFromDatabaseAsync(int ItemId);
-    Task<ObservableCollection<RecentSellPriceModel>> GetRecentSellPricesAsync(int MaxRecord, int CustomerId, int ProductId);
+    Task<List<RecentSellPriceModel>> GetRecentSellPricesAsync(int MaxRecord, int CustomerId, int ProductId);
 }

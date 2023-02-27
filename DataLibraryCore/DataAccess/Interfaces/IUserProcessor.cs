@@ -1,5 +1,5 @@
 ﻿using SharedLibrary.SecurityAndSettingsModels;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.Interfaces;
@@ -7,7 +7,7 @@ namespace DataLibraryCore.DataAccess.Interfaces;
 public interface IUserProcessor
 {
     Task<bool> TestDBConnectionAsync();
-    Task<ObservableCollection<UserInfoBaseModel>> GetUsersAsync();
+    Task<List<UserInfoBaseModel>> GetUsersAsync();
     Task<int> GetCountOfAdminUsersAsync();
     Task<UserInfoBaseModel> CreateUserAsync(User_DTO_CreateUpdate user);
     Task<bool> VerifyUserAsync(UserLogin_DTO user);

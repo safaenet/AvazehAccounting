@@ -6,6 +6,7 @@
     [DateUpdated] DATETIME NULL, 
     [DiscountType] TINYINT NULL DEFAULT 0, 
     [DiscountValue] FLOAT NULL DEFAULT 0, 
+    [About] NVARCHAR(50) NULL,
     [Descriptions] NTEXT NULL, 
     [LifeStatus] TINYINT NOT NULL,
     [PrevInvoiceId] INT NULL

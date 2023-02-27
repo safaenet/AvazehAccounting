@@ -2,7 +2,7 @@
 using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,7 +23,7 @@ public class TransactionCollectionManager : ITransactionCollectionManager
     public bool Initialized { get; set; }
     public ITransactionProcessor Processor { get; init; }
 
-    public ObservableCollection<TransactionListModel> Items { get; set; }
+    public List<TransactionListModel> Items { get; set; }
     public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
     public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
 

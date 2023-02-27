@@ -2,7 +2,7 @@
 using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,7 +23,7 @@ public class ProductCollectionManager : IGeneralCollectionManager<ProductModel, 
     public bool Initialized { get; set; }
     public IGeneralProcessor<ProductModel> Processor { get; init; }
 
-    public ObservableCollection<ProductModel> Items { get; set; }
+    public List<ProductModel> Items { get; set; }
     public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
     public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
 

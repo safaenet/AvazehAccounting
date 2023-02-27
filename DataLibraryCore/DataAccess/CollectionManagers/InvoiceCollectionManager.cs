@@ -2,7 +2,7 @@
 using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,7 +22,7 @@ public class InvoiceCollectionManager : IInvoiceCollectionManager
     public event EventHandler PreviousPageLoaded;
     public bool Initialized { get; set; }
     public IInvoiceProcessor Processor { get; init; }
-    public ObservableCollection<InvoiceListModel> Items { get; set; }
+    public List<InvoiceListModel> Items { get; set; }
     public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
     public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
 

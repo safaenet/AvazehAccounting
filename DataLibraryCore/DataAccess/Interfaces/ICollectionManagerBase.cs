@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DataLibraryCore.DataAccess.Interfaces;
@@ -14,7 +14,7 @@ public interface ICollectionManagerBase<TModel>
     event EventHandler PreviousPageLoaded;
     int CurrentPage { get; }
     bool Initialized { get; set; }
-    ObservableCollection<TModel> Items { get; set; }
+    List<TModel> Items { get; set; }
     int? MaxID { get; }
     int? MinID { get; }
     int PagesCount { get; }

@@ -40,7 +40,7 @@ public class CustomerDetailViewModel : ViewAware
 
     private readonly ICollectionManager<CustomerModel> Manager;
     private CustomerModel _Customer;
-    private Func<Task> CallBackFunc;
+    private readonly Func<Task> CallBackFunc;
     private string windowTitle;
     private CustomerModel customerBackup;
 

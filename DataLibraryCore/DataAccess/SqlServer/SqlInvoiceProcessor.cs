@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Collections.ObjectModel;
 using FluentValidation.Results;
 using Dapper.FluentMap.Mapping;
 using Dapper.FluentMap;
@@ -120,7 +119,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         try
         {
             var query = $"SELECT InvoiceId FROM InvoiceItems WHERE Id = { Id }";
-            return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(query, null);
+            return await DataAccess.ExecuteScalarAsync<int>(query);
         }
         catch (Exception ex)
         {
@@ -134,7 +133,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         try
         {
             var query = $"SELECT InvoiceId FROM InvoicePayments WHERE Id = { Id }";
-            return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(query, null);
+            return await DataAccess.ExecuteScalarAsync<int>(query);
         }
         catch (Exception ex)
         {
@@ -249,7 +248,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         try
         {
             string sql = @$"DELETE FROM Invoices WHERE Id = {Id}";
-            return await DataAccess.SaveDataAsync<DynamicParameters>(sql, null);
+            return await DataAccess.SaveDataAsync(sql);
         }
         catch (Exception ex)
         {
@@ -360,7 +359,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         try
         {
             string GetInvoicePaymentQuery = $"SELECT * FROM InvoicePayments WHERE Id = { Id }";
-            var result = await DataAccess.LoadDataAsync<InvoicePaymentModel, DynamicParameters>(GetInvoicePaymentQuery, null);
+            var result = await DataAccess.LoadDataAsync<InvoicePaymentModel>(GetInvoicePaymentQuery);
             return result.SingleOrDefault();
         }
         catch (Exception ex)
@@ -463,7 +462,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
                 LEFT JOIN (SELECT SUM(ips.[PayAmount]) AS TotalPayments, ips.[InvoiceId]
 	            FROM InvoicePayments ips GROUP BY ips.[InvoiceId]) pays ON i.Id=pays.InvoiceId
                 { (string.IsNullOrEmpty(WhereClause) ? "" : " WHERE ") } { WhereClause }";
-            return await DataAccess.ExecuteScalarAsync<int, DynamicParameters>(sqlTemp, null);
+            return await DataAccess.ExecuteScalarAsync<int>(sqlTemp);
         }
         catch (Exception ex)
         {
@@ -472,7 +471,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         return 0;
     }
 
-    public async Task<ObservableCollection<InvoiceListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    public async Task<List<InvoiceListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
     {
         try
         {
@@ -490,7 +489,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
 
                             { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
                             ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
-            return await DataAccess.LoadDataAsync<InvoiceListModel, DynamicParameters>(sql, null);
+            return await DataAccess.LoadDataAsync<InvoiceListModel>(sql);
         }
         catch (Exception ex)
         {
@@ -531,7 +530,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
                                  FROM InvoicePayments ips GROUP BY ips.[InvoiceId]) pays ON i.Id=pays.InvoiceId
                               WHERE i.LifeStatus = { (int)InvoiceLifeStatus.Active } AND c.Id = { CustomerId } { InvoiceClause }
                               GROUP BY c.Id";
-            return await DataAccess.ExecuteScalarAsync<double, DynamicParameters>(sqlQuery, null);
+            return await DataAccess.ExecuteScalarAsync<double>(sqlQuery);
         }
         catch (Exception ex)
         {
@@ -547,7 +546,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
             var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [ProductName] LIKE '%{ SearchText }%'";
             if (string.IsNullOrEmpty(where)) where = " WHERE IsActive = 1"; else where += " AND IsActive = 1";
             var sql = string.Format(GetProductItemsQuery, where);
-            var items = await DataAccess.LoadDataAsync<ItemsForComboBox, DynamicParameters>(sql, null);
+            var items = await DataAccess.LoadDataAsync<ItemsForComboBox>(sql);
             return items?.ToList();
         }
         catch (Exception ex)
@@ -561,7 +560,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
     {
         try
         {
-            var result = await DataAccess.LoadDataAsync<ProductUnitModel, DynamicParameters>(GetProductUnitsQuery, null);
+            var result = await DataAccess.LoadDataAsync<ProductUnitModel>(GetProductUnitsQuery);
             return result?.ToList();
         }
         catch (Exception ex)
@@ -577,7 +576,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         {
             var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [FirstName] + ' ' + [LastName] LIKE '%{ SearchText }%'";
             var sql = string.Format(GetCustomerNamesQuery, where);
-            var items = await DataAccess.LoadDataAsync<ItemsForComboBox, DynamicParameters>(sql, null);
+            var items = await DataAccess.LoadDataAsync<ItemsForComboBox>(sql);
             return items?.ToList();
         }
         catch (Exception ex)
@@ -587,12 +586,12 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         return null;
     }
 
-    public async Task<ObservableCollection<RecentSellPriceModel>> GetRecentSellPricesAsync(int MaxRecord, int CustomerId, int ProductId)
+    public async Task<List<RecentSellPriceModel>> GetRecentSellPricesAsync(int MaxRecord, int CustomerId, int ProductId)
     {
         try
         {
             var sql = string.Format(GetRecentPricesOfProductQuery, MaxRecord, CustomerId, ProductId);
-            return await DataAccess.LoadDataAsync<RecentSellPriceModel, DynamicParameters>(sql, null);
+            return await DataAccess.LoadDataAsync<RecentSellPriceModel>(sql);
         }
         catch (Exception ex)
         {
