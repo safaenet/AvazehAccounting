@@ -259,7 +259,7 @@ public class ChequeEventToColorConverter : Freezable, IValueConverter
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
 }
 
-public class DateToColorConverter : Freezable, IValueConverter
+public class DateToColorConverter : Freezable, IValueConverter //Used
 {
     #region Overrides of Freezable    
     protected override Freezable CreateInstanceCore()
@@ -291,7 +291,7 @@ public class DateToColorConverter : Freezable, IValueConverter
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value == null || string.IsNullOrEmpty(ItemColor)) return DependencyProperty.UnsetValue;
-        if ((string)value == Date) return new SolidColorBrush(ItemColor.ToColor());
+        if (((DateTime)value).ToPersianDate() == Date) return new SolidColorBrush(ItemColor.ToColor());
         return DependencyProperty.UnsetValue;
     }
 
@@ -462,11 +462,11 @@ public class EnglishInvoiceStatusToPersianConverter : IValueConverter
     }
 }
 
-public class ProductStatusToPersianConverter : IValueConverter
+public class ProductStatusToPersianConverter : IValueConverter //Used
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value == null) return DependencyProperty.UnsetValue; ;
+        if (value == null) return DependencyProperty.UnsetValue;
         if ((bool)value) return "فعال"; else return "غیرفعال";
     }
 
@@ -482,4 +482,46 @@ public class NumberToVisibilityConverter : IValueConverter
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+}
+
+public class DateTimeToPersianDateConverter : IValueConverter //Used
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value == null) return DependencyProperty.UnsetValue;
+        return ((DateTime)value).ToPersianDate();
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class DateTimeToPersianDateTimeConverter : IValueConverter //Used
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value == null) return DependencyProperty.UnsetValue;
+        return ((DateTime)value).ToPersianDateTime();
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class DateTimeToTimeOnlyConverter : IValueConverter //Used
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value == null) return DependencyProperty.UnsetValue;
+        return ((DateTime)value).ToTime();
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
 }

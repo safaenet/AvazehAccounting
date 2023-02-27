@@ -1,10 +1,10 @@
-﻿using AvazehApiClient.DataAccess;
-using AvazehApiClient.DataAccess.Interfaces;
+﻿using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
+using SharedLibrary.Helpers;
 using SharedLibrary.SecurityAndSettingsModels;
+using System;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -18,7 +18,7 @@ public class ProductListViewModel : Screen
         PCM = manager;
         User = user;
         LoadSettings();
-        CurrentPersianDate = new PersianCalendar().GetPersianDate();
+        CurrentPersianDate = DateTime.Now.ToPersianDate();
         _SelectedProduct = new();
         _ = SearchAsync().ConfigureAwait(true);
     }

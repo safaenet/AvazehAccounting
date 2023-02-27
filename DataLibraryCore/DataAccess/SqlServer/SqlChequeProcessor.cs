@@ -44,8 +44,8 @@ public class SqlChequeProcessor : IChequeProcessor
 	        [Orderer] [nvarchar](50),
 	        [PayAmount] [bigint],
 	        [About] [nvarchar](100),
-	        [IssueDate] [char](10),
-	        [DueDate] [char](10),
+	        [IssueDate] [datetime],
+	        [DueDate] [datetime],
 	        [BankName] [nvarchar](50),
 	        [Serial] [nvarchar](25),
 	        [Identifier] [char](20),
@@ -61,7 +61,7 @@ public class SqlChequeProcessor : IChequeProcessor
         try
         {
             var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
-            var persianDate = PersianCalendarHelper.GetCurrentPersianDate();
+            var TodayDate = DateTime.Now;
             //NotCashed : WHERE [EventType] != 2 AND [EventType] != 4
             //Cashed : WHERE [EventType] = 4
             //Sold : WHERE [EventType] = 2
@@ -73,7 +73,7 @@ public class SqlChequeProcessor : IChequeProcessor
                 ChequeListQueryStatus.Cashed => " AND ISNULL(ce1.[EventType], 0) = 4",
                 ChequeListQueryStatus.Sold => " AND ISNULL(ce1.[EventType], 0) = 2",
                 ChequeListQueryStatus.NonSufficientFund => " AND ISNULL(ce1.[EventType], 0) = 3",
-                ChequeListQueryStatus.FromNowOn => $" AND ((ISNULL(ce1.[EventType], 0) != 4 AND ISNULL(ce1.[EventType], 0) !=2) OR (ISNULL(ce1.[EventType], 0) = 2 AND c.[DueDate] >= '{ persianDate }'))",
+                ChequeListQueryStatus.FromNowOn => $" AND ((ISNULL(ce1.[EventType], 0) != 4 AND ISNULL(ce1.[EventType], 0) !=2) OR (ISNULL(ce1.[EventType], 0) = 2 AND CONVERT(VARCHAR(10), c.[DueDate], 111) >= '{ TodayDate:yyyy/MM/dd}'))",
                 _ => ""
             };
             return @$"(CAST(c.[Id] AS varchar) LIKE { criteria }
@@ -81,8 +81,8 @@ public class SqlChequeProcessor : IChequeProcessor
                       {mode} c.[Orderer] LIKE N{ criteria }
                       {mode} CAST(c.[PayAmount] AS varchar) LIKE { criteria }
                       {mode} c.[About] LIKE N{ criteria }
-                      {mode} c.[IssueDate] LIKE { criteria }
-                      {mode} c.[DueDate] LIKE { criteria }
+                      {mode} CONVERT(VARCHAR(10), c.[IssueDate], 111) LIKE { criteria }
+                      {mode} CONVERT(VARCHAR(10), c.[DueDate], 111) LIKE { criteria }
                       {mode} c.[BankName] LIKE N{ criteria }
                       {mode} c.[Serial] LIKE { criteria }
                       {mode} c.[Identifier] LIKE { criteria }
@@ -217,11 +217,11 @@ public class SqlChequeProcessor : IChequeProcessor
         return null;
     }
 
-    public async Task<List<ChequeModel>> LoadChequesByDueDate(string FromDate, string ToDate)
+    public async Task<List<ChequeModel>> LoadChequesByDueDate(DateOnly FromDate, DateOnly ToDate)
     {
         try
         {
-            string LoadCloseChequesQuery = $" CAST(REPLACE(c.DueDate,'/','') AS bigint) <= CAST('{ ToDate }' AS bigint) AND CAST(REPLACE(c.DueDate,'/','') AS bigint) >= CAST('{ FromDate }' AS bigint) ";
+            string LoadCloseChequesQuery = $" CONVERT(VARCHAR(10), c.DueDate, 111) <= '{ ToDate:yyyy/MM/dd}' AND CONVERT(VARCHAR(10), c.DueDate, 111) >= '{ FromDate:yyyy/MM/dd}' ";
             var result = await LoadManyItemsAsync(0, int.MaxValue, LoadCloseChequesQuery);
             return result;
         }

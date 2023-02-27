@@ -48,4 +48,20 @@ public static class PersianCalendarHelper
     /// Gets the current time in format of "HH:mm:ss"
     /// </summary>
     public static string GetCurrentTime() => DateTime.Now.ToString("HH:mm:ss");
+
+    public static string ToPersianDate(this DateTime datetime)
+    {
+        PersianCalendar pCal = new();
+        return $"{pCal.GetYear(datetime):0000}/{pCal.GetMonth(datetime):00}/{pCal.GetDayOfMonth(datetime):00}";
+    }
+    public static string ToPersianDateTime(this DateTime datetime)
+    {
+        PersianCalendar pCal = new();
+        return $"{pCal.GetYear(datetime):0000}/{pCal.GetMonth(datetime):00}/{pCal.GetDayOfMonth(datetime):00} {datetime.ToTime()}";
+    }
+
+    public static string ToTime(this DateTime datetime)
+    {
+        return $"{ datetime:'HH:mm:ss'}";
+    }
 }

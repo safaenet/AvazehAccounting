@@ -6,8 +6,6 @@ using SharedLibrary.SecurityAndSettingsModels;
 using System.Security.Cryptography;
 using System.Text;
 using System;
-using System.Collections.ObjectModel;
-using SharedLibrary.Helpers;
 using Serilog;
 using System.Collections.Generic;
 
@@ -70,15 +68,15 @@ public class SqlUserProcessor : IUserProcessor
             TransactionShortcut1Name = @transactionShortcut1Name, TransactionShortcut2Name = @transactionShortcut2Name, TransactionShortcut3Name = @transactionShortcut3Name,
             AskToAddNotExistingProduct = @askToAddNotExistingProduct, SearchWhenTyping = @searchWhenTyping, CustomerListPageSize = @customerListPageSize, CustomerListQueryOrderType = @customerListQueryOrderType,
             ProductListPageSize = @productListPageSize, ProductListQueryOrderType = @productListQueryOrderType WHERE [Id] = @id;";
-    private readonly string SelectUserInfoBase = @"SELECT [Id], [Username], FirstName, LastName, DateCreated, LastLoginDate, LastLoginTime, IsActive FROM UserInfo WHERE Username = @username";
+    private readonly string SelectUserInfoBase = @"SELECT [Id], [Username], FirstName, LastName, DateCreated, LastLoginDate, IsActive FROM UserInfo WHERE Username = @username";
     private readonly string SelectUserPermissions = @"SELECT * FROM UserPermissions WHERE [Id] = @id";
     private readonly string SelectUserSettings = @"SELECT * FROM UserSettings WHERE [Id] = @id";
     private readonly string GetPasswordHash = @"SELECT PasswordHash FROM UserInfo WHERE Username = @username";
     private readonly string GetPasswordSalt = @"SELECT PasswordSalt FROM UserInfo WHERE Username = @username";
     private readonly string DeleteUserFromDB = @"DELETE FROM UserInfo WHERE [Id] = @id; DELETE FROM UserPermissions WHERE [Id] = @id; DELETE FROM UserSettings WHERE [Id] = @id";
-    private readonly string GetUsersListQuery = @"SELECT [Id], Username, FirstName, LastName, DateCreated, LastLoginDate, LastLoginTime, IsActive FROM UserInfo";
+    private readonly string GetUsersListQuery = @"SELECT [Id], Username, FirstName, LastName, DateCreated, LastLoginDate, IsActive FROM UserInfo";
     private readonly string GetCountOfAdminUsersQuery = @"SELECT COUNT(u.Username) FROM UserInfo u LEFT JOIN UserPermissions p ON u.Id = p.Id WHERE p.CanManageOthers = 1 AND u.IsActive = 1";
-    private readonly string UpdateUserLastLoginDateQuery = @"UPDATE UserInfo SET LastLoginDate = @lastLoginDate, LastLoginTime = @lastLoginTime WHERE Username = @username";
+    private readonly string UpdateUserLastLoginDateQuery = @"UPDATE UserInfo SET LastLoginDate = @lastLoginDate WHERE Username = @username";
 
     public async Task<bool> TestDBConnectionAsync()
     {
@@ -321,8 +319,7 @@ public class SqlUserProcessor : IUserProcessor
             if (string.IsNullOrEmpty(username)) return;
             DynamicParameters dp = new();
             dp.Add("@username", username);
-            dp.Add("@lastLoginDate", PersianCalendarHelper.GetCurrentPersianDate());
-            dp.Add("@lastLoginTime", PersianCalendarHelper.GetCurrentTime());
+            dp.Add("@lastLoginDate", DateTime.Now);
             await DataAccess.SaveDataAsync(UpdateUserLastLoginDateQuery, dp);
         }
         catch (Exception ex)

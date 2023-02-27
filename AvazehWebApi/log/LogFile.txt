@@ -627,3 +627,16 @@ System.Data.DataException: Error parsing column 5 (IssueDate=1401/10/08 - String
    at Dapper.SqlMapper.GridReader.ReadBufferedAsync[T](Int32 index, Func`2 deserializer) in /_/Dapper/SqlMapper.GridReader.Async.cs:line 244
    at DataLibraryCore.DataAccess.Statics.MapObservableCollectionOfChequesAsync[TFirst,TSecond,TKey](GridReader reader, Func`2 firstKey, Func`2 secondKey, Action`2 addChildren) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\Statics.cs:line 95
    at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 266
+2023-02-27 17:08:20.954 +03:30 [ERR] Error in SqlCustomerProcessor
+System.Data.SqlClient.SqlException (0x80131904): The conversion of a varchar data type to a datetime data type resulted in an out-of-range value.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlCustomerProcessor`3.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlCustomerProcessor.cs:line 204
+ClientConnectionId:8e98e5d5-2a0b-491a-91fb-9502aeade1b0
+Error Number:242,State:3,Class:16

@@ -63,7 +63,7 @@ public class ChequeController : ControllerBase
         IUserProcessor Processor;
         Processor = Service.GetService(typeof(IUserProcessor)) as IUserProcessor;
         var settings = await Processor.GetUserSettingsAsync(Id);
-        var items = await Manager.Processor.LoadChequesByDueDate(PersianCalendarHelper.GetCurrentRawPersianDate(), PersianCalendarHelper.GetRawPersianDate(settings.ChequeNotifyDays));
+        var items = await Manager.Processor.LoadChequesByDueDate(DateOnly.FromDateTime(DateTime.Now), DateOnly.FromDateTime(DateTime.Now).AddDays(settings.ChequeNotifyDays));
         return items is null ? NotFound("Couldn't find any match") : items.ToList();
     }
 

@@ -12,7 +12,6 @@ using SharedLibrary.DalModels;
 using SharedLibrary.Validators;
 using SharedLibrary.DtoModels;
 using System.Threading.Tasks;
-using SharedLibrary.Helpers;
 using System;
 using Serilog;
 
@@ -42,37 +41,33 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
     private const string QueryOrderBy = "Id";
     private const OrderType QueryOrderType = OrderType.DESC;
     private readonly string CreateInvoiceQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 1) FROM [Invoices]) + 1;
-            INSERT INTO Invoices ([Id], CustomerId, DateCreated, TimeCreated, DiscountType, DiscountValue, Descriptions, LifeStatus)
-            VALUES (@newId, @customerId, @dateCreated, @timeCreated, @discountType, @discountValue, @descriptions, @lifeStatus);
+            INSERT INTO Invoices ([Id], CustomerId, DateCreated, DiscountType, DiscountValue, Descriptions, LifeStatus)
+            VALUES (@newId, @customerId, @dateCreated, @discountType, @discountValue, @descriptions, @lifeStatus);
             SELECT @id = @newId;";
-    private readonly string UpdateInvoiceQuery = @"UPDATE Invoices SET CustomerId = @customerId, DateCreated = @dateCreated, TimeCreated = @timeCreated,
-            DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, DiscountType = @discountType,
+    private readonly string UpdateInvoiceQuery = @"UPDATE Invoices SET CustomerId = @customerId, DateCreated = @dateCreated,
+            DateUpdated = @dateUpdated, DiscountType = @discountType,
             DiscountValue = @discountValue, Descriptions = @descriptions, LifeStatus = @lifeStatus WHERE Id = @id";
     private readonly string InsertInvoiceItemQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [InvoiceItems]) + 1;
-            INSERT INTO InvoiceItems ([Id], InvoiceId, ProductId, BuyPrice, SellPrice, CountString, CountValue, ProductUnitId, DateCreated,
-            TimeCreated, Delivered, Descriptions)
-            VALUES (@newId, @invoiceId, @productId, @buyPrice, @sellPrice, @countString, @countValue, @productUnitId, @dateCreated, @timeCreated, @delivered, @descriptions);
+            INSERT INTO InvoiceItems ([Id], InvoiceId, ProductId, BuyPrice, SellPrice, CountString, CountValue, ProductUnitId, DateCreated, Delivered, Descriptions)
+            VALUES (@newId, @invoiceId, @productId, @buyPrice, @sellPrice, @countString, @countValue, @productUnitId, @dateCreated, @delivered, @descriptions);
             SELECT @id = @newId;";
     private readonly string UpdateInvoiceItemQuery = @$"UPDATE InvoiceItems SET ProductId = @productId, BuyPrice = @buyPrice, SellPrice = @sellPrice,
-            CountString = @countString, CountValue = @countValue, ProductUnitId = @productUnitId, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
-            Delivered = @delivered, Descriptions = @descriptions WHERE [Id] = @id";
+            CountString = @countString, CountValue = @countValue, ProductUnitId = @productUnitId, DateUpdated = @dateUpdated, Delivered = @delivered, Descriptions = @descriptions WHERE [Id] = @id";
     private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Invoices SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated WHERE [Id] = @id";
     private readonly string DeleteInvoiceItemQuery = @$"DELETE FROM InvoiceItems WHERE [Id] = @id";
     private readonly string InsertInvoicePaymentQuery = @$"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [InvoicePayments]) + 1;
-            INSERT INTO InvoicePayments ([Id], InvoiceId, DateCreated, TimeCreated, PayAmount, Descriptions)
-            VALUES (@newId, @invoiceId, @dateCreated, @timeCreated, @payAmount, @descriptions);
+            INSERT INTO InvoicePayments ([Id], InvoiceId, DateCreated, PayAmount, Descriptions)
+            VALUES (@newId, @invoiceId, @dateCreated, @payAmount, @descriptions);
             SELECT @id = @newId;";
-    private readonly string UpdateInvoicePaymentQuery = @$"UPDATE InvoicePayments SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
+    private readonly string UpdateInvoicePaymentQuery = @$"UPDATE InvoicePayments SET DateUpdated = @dateUpdated,
             PayAmount = @payAmount, Descriptions = @descriptions WHERE [Id] = @id";
     private readonly string DeleteInvoicePaymentQuery = @$"DELETE FROM InvoicePayments WHERE [Id] = @id";
     private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON
             DECLARE @invoices TABLE(
 	        [Id] [int],
             [CustomerId] [int],
-	        [DateCreated] [char](10),
-	        [TimeCreated] [char](8),
-	        [DateUpdated] [char](10),
-	        [TimeUpdated] [char](8),
+	        [DateCreated] [datetime],
+	        [DateUpdated] [datetime],
 	        [DiscountType] [tinyint],
 	        [DiscountValue] [float],
 	        [Descriptions] [ntext],
@@ -93,26 +88,22 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
             WHERE i.Id = {0}
 
             SELECT * FROM @invoices ORDER BY [Id] ASC;
-            SELECT it.Id, it.InvoiceId, it.BuyPrice, it.SellPrice, it.CountString, it.DateCreated, it.TimeCreated,
-                it.DateUpdated, it.TimeUpdated, it.Delivered, it.Descriptions, p.Id pId, p.ProductName, p.BuyPrice pBuyPrice,
-                p.SellPrice pSellPrice, p.Barcode, p.CountString pCountString, p.DateCreated pDateCreated,
-                p.TimeCreated pTimeCreated, p.DateUpdated pDateUpdated, p.TimeUpdated pTimeUpdated, p.Descriptions pDescriptions,
-                u.Id AS puId, u.UnitName
+            SELECT it.Id, it.InvoiceId, it.BuyPrice, it.SellPrice, it.CountString, it.DateCreated,
+                it.DateUpdated, it.Delivered, it.Descriptions, p.Id pId, p.ProductName, p.BuyPrice pBuyPrice,
+                p.SellPrice pSellPrice, p.Barcode, p.CountString pCountString, p.DateCreated pDateCreated, p.DateUpdated pDateUpdated, p.Descriptions pDescriptions, u.Id AS puId, u.UnitName
                 FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id LEFT JOIN ProductUnits u ON it.ProductUnitId = u.Id WHERE it.InvoiceId IN (SELECT i.Id FROM @invoices i) ORDER BY [Id] DESC;
             SELECT * FROM InvoicePayments WHERE InvoiceId IN (SELECT i.Id FROM @invoices i);
             SELECT * FROM PhoneNumbers WHERE CustomerId IN (SELECT i.CustomerId FROM @invoices i);";
     private readonly string GetSingleInvoiceItemQuery = @"SELECT it.*, p.[Id] AS pId,
                 p.[ProductName], p.[BuyPrice] AS pBuyPrice, p.[SellPrice] AS pSellPrice, p.[Barcode],
-                p.[CountString] AS pCountString, p.[DateCreated] AS pDateCreated, p.[TimeCreated] AS pTimeCreated,
-                p.[DateUpdated] AS pDateUpdated, p.[TimeUpdated] AS pTimeUpdated, p.[Descriptions] AS pDescriptions,
-				u.Id AS puId, u.UnitName
+                p.[CountString] AS pCountString, p.[DateCreated] AS pDateCreated, p.[DateUpdated] AS pDateUpdated, p.[Descriptions] AS pDescriptions, u.Id AS puId, u.UnitName
                 FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id LEFT JOIN ProductUnits u ON it.ProductUnitId = u.Id WHERE it.Id = {0}";
     private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] AS ItemName FROM Products {0} ORDER BY [ProductName]";
     private readonly string GetProductUnitsQuery = "SELECT [Id], [UnitName] FROM ProductUnits";
     private readonly string GetCustomerNamesQuery = "SELECT [Id], ISNULL(FirstName, '') + ' ' + ISNULL(LastName, '') AS ItemName FROM Customers {0} ORDER BY [FirstName], [LastName]";
-    private readonly string GetRecentPricesOfProductQuery = @"SELECT TOP({0}) it.SellPrice AS SellPrice, it.DateCreated AS DateSold FROM InvoiceItems it LEFT JOIN Invoices i ON it.InvoiceId = i.Id
+    private readonly string GetRecentPricesOfProductQuery = @"SELECT TOP({0}) it.SellPrice AS SellPrice, CONVERT(VARCHAR(10), it.DateCreated, 111) AS DateSold FROM InvoiceItems it LEFT JOIN Invoices i ON it.InvoiceId = i.Id
                                                              LEFT JOIN Customers c ON i.CustomerId = c.Id LEFT JOIN Products p ON it.ProductId = p.Id
-                                                             WHERE c.Id = {1} AND p.Id = {2} ORDER BY it.DateCreated DESC";
+                                                             WHERE c.Id = {1} AND p.Id = {2} ORDER BY DateSold DESC";
 
     private async Task<int> GetInvoiceIdFromInvoiceItemId(int Id)
     {
@@ -165,9 +156,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
             return @$"(CAST(i.[Id] AS VARCHAR) LIKE { criteria }
                       {mode} CAST(i.[CustomerId] AS VARCHAR) LIKE { criteria }
                       {mode} i.[DateCreated] LIKE { criteria }
-                      {mode} i.[TimeCreated] LIKE { criteria }
                       {mode} i.[DateUpdated] LIKE { criteria }
-                      {mode} i.[TimeUpdated] LIKE { criteria }
                       {mode} CAST(i.[DiscountValue] AS VARCHAR) LIKE { criteria }
                       {mode} i.[Descriptions] LIKE N{ criteria }
 
@@ -228,8 +217,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
             dp.Add("@id", item.Id);
             dp.Add("@customerId", item.Customer.Id);
             dp.Add("@dateCreated", item.DateCreated);
-            dp.Add("@dateUpdated", PersianCalendarHelper.GetCurrentPersianDate());
-            dp.Add("@timeUpdated", PersianCalendarHelper.GetCurrentTime());
+            dp.Add("@dateUpdated", DateTime.Now);
             dp.Add("@discountType", item.DiscountType);
             dp.Add("@discountValue", item.DiscountValue);
             dp.Add("@descriptions", item.Descriptions);
@@ -442,8 +430,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         {
             var dp = new DynamicParameters();
             dp.Add("@id", Id);
-            dp.Add("@dateUpdated", PersianCalendarHelper.GetCurrentPersianDate());
-            dp.Add("@timeUpdated", PersianCalendarHelper.GetCurrentTime());
+            dp.Add("@dateUpdated", DateTime.Now);
             await DataAccess.SaveDataAsync(UpdateSubItemDateAndTimeQuery, dp).ConfigureAwait(false);
         }
         catch (Exception ex)
@@ -476,9 +463,8 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         try
         {
             string sql = $@"SET NOCOUNT ON
-                            SELECT i.Id, i.CustomerId, ISNULL(c.FirstName, '') + ' ' + ISNULL(c.LastName, '') CustomerFullName, i.DateCreated, i.TimeCreated, i.DateUpdated, i.TimeUpdated,
-		                            dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) AS TotalInvoiceSum,
-		                            pays.TotalPayments, i.LifeStatus
+                            SELECT i.Id, i.CustomerId, ISNULL(c.FirstName, '') + ' ' + ISNULL(c.LastName, '') CustomerFullName, i.DateCreated, i.DateUpdated,
+		                            dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) AS TotalInvoiceSum, pays.TotalPayments, i.LifeStatus
                             FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id
                             
                             LEFT JOIN (SELECT SUM(ii.[CountValue] * ii.SellPrice) AS TotalSellValue, ii.[InvoiceId]

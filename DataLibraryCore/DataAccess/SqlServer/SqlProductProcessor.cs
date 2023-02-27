@@ -25,11 +25,11 @@ public class SqlProductProcessor<TModel, TValidator> : IGeneralProcessor<TModel>
     private const string QueryOrderBy = "ProductName";
     private const OrderType QueryOrderType = OrderType.ASC;
     private readonly string CreateProductQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Products]) + 1;
-            INSERT INTO Products ([Id], ProductName, BuyPrice, SellPrice, Barcode, CountString, DateCreated, TimeCreated, Descriptions, IsActive)
-            VALUES (@newId, @productName, @buyPrice, @sellPrice, @barcode, @countString, @dateCreated, @timeCreated, @descriptions, @isActive);
+            INSERT INTO Products ([Id], ProductName, BuyPrice, SellPrice, Barcode, CountString, DateCreated, Descriptions, IsActive)
+            VALUES (@newId, @productName, @buyPrice, @sellPrice, @barcode, @countString, @dateCreated, @descriptions, @isActive);
             SELECT @id = @newId;";
     private readonly string UpdateProductQuery = @"UPDATE Products SET ProductName = @productName, BuyPrice = @buyPrice, SellPrice = @sellPrice, Barcode = @barcode,
-            CountString = @countString, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, Descriptions = @descriptions, IsActive = @isActive
+            CountString = @countString, DateUpdated = @dateUpdated, Descriptions = @descriptions, IsActive = @isActive
             WHERE Id = @id";
     private readonly string DeleteProductQuery = @"DELETE FROM Products WHERE Id = @id";
 
@@ -44,10 +44,8 @@ public class SqlProductProcessor<TModel, TValidator> : IGeneralProcessor<TModel>
                       {mode} CAST([SellPrice] AS varchar) LIKE {criteria}
                       {mode} [Barcode] LIKE {criteria}
                       {mode} [CountString] LIKE N{criteria}
-                      {mode} [DateCreated] LIKE {criteria}
-                      {mode} [TimeCreated] LIKE {criteria}
-                      {mode} [DateUpdated] LIKE {criteria}
-                      {mode} [TimeUpdated] LIKE {criteria}
+                      {mode} CONVERT(VARCHAR(10), [DateCreated], 111) LIKE {criteria}
+                      {mode} CONVERT(VARCHAR(10), [DateUpdated], 111) LIKE {criteria}
                       {mode} [Descriptions] LIKE N{criteria} )";
         }
         catch (Exception ex)

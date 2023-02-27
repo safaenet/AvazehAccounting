@@ -43,7 +43,7 @@ public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<
 	        [CompanyName] [nvarchar](50),
 	        [EmailAddress] [nvarchar](50),
 	        [PostAddress] [ntext],
-	        [DateJoined] [char](10),
+	        [DateJoined] [datetime],
 	        [Descriptions] [ntext])
             {0}
             SELECT * FROM @customers ORDER BY [Id] ASC;
@@ -61,7 +61,7 @@ public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<
                              {mode} [CompanyName] LIKE N{ criteria } 
                              {mode} [EmailAddress] LIKE N{ criteria } 
                              {mode} [PostAddress] LIKE N{ criteria } 
-                             {mode} [DateJoined] LIKE { criteria }  
+                             {mode} CONVERT(VARCHAR(10), [DateJoined], 111) LIKE { criteria }  
                              {mode} [Descriptions] LIKE N{ criteria } )";
         }
         catch (Exception ex)
@@ -197,8 +197,7 @@ public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<
     {
         try
         {
-            var sqlInsert = $@"INSERT @customers SELECT * FROM Customers
-                               { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
+            var sqlInsert = $@"INSERT @customers SELECT * FROM Customers { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
                                ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
             var query = string.Format(SelectCustomersQuery, sqlInsert);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
