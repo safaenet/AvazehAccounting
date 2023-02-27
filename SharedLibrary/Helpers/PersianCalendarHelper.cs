@@ -64,4 +64,17 @@ public static class PersianCalendarHelper
     {
         return $"{ datetime:'HH:mm:ss'}";
     }
+
+    public static DateOnly? ToGregorianDate(this string persianDate)
+    {
+        if (persianDate == null) return null;
+        var subs = persianDate.Split('/');
+        if (subs == null || subs.Length != 3) return null;
+        PersianCalendar pc = new PersianCalendar();
+        if (!int.TryParse(subs[2], out var day)) return null;
+        if (!int.TryParse(subs[1], out var month)) return null;
+        if (!int.TryParse(subs[0], out var year)) return null;
+        DateOnly dt = new DateOnly(year, month, day, pc);
+        return dt;
+    }
 }
