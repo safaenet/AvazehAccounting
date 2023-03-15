@@ -71,9 +71,9 @@ public static class PersianCalendarHelper
         var subs = persianDate.Split('/');
         if (subs == null || subs.Length != 3) return null;
         PersianCalendar pc = new PersianCalendar();
-        if (!int.TryParse(subs[2], out var day)) return null;
-        if (!int.TryParse(subs[1], out var month)) return null;
-        if (!int.TryParse(subs[0], out var year)) return null;
+        if (!int.TryParse(subs[2], NumberStyles.Any, CultureInfo.InvariantCulture, out var day)) return null;
+        if (!int.TryParse(subs[1], NumberStyles.Any, CultureInfo.InvariantCulture, out var month)) return null;
+        if (!int.TryParse(subs[0], NumberStyles.Any, CultureInfo.InvariantCulture, out var year)) return null;
         DateOnly dt = new DateOnly(year, month, day, pc);
         return dt;
     }

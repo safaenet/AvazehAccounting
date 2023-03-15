@@ -214,7 +214,7 @@ namespace PrintInterface
         private void cmbPageHeaderFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            pim.PrintSettings.PageHeaderFontSize = int.Parse((sender as ComboBox).Text);
+            pim.PrintSettings.PageHeaderFontSize = int.Parse((sender as ComboBox).Text, CultureInfo.InvariantCulture);
             rd.SetParameterValue("PageHeaderFontSize", pim.PrintSettings.PageHeaderFontSize);
             RefreshCrystalReport();
         }
@@ -222,7 +222,7 @@ namespace PrintInterface
         private void cmbDetailsFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            pim.PrintSettings.DetailsFontSize = int.Parse((sender as ComboBox).Text);
+            pim.PrintSettings.DetailsFontSize = int.Parse((sender as ComboBox).Text, CultureInfo.InvariantCulture);
             rd.SetParameterValue("DetailsFontSize", pim.PrintSettings.DetailsFontSize);
             RefreshCrystalReport();
         }
@@ -230,7 +230,7 @@ namespace PrintInterface
         private void cmbPageFooterFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            pim.PrintSettings.PageFooterFontSize = int.Parse((sender as ComboBox).Text);
+            pim.PrintSettings.PageFooterFontSize = int.Parse((sender as ComboBox).Text, CultureInfo.InvariantCulture);
             rd.SetParameterValue("PageFooterFontSize", pim.PrintSettings.PageFooterFontSize);
             RefreshCrystalReport();
         }
@@ -238,7 +238,7 @@ namespace PrintInterface
         private void cmbDescriptionFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            pim.PrintSettings.DescriptionFontSize = int.Parse((sender as ComboBox).Text);
+            pim.PrintSettings.DescriptionFontSize = int.Parse((sender as ComboBox).Text, CultureInfo.InvariantCulture);
             rd.SetParameterValue("DescriptionFontSize", pim.PrintSettings.DescriptionFontSize);
             RefreshCrystalReport();
         }

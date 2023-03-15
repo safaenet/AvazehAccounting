@@ -291,7 +291,7 @@ public class DateToColorConverter : Freezable, IValueConverter //Used
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value == null || string.IsNullOrEmpty(ItemColor)) return DependencyProperty.UnsetValue;
-        if ((DateTime)value < DateTime.Parse("2000/01/01")) return DependencyProperty.UnsetValue;
+        if ((DateTime)value < DateTime.Parse("2000/01/01", CultureInfo.InvariantCulture)) return DependencyProperty.UnsetValue;
         if (((DateTime)value).ToPersianDate() == Date) return new SolidColorBrush(ItemColor.ToColor());
         return DependencyProperty.UnsetValue;
     }
@@ -405,7 +405,7 @@ public class SumOfValues : IMultiValueConverter
         if (values == null || values.Length == 0) return DependencyProperty.UnsetValue;
         long result = 0;
         foreach (var item in values)
-            if (!string.IsNullOrEmpty(item.ToString()) && long.TryParse(item.ToString(), out long l))
+            if (!string.IsNullOrEmpty(item.ToString()) && long.TryParse(item.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out long l))
                 result *= l;
             else return DependencyProperty.UnsetValue;
         return result;
@@ -478,7 +478,7 @@ public class NumberToVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (int.TryParse(value.ToString(), out int val) == false) return DependencyProperty.UnsetValue;
+        if (int.TryParse(value.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out int val) == false) return DependencyProperty.UnsetValue;
         if (val != 0) return Visibility.Visible; else return Visibility.Hidden;
     }
 
@@ -490,7 +490,7 @@ public class DateTimeToPersianDateConverter : IValueConverter //Used
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value == null) return DependencyProperty.UnsetValue;
-        if ((DateTime)value < DateTime.Parse("2000/01/01")) return DependencyProperty.UnsetValue;
+        if ((DateTime)value < DateTime.Parse("2000/01/01", CultureInfo.InvariantCulture)) return DependencyProperty.UnsetValue;
         return ((DateTime)value).ToPersianDate();
     }
 
@@ -505,7 +505,7 @@ public class DateTimeToPersianDateTimeConverter : IValueConverter //Used
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value == null) return DependencyProperty.UnsetValue;
-        if ((DateTime)value < DateTime.Parse("2000/01/01")) return DependencyProperty.UnsetValue;
+        if ((DateTime)value < DateTime.Parse("2000/01/01", CultureInfo.InvariantCulture)) return DependencyProperty.UnsetValue;
         return ((DateTime)value).ToPersianDateTime();
     }
 
@@ -520,7 +520,7 @@ public class DateTimeToTimeOnlyConverter : IValueConverter //Used
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value == null) return DependencyProperty.UnsetValue;
-        if ((DateTime)value < DateTime.Parse("2000/01/01")) return DependencyProperty.UnsetValue;
+        if ((DateTime)value < DateTime.Parse("2000/01/01", CultureInfo.InvariantCulture)) return DependencyProperty.UnsetValue;
         return ((DateTime)value).ToTime();
     }
 

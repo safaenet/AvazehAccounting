@@ -178,7 +178,7 @@ namespace PrintInterface
         private void cmbPageHeaderFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            ptm.PrintSettings.PageHeaderFontSize = int.Parse((sender as ComboBox).Text);
+            ptm.PrintSettings.PageHeaderFontSize = int.Parse((sender as ComboBox).Text, CultureInfo.InvariantCulture);
             rd.SetParameterValue(nameof(ptm.PrintSettings.PageHeaderFontSize), ptm.PrintSettings.PageHeaderFontSize);
             RefreshCrystalReport();
         }
@@ -186,7 +186,7 @@ namespace PrintInterface
         private void cmbDetailsFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            ptm.PrintSettings.DetailsFontSize = int.Parse((sender as ComboBox).Text);
+            ptm.PrintSettings.DetailsFontSize = int.Parse((sender as ComboBox).Text, CultureInfo.InvariantCulture);
             rd.SetParameterValue(nameof(ptm.PrintSettings.DetailsFontSize), ptm.PrintSettings.DetailsFontSize);
             RefreshCrystalReport();
         }
@@ -194,7 +194,7 @@ namespace PrintInterface
         private void cmbPageFooterFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            ptm.PrintSettings.PageFooterFontSize = int.Parse((sender as ComboBox).Text);
+            ptm.PrintSettings.PageFooterFontSize = int.Parse((sender as ComboBox).Text, CultureInfo.InvariantCulture);
             rd.SetParameterValue(nameof(ptm.PrintSettings.PageFooterFontSize), ptm.PrintSettings.PageFooterFontSize);
             RefreshCrystalReport();
         }
@@ -202,7 +202,7 @@ namespace PrintInterface
         private void cmbDescriptionFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            ptm.PrintSettings.DescriptionFontSize = int.Parse((sender as ComboBox).Text);
+            ptm.PrintSettings.DescriptionFontSize = int.Parse((sender as ComboBox).Text, CultureInfo.InvariantCulture);
             rd.SetParameterValue(nameof(ptm.PrintSettings.DescriptionFontSize), ptm.PrintSettings.DescriptionFontSize);
             RefreshCrystalReport();
         }

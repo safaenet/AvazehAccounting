@@ -127,9 +127,9 @@ namespace AvazehUserControlLibraryWpf
             if (e.NewValue is null || d is not PersianDatePicker pdp) return;
             var subs = ((string)e.NewValue).Split('/');
             if (subs.Length != 3) throw new InvalidCastException();
-            if (!int.TryParse(subs[2], out var day)) throw new InvalidCastException();
-            if (!int.TryParse(subs[1], out var month)) throw new InvalidCastException();
-            if (!int.TryParse(subs[0], out var year)) throw new InvalidCastException();
+            if (!int.TryParse(subs[2], NumberStyles.Any, CultureInfo.InvariantCulture, out var day)) throw new InvalidCastException();
+            if (!int.TryParse(subs[1], NumberStyles.Any, CultureInfo.InvariantCulture, out var month)) throw new InvalidCastException();
+            if (!int.TryParse(subs[0], NumberStyles.Any, CultureInfo.InvariantCulture, out var year)) throw new InvalidCastException();
 
             if (pdp != null)
             {

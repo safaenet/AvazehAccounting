@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Globalization;
 
 namespace AvazehWebAPI.Controllers;
 
@@ -193,7 +194,7 @@ public class AuthController : Controller
         if (Permissions.CanManageOthers) claims.Add(new Claim(ClaimTypes.Role, nameof(UserPermissionsModel.CanManageOthers)));
 
         var validHours = SettingsDataAccess.AppConfiguration().GetSection("Jwt:ValidHours").Value;
-        _ = double.TryParse(validHours, out var addHours);
+        _ = double.TryParse(validHours, NumberStyles.Any, CultureInfo.InvariantCulture, out var addHours);
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SettingsDataAccess.AppConfiguration().GetSection("Jwt:Key").Value));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
         var token = new JwtSecurityToken(

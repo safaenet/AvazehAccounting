@@ -10,6 +10,7 @@ using SharedLibrary.Helpers;
 using SharedLibrary.SecurityAndSettingsModels;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -59,7 +60,7 @@ public class ChequeController : ControllerBase
     [HttpGet("CloseCheques/{Days}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanViewChequesList))]
     public async Task<ActionResult<List<ChequeModel>>> GetCloseChequesAsync(int Days)
     {
-        int Id = int.Parse(User.FindFirstValue(ClaimTypes.SerialNumber));
+        int Id = int.Parse(User.FindFirstValue(ClaimTypes.SerialNumber), CultureInfo.InvariantCulture);
         IUserProcessor Processor;
         Processor = Service.GetService(typeof(IUserProcessor)) as IUserProcessor;
         var settings = await Processor.GetUserSettingsAsync(Id);

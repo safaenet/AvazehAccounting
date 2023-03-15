@@ -260,7 +260,7 @@ public class InvoiceDetailViewModel : ViewAware
                         ProductModel newProduct = new();
                         newProduct.SellPrice = WorkItem.SellPrice;
                         newProduct.ProductName = ProductInput;
-                        if (long.TryParse(ProductInput, out _)) newProduct.Barcode = ProductInput;
+                        if (long.TryParse(ProductInput, NumberStyles.Any, CultureInfo.InvariantCulture, out _)) newProduct.Barcode = ProductInput;
                         newProduct.BuyPrice = WorkItem.BuyPrice;
                         var p = await pcm.CreateItemAsync(newProduct);
                         if (p is not null)

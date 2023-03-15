@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using static DotNetStandardCalculator.DotNetStandardCalculatorConstants;
 
 namespace DotNetStandardCalculator
@@ -41,8 +42,8 @@ namespace DotNetStandardCalculator
                 var rpn = PrepareString(calculateFrom);
 
                 if (rpn.Length == 0) return false;
-                if (rpn.Length == 1) return double.TryParse(rpn[0], out _);
-                foreach (var token in rpn) if (!double.TryParse(token, out _) && token != OPERATOR_POW && token != OPERATOR_MULTIPLY && token != OPERATOR_ADD && token != OPERATOR_DIVIDE && token != OPERATOR_SUBTRACT) return false;
+                if (rpn.Length == 1) return double.TryParse(rpn[0], NumberStyles.Any, CultureInfo.InvariantCulture, out _);
+                foreach (var token in rpn) if (!double.TryParse(token, NumberStyles.Any, CultureInfo.InvariantCulture, out _) && token != OPERATOR_POW && token != OPERATOR_MULTIPLY && token != OPERATOR_ADD && token != OPERATOR_DIVIDE && token != OPERATOR_SUBTRACT) return false;
                 return true;
             }
             catch { return false; }
@@ -55,7 +56,7 @@ namespace DotNetStandardCalculator
 
             if (rpnSum.Length == 1)
             {
-                if (double.TryParse(rpnSum[0], out double parsedValue))
+                if (double.TryParse(rpnSum[0], NumberStyles.Any, CultureInfo.InvariantCulture, out double parsedValue))
                 {
                     return parsedValue;
                 }
@@ -69,7 +70,7 @@ namespace DotNetStandardCalculator
             foreach(var token in rpnSum)
             {
                 var workingNumber = 0D;
-                if (double.TryParse(token, out double parsed))
+                if (double.TryParse(token, NumberStyles.Any, CultureInfo.InvariantCulture, out double parsed))
                     stack.Push(parsed);
                 else
                 {
