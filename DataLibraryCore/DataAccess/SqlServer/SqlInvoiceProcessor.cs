@@ -70,8 +70,10 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
 	        [DateUpdated] [datetime],
 	        [DiscountType] [tinyint],
 	        [DiscountValue] [float],
+			[About] [nvarchar](50),
 	        [Descriptions] [ntext],
 	        [LifeStatus] [tinyint],
+			[PrevInvoiceId] [int],
 
 	        [CustId] [int],
 	        [FirstName] [nvarchar](50),
