@@ -27,22 +27,23 @@ public class SqlTransactionProcessor : ITransactionProcessor
     private const string QueryOrderBy = "Id";
     private const OrderType QueryOrderType = OrderType.ASC;
     private readonly string CreateTransactionQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [Transactions]) + 1;
-            INSERT INTO Transactions ([Id], FileName, DateCreated, Descriptions)
-            VALUES (@newId, @fileName, @dateCreated, @descriptions);
+            INSERT INTO Transactions ([Id], FileName, DateCreated, TimeCreated, Descriptions)
+            VALUES (@newId, @fileName, @dateCreated, @timeCreated, @descriptions);
             SELECT @id = @newId;";
-    private readonly string UpdateTransactionQuery = @"UPDATE Transactions SET FileName = @fileName, DateCreated = @dateCreated, DateUpdated = @dateUpdated, Descriptions = @descriptions WHERE Id = @id";
+    private readonly string UpdateTransactionQuery = @"UPDATE Transactions SET FileName = @fileName, DateCreated = @dateCreated, TimeCreated = @timeCreated, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated,
+            Descriptions = @descriptions WHERE Id = @id";
     private readonly string DeleteTransactionQuery = @"DELETE FROM Transactions WHERE Id = @id";
     private readonly string GetSingleTransactionItemQuery = "SELECT * FROM TransactionItems WHERE [Id] = {0}";
     private readonly string InsertTransactionItemQuery = @"DECLARE @newId int; SET @newId = (SELECT ISNULL(MAX([Id]), 0) FROM [TransactionItems]) + 1;
-            INSERT INTO TransactionItems ([Id], TransactionId, Title, Amount, CountString, CountValue, DateCreated, Descriptions)
-            VALUES (@newId, @transactionId, @title, @amount, @countString, @countValue, @dateCreated, @descriptions);
+            INSERT INTO TransactionItems ([Id], TransactionId, Title, Amount, CountString, CountValue, DateCreated, TimeCreated, Descriptions)
+            VALUES (@newId, @transactionId, @title, @amount, @countString, @countValue, @dateCreated, @timeCreated, @descriptions);
             SELECT @id = @newId;";
     private readonly string UpdateTransactionItemQuery = @"UPDATE TransactionItems SET Title = @title, Amount = @amount,
-            CountString = @countString, CountValue = @countValue, DateUpdated = @dateUpdated, Descriptions = @descriptions WHERE [Id] = @id";
+            CountString = @countString, CountValue = @countValue, DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, Descriptions = @descriptions WHERE [Id] = @id";
     private readonly string DeleteTransactionItemQuery = @$"DELETE FROM TransactionItems WHERE [Id] = @id";
     private readonly string GetProductItemsQuery = "SELECT [ProductName] AS ItemName FROM Products {0} UNION SELECT [Title] AS ItemName FROM TransactionItems WHERE 1=1 {1} {2} ORDER BY ItemName";
     private readonly string GetTransactionNamesQuery = "SELECT [Id], [FileName] AS ItemName FROM Transactions {0}";
-    private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Transactions SET DateUpdated = @dateUpdated WHERE [Id] = @id";
+    private readonly string UpdateSubItemDateAndTimeQuery = @"UPDATE Transactions SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated WHERE [Id] = @id";
     private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON SELECT * FROM Transactions t WHERE t.[Id] = {0} ORDER BY t.[Id] DESC";
 
     private async Task<int> GetTransactionIdFromTransactionItemId(int Id)
@@ -82,8 +83,10 @@ public class SqlTransactionProcessor : ITransactionProcessor
             var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
             return @$"(CAST(t.[Id] AS VARCHAR) LIKE {criteria}
                       {mode} t.[FileName] LIKE N{criteria}
-                      {mode} CONVERT(VARCHAR(10), t.[DateCreated], 111) LIKE {criteria}
-                      {mode} CONVERT(VARCHAR(10), t.[DateUpdated], 111) LIKE {criteria}
+                      {mode} t.[DateCreated] LIKE {criteria}
+                      {mode} t.[TimeCreated] LIKE {criteria}
+                      {mode} t.[DateUpdated] LIKE {criteria}
+                      {mode} t.[TimeUpdated] LIKE {criteria}
                       {mode} t.[Descriptions] LIKE N{criteria}
                       {mode} CAST(pos.TotalVal AS VARCHAR) LIKE {criteria}
 					  {mode} CAST(neg.TotalVal AS VARCHAR) LIKE {criteria} )
@@ -122,8 +125,10 @@ public class SqlTransactionProcessor : ITransactionProcessor
                       {mode} [CountString] LIKE {criteria}
                       {mode} CAST([CountValue] AS VARCHAR) LIKE {criteria}
                       {mode} CAST(ISNULL(([Amount] * [CountValue]), 0) AS VARCHAR) LIKE {criteria}
-                      {mode} CONVERT(VARCHAR(10), [DateCreated], 111) LIKE {criteria}
-                      {mode} CONVERT(VARCHAR(10), [DateUpdated], 111) LIKE {criteria}
+                      {mode} [DateCreated] LIKE {criteria}
+                      {mode} [TimeCreated] LIKE {criteria}
+                      {mode} [DateUpdated] LIKE {criteria}
+                      {mode} [TimeUpdated] LIKE {criteria}
                       {mode} [Descriptions] LIKE N{criteria} ) 
                       { (FinStatus == null ? "" : $" AND ISNULL(([Amount] * [CountValue]), 0) { finStatusOperand } 0 ")}
             ";
@@ -205,10 +210,12 @@ public class SqlTransactionProcessor : ITransactionProcessor
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
+            item.TimeCreated = PersianCalendarHelper.GetCurrentTime();
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@fileName", item.FileName);
             dp.Add("@dateCreated", item.DateCreated);
+            dp.Add("@timeCreated", item.TimeCreated);
             dp.Add("@descriptions", item.Descriptions);
             var AffectedCount = await DataAccess.SaveDataAsync(CreateTransactionQuery, dp);
             var OutputId = dp.Get<int>("@id");
@@ -228,6 +235,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
             item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
+            item.TimeUpdated = PersianCalendarHelper.GetCurrentTime();
             return await DataAccess.SaveDataAsync(UpdateTransactionQuery, item);
         }
         catch (Exception ex)
@@ -274,6 +282,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
         {
             if (item == null || !item.IsCountStringValid) return 0;
             item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
+            item.TimeCreated = PersianCalendarHelper.GetCurrentTime();
             DynamicParameters dp = new();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@transactionId", item.TransactionId);
@@ -282,6 +291,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
             dp.Add("@countString", item.CountString);
             dp.Add("@countValue", item.CountValue);
             dp.Add("@dateCreated", item.DateCreated);
+            dp.Add("@timeCreated", item.TimeCreated);
             dp.Add("@descriptions", item.Descriptions);
             var AffectedCount = await DataAccess.SaveDataAsync(InsertTransactionItemQuery, dp);
             if (AffectedCount > 0)
@@ -304,6 +314,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
         {
             if (item == null || !item.IsCountStringValid) return 0;
             item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
+            item.TimeUpdated = PersianCalendarHelper.GetCurrentTime();
             DynamicParameters dp = new();
             dp.Add("@id", item.Id);
             dp.Add("@title", item.Title);
@@ -311,6 +322,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
             dp.Add("@countString", item.CountString);
             dp.Add("@countValue", item.CountValue);
             dp.Add("@dateUpdated", item.DateUpdated);
+            dp.Add("@timeUpdated", item.TimeUpdated);
             dp.Add("@descriptions", item.Descriptions);
             var AffectedCount = await DataAccess.SaveDataAsync(UpdateTransactionItemQuery, dp);
             if (AffectedCount > 0) await UpdateItemUpdateDateAndUpdateTimeAsync(item.TransactionId);
@@ -348,7 +360,8 @@ public class SqlTransactionProcessor : ITransactionProcessor
         {
             var dp = new DynamicParameters();
             dp.Add("@id", Id);
-            dp.Add("@dateUpdated", DateTime.Now);
+            dp.Add("@dateUpdated", PersianCalendarHelper.GetCurrentPersianDate());
+            dp.Add("@timeUpdated", PersianCalendarHelper.GetCurrentTime());
             await DataAccess.SaveDataAsync(UpdateSubItemDateAndTimeQuery, dp).ConfigureAwait(false);
         }
         catch (Exception ex)
@@ -395,7 +408,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
         try
         {
             string sql = $@"SET NOCOUNT ON
-                            SELECT t.Id, t.[FileName], t.DateCreated, t.DateUpdated, t.Descriptions, ISNULL(pos.TotalVal, 0) AS TotalPositiveItemsSum, ISNULL(neg.TotalVal, 0) AS TotalNegativeItemsSum
+                            SELECT t.Id, t.[FileName], t.DateCreated, t.TimeCreated, t.DateUpdated, t.TimeUpdated, t.Descriptions, ISNULL(pos.TotalVal, 0) AS TotalPositiveItemsSum, ISNULL(neg.TotalVal, 0) AS TotalNegativeItemsSum
                             FROM Transactions t LEFT JOIN (
                             SELECT ti.TransactionId, SUM(ti.Amount * ti.CountValue) AS TotalVal FROM TransactionItems ti WHERE (ti.Amount * ti.CountValue) > 0 GROUP BY ti.TransactionId) AS pos ON t.Id = pos.TransactionId
                             LEFT JOIN (SELECT ti.TransactionId, SUM(ti.Amount * ti.CountValue) AS TotalVal FROM TransactionItems ti WHERE (ti.Amount * ti.CountValue) < 0 GROUP BY ti.TransactionId 

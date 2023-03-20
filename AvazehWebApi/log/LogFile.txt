@@ -640,3 +640,340 @@ The statement has been terminated.
    at DataLibraryCore.DataAccess.SqlServer.SqlCustomerProcessor`3.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlCustomerProcessor.cs:line 204
 ClientConnectionId:8e98e5d5-2a0b-491a-91fb-9502aeade1b0
 Error Number:242,State:3,Class:16
+2023-03-20 17:41:39.406 +03:30 [ERR] Error in SqlInvoiceProcessor
+System.Data.SqlClient.SqlException (0x80131904): Operand type clash: float is incompatible with ntext
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlInvoiceProcessor.LoadSingleItemAsync(Int32 Id) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlInvoiceProcessor.cs:line 496
+ClientConnectionId:da9bd9d8-407a-43c2-9007-f0a4f850c353
+Error Number:206,State:2,Class:16
+2023-03-20 18:38:33.295 +03:30 [ERR] Error in SqlInvoiceProcessor
+System.Data.SqlClient.SqlException (0x80131904): Column name or number of supplied values does not match table definition.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlInvoiceProcessor.LoadSingleItemAsync(Int32 Id) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlInvoiceProcessor.cs:line 513
+ClientConnectionId:a08448f8-0ed8-47ff-8e84-3d9bbb6bb756
+Error Number:213,State:1,Class:16
+2023-03-20 18:39:19.976 +03:30 [ERR] Error in SqlInvoiceProcessor
+System.Data.SqlClient.SqlException (0x80131904): Column name or number of supplied values does not match table definition.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlInvoiceProcessor.LoadSingleItemAsync(Int32 Id) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlInvoiceProcessor.cs:line 513
+ClientConnectionId:a08448f8-0ed8-47ff-8e84-3d9bbb6bb756
+Error Number:213,State:1,Class:16
+2023-03-20 18:51:49.656 +03:30 [ERR] Error in SqlInvoiceProcessor
+System.Data.SqlClient.SqlException (0x80131904): Operand type clash: tinyint is incompatible with ntext
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlInvoiceProcessor.LoadSingleItemAsync(Int32 Id) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlInvoiceProcessor.cs:line 513
+ClientConnectionId:d16cd604-5cd3-4595-8aca-b8852868888d
+Error Number:206,State:2,Class:16
+2023-03-20 19:07:43.163 +03:30 [ERR] Error in DataLibraryCore.DataAccess.SqlServer.SqlDataAccess+<SaveDataAsync>d__5`1[T]
+System.Data.SqlClient.SqlException (0x80131904): Cannot insert the value NULL into column 'FirstName', table 'AvazehDB_Test.dbo.UserInfo'; column does not allow nulls. INSERT fails.
+The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserInfo_ToUserPermissions". The conflict occurred in database "AvazehDB_Test", table "dbo.UserInfo", column 'Id'.
+The INSERT statement conflicted with the FOREIGN KEY constraint "FK_UserInfo_ToUserSettings". The conflict occurred in database "AvazehDB_Test", table "dbo.UserInfo", column 'Id'.
+The statement has been terminated.
+The statement has been terminated.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader()
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQuery(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.ExecuteImplAsync(IDbConnection cnn, CommandDefinition command, Object param) in /_/Dapper/SqlMapper.Async.cs:line 646
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.SaveDataAsync[T](String sql, T data) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 80
+ClientConnectionId:f27802aa-4709-437f-ab7b-dd594160b42a
+Error Number:515,State:2,Class:16
+2023-03-20 19:08:13.649 +03:30 [ERR] Error in SqlCustomerProcessor
+System.Data.SqlClient.SqlException (0x80131904): The conversion of a varchar data type to a datetime data type resulted in an out-of-range value.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlCustomerProcessor`3.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlCustomerProcessor.cs:line 205
+ClientConnectionId:f27802aa-4709-437f-ab7b-dd594160b42a
+Error Number:242,State:3,Class:16
+2023-03-20 19:08:13.695 +03:30 [ERR] Error in SqlCustomerProcessor
+System.ArgumentNullException: Value cannot be null. (Parameter 'source')
+   at System.Linq.ThrowHelper.ThrowArgumentNullException(ExceptionArgument argument)
+   at System.Linq.Enumerable.TryGetFirst[TSource](IEnumerable`1 source, Boolean& found)
+   at System.Linq.Enumerable.FirstOrDefault[TSource](IEnumerable`1 source)
+   at DataLibraryCore.DataAccess.SqlServer.SqlCustomerProcessor`3.LoadSingleItemAsync(Int32 Id) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlCustomerProcessor.cs:line 220
+2023-03-20 19:13:46.559 +03:30 [ERR] Error in DataLibraryCore.DataAccess.SqlServer.SqlDataAccess+<SaveDataAsync>d__5`1[T]
+System.Data.SqlClient.SqlException (0x80131904): Cannot insert the value NULL into column 'TimeCreated', table 'AvazehDB_Test.dbo.Products'; column does not allow nulls. INSERT fails.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader()
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQuery(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.ExecuteImplAsync(IDbConnection cnn, CommandDefinition command, Object param) in /_/Dapper/SqlMapper.Async.cs:line 646
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.SaveDataAsync[T](String sql, T data) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 80
+ClientConnectionId:4706ff8b-f11b-4614-99aa-f079cba3323e
+Error Number:515,State:2,Class:16
+2023-03-20 19:48:21.318 +03:30 [ERR] Error in IChequeProcessor
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type varchar to bigint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 259
+ClientConnectionId:8eac0a08-df98-41a2-874d-414d493501c5
+Error Number:8114,State:5,Class:16
+2023-03-20 19:48:26.739 +03:30 [ERR] Error in IChequeProcessor
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type varchar to bigint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 259
+ClientConnectionId:74a4ea98-7272-4e3c-ae3e-bf42f8864b6f
+Error Number:8114,State:5,Class:16
+2023-03-20 19:48:31.929 +03:30 [ERR] Error in IChequeProcessor
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type varchar to bigint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 259
+ClientConnectionId:74a4ea98-7272-4e3c-ae3e-bf42f8864b6f
+Error Number:8114,State:5,Class:16
+2023-03-20 19:48:37.110 +03:30 [ERR] Error in IChequeProcessor
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type varchar to bigint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 259
+ClientConnectionId:74a4ea98-7272-4e3c-ae3e-bf42f8864b6f
+Error Number:8114,State:5,Class:16
+2023-03-20 19:48:42.309 +03:30 [ERR] Error in IChequeProcessor
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type varchar to bigint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 259
+ClientConnectionId:74a4ea98-7272-4e3c-ae3e-bf42f8864b6f
+Error Number:8114,State:5,Class:16
+2023-03-20 19:48:47.528 +03:30 [ERR] Error in IChequeProcessor
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type varchar to bigint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 259
+ClientConnectionId:74a4ea98-7272-4e3c-ae3e-bf42f8864b6f
+Error Number:8114,State:5,Class:16
+2023-03-20 19:48:52.716 +03:30 [ERR] Error in IChequeProcessor
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type varchar to bigint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 259
+ClientConnectionId:74a4ea98-7272-4e3c-ae3e-bf42f8864b6f
+Error Number:8114,State:5,Class:16
+2023-03-20 19:48:57.930 +03:30 [ERR] Error in IChequeProcessor
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type varchar to bigint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 259
+ClientConnectionId:74a4ea98-7272-4e3c-ae3e-bf42f8864b6f
+Error Number:8114,State:5,Class:16
+2023-03-20 19:49:03.163 +03:30 [ERR] Error in IChequeProcessor
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type varchar to bigint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 259
+ClientConnectionId:74a4ea98-7272-4e3c-ae3e-bf42f8864b6f
+Error Number:8114,State:5,Class:16
+2023-03-20 19:49:08.388 +03:30 [ERR] Error in IChequeProcessor
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type varchar to bigint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 259
+ClientConnectionId:74a4ea98-7272-4e3c-ae3e-bf42f8864b6f
+Error Number:8114,State:5,Class:16
+2023-03-20 19:49:13.642 +03:30 [ERR] Error in IChequeProcessor
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type varchar to bigint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 259
+ClientConnectionId:74a4ea98-7272-4e3c-ae3e-bf42f8864b6f
+Error Number:8114,State:5,Class:16
+2023-03-20 19:49:18.860 +03:30 [ERR] Error in IChequeProcessor
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type varchar to bigint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 259
+ClientConnectionId:74a4ea98-7272-4e3c-ae3e-bf42f8864b6f
+Error Number:8114,State:5,Class:16
+2023-03-20 19:49:24.028 +03:30 [ERR] Error in IChequeProcessor
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type varchar to bigint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 259
+ClientConnectionId:74a4ea98-7272-4e3c-ae3e-bf42f8864b6f
+Error Number:8114,State:5,Class:16
+2023-03-20 19:49:29.257 +03:30 [ERR] Error in IChequeProcessor
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type varchar to bigint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 259
+ClientConnectionId:74a4ea98-7272-4e3c-ae3e-bf42f8864b6f
+Error Number:8114,State:5,Class:16
+2023-03-20 19:50:39.829 +03:30 [ERR] Error in IChequeProcessor
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type varchar to bigint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 259
+ClientConnectionId:74a4ea98-7272-4e3c-ae3e-bf42f8864b6f
+Error Number:8114,State:5,Class:16
+2023-03-20 19:52:25.002 +03:30 [ERR] Error in IChequeProcessor
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type varchar to bigint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryMultipleAsync(IDbConnection cnn, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 1013
+   at DataLibraryCore.DataAccess.SqlServer.SqlChequeProcessor.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlChequeProcessor.cs:line 259
+ClientConnectionId:0081d4e1-a51e-48df-8db3-4d9264f5bb0c
+Error Number:8114,State:5,Class:16

@@ -44,7 +44,7 @@ public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<
 	        [CompanyName] [nvarchar](50),
 	        [EmailAddress] [nvarchar](50),
 	        [PostAddress] [ntext],
-	        [DateJoined] [datetime],
+	        [DateJoined] [char](10),
 	        [Descriptions] [ntext])
             {0}
             SELECT * FROM @customers ORDER BY [Id] ASC;
@@ -62,7 +62,7 @@ public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<
                              {mode} [CompanyName] LIKE N{ criteria } 
                              {mode} [EmailAddress] LIKE N{ criteria } 
                              {mode} [PostAddress] LIKE N{ criteria } 
-                             {mode} CONVERT(VARCHAR(10), [DateJoined], 111) LIKE { criteria }  
+                             {mode} [DateJoined] LIKE { criteria }   
                              {mode} [Descriptions] LIKE N{ criteria } )";
         }
         catch (Exception ex)
@@ -123,7 +123,7 @@ public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<
         try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            //if (item.DateJoined is null) item.DateJoined = DateTime.Now;
+            if (item.DateJoined is null) item.DateJoined = PersianCalendarHelper.GetCurrentPersianDate();
             var AffectedCount = await DataAccess.SaveDataAsync(UpdateCustomerQuery, item);
             if (AffectedCount > 0)
             {
