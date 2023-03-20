@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using SharedLibrary.Helpers;
 
 namespace DataLibraryCore.DataAccess.SqlServer;
 
@@ -91,7 +92,7 @@ public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<
         try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateJoined = DateTime.Now;
+            item.DateJoined = PersianCalendarHelper.GetCurrentPersianDate();
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@firstName", item.FirstName);

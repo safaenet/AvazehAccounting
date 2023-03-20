@@ -18,7 +18,7 @@
         <local:ChequeEventToColorConverter x:Key="ChequeEventToColorConverter" SoldColor="{Binding User.UserSettings.ColorSoldItem}" NonSufficientFundColor="{Binding User.UserSettings.ColorNonSufficientFundItem}" CashedColor="{Binding User.UserSettings.ColorCashedItem}"/>
         <local:DateToColorConverter x:Key="DateToColorConverterForNewItem" ItemColor="{Binding User.UserSettings.ColorNewItem}" Date="{Binding CurrentPersianDate}"/>
         <local:DueDateToColorConverter x:Key="DueDateToColorConverter" NotifColor="{Binding User.UserSettings.ColorChequeNotification}" NotifDays="{Binding User.UserSettings.ChequeNotifyDays}"/>
-        <local:DateTimeToPersianDateConverter x:Key="DateTimeToPersianDateConverter"/>
+        <!--<local:DateTimeToPersianDateConverter x:Key="DateTimeToPersianDateConverter"/>-->
         <!--body content datagrid cell vertical centering-->
         <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
             <Setter Property="Template">
@@ -94,14 +94,14 @@
                                     <materialDesign:PackIcon Kind="DateRange" Margin="0,0,5,0"/>
                                     <TextBlock MaxWidth="200" Height="auto" TextAlignment="Center" Text="تاریخ سررسید" Margin="0,0,0,2"/>
                                 </StackPanel>
-                                <TextBox Text="{Binding SelectedCheque.DueDate, Mode=OneWay, Converter={StaticResource DateTimeToPersianDateConverter}}" IsReadOnly="True" HorizontalContentAlignment="Center" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
+                                <TextBox Text="{Binding SelectedCheque.DueDate, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
                             </StackPanel>
                             <StackPanel Orientation="Vertical" Margin="0,0,0,3">
                                 <StackPanel Width="98" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 0 0 0">
                                     <materialDesign:PackIcon Kind="DateRange" Margin="0,0,5,0"/>
                                     <TextBlock MaxWidth="200" Height="auto" TextAlignment="Center" Text=" تاریخ صدور" Margin="0,0,0,2"/>
                                 </StackPanel>
-                                <TextBox Text="{Binding SelectedCheque.IssueDate, Mode=OneWay, Converter={StaticResource DateTimeToPersianDateConverter}}" IsReadOnly="True" HorizontalContentAlignment="Center" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
+                                <TextBox Text="{Binding SelectedCheque.IssueDate, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" Height="25" MaxWidth="200" VerticalContentAlignment="Center"/>
                             </StackPanel>
                         </StackPanel>
 
@@ -244,7 +244,7 @@
                     <DataGridTextColumn Header="در وجه" Binding="{Binding Orderer, Mode=OneWay}" Width="*"/>
                     <DataGridTextColumn Header="مبلغ" Binding="{Binding PayAmount, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.5*"/>
                     <DataGridTextColumn Header="بابت" Binding="{Binding About, Mode=OneWay}" Width="0.7*"/>
-                    <DataGridTextColumn Header="تاریخ سررسید" Binding="{Binding DueDate, Mode=OneWay, Converter={StaticResource DateTimeToPersianDateConverter}}" Width="80">
+                    <DataGridTextColumn Header="تاریخ سررسید" Binding="{Binding DueDate, Mode=OneWay}" Width="80">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Background" Value="{Binding Path=DueDate, Converter={StaticResource DueDateToColorConverter}}"/>

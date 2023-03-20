@@ -19,6 +19,7 @@ using System.Diagnostics;
 using SharedLibrary.SecurityAndSettingsModels;
 using System.Globalization;
 using SharedLibrary.Enums;
+using SharedLibrary.Helpers;
 
 namespace AvazehWpf.ViewModels;
 
@@ -29,7 +30,7 @@ public class InvoiceDetailViewModel : ViewAware
         ICM = iManager;
         IDM = dManager;
         User = user;
-        CurrentPersianDate = new PersianCalendar().GetPersianDate();
+        CurrentPersianDate = PersianCalendarHelper.GetCurrentPersianDate();
         SC = sc;
         CallBackFunc = callBack;
         Singleton = singleton;
@@ -520,7 +521,7 @@ public class InvoiceDetailViewModel : ViewAware
         var recents = await IDM.GetRecentSellPrices(1, Invoice.Customer.Id, WorkItem.Product.Id);
         if (recents != null && recents.Count > 0) RecentSellPrices = recents;
         if (RecentSellPrices == null) RecentSellPrices = new();
-        RecentSellPrices.Add(new RecentSellPriceModel { SellPrice = WorkItem.Product.SellPrice, DateSold = DateTime.Now });
+        RecentSellPrices.Add(new RecentSellPriceModel { SellPrice = WorkItem.Product.SellPrice, DateSold = PersianCalendarHelper.GetCurrentPersianDate() });
         NotifyOfPropertyChange(() => WorkItem.Product);
         NotifyOfPropertyChange(() => Invoice.Items);
         NotifyOfPropertyChange(() => WorkItem);

@@ -6,8 +6,10 @@
     [SellPrice] BIGINT NOT NULL ,
     [Barcode] NVARCHAR(15) NULL, 
     [CountString] NVARCHAR(50) NULL,
-    [DateCreated] DATETIME NOT NULL, 
-    [DateUpdated] DATETIME NULL, 
+    [DateCreated] CHAR(10) NOT NULL, 
+    [TimeCreated] CHAR(8) NOT NULL, 
+    [DateUpdated] CHAR(10) NULL, 
+    [TimeUpdated] CHAR(8) NULL, 
     [Descriptions] NTEXT NULL, 
     [IsActive] BIT NOT NULL DEFAULT 1 
 )

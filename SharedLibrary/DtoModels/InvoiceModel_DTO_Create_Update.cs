@@ -8,7 +8,8 @@ public class InvoiceModel_DTO_Create_Update
 {
     public int CustomerId { get; set; }
 
-    public DateTime DateCreated { get; set; }
+    public string DateCreated { get; set; }
+    public string TimeCreated { get; set; }
 
     [Display(Name = "Discount Type")]
     public DiscountTypes DiscountType { get; set; }

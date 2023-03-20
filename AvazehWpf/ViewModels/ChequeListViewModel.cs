@@ -3,6 +3,7 @@ using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
+using SharedLibrary.Helpers;
 using SharedLibrary.SecurityAndSettingsModels;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ public class ChequeListViewModel : Screen
     {
         CCM = manager;
         User = user;
-        CurrentPersianDate = new PersianCalendar().GetPersianDate();
+        CurrentPersianDate = PersianCalendarHelper.GetCurrentPersianDate();
         Singleton = singelton;
         _SelectedCheque = new();
         _ = LoadSettingsAsync().ConfigureAwait(true);

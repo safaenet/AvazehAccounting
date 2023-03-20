@@ -14,6 +14,7 @@ using SharedLibrary.DtoModels;
 using System.Threading.Tasks;
 using System;
 using Serilog;
+using SharedLibrary.Helpers;
 
 namespace DataLibraryCore.DataAccess.SqlServer;
 
@@ -189,7 +190,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateCreated = DateTime.Now;
+            item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@customerId", item.Customer.Id);
@@ -269,7 +270,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         try
         {
             if (item == null || !item.IsCountStringValid) return 0;
-            item.DateCreated = DateTime.Now;
+            item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
             DynamicParameters dp = new();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@invoiceId", item.InvoiceId);
@@ -302,7 +303,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         try
         {
             if (item == null || !item.IsCountStringValid) return 0;
-            item.DateUpdated = DateTime.Now;
+            item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
             DynamicParameters dp = new();
             dp.Add("@id", item.Id);
             dp.Add("@productId", item.Product.Id);
@@ -364,7 +365,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         try
         {
             if (item == null) return 0;
-            item.DateCreated = DateTime.Now;
+            item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
             DynamicParameters dp = new();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@invoiceId", item.InvoiceId);
@@ -391,7 +392,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         try
         {
             if (item == null) return 0;
-            item.DateUpdated = DateTime.Now;
+            item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
             DynamicParameters dp = new();
             dp.Add("@dateUpdated", item.DateUpdated);
             dp.Add("@payAmount", item.PayAmount);

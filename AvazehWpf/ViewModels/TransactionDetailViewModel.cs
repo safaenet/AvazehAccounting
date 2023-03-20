@@ -50,7 +50,7 @@ public class TransactionDetailViewModel : ViewAware
     private readonly ITransactionDetailManager TDM;
     public LoggedInUser_DTO User { get; init; }
     public string CurrentPersianDate { get; init; }
-    private SingletonClass Singleton;
+    private readonly SingletonClass Singleton;
     private TransactionModel _Transaction;
     private readonly Func<Task> CallBackFunc;
     private ObservableCollection<ItemsForComboBox> productItems;

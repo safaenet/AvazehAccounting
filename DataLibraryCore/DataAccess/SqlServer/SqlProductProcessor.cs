@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System;
 using Serilog;
 using System.Collections.Generic;
+using SharedLibrary.Helpers;
 
 namespace DataLibraryCore.DataAccess.SqlServer;
 
@@ -75,7 +76,7 @@ public class SqlProductProcessor<TModel, TValidator> : IGeneralProcessor<TModel>
         try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateCreated = DateTime.Now;
+            item.DateCreated = PersianCalendarHelper.GetCurrentPersianDate();
             var dp = new DynamicParameters();
             dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
             dp.Add("@productName", item.ProductName);
@@ -103,7 +104,7 @@ public class SqlProductProcessor<TModel, TValidator> : IGeneralProcessor<TModel>
         try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
-            item.DateUpdated = DateTime.Now;
+            item.DateUpdated = PersianCalendarHelper.GetCurrentPersianDate();
             return await DataAccess.SaveDataAsync(UpdateProductQuery, item);
         }
         catch (Exception ex)

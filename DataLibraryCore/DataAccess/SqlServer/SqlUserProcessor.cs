@@ -8,6 +8,7 @@ using System.Text;
 using System;
 using Serilog;
 using System.Collections.Generic;
+using SharedLibrary.Helpers;
 
 namespace DataLibraryCore.DataAccess.SqlServer;
 
@@ -132,7 +133,7 @@ public class SqlUserProcessor : IUserProcessor
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 IsActive = user.IsActive,
-                DateCreated = DateTime.Now
+                DateCreated = PersianCalendarHelper.GetCurrentPersianDate()
             };
             var dp = new DynamicParameters();
             FillUserBaseParameters(dp, newUser);

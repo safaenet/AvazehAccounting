@@ -11,8 +11,8 @@ public class ChequeModel
     public string Orderer { get; set; }
     public long PayAmount { get; set; }
     public string About { get; set; }
-    public DateOnly IssueDate { get; set; }
-    public DateOnly DueDate { get; set; }
+    public string IssueDate { get; set; }
+    public string DueDate { get; set; }
     public string BankName { get; set; }
     public string Serial { get; set; }
     public string Identifier { get; set; } //Sayyaad Code

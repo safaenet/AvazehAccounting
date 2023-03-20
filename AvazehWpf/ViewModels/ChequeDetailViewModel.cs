@@ -4,6 +4,7 @@ using AvazehUserControlLibraryWpf;
 using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using SharedLibrary.Enums;
+using SharedLibrary.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,8 +32,8 @@ public class ChequeDetailViewModel : ViewAware
         else
         {
             Cheque = new();
-            Cheque.IssueDate = DateOnly.FromDateTime(DateTime.Now);
-            Cheque.DueDate = DateOnly.FromDateTime(DateTime.Now);
+            Cheque.IssueDate = PersianCalendarHelper.GetCurrentPersianDate();
+            Cheque.DueDate = PersianCalendarHelper.GetCurrentPersianDate();
             WindowTitle = "چک جدید";
         }
     }
@@ -78,7 +79,7 @@ public class ChequeDetailViewModel : ViewAware
             NotifyOfPropertyChange(() => Cheque);
         }
         newEvent.ChequeId = Cheque.Id;
-        newEvent.EventDate = DateTime.Now;
+        newEvent.EventDate = PersianCalendarHelper.GetCurrentPersianDate();
         Cheque.Events.Add(newEvent);
     }
 

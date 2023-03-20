@@ -23,10 +23,10 @@ public class ChequeModel_DTO_Create_Update
     public string About { get; set; }
 
     [Required(ErrorMessage = "Field is required")]
-    public DateOnly IssueDate { get; set; }
+    public string IssueDate { get; set; }
 
     [Required(ErrorMessage = "Field is required")]
-    public DateOnly DueDate { get; set; }
+    public string DueDate { get; set; }
 
     [Required(ErrorMessage = "Field is required")]
     [StringLength(50, ErrorMessage = "Maximum length is 50")]

@@ -13,7 +13,7 @@
         Width="460" MaxWidth="460" MinHeight="395" Height="500"
         cal:Message.Attach="[Event Closing] = [Action ClosingWindowAsync]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
     <Window.Resources>
-        <local:DateTimeToPersianDateTimeConverter x:Key="DateTimeToPersianDateTimeConverter"/>
+        <!--<local:DateTimeToPersianDateTimeConverter x:Key="DateTimeToPersianDateTimeConverter"/>-->
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -118,7 +118,7 @@
                         <materialDesign:PackIcon Kind="CalendarOutline" Margin="0,0,3,0"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد" Margin="0,0,0,2"/>
                     </StackPanel>
-                    <TextBox Text="{Binding Customer.DateJoined, Converter={StaticResource DateTimeToPersianDateTimeConverter}}" IsReadOnly="True" MaxLength="10" MaxWidth="200" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding Customer.DateJoined}" IsReadOnly="True" MaxLength="10" MaxWidth="200" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,0,0,10">

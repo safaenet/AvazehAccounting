@@ -2,8 +2,10 @@
 (
 	[Id] INT NOT NULL PRIMARY KEY, 
     [CustomerId] INT NOT NULL, 
-    [DateCreated] DATETIME NOT NULL, 
-    [DateUpdated] DATETIME NULL, 
+    [DateCreated] CHAR(10) NOT NULL, 
+    [TimeCreated] CHAR(8) NOT NULL, 
+    [DateUpdated] CHAR(10) NULL, 
+    [TimeUpdated] CHAR(8) NULL, 
     [DiscountType] TINYINT NULL DEFAULT 0, 
     [DiscountValue] FLOAT NULL DEFAULT 0, 
     [About] NVARCHAR(50) NULL,

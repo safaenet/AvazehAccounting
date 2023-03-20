@@ -9,7 +9,8 @@ public class TransactionModel_DTO_Create_Update
     [StringLength(100, ErrorMessage = "Maximum length is 100")]
     public string FileName { get; set; }
 
-    public DateTime DateCreated { get; set; }
+    public string DateCreated { get; set; }
+    public string TimeCreated { get; set; }
 
     [Display(Name = "Description")]
     public string Descriptions { get; set; }

@@ -291,8 +291,7 @@ public class DateToColorConverter : Freezable, IValueConverter //Used
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value == null || string.IsNullOrEmpty(ItemColor)) return DependencyProperty.UnsetValue;
-        if ((DateTime)value < DateTime.Parse("2000/01/01", CultureInfo.InvariantCulture)) return DependencyProperty.UnsetValue;
-        if (((DateTime)value).ToPersianDate() == Date) return new SolidColorBrush(ItemColor.ToColor());
+        if (((string)value) == Date) return new SolidColorBrush(ItemColor.ToColor());
         return DependencyProperty.UnsetValue;
     }
 
@@ -485,47 +484,47 @@ public class NumberToVisibilityConverter : IValueConverter
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
 }
 
-public class DateTimeToPersianDateConverter : IValueConverter //Used
-{
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        if (value == null) return DependencyProperty.UnsetValue;
-        if ((DateTime)value < DateTime.Parse("2000/01/01", CultureInfo.InvariantCulture)) return DependencyProperty.UnsetValue;
-        return ((DateTime)value).ToPersianDate();
-    }
+//public class DateTimeToPersianDateConverter : IValueConverter //Used
+//{
+//    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+//    {
+//        if (value == null) return DependencyProperty.UnsetValue;
+//        if ((DateTime)value < DateTime.Parse("2000/01/01", CultureInfo.InvariantCulture)) return DependencyProperty.UnsetValue;
+//        return ((DateTime)value).ToPersianDate();
+//    }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
-    }
-}
+//    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+//    {
+//        throw new NotImplementedException();
+//    }
+//}
 
-public class DateTimeToPersianDateTimeConverter : IValueConverter //Used
-{
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        if (value == null) return DependencyProperty.UnsetValue;
-        if ((DateTime)value < DateTime.Parse("2000/01/01", CultureInfo.InvariantCulture)) return DependencyProperty.UnsetValue;
-        return ((DateTime)value).ToPersianDateTime();
-    }
+//public class DateTimeToPersianDateTimeConverter : IValueConverter //Used
+//{
+//    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+//    {
+//        if (value == null) return DependencyProperty.UnsetValue;
+//        if ((DateTime)value < DateTime.Parse("2000/01/01", CultureInfo.InvariantCulture)) return DependencyProperty.UnsetValue;
+//        return ((DateTime)value).ToPersianDateTime();
+//    }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
-    }
-}
+//    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+//    {
+//        throw new NotImplementedException();
+//    }
+//}
 
-public class DateTimeToTimeOnlyConverter : IValueConverter //Used
-{
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        if (value == null) return DependencyProperty.UnsetValue;
-        if ((DateTime)value < DateTime.Parse("2000/01/01", CultureInfo.InvariantCulture)) return DependencyProperty.UnsetValue;
-        return ((DateTime)value).ToTime();
-    }
+//public class DateTimeToTimeOnlyConverter : IValueConverter //Used
+//{
+//    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+//    {
+//        if (value == null) return DependencyProperty.UnsetValue;
+//        if ((DateTime)value < DateTime.Parse("2000/01/01", CultureInfo.InvariantCulture)) return DependencyProperty.UnsetValue;
+//        return ((DateTime)value).ToTime();
+//    }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
-    }
-}
+//    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+//    {
+//        throw new NotImplementedException();
+//    }
+//}

@@ -23,7 +23,7 @@
                 <Setter Property="Height" Value="25"/>
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
             </Style>
-            <local:DateTimeToPersianDateTimeConverter x:Key="DateTimeToPersianDateTimeConverter"/>
+            <!--<local:DateTimeToPersianDateTimeConverter x:Key="DateTimeToPersianDateTimeConverter"/>-->
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="3"/>
@@ -122,14 +122,14 @@
                         <materialDesign:PackIcon Kind="CalendarAdd" Margin="0,0,3,0"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد: " Margin="5,0,0,2"/>
                     </StackPanel>
-                    <TextBlock Text="{Binding Product.DateCreated, Converter={StaticResource DateTimeToPersianDateTimeConverter}}" TextAlignment="Center"/>
+                    <TextBlock Text="{Binding Product.DateCreated}" TextAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,0,0,10">
                     <StackPanel Width="108" Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="CalendarCheckOutline" Margin="0,0,3,0"/>
                         <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ بروزرسانی: " Margin="5,0,0,2"/>
                     </StackPanel>
-                    <TextBlock Text="{Binding Product.DateUpdated, Converter={StaticResource DateTimeToPersianDateTimeConverter}}" TextAlignment="Center"/>
+                    <TextBlock Text="{Binding Product.DateUpdated}" TextAlignment="Center"/>
                 </StackPanel>
             </Grid>
         </Grid>

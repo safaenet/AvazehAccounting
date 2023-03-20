@@ -13,8 +13,10 @@ public class InvoiceItemModel
     public string BarCode { get; set; }
     public string CountString { get; set; } = "1";
     public ProductUnitModel Unit { get; set; }
-    public DateTime DateCreated { get; set; }
-    public DateTime? DateUpdated { get; set; }
+    public string DateCreated { get; set; }
+    public string TimeCreated { get; set; }
+    public string DateUpdated { get; set; }
+    public string TimeUpdated { get; set; }
     public bool Delivered { get; set; }
     public string Descriptions { get; set; }
     public double CountValue => StandardCalculator.CalculateFromString(CountString);

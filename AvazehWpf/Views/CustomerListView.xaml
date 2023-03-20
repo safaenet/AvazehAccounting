@@ -14,7 +14,7 @@
         cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
     <Window.Resources>
         <local:DateToColorConverter x:Key="DateToColorConverterForNewItem" ItemColor="{Binding User.UserSettings.ColorNewItem}" Date="{Binding CurrentPersianDate}"/>
-        <local:DateTimeToPersianDateConverter x:Key="DateTimeToPersianDateConverter"/>
+        <!--<local:DateTimeToPersianDateConverter x:Key="DateTimeToPersianDateConverter"/>-->
         <!--body content datagrid cell vertical centering-->
         <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
             <Setter Property="Template">
@@ -111,7 +111,7 @@
                                 <materialDesign:PackIcon Kind="CalendarOutline" Margin="0,0,5,0"/>
                                 <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد" Margin="0,0,0,2"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Path=SelectedCustomer.DateJoined, Mode=OneWay, Converter={StaticResource DateTimeToPersianDateConverter}}" IsReadOnly="True" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
+                            <TextBox Text="{Binding Path=SelectedCustomer.DateJoined, Mode=OneWay}" IsReadOnly="True" MaxLength="10" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                         </StackPanel>
                     </StackPanel>
 
@@ -222,7 +222,7 @@
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="ایمیل" Binding="{Binding Path=EmailAddress, Mode=OneWay}" Width="190"/>
                     <DataGridTextColumn Header="آدرس" Binding="{Binding Path=PostAddress, Mode=OneWay}" Width="0.8*"/>
-                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding Path=DateJoined, Mode=OneWay, Converter={StaticResource DateTimeToPersianDateConverter}}" Width="70"/>
+                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding Path=DateJoined, Mode=OneWay}" Width="70"/>
                     <DataGridTextColumn Header="توضیحات" Binding="{Binding Path=Descriptions, Mode=OneWay}" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>

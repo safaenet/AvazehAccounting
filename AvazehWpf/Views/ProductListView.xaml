@@ -16,7 +16,7 @@
         <BooleanToVisibilityConverter x:Key="b2v"/>
         <local:DateToColorConverter x:Key="DateToColorConverterForNewItem" ItemColor="{Binding User.UserSettings.ColorNewItem}" Date="{Binding CurrentPersianDate}"/>
         <local:DateToColorConverter x:Key="DateToColorConverterForUpdatedItem" ItemColor="{Binding User.UserSettings.ColorUpdatedItem}" Date="{Binding CurrentPersianDate}"/>
-        <local:DateTimeToPersianDateConverter x:Key="DateTimeToPersianDateConverter"/>
+        <!--<local:DateTimeToPersianDateConverter x:Key="DateTimeToPersianDateConverter"/>-->
         <local:ProductStatusToPersianConverter x:Key="ProductStatusToPersianConverter"/>
         <!--body content datagrid cell vertical centering-->
         <Style x:Key="Body_Content_DataGrid_Centering" TargetType="{x:Type DataGridCell}">
@@ -101,7 +101,7 @@
                                     <materialDesign:PackIcon Kind="CalendarAdd" Margin="0,0,3,0"/>
                                     <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ ایجاد" Margin="0,0,0,2"/>
                                 </StackPanel>
-                                <TextBox Text="{Binding SelectedProduct.DateCreated, Mode=OneWay, Converter={StaticResource DateTimeToPersianDateConverter}}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center" Margin="0,0,1,0"/>
+                                <TextBox Text="{Binding SelectedProduct.DateCreated, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" VerticalContentAlignment="Center" Margin="0,0,1,0"/>
                             </StackPanel>
 
                             <StackPanel Orientation="Vertical" Margin="0,0,0,10">
@@ -109,7 +109,7 @@
                                     <materialDesign:PackIcon Kind="CalendarCheckOutline" Margin="0,0,3,0"/>
                                     <TextBlock MaxWidth="200" TextAlignment="Center" Text="تاریخ بروزرسانی" Margin="0,0,0,2"/>
                                 </StackPanel>
-                                <TextBox Text="{Binding SelectedProduct.DateUpdated, Mode=OneWay, Converter={StaticResource DateTimeToPersianDateConverter}}" IsReadOnly="True" Height="25" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center" Margin="1,0,0,0"/>
+                                <TextBox Text="{Binding SelectedProduct.DateUpdated, Mode=OneWay}" IsReadOnly="True" Height="25" MaxLength="50" MaxWidth="200" VerticalContentAlignment="Center" Margin="1,0,0,0"/>
                             </StackPanel>
                         </StackPanel>
 
@@ -233,8 +233,8 @@
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding Path=DateCreated, Mode=OneWay, Converter={StaticResource DateTimeToPersianDateConverter}}" Width="70"/>
-                    <DataGridTextColumn Header="تاریخ بروزرسانی" Binding="{Binding Path=DateUpdated, Mode=OneWay, Converter={StaticResource DateTimeToPersianDateConverter}}" Width="90">
+                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="70"/>
+                    <DataGridTextColumn Header="تاریخ بروزرسانی" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="90">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Background" Value="{Binding Path=DateUpdated, Converter={StaticResource DateToColorConverterForUpdatedItem}}"/>

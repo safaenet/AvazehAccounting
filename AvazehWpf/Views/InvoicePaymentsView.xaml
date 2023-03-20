@@ -14,8 +14,8 @@
         Width="700" Height="400"
         cal:Message.Attach="[Event Closing] = [Action ClosingWindow]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]; [Event Loaded] = [FocusOnPayAmountTextBox()]">
     <Window.Resources>
-        <local:DateTimeToPersianDateConverter x:Key="DateTimeToPersianDateConverter"/>
-        <local:DateTimeToTimeOnlyConverter x:Key="DateTimeToTimeOnlyConverter"/>
+        <!--<local:DateTimeToPersianDateConverter x:Key="DateTimeToPersianDateConverter"/>
+        <local:DateTimeToTimeOnlyConverter x:Key="DateTimeToTimeOnlyConverter"/>-->
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -141,7 +141,7 @@
                     </DataGridTextColumn.CellStyle>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="توضیحات" Binding="{Binding Descriptions, Mode=OneWay}" Width="*"/>
-                <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding DateCreated, Mode=OneWay, Converter={StaticResource DateTimeToPersianDateConverter}}" Width="87">
+                <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding DateCreated, Mode=OneWay}" Width="87">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Background" Value="{Binding Path=DateCreated, Converter={StaticResource DateToColorConverterForNewItem}}"/>
@@ -149,8 +149,8 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="ساعت ایجاد" Binding="{Binding DateCreated, Mode=OneWay, Converter={StaticResource DateTimeToTimeOnlyConverter}}" Width="87"/>
-                <DataGridTextColumn Header="تاریخ ویرایش" Binding="{Binding DateUpdated, Mode=OneWay, Converter={StaticResource DateTimeToPersianDateConverter}}" Width="87">
+                <DataGridTextColumn Header="ساعت ایجاد" Binding="{Binding TimeCreated, Mode=OneWay}" Width="87"/>
+                <DataGridTextColumn Header="تاریخ ویرایش" Binding="{Binding DateUpdated, Mode=OneWay}" Width="87">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Background" Value="{Binding Path=DateUpdated, Converter={StaticResource DateToColorConverterForUpdatedItem}}"/>
@@ -158,7 +158,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="ساعت ویرایش" Binding="{Binding DateUpdated, Mode=OneWay, Converter={StaticResource DateTimeToTimeOnlyConverter}}" Width="87"/>
+                <DataGridTextColumn Header="ساعت ویرایش" Binding="{Binding TimeUpdated, Mode=OneWay}" Width="87"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

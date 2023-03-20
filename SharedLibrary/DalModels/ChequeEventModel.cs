@@ -6,7 +6,7 @@ namespace SharedLibrary.DalModels;
 public class ChequeEventModel
 {
     public int ChequeId { get; set; }
-    public DateTime EventDate { get; set; }
+    public string EventDate { get; set; }
     public ChequeEventTypes EventType { get; set; }
     public string EventText { get; set; }
     public string EventTypeString
