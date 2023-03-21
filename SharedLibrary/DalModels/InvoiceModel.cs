@@ -26,8 +26,9 @@ public class InvoiceModel
     public double TotalDiscountAmount => DiscountType == DiscountTypes.Percent ? (TotalItemsSellSum * DiscountValue / 100) : DiscountValue;
     public double TotalInvoiceSum => TotalItemsSellSum - TotalDiscountAmount;
     public double TotalPayments => Payments == null || Payments.Count == 0 ? 0 : Payments.Sum(i => i.PayAmount);
-    public double TotalBalance => TotalInvoiceSum - TotalPayments;
-    public double NetProfit => TotalInvoiceSum - TotalItemsBuySum;
+    public double TotalInvoiceBalance => TotalInvoiceSum - TotalPayments;
+    public double TotalBalance => TotalInvoiceBalance + PrevInvoiceBalance;
+    public double NetProfit => TotalInvoiceSum - TotalItemsBuySum; //(Prev invoice not included)
     public double CurrentProfit => NetProfit - TotalBalance;
     public InvoiceFinancialStatus InvoiceFinancialStatus => TotalBalance == 0 ? InvoiceFinancialStatus.Balanced : TotalBalance > 0 ? InvoiceFinancialStatus.Deptor : InvoiceFinancialStatus.Creditor;
 }

@@ -21,6 +21,8 @@ public class InvoiceListModel
     public InvoiceLifeStatus LifeStatus { get; set; }
     public int PrevInvoiceId { get; set; }
     public int PrevInvoiceBalance { get; set; }
-    public double TotalBalance => TotalInvoiceSum - TotalPayments;
+    public int FwdInvoiceId { get; set; }
+    public double TotalInvoiceBalance => TotalInvoiceSum - TotalPayments;
+    public double TotalBalance => TotalInvoiceBalance + PrevInvoiceBalance;
     public InvoiceFinancialStatus InvoiceFinancialStatus => TotalBalance == 0 ? InvoiceFinancialStatus.Balanced : TotalBalance > 0 ? InvoiceFinancialStatus.Deptor : InvoiceFinancialStatus.Creditor;
 }
