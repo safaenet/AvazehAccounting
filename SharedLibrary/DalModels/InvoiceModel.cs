@@ -1,5 +1,4 @@
 ﻿using SharedLibrary.Enums;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -18,7 +17,10 @@ public class InvoiceModel
     public DiscountTypes DiscountType { get; set; } = DiscountTypes.Amount;
     public double DiscountValue { get; set; }
     public string Descriptions { get; set; }
+    public string About { get; set; }
     public InvoiceLifeStatus LifeStatus { get; set; }
+    public int PrevInvoiceId { get; set; }
+    public int PrevInvoiceBalance { get; set; }
     public double TotalItemsBuySum => Items == null || Items.Count == 0 ? 0 : Items.Sum(i => i.TotalBuyValue);
     public double TotalItemsSellSum => Items == null || Items.Count == 0 ? 0 : Items.Sum(i => i.TotalSellValue);
     public double TotalDiscountAmount => DiscountType == DiscountTypes.Percent ? (TotalItemsSellSum * DiscountValue / 100) : DiscountValue;

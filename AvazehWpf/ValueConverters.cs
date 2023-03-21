@@ -151,14 +151,13 @@ public class EnglishToPersianInvoiceFinStatusConverter : IValueConverter
         else if ((InvoiceFinancialStatus)value == InvoiceFinancialStatus.Balanced) return "تسویه";
         else if ((InvoiceFinancialStatus)value == InvoiceFinancialStatus.Deptor) return "بدهکار";
         else if ((InvoiceFinancialStatus)value == InvoiceFinancialStatus.Creditor) return "بستانکار";
+        else if ((InvoiceFinancialStatus)value == InvoiceFinancialStatus.Outstanding) return "معوق";
         else return DependencyProperty.UnsetValue;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
-        if (value == null) return DependencyProperty.UnsetValue;
-        if ((string)value == "صعودی") return OrderType.ASC;
-        return OrderType.DESC;
+        throw new NotSupportedException();
     }
 }
 
@@ -175,9 +174,7 @@ public class EnglishToPersianTransactionFinStatusConverter : IValueConverter
 
     public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
-        if (value == null) return DependencyProperty.UnsetValue;
-        if ((string)value == "صعودی") return OrderType.ASC;
-        return OrderType.DESC;
+        throw new NotSupportedException();
     }
 }
 

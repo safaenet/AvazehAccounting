@@ -292,6 +292,8 @@ public static class InvoiceFinStatusAndLifeStatusItems //For ComboBoxes
                 choices.Add((int)InvoiceFinancialStatus.Deptor, "بدهکار");
             else if (Enum.GetName(typeof(InvoiceFinancialStatus), i) == InvoiceFinancialStatus.Creditor.ToString())
                 choices.Add((int)InvoiceFinancialStatus.Creditor, "بستانکار");
+            else if (Enum.GetName(typeof(InvoiceFinancialStatus), i) == InvoiceFinancialStatus.Outstanding.ToString())
+                choices.Add((int)InvoiceFinancialStatus.Outstanding, "معوق");
         }
         choices.Add(Enum.GetNames(typeof(InvoiceFinancialStatus)).Length, "همه");
         return choices;
