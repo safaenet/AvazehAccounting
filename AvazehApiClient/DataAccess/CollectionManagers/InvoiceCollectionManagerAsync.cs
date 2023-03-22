@@ -29,18 +29,16 @@ public class InvoiceCollectionManagerAsync : IInvoiceCollectionManager
     public IApiProcessor ApiProcessor { get; init; }
 
     public ObservableCollection<InvoiceListModel> Items { get; set; }
-    public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
-    public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
-
-    public string SearchValue { get; set; }
-    public string QueryOrderBy { get; set; } = "Id";
-    public OrderType QueryOrderType { get; set; } = OrderType.DESC;
-    public InvoiceLifeStatus? LifeStatus { get; set; }
-    public InvoiceFinancialStatus? FinStatus { get; set; }
 
     public int PageSize { get; set; } = 50;
-    public int PagesCount { get; private set; }
-    public int CurrentPage { get; private set; }
+    public int InvoiceIdToSearch { get; set; }
+    public int CustomerIdToSearch { get; set; }
+    public string InvoiceDate { get; set; }
+    public string SearchValue { get; set; }
+    public InvoiceLifeStatus LifeStatus { get; set; }
+    public InvoiceFinancialStatus FinStatus { get; set; }
+    public OrderType orderType { get; set; }
+
     public InvoiceListModel GetItemFromCollectionById(int Id)
     {
         return Items.SingleOrDefault(i => i.Id == Id);
@@ -84,49 +82,43 @@ public class InvoiceCollectionManagerAsync : IInvoiceCollectionManager
         return result;
     }
 
-    public async Task<int> GotoPageAsync(int PageNumber, bool Refresh = false)
+    public async Task<int> LoadItemsAsync(SqlQuerySearchMode SearchMode, int StartId)
     {
-        PageLoadEventArgs eventArgs = new();
-        PageLoading?.Invoke(this, eventArgs);
-        if (eventArgs.Cancel) return 0;
-        var collection = await ApiProcessor.GetInvoiceCollectionAsync<ItemsCollection_DTO<InvoiceListModel>>(Key, QueryOrderBy, QueryOrderType, PageNumber, SearchValue, LifeStatus, FinStatus, PageSize, Refresh);
+        var collection = await ApiProcessor.GetInvoiceCollectionAsync<ItemsCollection_DTO<InvoiceListModel>>(Key, PageSize, InvoiceIdToSearch, CustomerIdToSearch, InvoiceDate, SearchValue, LifeStatus, FinStatus, SearchMode, orderType, StartId);
         Items = collection?.Items.AsObservable();
-        CurrentPage = collection is null ? 0 : collection.CurrentPage;
-        PagesCount = collection is null ? 0 : collection.PagesCount;
-        PageLoaded?.Invoke(this, null);
-        return Items == null ? 0 : Items.Count;
+        return collection == null ? 0 : collection.Items.Count();
     }
 
     public async Task<int> RefreshPage()
     {
-        return await GotoPageAsync(CurrentPage, true);
+        return await LoadFirstPageAsync(); //To be improved.
     }
 
     public async Task<int> LoadFirstPageAsync()
     {
-        var result = await GotoPageAsync(1);
+        var result = await LoadItemsAsync(SqlQuerySearchMode.Backward, -1);
         FirstPageLoaded?.Invoke(this, null);
         return result;
     }
 
     public async Task<int> LoadPreviousPageAsync()
     {
-        if (CurrentPage == 1) return 0;
+        if (Items == null || Items.Count == 0) return await LoadFirstPageAsync();
         PageLoadEventArgs eventArgs = new();
         PreviousPageLoading?.Invoke(this, eventArgs);
         if (eventArgs.Cancel) return 0;
-        var result = await GotoPageAsync(CurrentPage - 1);
+        var result = await LoadItemsAsync(SqlQuerySearchMode.Backward, Items.Min(x => x.Id));
         PreviousPageLoaded?.Invoke(this, null);
         return result;
     }
 
     public async Task<int> LoadNextPageAsync()
     {
-        if (CurrentPage == PagesCount) return 0;
+        if (Items == null || Items.Count == 0) return await LoadFirstPageAsync();
         PageLoadEventArgs eventArgs = new();
         NextPageLoading?.Invoke(this, eventArgs);
         if (eventArgs.Cancel) return 0;
-        var result = await GotoPageAsync(CurrentPage + 1);
+        var result = await LoadItemsAsync(SqlQuerySearchMode.Forward, Items.Max(x => x.Id));
         NextPageLoaded?.Invoke(this, null);
         return result;
     }

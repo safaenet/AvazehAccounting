@@ -32,7 +32,7 @@ public class InvoiceListViewModel : Screen
         Singleton = singleton;
         LoadSettings();
         ICM.PageSize = User.UserSettings.InvoicePageSize;
-        ICM.QueryOrderType = User.UserSettings.InvoiceListQueryOrderType;
+        ICM.orderType = User.UserSettings.InvoiceListQueryOrderType;
 
         _ = SearchAsync().ConfigureAwait(true);
     }
@@ -160,8 +160,8 @@ public class InvoiceListViewModel : Screen
         InvoiceFinancialStatus? FinStatus = SelectedFinStatus >= Enum.GetNames(typeof(InvoiceFinancialStatus)).Length ? null : (InvoiceFinancialStatus)SelectedFinStatus;
         InvoiceLifeStatus? LifeStatus = SelectedLifeStatus >= Enum.GetNames(typeof(InvoiceLifeStatus)).Length ? null : (InvoiceLifeStatus)SelectedLifeStatus;
         ICM.SearchValue = SearchText;
-        ICM.FinStatus = FinStatus;
-        ICM.LifeStatus = LifeStatus;
+        ICM.FinStatus = FinStatus == null ? InvoiceFinancialStatus.Outstanding : (InvoiceFinancialStatus)FinStatus;
+        ICM.LifeStatus = LifeStatus == null ? InvoiceLifeStatus.Active : (InvoiceLifeStatus)FinStatus;
         await ICM.LoadFirstPageAsync();
         NotifyOfPropertyChange(() => Invoices);
     }
