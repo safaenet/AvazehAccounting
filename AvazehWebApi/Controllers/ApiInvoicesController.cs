@@ -24,7 +24,18 @@ public class InvoicesController : ControllerBase
 
     private readonly IInvoiceCollectionManager Manager;
 
-    //GET /Customer?Id=1&SearchText=sometext
+    ////GET /Customer?Id=1&SearchText=sometext
+    //[HttpGet, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanViewInvoicesList))]
+    //public async Task<ActionResult<ItemsCollection_DTO<InvoiceListModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "Id", OrderType orderType = OrderType.DESC, InvoiceLifeStatus? LifeStatus = InvoiceLifeStatus.Active, InvoiceFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false)
+    //{
+    //    Manager.GenerateWhereClause(SearchText, OrderBy, orderType, LifeStatus, FinStatus);
+    //    Manager.PageSize = PageSize;
+    //    if (ForceLoad) Manager.Initialized = false;
+    //    await Manager.GotoPageAsync(Page);
+    //    if (Manager.Items == null || Manager.Items.Count() == 0) return NotFound("List is empty");
+    //    return Manager.AsDto();
+    //}
+
     [HttpGet, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanViewInvoicesList))]
     public async Task<ActionResult<ItemsCollection_DTO<InvoiceListModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "Id", OrderType orderType = OrderType.DESC, InvoiceLifeStatus? LifeStatus = InvoiceLifeStatus.Active, InvoiceFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false)
     {
@@ -32,7 +43,7 @@ public class InvoicesController : ControllerBase
         Manager.PageSize = PageSize;
         if (ForceLoad) Manager.Initialized = false;
         await Manager.GotoPageAsync(Page);
-        if (Manager.Items == null || Manager.Items.Count() == 0) return NotFound("List is empty");
+        if (Manager.Items == null || !Manager.Items.Any()) return NotFound("List is empty");
         return Manager.AsDto();
     }
 
