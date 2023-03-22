@@ -5,6 +5,7 @@ using Caliburn.Micro;
 using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
+using SharedLibrary.Helpers;
 using SharedLibrary.SecurityAndSettingsModels;
 using SharedLibrary.Validators;
 using System;
@@ -26,13 +27,15 @@ public class InvoiceListViewModel : Screen
     {
         ICM = manager;
         User = user;
-        CurrentPersianDate = new PersianCalendar().GetPersianDate();
+        CurrentPersianDate = PersianCalendarHelper.GetCurrentPersianDate();
         SC = sc;
         _SelectedInvoice = new();
         Singleton = singleton;
         LoadSettings();
         ICM.PageSize = User.UserSettings.InvoicePageSize;
         ICM.orderType = User.UserSettings.InvoiceListQueryOrderType;
+        ICM.LifeStatus = InvoiceLifeStatus.Active;
+        ICM.FinStatus = InvoiceFinancialStatus.Outstanding;
 
         _ = SearchAsync().ConfigureAwait(true);
     }
@@ -160,8 +163,8 @@ public class InvoiceListViewModel : Screen
         InvoiceFinancialStatus? FinStatus = SelectedFinStatus >= Enum.GetNames(typeof(InvoiceFinancialStatus)).Length ? null : (InvoiceFinancialStatus)SelectedFinStatus;
         InvoiceLifeStatus? LifeStatus = SelectedLifeStatus >= Enum.GetNames(typeof(InvoiceLifeStatus)).Length ? null : (InvoiceLifeStatus)SelectedLifeStatus;
         ICM.SearchValue = SearchText;
-        ICM.FinStatus = FinStatus == null ? InvoiceFinancialStatus.Outstanding : (InvoiceFinancialStatus)FinStatus;
-        ICM.LifeStatus = LifeStatus == null ? InvoiceLifeStatus.Active : (InvoiceLifeStatus)FinStatus;
+        ICM.FinStatus = FinStatus;
+        ICM.LifeStatus = LifeStatus;
         await ICM.LoadFirstPageAsync();
         NotifyOfPropertyChange(() => Invoices);
     }

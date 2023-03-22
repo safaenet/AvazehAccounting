@@ -504,7 +504,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
     //    return null;
     //}
 
-    public async Task<IEnumerable<InvoiceListModel>> LoadManyItemsAsync(int FetcheSize, int InvoiceId, int CustomerId, string InvoiceDate, string SearchValue, InvoiceLifeStatus LifeStatus, InvoiceFinancialStatus FinStatus, SqlQuerySearchMode SearchMode, OrderType orderType, int StartId)
+    public async Task<IEnumerable<InvoiceListModel>> LoadManyItemsAsync(int FetcheSize, int InvoiceId, int CustomerId, string InvoiceDate, string SearchValue, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, SqlQuerySearchMode SearchMode, OrderType orderType, int StartId)
     {
         try
         {
@@ -515,8 +515,8 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
             dp.Add("@CustomerId", CustomerId);
             dp.Add("@Date", InvoiceDate);
             dp.Add("@SearchValue", SearchValue);
-            dp.Add("@LifeStatus", LifeStatus);
-            dp.Add("@FinStatus", FinStatus);
+            dp.Add("@LifeStatus", LifeStatus == null ? -1 : LifeStatus);
+            dp.Add("@FinStatus", FinStatus == null ? -1 : FinStatus);
             dp.Add("@SearchMode", SearchMode);
             dp.Add("@OrderType", orderType);
             dp.Add("@StartId", StartId);

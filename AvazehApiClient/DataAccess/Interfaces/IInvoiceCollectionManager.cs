@@ -17,8 +17,8 @@ public interface IInvoiceCollectionManager
     public int CustomerIdToSearch { get; set; }
     public string InvoiceDate { get; set; }
     public string SearchValue { get; set; }
-    public InvoiceLifeStatus LifeStatus { get; set; }
-    public InvoiceFinancialStatus FinStatus { get; set; }
+    public InvoiceLifeStatus? LifeStatus { get; set; }
+    public InvoiceFinancialStatus? FinStatus { get; set; }
     public OrderType orderType { get; set; }
 
     event EventHandler PageLoading;

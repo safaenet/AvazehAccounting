@@ -20,7 +20,7 @@ public interface IInvoiceProcessorBase<TModel> : IProcessorBase<TModel>
     Task<IEnumerable<ProductUnitModel>> GetProductUnitsAsync();
     Task<IEnumerable<ItemsForComboBox>> GetCustomerNamesAsync(string SearchText);
     //Task<IEnumerable<InvoiceListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy, OrderType Order);
-    Task<IEnumerable<InvoiceListModel>> LoadManyItemsAsync(int FetcheSize, int InvoiceId, int CustomerId, string InvoiceDate, string SearchValue, InvoiceLifeStatus LifeStatus, InvoiceFinancialStatus FinStatus, SqlQuerySearchMode SearchMode, OrderType orderType, int StartId);
+    Task<IEnumerable<InvoiceListModel>> LoadManyItemsAsync(int FetcheSize, int InvoiceId, int CustomerId, string InvoiceDate, string SearchValue, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, SqlQuerySearchMode SearchMode, OrderType orderType, int StartId);
     Task<int> UpdateInvoiceItemInDatabaseAsync(InvoiceItemModel item);
     Task<InvoicePaymentModel> GetInvoicePaymentFromDatabaseAsync(int Id);
     Task<int> InsertInvoicePaymentToDatabaseAsync(InvoicePaymentModel item);

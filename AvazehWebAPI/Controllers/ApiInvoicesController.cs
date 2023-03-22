@@ -25,8 +25,13 @@ public class InvoicesController : ControllerBase
     private readonly IInvoiceProcessor Processor;
 
     [HttpGet, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanViewInvoicesList))]
-    public async Task<ActionResult<List<InvoiceListModel>>> GetItemsAsync(int FetcheSize = 50, int InvoiceId = -1 , int CustomerId = -1 , string InvoiceDate = "%", string SearchValue = "%", InvoiceLifeStatus LifeStatus = InvoiceLifeStatus.Active, InvoiceFinancialStatus FinStatus = InvoiceFinancialStatus.Outstanding, SqlQuerySearchMode SearchMode = SqlQuerySearchMode.Backward, OrderType orderType = OrderType.DESC, int StartId = -1)
+    public async Task<ActionResult<List<InvoiceListModel>>> GetItemsAsync(int FetcheSize = 50, int InvoiceId = -1 , int CustomerId = -1 , string InvoiceDate = "%", string SearchValue = "%", InvoiceLifeStatus? LifeStatus = InvoiceLifeStatus.Active, InvoiceFinancialStatus? FinStatus = InvoiceFinancialStatus.Outstanding, SqlQuerySearchMode SearchMode = SqlQuerySearchMode.Backward, OrderType orderType = OrderType.DESC, int StartId = -1)
     {
+        if (InvoiceId == 0) InvoiceId = -1;
+        if (CustomerId == 0) CustomerId = -1;
+        if (InvoiceDate == null) InvoiceDate = "%";
+        if (SearchValue == null) SearchValue = "%";
+        if (StartId == 0) StartId = -1;
         var result = await Processor.LoadManyItemsAsync(FetcheSize, InvoiceId, CustomerId, InvoiceDate, SearchValue, LifeStatus, FinStatus, SearchMode, orderType, StartId);
         return (result == null || !result.Any()) ? NotFound("List is empty") : result.ToList();
     }

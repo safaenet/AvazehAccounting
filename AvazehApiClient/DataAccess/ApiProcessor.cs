@@ -185,7 +185,7 @@ public class ApiProcessor : IApiProcessor
     //    return default;
     //}
 
-    public async Task<T> GetInvoiceCollectionAsync<T>(string Key, int FetcheSize = 50, int InvoiceId = -1, int CustomerId = -1, string InvoiceDate = "%", string SearchValue = "%", InvoiceLifeStatus LifeStatus = InvoiceLifeStatus.Active, InvoiceFinancialStatus FinStatus = InvoiceFinancialStatus.Outstanding, SqlQuerySearchMode SearchMode = SqlQuerySearchMode.Backward, OrderType orderType = OrderType.DESC, int StartId = -1) where T : class
+    public async Task<T> GetInvoiceCollectionAsync<T>(string Key, int FetcheSize = 50, int InvoiceId = -1, int CustomerId = -1, string InvoiceDate = "%", string SearchValue = "%", InvoiceLifeStatus? LifeStatus = InvoiceLifeStatus.Active, InvoiceFinancialStatus? FinStatus = InvoiceFinancialStatus.Outstanding, SqlQuerySearchMode SearchMode = SqlQuerySearchMode.Backward, OrderType orderType = OrderType.DESC, int StartId = -1) where T : class
     {
         try
         {
