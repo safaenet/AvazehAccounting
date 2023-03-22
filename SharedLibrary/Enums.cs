@@ -61,3 +61,9 @@ public enum ProductStatus
     InActive = 0,
     Active = 1
 }
+
+public enum SqlQueryOrderMode
+{
+    ASC = 'A',
+    DESC = 'D'
+}

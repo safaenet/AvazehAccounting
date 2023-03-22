@@ -478,24 +478,49 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         return 0;
     }
 
-    public async Task<IEnumerable<InvoiceListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    //public async Task<IEnumerable<InvoiceListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    //{
+    //    try
+    //    {
+    //        string sql = $@"SET NOCOUNT ON
+    //                        SELECT i.Id, i.CustomerId, ISNULL(c.FirstName, '') + ' ' + ISNULL(c.LastName, '') CustomerFullName, i.DateCreated, i.TimeCreated, i.DateUpdated, i.TimeUpdated,
+		  //                          dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) AS TotalInvoiceSum, pays.TotalPayments, i.LifeStatus
+    //                        FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id
+                            
+    //                        LEFT JOIN (SELECT SUM(ii.[CountValue] * ii.SellPrice) AS TotalSellValue, ii.[InvoiceId]
+	   //                         FROM InvoiceItems ii GROUP BY ii.[InvoiceId]) sp ON i.Id = sp.InvoiceId
+                            
+    //                        LEFT JOIN (SELECT SUM(ips.[PayAmount]) AS TotalPayments, ips.[InvoiceId]
+	   //                        FROM InvoicePayments ips GROUP BY ips.[InvoiceId]) pays ON i.Id = pays.InvoiceId
+
+    //                        { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
+    //                        ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
+    //        return await DataAccess.LoadDataAsync<InvoiceListModel>(sql);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Log.Error(ex, "Error in SqlInvoiceProcessor");
+    //    }
+    //    return null;
+    //}
+
+    public async Task<IEnumerable<InvoiceListModel>> LoadManyItemsAsync(int FetcheSize, int InvoiceId, int CustomerId, string InvoiceDate, string SearchValue, InvoiceLifeStatus LifeStatus, InvoiceFinancialStatus FinStatus, SqlQueryOrderMode SearchMode, int StartId)
     {
         try
         {
-            string sql = $@"SET NOCOUNT ON
-                            SELECT i.Id, i.CustomerId, ISNULL(c.FirstName, '') + ' ' + ISNULL(c.LastName, '') CustomerFullName, i.DateCreated, i.TimeCreated, i.DateUpdated, i.TimeUpdated,
-		                            dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) AS TotalInvoiceSum, pays.TotalPayments, i.LifeStatus
-                            FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id
-                            
-                            LEFT JOIN (SELECT SUM(ii.[CountValue] * ii.SellPrice) AS TotalSellValue, ii.[InvoiceId]
-	                            FROM InvoiceItems ii GROUP BY ii.[InvoiceId]) sp ON i.Id = sp.InvoiceId
-                            
-                            LEFT JOIN (SELECT SUM(ips.[PayAmount]) AS TotalPayments, ips.[InvoiceId]
-	                           FROM InvoicePayments ips GROUP BY ips.[InvoiceId]) pays ON i.Id = pays.InvoiceId
-
-                            { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
-                            ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
-            return await DataAccess.LoadDataAsync<InvoiceListModel>(sql);
+            int EndId = -1;
+            DynamicParameters dp = new();
+            dp.Add("@FetchSize", FetcheSize);
+            dp.Add("@InvoiceId", InvoiceId);
+            dp.Add("@CustomerId", CustomerId);
+            dp.Add("@Date", InvoiceDate);
+            dp.Add("@SearchValue", SearchValue);
+            dp.Add("@LifeStatus", LifeStatus);
+            dp.Add("@FinStatus", FinStatus);
+            dp.Add("@SearchMode", SearchMode);
+            dp.Add("@StartId", StartId);
+            dp.Add("@EndId", EndId, DbType.Int32, ParameterDirection.Output);
+            return await DataAccess.LoadDataAsync<InvoiceListModel, DynamicParameters>("LoadInvoices", dp, CommandType.StoredProcedure);
         }
         catch (Exception ex)
         {
