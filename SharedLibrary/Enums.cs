@@ -52,8 +52,8 @@ public enum TransactionFinancialStatus
 
 public enum OrderType
 {
-    ASC,
-    DESC
+    ASC = 0,
+    DESC = 1
 }
 
 public enum ProductStatus
@@ -62,8 +62,8 @@ public enum ProductStatus
     Active = 1
 }
 
-public enum SqlQueryOrderMode
+public enum SqlQuerySearchMode
 {
-    ASC = 'A',
-    DESC = 'D'
+    Forward = 0,
+    Backward = 1
 }

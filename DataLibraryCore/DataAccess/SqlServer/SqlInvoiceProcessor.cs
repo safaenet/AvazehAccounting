@@ -504,7 +504,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
     //    return null;
     //}
 
-    public async Task<IEnumerable<InvoiceListModel>> LoadManyItemsAsync(int FetcheSize, int InvoiceId, int CustomerId, string InvoiceDate, string SearchValue, InvoiceLifeStatus LifeStatus, InvoiceFinancialStatus FinStatus, SqlQueryOrderMode SearchMode, int StartId)
+    public async Task<IEnumerable<InvoiceListModel>> LoadManyItemsAsync(int FetcheSize, int InvoiceId, int CustomerId, string InvoiceDate, string SearchValue, InvoiceLifeStatus LifeStatus, InvoiceFinancialStatus FinStatus, SqlQuerySearchMode SearchMode, OrderType orderType, int StartId)
     {
         try
         {
@@ -518,9 +518,11 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
             dp.Add("@LifeStatus", LifeStatus);
             dp.Add("@FinStatus", FinStatus);
             dp.Add("@SearchMode", SearchMode);
+            dp.Add("@OrderType", orderType);
             dp.Add("@StartId", StartId);
             dp.Add("@EndId", EndId, DbType.Int32, ParameterDirection.Output);
-            return await DataAccess.LoadDataAsync<InvoiceListModel, DynamicParameters>("LoadInvoices", dp, CommandType.StoredProcedure);
+            var result = await DataAccess.LoadDataAsync<InvoiceListModel, DynamicParameters>("LoadInvoices", dp, CommandType.StoredProcedure);
+            return result;
         }
         catch (Exception ex)
         {

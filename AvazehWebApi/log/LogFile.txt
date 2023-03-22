@@ -640,3 +640,17 @@ The statement has been terminated.
    at DataLibraryCore.DataAccess.SqlServer.SqlCustomerProcessor`3.LoadManyItemsAsync(Int32 OffSet, Int32 FetcheSize, String WhereClause, String OrderBy, OrderType Order) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlCustomerProcessor.cs:line 204
 ClientConnectionId:8e98e5d5-2a0b-491a-91fb-9502aeade1b0
 Error Number:242,State:3,Class:16
+2023-03-22 19:58:52.375 +03:30 [ERR] Error in DataLibraryCore.DataAccess.SqlServer.SqlDataAccess+<LoadDataAsync>d__3`2[T,U]
+System.Data.SqlClient.SqlException (0x80131904): Conversion failed when converting the varchar value 'B' to data type int.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryAsync[T](IDbConnection cnn, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 418
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.LoadDataAsync[T,U](String sql, U param, CommandType CType) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 52
+ClientConnectionId:ac3ab2c6-b15d-41d0-9e88-cd697e681209
+Error Number:245,State:1,Class:16
