@@ -143,22 +143,22 @@ public class PersianOrderStringToEnglishOrderStringConverter : IValueConverter
     }
 }
 
-public class EnglishToPersianInvoiceFinStatusConverter : IValueConverter
+public class EnglishToPersianInvoiceFinStatusConverter : IMultiValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value == null) return DependencyProperty.UnsetValue;
-        else if ((InvoiceFinancialStatus)value == InvoiceFinancialStatus.Balanced) return "تسویه";
-        else if ((InvoiceFinancialStatus)value == InvoiceFinancialStatus.Deptor) return "بدهکار";
-        else if ((InvoiceFinancialStatus)value == InvoiceFinancialStatus.Creditor) return "بستانکار";
-        else if ((InvoiceFinancialStatus)value == InvoiceFinancialStatus.Outstanding) return "معوق";
+        int fwdInvoiceId = -1;
+        if (values[1] != null) fwdInvoiceId = (int)values[1];
+        string outPut;
+        if ((InvoiceFinancialStatus)values[0] == InvoiceFinancialStatus.Balanced) outPut = "تسویه";
+        else if ((InvoiceFinancialStatus)values[0] == InvoiceFinancialStatus.Deptor) outPut = "بدهکار";
+        else if ((InvoiceFinancialStatus)values[0] == InvoiceFinancialStatus.Creditor) outPut = "بستانکار";
         else return DependencyProperty.UnsetValue;
+        if (fwdInvoiceId > 0) outPut += " - " + fwdInvoiceId.ToString();
+        return outPut;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-    {
-        throw new NotSupportedException();
-    }
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => throw new NotImplementedException();
 }
 
 public class EnglishToPersianTransactionFinStatusConverter : IValueConverter

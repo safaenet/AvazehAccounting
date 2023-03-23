@@ -24,6 +24,9 @@ public class InvoiceListModel
     public int? FwdInvoiceId { get; set; }
     public double TotalInvoiceBalance => TotalInvoiceSum - TotalPayments;
     public double TotalBalance => TotalInvoiceBalance + PrevInvoiceBalance;
-    //public InvoiceFinancialStatus InvoiceFinancialStatus => TotalBalance == 0 ? InvoiceFinancialStatus.Balanced : TotalBalance > 0 ? InvoiceFinancialStatus.Deptor : InvoiceFinancialStatus.Creditor;
-    public InvoiceFinancialStatus InvoiceFinancialStatus => (FwdInvoiceId is not null and > 0) ? InvoiceFinancialStatus.Outstanding : TotalBalance == 0 ? InvoiceFinancialStatus.Balanced : TotalBalance > 0 ? InvoiceFinancialStatus.Deptor : InvoiceFinancialStatus.Creditor;
+    public string InvoiceTitle => string.IsNullOrEmpty(About) ? CustomerFullName : CustomerFullName + " - " + About;
+    public string DateTimeCreated => TimeCreated + " " + DateCreated;
+    public string DateTimeUpdated => TimeUpdated + " " + DateUpdated;
+    public InvoiceFinancialStatus InvoiceFinancialStatus => TotalBalance == 0 ? InvoiceFinancialStatus.Balanced : TotalBalance > 0 ? InvoiceFinancialStatus.Deptor : InvoiceFinancialStatus.Creditor;
+    //public InvoiceFinancialStatus InvoiceFinancialStatus => (FwdInvoiceId is not null and > 0) ? InvoiceFinancialStatus.Outstanding : TotalBalance == 0 ? InvoiceFinancialStatus.Balanced : TotalBalance > 0 ? InvoiceFinancialStatus.Deptor : InvoiceFinancialStatus.Creditor;
 }

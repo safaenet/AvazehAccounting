@@ -35,7 +35,7 @@ public class InvoiceListViewModel : Screen
         ICM.PageSize = User.UserSettings.InvoicePageSize;
         ICM.orderType = User.UserSettings.InvoiceListQueryOrderType;
         ICM.LifeStatus = InvoiceLifeStatus.Active;
-        ICM.FinStatus = InvoiceFinancialStatus.Outstanding;
+        ICM.FinStatus = null;
 
         _ = SearchAsync().ConfigureAwait(true);
     }
@@ -287,18 +287,11 @@ public static class InvoiceFinStatusAndLifeStatusItems //For ComboBoxes
     public static Dictionary<int, string> GetInvoiceFinStatusItems()
     {
         Dictionary<int, string> choices = new();
-        for (int i = 0; i < Enum.GetNames(typeof(InvoiceFinancialStatus)).Length; i++)
-        {
-            if (Enum.GetName(typeof(InvoiceFinancialStatus), i) == InvoiceFinancialStatus.Balanced.ToString())
-                choices.Add((int)InvoiceFinancialStatus.Balanced, "تسویه");
-            else if (Enum.GetName(typeof(InvoiceFinancialStatus), i) == InvoiceFinancialStatus.Deptor.ToString())
-                choices.Add((int)InvoiceFinancialStatus.Deptor, "بدهکار");
-            else if (Enum.GetName(typeof(InvoiceFinancialStatus), i) == InvoiceFinancialStatus.Creditor.ToString())
-                choices.Add((int)InvoiceFinancialStatus.Creditor, "بستانکار");
-            else if (Enum.GetName(typeof(InvoiceFinancialStatus), i) == InvoiceFinancialStatus.Outstanding.ToString())
-                choices.Add((int)InvoiceFinancialStatus.Outstanding, "معوق");
-        }
-        choices.Add(Enum.GetNames(typeof(InvoiceFinancialStatus)).Length, "همه");
+        choices.Add((int)InvoiceFinancialStatus.Balanced, "تسویه");
+        choices.Add((int)InvoiceFinancialStatus.Deptor, "بدهکار");
+        choices.Add((int)InvoiceFinancialStatus.Creditor, "بستانکار");
+        choices.Add(3, "معوق"); //Outstanding
+        choices.Add(4, "همه");
         return choices;
     }
 

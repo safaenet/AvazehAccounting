@@ -690,3 +690,35 @@ System.Data.SqlClient.SqlException (0x80131904): Error converting data type int 
    at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.LoadDataAsync[T,U](String sql, U param, CommandType CType) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 52
 ClientConnectionId:1a9826b4-177d-40a8-894b-0bfbeaccf2ea
 Error Number:8114,State:1,Class:16
+2023-03-23 15:50:29.523 +03:30 [ERR] Error in DataLibraryCore.DataAccess.SqlServer.SqlDataAccess+<LoadDataAsync>d__3`2[T,U]
+System.Data.SqlClient.SqlException (0x80131904): String or binary data would be truncated in table 'tempdb.dbo.#AE26C3DA', column 'About'. Truncated value: 'ک'.
+String or binary data would be truncated in table 'tempdb.dbo.#AE26C3DA', column 'About'. Truncated value: 'د'.
+The statement has been terminated.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryAsync[T](IDbConnection cnn, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 418
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.LoadDataAsync[T,U](String sql, U param, CommandType CType) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 52
+ClientConnectionId:8235e65b-fa4a-4446-a966-9e43181cbfba
+Error Number:2628,State:1,Class:16
+2023-03-23 15:50:32.682 +03:30 [ERR] Error in DataLibraryCore.DataAccess.SqlServer.SqlDataAccess+<LoadDataAsync>d__3`2[T,U]
+System.Data.SqlClient.SqlException (0x80131904): String or binary data would be truncated in table 'tempdb.dbo.#AE26C3DA', column 'About'. Truncated value: 'د'.
+String or binary data would be truncated in table 'tempdb.dbo.#AE26C3DA', column 'About'. Truncated value: 'ک'.
+String or binary data would be truncated in table 'tempdb.dbo.#AE26C3DA', column 'About'. Truncated value: 'د'.
+The statement has been terminated.
+The statement has been terminated.
+The statement has been terminated.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryAsync[T](IDbConnection cnn, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 418
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.LoadDataAsync[T,U](String sql, U param, CommandType CType) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 52
+ClientConnectionId:8235e65b-fa4a-4446-a966-9e43181cbfba
+Error Number:2628,State:1,Class:16

@@ -11,7 +11,7 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:InvoiceListViewModel}"
         Title="فاکتور ها" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
-        Width="1030" Height="650"
+        Width="1230" Height="650"
         cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
     <Window.Resources>
         <local:EnglishInvoiceStatusToPersianConverter x:Key="EnglishInvoiceStatusToPersianConverter"/>
@@ -198,7 +198,7 @@
                     <ObjectDataProvider x:Key="UserColorSettings" MethodName="GetColorSettings" ObjectInstance="{x:Type viewmodels:InvoiceListViewModel}"/>
                 </DataGrid.Resources>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="شماره" Binding="{Binding Path=Id, Mode=OneWay}" Width="50">
+                    <DataGridTextColumn Header="شماره" Binding="{Binding Path=Id, Mode=OneWay}" Width="55">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Background" Value="{Binding Path=DateCreated, Converter={StaticResource DateToColorConverterForNewItem}}"/>
@@ -206,15 +206,15 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="نام مشتری" Binding="{Binding Path=CustomerFullName, Mode=OneWay}" Width="*"/>
-                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding Path=DateCreated, Mode=OneWay}" Width="70">
+                    <DataGridTextColumn Header="عنوان" Binding="{Binding Path=InvoiceTitle, Mode=OneWay}" Width="*"/>
+                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding Path=DateTimeCreated, Mode=OneWay}" Width="120">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="TextAlignment" Value="Center"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="تاریخ بروزرسانی" Binding="{Binding Path=DateUpdated, Mode=OneWay}" Width="89">
+                    <DataGridTextColumn Header="تاریخ بروزرسانی" Binding="{Binding Path=DateTimeUpdated, Mode=OneWay}" Width="120">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Background" Value="{Binding Path=DateUpdated, Converter={StaticResource DateToColorConverterForUpdatedItem}}"/>
@@ -223,12 +223,19 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="ساعت بروزرسانی" Binding="{Binding Path=TimeUpdated, Mode=OneWay}" Width="100"/>
                     <DataGridTextColumn Header="جمع فاکتور" Binding="{Binding Path=TotalInvoiceSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.6*"/>
                     <DataGridTextColumn Header="جمع پرداخت ها" Binding="{Binding Path=TotalPayments, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.6*"/>
-                    <DataGridTextColumn Header="نوع فاکتور" Binding="{Binding Path=LifeStatus, Converter={StaticResource EnglishInvoiceStatusToPersianConverter}, Mode=OneWay}" Width="57"/>
+                    <!--<DataGridTextColumn Header="نوع فاکتور" Binding="{Binding Path=LifeStatus, Converter={StaticResource EnglishInvoiceStatusToPersianConverter}, Mode=OneWay}" Width="57"/>-->
+                    <DataGridTextColumn Header="فاکتور قبل" Binding="{Binding Path=PrevInvoiceId, Mode=OneWay}" Width="65"/>
+                    <DataGridTextColumn Header="مانده قبل" Binding="{Binding Path=PrevInvoiceBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.6*"/>
                     <DataGridTextColumn Header="تراز کل" Binding="{Binding Path=TotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.6*"/>
-                    <DataGridTextColumn Header="وضعیت مالی" Binding="{Binding Path=InvoiceFinancialStatus, Converter={StaticResource EnglishToPersianInvoiceFinStatusConverter}, Mode=OneWay}" Width="80">
+                    <DataGridTextColumn Header="وضعیت مالی"  Width="90">
+                        <DataGridTextColumn.Binding>
+                            <MultiBinding Mode="OneWay" Converter="{StaticResource EnglishToPersianInvoiceFinStatusConverter}">
+                                <Binding Path="InvoiceFinancialStatus"/>
+                                <Binding Path="FwdInvoiceId"/>
+                            </MultiBinding>
+                        </DataGridTextColumn.Binding>
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Background" Value="{Binding TotalBalance, Converter={StaticResource AmountToColorConverterForTotalBalance}}"/>
