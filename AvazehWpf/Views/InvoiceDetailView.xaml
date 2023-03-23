@@ -81,9 +81,6 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,3,0">
 
@@ -155,6 +152,26 @@
                                 <TextBlock TextAlignment="Center" Text="مقدار" VerticalAlignment="Center" Margin="3,0,3,3"/>
                             </StackPanel>
                         </StackPanel>
+
+                        <StackPanel Orientation="Vertical" Margin="0,0,0,3">
+                            <StackPanel Width="80" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <materialDesign:PackIcon Kind="FileDocumentOutline" Margin="0,2,5,2"/>
+                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="فاکتور قبلی" Margin="0,2,0,2"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel.Resources>
+                                    <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+                                        <ObjectDataProvider.MethodParameters>
+                                            <x:Type TypeName="dlc:DiscountTypes"/>
+                                        </ObjectDataProvider.MethodParameters>
+                                    </ObjectDataProvider>
+                                </StackPanel.Resources>
+                                
+                                <Button HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="50" Height="25" Content="انتخاب" Margin="0,0,3,0"/>
+                                <TextBox Text="{Binding Invoice.PrevInvoiceId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" MaxLength="70" Width="70" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                <TextBlock TextAlignment="Center" Text="شماره فاکتور" VerticalAlignment="Center" Margin="3,0,3,3"/>
+                            </StackPanel>
+                        </StackPanel>
                     </StackPanel>
 
                     <DockPanel LastChildFill="True"  Grid.Row="1" DockPanel.Dock="Bottom" Margin="0,0,3,0">
@@ -182,17 +199,17 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,3,3" HorizontalAlignment="Left">
-                            <TextBlock Text="{Binding Invoice.TotalPayments, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="138" VerticalAlignment="Center"/>
-                            <TextBlock MaxWidth="200" TextAlignment="Right" Text="پرداخت ها" Margin="3,0,0,2" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Invoice.TotalPayments, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="112" VerticalAlignment="Center"/>
+                            <TextBlock MaxWidth="200" TextAlignment="Right" Text="جمع پرداخت ها" Margin="3,0,0,2" VerticalAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,3,3" HorizontalAlignment="Left">
-                            <TextBlock Text="{Binding Invoice.TotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="120" VerticalAlignment="Center"/>
-                            <TextBlock MaxWidth="200" TextAlignment="Right" Text="قابل پرداخت" FontWeight="Bold" Margin="3,0,0,2" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Invoice.TotalInvoiceBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="133" VerticalAlignment="Center"/>
+                            <TextBlock MaxWidth="200" TextAlignment="Right" Text="مانده فاکتور" Margin="3,0,0,2" VerticalAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,3,3" HorizontalAlignment="Left">
-                            <TextBlock Text="{Binding CustomerPreviousTotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,3,0" TextAlignment="Left" Width="113" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Invoice.PrevInvoiceBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,3,0" TextAlignment="Left" Width="113" VerticalAlignment="Center"/>
                             <Button x:Name="ReloadCustomerPreviousBalance" HorizontalAlignment="Left">
                                 <materialDesign:PackIcon Kind="Refresh" Width="15" Height="15"/>
                             </Button>
@@ -200,7 +217,7 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,3,3" HorizontalAlignment="Left">
-                            <TextBlock Text="{Binding CustomerTotalBalancePlusThis, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="135" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Invoice.TotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="135" VerticalAlignment="Center"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="کل بدهی" FontWeight="Bold" Margin="3,0,0,2" VerticalAlignment="Center"/>
                         </StackPanel>
 
@@ -217,31 +234,42 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <Button x:Name="SaveInvoiceChangesAsync" IsEnabled="{Binding CanEditInvoice}" Grid.Row="3" Margin="0,3,2,0">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="ContentSaveOutline" Width="20" Height="20" Margin="3"/>
-                            <TextBlock Text="ذخیره تغییرات" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                    <Button x:Name="DeleteInvoiceAndCloseAsync" IsEnabled="{Binding CanDeleteInvoice}" Grid.Row="4" Margin="0,3,2,0">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="DeleteOutline" Width="20" Height="20" Margin="3"/>
-                            <TextBlock Text="حذف فاکتور" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                    <Button cal:Message.Attach="[Event Click] = [Action PrintInvoiceMenu($source, $view)]" IsEnabled="{Binding CanPrintInvoice}" Grid.Row="5" Margin="0,3,2,0">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="PrinterOutline" Width="20" Height="20" Margin="3"/>
-                            <TextBlock Text="چاپ فاکتور" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
 
-                    <Button x:Name="ViewPaymentsAsync" IsEnabled="{Binding CanEditInvoice}" Grid.Row="6" Margin="0,3,2,0">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Payment" Width="20" Height="20" Margin="3"/>
-                            <TextBlock Text="پرداخت ها" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
+                    <Grid Grid.Row="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="28"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="SaveInvoiceChangesAsync" IsEnabled="{Binding CanEditInvoice}" Grid.Row="0" Grid.Column="1" Margin="0,3,2,0">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="ContentSaveOutline" Width="20" Height="15" Margin="3"/>
+                                <TextBlock Text="ذخیره تغییرات" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="DeleteInvoiceAndCloseAsync" IsEnabled="{Binding CanDeleteInvoice}" Grid.Row="0" Grid.Column="0" Margin="0,3,2,0">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="DeleteOutline" Width="20" Height="15" Margin="3"/>
+                                <TextBlock Text="حذف فاکتور" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button cal:Message.Attach="[Event Click] = [Action PrintInvoiceMenu($source, $view)]" IsEnabled="{Binding CanPrintInvoice}" Grid.Row="1" Grid.Column="0" Margin="0,3,2,0">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="PrinterOutline" Width="20" Height="15" Margin="3"/>
+                                <TextBlock Text="چاپ فاکتور" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button x:Name="ViewPaymentsAsync" IsEnabled="{Binding CanEditInvoice}" Grid.Row="1" Grid.Column="1" Margin="0,3,2,0">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Payment" Width="20" Height="15" Margin="3"/>
+                                <TextBlock Text="پرداخت ها" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
                 </Grid>
             </ScrollViewer>
         </Grid>

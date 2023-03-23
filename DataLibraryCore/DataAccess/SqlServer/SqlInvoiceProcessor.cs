@@ -63,42 +63,42 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
     private readonly string UpdateInvoicePaymentQuery = @$"UPDATE InvoicePayments SET DateUpdated = @dateUpdated, TimeUpdated = @timeUpdated, PayAmount = @payAmount, Descriptions = @descriptions
              WHERE [Id] = @id";
     private readonly string DeleteInvoicePaymentQuery = @$"DELETE FROM InvoicePayments WHERE [Id] = @id";
-    private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON
-            DECLARE @invoices TABLE(
-	        [Id] [int],
-            [CustomerId] [int],
-	        [DateCreated] [char](10),
-	        [TimeCreated] [char](8),
-	        [DateUpdated] [char](10),
-	        [TimeUpdated] [char](8),
-	        [DiscountType] [tinyint],
-	        [DiscountValue] [float],
-			[About] [nvarchar](50),
-	        [Descriptions] [ntext],
-	        [LifeStatus] [tinyint],
-			[PrevInvoiceId] [int],
+   // private readonly string LoadSingleItemQuery = @"SET NOCOUNT ON
+   //         DECLARE @invoices TABLE(
+	  //      [Id] [int],
+   //         [CustomerId] [int],
+	  //      [DateCreated] [char](10),
+	  //      [TimeCreated] [char](8),
+	  //      [DateUpdated] [char](10),
+	  //      [TimeUpdated] [char](8),
+	  //      [DiscountType] [tinyint],
+	  //      [DiscountValue] [float],
+			//[About] [nvarchar](50),
+	  //      [Descriptions] [ntext],
+	  //      [LifeStatus] [tinyint],
+			//[PrevInvoiceId] [int],
 
-	        [CustId] [int],
-	        [FirstName] [nvarchar](50),
-	        [LastName] [nvarchar](50),
-	        [CompanyName] [nvarchar](50),
-	        [EmailAddress] [nvarchar](50),
-	        [PostAddress] [ntext],
-	        [DateJoined] [char](10),
-	        [CustDescriptions] [ntext])
+	  //      [CustId] [int],
+	  //      [FirstName] [nvarchar](50),
+	  //      [LastName] [nvarchar](50),
+	  //      [CompanyName] [nvarchar](50),
+	  //      [EmailAddress] [nvarchar](50),
+	  //      [PostAddress] [ntext],
+	  //      [DateJoined] [char](10),
+	  //      [CustDescriptions] [ntext])
 
-            INSERT @invoices
-            SELECT i.*, c.Id as CustId, FirstName, LastName, CompanyName, EmailAddress, PostAddress, DateJoined, c.Descriptions as CustDescriptions
-            FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id
-            WHERE i.Id = {0}
+   //         INSERT @invoices
+   //         SELECT i.*, c.Id as CustId, FirstName, LastName, CompanyName, EmailAddress, PostAddress, DateJoined, c.Descriptions as CustDescriptions
+   //         FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id
+   //         WHERE i.Id = {0}
 
-            SELECT * FROM @invoices ORDER BY [Id] ASC;
-            SELECT it.Id, it.InvoiceId, it.BuyPrice, it.SellPrice, it.CountString, it.DateCreated, it.TimeCreated, it.DateUpdated, it.DateUpdated, it.Delivered, it.Descriptions,
-                p.Id pId, p.ProductName, p.BuyPrice pBuyPrice, p.SellPrice pSellPrice, p.Barcode, p.CountString pCountString, p.DateCreated pDateCreated, p.TimeCreated pTimeCreated,
-                p.DateUpdated pDateUpdated, p.TimeUpdated pTimeUpdated, p.Descriptions pDescriptions, u.Id AS puId, u.UnitName
-                FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id LEFT JOIN ProductUnits u ON it.ProductUnitId = u.Id WHERE it.InvoiceId IN (SELECT i.Id FROM @invoices i) ORDER BY [Id] DESC;
-            SELECT * FROM InvoicePayments WHERE InvoiceId IN (SELECT i.Id FROM @invoices i);
-            SELECT * FROM PhoneNumbers WHERE CustomerId IN (SELECT i.CustomerId FROM @invoices i);";
+   //         SELECT * FROM @invoices ORDER BY [Id] ASC;
+   //         SELECT it.Id, it.InvoiceId, it.BuyPrice, it.SellPrice, it.CountString, it.DateCreated, it.TimeCreated, it.DateUpdated, it.DateUpdated, it.Delivered, it.Descriptions,
+   //             p.Id pId, p.ProductName, p.BuyPrice pBuyPrice, p.SellPrice pSellPrice, p.Barcode, p.CountString pCountString, p.DateCreated pDateCreated, p.TimeCreated pTimeCreated,
+   //             p.DateUpdated pDateUpdated, p.TimeUpdated pTimeUpdated, p.Descriptions pDescriptions, u.Id AS puId, u.UnitName
+   //             FROM InvoiceItems it LEFT JOIN Products p ON it.ProductId = p.Id LEFT JOIN ProductUnits u ON it.ProductUnitId = u.Id WHERE it.InvoiceId IN (SELECT i.Id FROM @invoices i) ORDER BY [Id] DESC;
+   //         SELECT * FROM InvoicePayments WHERE InvoiceId IN (SELECT i.Id FROM @invoices i);
+   //         SELECT * FROM PhoneNumbers WHERE CustomerId IN (SELECT i.CustomerId FROM @invoices i);";
     private readonly string GetSingleInvoiceItemQuery = @"SELECT it.*, p.[Id] AS pId, p.[ProductName], p.[BuyPrice] AS pBuyPrice, p.[SellPrice] AS pSellPrice, p.[Barcode],
                 p.[CountString] AS pCountString, p.[DateCreated] AS pDateCreated, p.[TimeCreated] AS pTimeCreated, p.[DateUpdated] AS pDateUpdated, p.[TimeUpdated] AS pTimeUpdated,
                 p.[Descriptions] AS pDescriptions, u.Id AS puId, u.UnitName
@@ -531,13 +531,30 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         return null;
     }
 
+    //public async Task<InvoiceModel> LoadSingleItemAsync(int Id)
+    //{
+    //    try
+    //    {
+    //        var query = string.Format(LoadSingleItemQuery, Id);
+    //        using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
+    //        var outPut = await conn.QueryMultipleAsync(query);
+    //        return outPut.MapToSingleInvoice();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Log.Error(ex, "Error in SqlInvoiceProcessor");
+    //    }
+    //    return null;
+    //}
+
     public async Task<InvoiceModel> LoadSingleItemAsync(int Id)
     {
         try
         {
-            var query = string.Format(LoadSingleItemQuery, Id);
+            DynamicParameters dp = new();
+            dp.Add("@InvoiceId", Id);
             using IDbConnection conn = new SqlConnection(DataAccess.GetConnectionString());
-            var outPut = await conn.QueryMultipleAsync(query);
+            var outPut = await conn.QueryMultipleAsync("LoadSingleInvoiceDetails", dp, commandType: CommandType.StoredProcedure);
             return outPut.MapToSingleInvoice();
         }
         catch (Exception ex)

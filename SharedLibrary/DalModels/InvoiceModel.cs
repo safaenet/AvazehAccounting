@@ -29,6 +29,6 @@ public class InvoiceModel
     public double TotalInvoiceBalance => TotalInvoiceSum - TotalPayments;
     public double TotalBalance => TotalInvoiceBalance + PrevInvoiceBalance;
     public double NetProfit => TotalInvoiceSum - TotalItemsBuySum; //(Prev invoice not included)
-    public double CurrentProfit => NetProfit - TotalBalance;
+    public double CurrentProfit => NetProfit - TotalInvoiceSum;
     public InvoiceFinancialStatus InvoiceFinancialStatus => TotalBalance == 0 ? InvoiceFinancialStatus.Balanced : TotalBalance > 0 ? InvoiceFinancialStatus.Deptor : InvoiceFinancialStatus.Creditor;
 }

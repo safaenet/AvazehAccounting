@@ -31,9 +31,9 @@ namespace AvazehUserControlLibraryWpf
         public ObservableCollection<KeyValuePair<int, string>> Months { get; private set; }
         public ObservableCollection<int> Days { get; private set; }
 
-        public DateOnly PersianDate
+        public string PersianDate
         {
-            get { return (DateOnly)GetValue(PersianDateProperty); }
+            get { return (string)GetValue(PersianDateProperty); }
             set
             {
                 SetValue(PersianDateProperty, value);
@@ -41,7 +41,7 @@ namespace AvazehUserControlLibraryWpf
         }
 
         public static DependencyProperty PersianDateProperty =
-            DependencyProperty.Register("PersianDate", typeof(DateOnly), typeof(PersianDatePicker), new PropertyMetadata(DateOnly.FromDateTime(DateTime.Now).AddYears(-15), OnMainDateChanged));
+            DependencyProperty.Register("PersianDate", typeof(string), typeof(PersianDatePicker), new PropertyMetadata("1355/02/28", OnMainDateChanged));
 
 
         public int YearWidth
@@ -124,7 +124,8 @@ namespace AvazehUserControlLibraryWpf
 
         private static void OnMainDateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue is null || d is not PersianDatePicker pdp) return;
+            var pdp = d as PersianDatePicker;
+            if (e.NewValue is null || pdp is null) return;
             var subs = ((string)e.NewValue).Split('/');
             if (subs.Length != 3) throw new InvalidCastException();
             if (!int.TryParse(subs[2], NumberStyles.Any, CultureInfo.InvariantCulture, out var day)) throw new InvalidCastException();
@@ -168,11 +169,9 @@ namespace AvazehUserControlLibraryWpf
         private static void OnSubDateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var pdp = d as PersianDatePicker;
-            string pDate = "";
-            if (pdp is not null && e.Property == YearProperty) pDate = string.Format("{0:0000}/{1:00}/{2:00}", e.NewValue, pdp.Month, pdp.Day);
-            if (pdp is not null && e.Property == MonthProperty) pDate = string.Format("{0:0000}/{1:00}/{2:00}", pdp.Year, e.NewValue, pdp.Day);
-            if (pdp is not null && e.Property == DayProperty) pDate = string.Format("{0:0000}/{1:00}/{2:00}", pdp.Year, pdp.Month, e.NewValue);
-            pdp.PersianDate = (DateOnly)pDate.ToGregorianDate();
+            if (pdp is not null && e.Property == YearProperty) pdp.PersianDate = string.Format("{0:0000}/{1:00}/{2:00}", e.NewValue, pdp.Month, pdp.Day);
+            if (pdp is not null && e.Property == MonthProperty) pdp.PersianDate = string.Format("{0:0000}/{1:00}/{2:00}", pdp.Year, e.NewValue, pdp.Day);
+            if (pdp is not null && e.Property == DayProperty) pdp.PersianDate = string.Format("{0:0000}/{1:00}/{2:00}", pdp.Year, pdp.Month, e.NewValue);
         }
 
         private void FillYears()
