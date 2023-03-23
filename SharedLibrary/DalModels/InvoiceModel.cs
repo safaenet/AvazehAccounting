@@ -8,6 +8,7 @@ public class InvoiceModel
 {
     public int Id { get; set; }
     public CustomerModel Customer { get; set; }
+    public string About { get; set; }
     public string DateCreated { get; set; }
     public string TimeCreated { get; set; }
     public string DateUpdated { get; set; }
@@ -17,7 +18,6 @@ public class InvoiceModel
     public DiscountTypes DiscountType { get; set; } = DiscountTypes.Amount;
     public double DiscountValue { get; set; }
     public string Descriptions { get; set; }
-    public string About { get; set; }
     public InvoiceLifeStatus LifeStatus { get; set; }
     public int PrevInvoiceId { get; set; }
     public int PrevInvoiceBalance { get; set; }

@@ -654,3 +654,39 @@ System.Data.SqlClient.SqlException (0x80131904): Conversion failed when converti
    at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.LoadDataAsync[T,U](String sql, U param, CommandType CType) in D:\Users\Safa\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 52
 ClientConnectionId:ac3ab2c6-b15d-41d0-9e88-cd697e681209
 Error Number:245,State:1,Class:16
+2023-03-23 09:55:13.171 +03:30 [ERR] Error in DataLibraryCore.DataAccess.SqlServer.SqlDataAccess+<LoadDataAsync>d__3`2[T,U]
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type int to tinyint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryAsync[T](IDbConnection cnn, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 418
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.LoadDataAsync[T,U](String sql, U param, CommandType CType) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 52
+ClientConnectionId:96d46a7e-d3c7-4d8c-91e9-c6d026e85b57
+Error Number:8114,State:1,Class:16
+2023-03-23 09:56:43.374 +03:30 [ERR] Error in DataLibraryCore.DataAccess.SqlServer.SqlDataAccess+<LoadDataAsync>d__3`2[T,U]
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type int to tinyint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryAsync[T](IDbConnection cnn, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 418
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.LoadDataAsync[T,U](String sql, U param, CommandType CType) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 52
+ClientConnectionId:96d46a7e-d3c7-4d8c-91e9-c6d026e85b57
+Error Number:8114,State:1,Class:16
+2023-03-23 10:03:14.294 +03:30 [ERR] Error in DataLibraryCore.DataAccess.SqlServer.SqlDataAccess+<LoadDataAsync>d__3`2[T,U]
+System.Data.SqlClient.SqlException (0x80131904): Error converting data type int to tinyint.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryAsync[T](IDbConnection cnn, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 418
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.LoadDataAsync[T,U](String sql, U param, CommandType CType) in D:\Users\Safa\Source\Repos\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 52
+ClientConnectionId:1a9826b4-177d-40a8-894b-0bfbeaccf2ea
+Error Number:8114,State:1,Class:16
