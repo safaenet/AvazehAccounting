@@ -225,7 +225,7 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="جمع فاکتور" Binding="{Binding Path=TotalInvoiceSum, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.6*"/>
                     <DataGridTextColumn Header="جمع پرداخت ها" Binding="{Binding Path=TotalPayments, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.6*"/>
-                    <!--<DataGridTextColumn Header="نوع فاکتور" Binding="{Binding Path=LifeStatus, Converter={StaticResource EnglishInvoiceStatusToPersianConverter}, Mode=OneWay}" Width="57"/>-->
+                    <DataGridTextColumn Header="نوع فاکتور" Binding="{Binding Path=LifeStatus, Converter={StaticResource EnglishInvoiceStatusToPersianConverter}, Mode=OneWay}" Width="57" Visibility="Hidden"/>
                     <DataGridTextColumn Header="فاکتور قبل" Binding="{Binding Path=PrevInvoiceId, Mode=OneWay}" Width="65"/>
                     <DataGridTextColumn Header="مانده قبل" Binding="{Binding Path=PrevInvoiceBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.6*"/>
                     <DataGridTextColumn Header="تراز کل" Binding="{Binding Path=TotalBalance, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.6*"/>
@@ -243,6 +243,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
+                    <DataGridTextColumn Header="فاکتور بعد" Binding="{Binding Path=FwdInvoiceId, Mode=OneWay}" Width="0.6*" Visibility="Hidden"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

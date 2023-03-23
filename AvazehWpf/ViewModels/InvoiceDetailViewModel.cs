@@ -35,7 +35,8 @@ public class InvoiceDetailViewModel : ViewAware
         CallBackFunc = callBack;
         Singleton = singleton;
         LoadSettings();
-        _ = LoadInvoiceAsync(InvoiceId).ConfigureAwait(true);
+        
+        _ = LoadInvoiceAsync(InvoiceId).ConfigureAwait(false);
     }
 
     private void LoadSettings()
@@ -68,6 +69,14 @@ public class InvoiceDetailViewModel : ViewAware
             NotifyOfPropertyChange(() => SelectedDiscountType);
         }
     }
+    private string prevInvoiceSelectTitle = "انتخاب";
+
+    public string PrevInvoiceSelectTitle
+    {
+        get { return prevInvoiceSelectTitle; }
+        set { prevInvoiceSelectTitle = value; NotifyOfPropertyChange(() => PrevInvoiceSelectTitle); }
+    }
+
     public string CurrentPersianDate { get; init; }
     public bool CanSaveInvoiceChanges { get; set; } = true;
     public InvoiceItemModel SelectedItem { get; set; }
@@ -141,6 +150,7 @@ public class InvoiceDetailViewModel : ViewAware
             await ReloadInvoiceAsync(InvoiceId);
         }
         await GetComboboxItemsAsync();
+        PrevInvoiceSelectTitle = Invoice == null || Invoice.PrevInvoiceId <= 0 ? "انتخاب" : "حذف";
     }
 
     public string WindowTitle
@@ -497,6 +507,26 @@ public class InvoiceDetailViewModel : ViewAware
     {
         if (RecentSellPrices != null && RecentSellPrices.Count > 1)
             IsSellPriceDropDownOpen = true;
+    }
+
+    public async Task AddDeletePrevInvoiceAsync()
+    {
+        if (!CanEditInvoice || Invoice is null) return;
+        int PrevId = 0;
+        if (Invoice.PrevInvoiceId > 0)
+        {//Delete Prev Id
+            var result = MessageBox.Show("آیا مطمئن هستید", "حذف فاکتور قبلی", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.No) return;
+            PrevId = 0;
+        }
+        else
+        {
+            PrevId = 1;//To be updated
+        }
+        if (await ICM.SetPrevInvoiceId(Invoice.Id, PrevId) == true) Invoice.PrevInvoiceId = 0;
+        else MessageBox.Show("خطا در بروزرسانی فیلد فاکتور قبلی", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+        PrevInvoiceSelectTitle = Invoice == null || Invoice.PrevInvoiceId <= 0 ? "انتخاب" : "حذف";
+        NotifyOfPropertyChange(() => Invoice);
     }
 
     public void SellPrice_LostFocus()

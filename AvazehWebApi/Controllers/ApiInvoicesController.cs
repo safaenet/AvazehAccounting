@@ -80,6 +80,13 @@ public class InvoicesController : ControllerBase
         return newItem;
     }
 
+    [HttpPut("SetPrevInvoiceId/{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanEditInvoice))]
+    public async Task<ActionResult<string>> UpdatePrevInvoiceIdAsync(int Id, int model)
+    {
+        if (await Processor.SetPrevInvoiceId(Id, model) == 0) return NotFound();
+        return "0";
+    }
+
     [HttpPut("{Id}"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanEditInvoice))]
     public async Task<ActionResult<InvoiceModel>> UpdateItemAsync(int Id, InvoiceModel_DTO_Create_Update model)
     {

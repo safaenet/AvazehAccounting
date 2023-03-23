@@ -166,9 +166,9 @@
                                         </ObjectDataProvider.MethodParameters>
                                     </ObjectDataProvider>
                                 </StackPanel.Resources>
-                                
-                                <Button HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="50" Height="25" Content="انتخاب" Margin="0,0,3,0"/>
-                                <TextBox Text="{Binding Invoice.PrevInvoiceId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" MaxLength="70" Width="70" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+                                <Button x:Name="AddDeletePrevInvoiceAsync" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="50" Height="25" Content="{Binding PrevInvoiceSelectTitle}" Margin="0,0,3,0"/>
+                                <TextBox Text="{Binding Invoice.PrevInvoiceId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" MaxLength="70" Width="76" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                 <TextBlock TextAlignment="Center" Text="شماره فاکتور" VerticalAlignment="Center" Margin="3,0,3,3"/>
                             </StackPanel>
                         </StackPanel>
@@ -502,18 +502,11 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="تاریخ ویرایش" Binding="{Binding DateUpdated, Mode=OneWay}" Width="72">
+                    <DataGridTextColumn Header="تاریخ و ساعت ویرایش" Binding="{Binding DateTimeUpdated, Mode=OneWay}" Width="120">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Background" Value="{Binding Path=DateUpdated, Converter={StaticResource DateToColorConverterForUpdatedItem}}"/>
                                 <Setter Property="Foreground" Value="Black"/>
-                                <Setter Property="TextAlignment" Value="Center"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="ساعت ویرایش" Binding="{Binding TimeUpdated, Mode=OneWay}" Width="82">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="TextAlignment" Value="Center"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>

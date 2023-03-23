@@ -530,6 +530,12 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         return null;
     }
 
+    public async Task<int> SetPrevInvoiceId(int InvoiceId, int PrevInvoiceId)
+    {
+        string sql = $"UPDATE Invoices SET [PrevInvoiceId] = { (PrevInvoiceId <= 0 ? "NULL" : PrevInvoiceId) } WHERE Id = {InvoiceId}";
+        return await DataAccess.SaveDataAsync(sql);
+    }
+
     public async Task<IEnumerable<ProductUnitModel>> GetProductUnitsAsync()
     {
         try

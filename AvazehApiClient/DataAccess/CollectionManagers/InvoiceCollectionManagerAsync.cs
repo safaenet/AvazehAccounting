@@ -123,6 +123,12 @@ public class InvoiceCollectionManagerAsync : IInvoiceCollectionManager
         return result;
     }
 
+    public async Task<bool> SetPrevInvoiceId(int InvoiceId, int PrevInvoiceId)
+    {
+        var result = await ApiProcessor.UpdateItemAsync<int, string>(Key + "/SetPrevInvoiceId", InvoiceId, PrevInvoiceId);
+        if (result == "0") return true; else return false;
+    }
+
     public async Task<List<ItemsForComboBox>> LoadProductItems(string SearchText = null)
     {
         var collection = await ApiProcessor.GetCollectionAsync<List<ItemsForComboBox>>(Key + "/ProductItems", SearchText);

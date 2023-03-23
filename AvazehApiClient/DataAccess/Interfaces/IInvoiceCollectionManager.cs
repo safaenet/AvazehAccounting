@@ -41,6 +41,7 @@ public interface IInvoiceCollectionManager
     ValidationResult ValidateItem(InvoiceModel item);
 
     ObservableCollection<InvoiceListModel> Items { get; set; }
+    Task<bool> SetPrevInvoiceId(int InvoiceId, int PrevInvoiceId);
     InvoiceListModel GetItemFromCollectionById(int Id);
     Task<List<ItemsForComboBox>> LoadProductItems(string SearchText = null);
     Task<double> GetCustomerTotalBalanceById(int CustomerId, int InvoiceId = 0);
