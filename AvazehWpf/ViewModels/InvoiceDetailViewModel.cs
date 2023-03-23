@@ -521,12 +521,22 @@ public class InvoiceDetailViewModel : ViewAware
         }
         else
         {
-            PrevId = 1;//To be updated
+            PrevId = 2;//To be updated
         }
-        if (await ICM.SetPrevInvoiceId(Invoice.Id, PrevId) == true) Invoice.PrevInvoiceId = 0;
+        if (await ICM.SetPrevInvoiceId(Invoice.Id, PrevId) == true)
+        {
+            Invoice.PrevInvoiceBalance = await GetPrevBalanceAsync(Invoice.Id);
+            Invoice.PrevInvoiceId = PrevId;
+        }
         else MessageBox.Show("خطا در بروزرسانی فیلد فاکتور قبلی", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
         PrevInvoiceSelectTitle = Invoice == null || Invoice.PrevInvoiceId <= 0 ? "انتخاب" : "حذف";
         NotifyOfPropertyChange(() => Invoice);
+    }
+
+    public async Task<double> GetPrevBalanceAsync(int InvoiceId)
+    {
+        var result = await ICM.GetInvoicePrevTotalBalanceById(InvoiceId);
+        return result;
     }
 
     public void SellPrice_LostFocus()

@@ -15,6 +15,7 @@ public interface IInvoiceProcessorBase<TModel> : IProcessorBase<TModel>
     Task<int> DeleteInvoiceItemFromDatabaseAsync(int ItemId);
     Task<IEnumerable<ItemsForComboBox>> GetProductItemsAsync(string SearchText);
     Task<double> GetTotalOrRestTotalBalanceOfCustomerAsync(int CustomerId, int InvoiceId = 0);
+    Task<double> GetPrevBalanceOfInvoiceAsync(int InvoiceId);
     Task<InvoiceItemModel> GetInvoiceItemFromDatabaseAsync(int Id);
     Task<int> InsertInvoiceItemToDatabaseAsync(InvoiceItemModel item);
     Task<IEnumerable<ProductUnitModel>> GetProductUnitsAsync();

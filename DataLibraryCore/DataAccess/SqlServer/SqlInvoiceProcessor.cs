@@ -513,6 +513,20 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         return 0;
     }
 
+    public async Task<double> GetPrevBalanceOfInvoiceAsync(int InvoiceId)
+    {
+        try
+        {
+            string sqlQuery = $"SELECT dbo.CalculatePrevInvoiceAmount({InvoiceId});";
+            return await DataAccess.ExecuteScalarAsync<double>(sqlQuery);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return 0;
+    }
+
     public async Task<IEnumerable<ItemsForComboBox>> GetProductItemsAsync(string SearchText = null)
     {
         try

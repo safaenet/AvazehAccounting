@@ -20,7 +20,7 @@ public class InvoiceModel
     public string Descriptions { get; set; }
     public InvoiceLifeStatus LifeStatus { get; set; }
     public int PrevInvoiceId { get; set; }
-    public int PrevInvoiceBalance { get; set; }
+    public double PrevInvoiceBalance { get; set; }
     public double TotalItemsBuySum => Items == null || Items.Count == 0 ? 0 : Items.Sum(i => i.TotalBuyValue);
     public double TotalItemsSellSum => Items == null || Items.Count == 0 ? 0 : Items.Sum(i => i.TotalSellValue);
     public double TotalDiscountAmount => DiscountType == DiscountTypes.Percent ? (TotalItemsSellSum * DiscountValue / 100) : DiscountValue;

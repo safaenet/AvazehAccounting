@@ -125,8 +125,9 @@ public class InvoiceCollectionManagerAsync : IInvoiceCollectionManager
 
     public async Task<bool> SetPrevInvoiceId(int InvoiceId, int PrevInvoiceId)
     {
-        var result = await ApiProcessor.UpdateItemAsync<int, string>(Key + "/SetPrevInvoiceId", InvoiceId, PrevInvoiceId);
-        if (result == "0") return true; else return false;
+        DtoModel<int> model = new() { Value = PrevInvoiceId };
+        var result = await ApiProcessor.UpdateItemAsync<DtoModel<int>, DtoModel<int>>(Key + "/SetPrevInvoiceId", InvoiceId, model);
+        return result.Value != 0;
     }
 
     public async Task<List<ItemsForComboBox>> LoadProductItems(string SearchText = null)
@@ -138,6 +139,11 @@ public class InvoiceCollectionManagerAsync : IInvoiceCollectionManager
     public async Task<double> GetCustomerTotalBalanceById(int CustomerId, int InvoiceId = 0)
     {
         return (double)await ApiProcessor.GetValueOrNullAsync<double>(Key + "/CustomerBalance", CustomerId, InvoiceId);
+    }
+
+    public async Task<double> GetInvoicePrevTotalBalanceById(int InvoiceId) //Calculates balance for prev id of this invoice.
+    {
+        return (double)await ApiProcessor.GetValueOrZeroAsync<double>(Key + "/PrevBalance", InvoiceId);
     }
 
     public async Task<List<UserDescriptionModel>> GetUserDescriptions()

@@ -45,5 +45,6 @@ public interface IInvoiceCollectionManager
     InvoiceListModel GetItemFromCollectionById(int Id);
     Task<List<ItemsForComboBox>> LoadProductItems(string SearchText = null);
     Task<double> GetCustomerTotalBalanceById(int CustomerId, int InvoiceId = 0);
+    Task<double> GetInvoicePrevTotalBalanceById(int InvoiceId);
     Task<List<UserDescriptionModel>> GetUserDescriptions();
 }

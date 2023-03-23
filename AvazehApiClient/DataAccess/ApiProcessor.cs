@@ -290,11 +290,17 @@ public class ApiProcessor : IApiProcessor
         return false;
     }
 
-    public async Task<T?> GetValueOrNullAsync<T>(string Key, int Id1, int Id2) where T : struct
+    public async Task<T?> GetValueOrNullAsync<T>(string Key, params int[] Ids) where T : struct
     {
         try
         {
-            var Url = $"{Key}/{Id1}/{Id2}";
+            if (Ids == null || Ids.Length == 0) return null;
+            string ids = "";
+            foreach (var id in Ids)
+            {
+                ids += "/" + id.ToString();
+            }
+            var Url = $"{Key}{ids}";
             var response = await ApiClient.GetAsync(Url);
             return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
         }
@@ -305,11 +311,17 @@ public class ApiProcessor : IApiProcessor
         return null;
     }
 
-    public async Task<double> GetValueOrZeroAsync<T>(string Key, int Id1, int Id2)
+    public async Task<double> GetValueOrZeroAsync<T>(string Key, params int[] Ids)
     {
         try
         {
-            var Url = $"{Key}/{Id1}/{Id2}";
+            if (Ids == null || Ids.Length == 0) return 0;
+            string ids = "";
+            foreach (var id in Ids)
+            {
+                ids += "/" + id.ToString();
+            }
+            var Url = $"{Key}{ids}";
             var response = await ApiClient.GetAsync(Url);
             return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<double>() : 0;
         }
