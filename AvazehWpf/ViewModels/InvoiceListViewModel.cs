@@ -57,6 +57,14 @@ public class InvoiceListViewModel : Screen
     private string searchText;
     private LoggedInUser_DTO user;
     private readonly SingletonClass Singleton;
+    private int invoiceIdToSearch;
+
+    public int InvoiceIdToSearch
+    {
+        get { return invoiceIdToSearch; }
+        set { invoiceIdToSearch = value;  NotifyOfPropertyChange(() => InvoiceIdToSearch); }
+    }
+
     private string queryDate;
 
     public string QueryDate
@@ -172,6 +180,8 @@ public class InvoiceListViewModel : Screen
         ICM.SearchValue = SearchText;
         ICM.FinStatus = FinStatus;
         ICM.LifeStatus = LifeStatus;
+        ICM.InvoiceIdToSearch = InvoiceIdToSearch == 0 ? -1 : InvoiceIdToSearch;
+        ICM.InvoiceDate = QueryDate;
         await ICM.LoadFirstPageAsync();
         NotifyOfPropertyChange(() => Invoices);
     }
