@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -36,6 +35,7 @@ public class InvoiceListViewModel : Screen
         ICM.orderType = User.UserSettings.InvoiceListQueryOrderType;
         ICM.LifeStatus = InvoiceLifeStatus.Active;
         ICM.FinStatus = null;
+        QueryDate = "____" + CurrentPersianDate.Substring(4);
 
         _ = SearchAsync().ConfigureAwait(true);
     }
@@ -57,10 +57,17 @@ public class InvoiceListViewModel : Screen
     private string searchText;
     private LoggedInUser_DTO user;
     private readonly SingletonClass Singleton;
+    private string queryDate;
+
+    public string QueryDate
+    {
+        get => queryDate;
+        set { queryDate = value; NotifyOfPropertyChange(() => QueryDate); }
+    }
 
     public InvoiceListModel SelectedInvoice
     {
-        get { return _SelectedInvoice; }
+        get => _SelectedInvoice;
         set { _SelectedInvoice = value; NotifyOfPropertyChange(() => SelectedInvoice); }
     }
 
