@@ -521,7 +521,9 @@ public class InvoiceDetailViewModel : ViewAware
         }
         else
         {
-            PrevId = 2;//To be updated
+            WindowManager wm = new();
+            var viewModel = new PrevInvoiceListViewModel(ICM, Invoice.Id, Invoice.Customer.FullName);
+            await wm.ShowDialogAsync(viewModel);
         }
         if (await ICM.SetPrevInvoiceId(Invoice.Id, PrevId) == true)
         {

@@ -35,7 +35,7 @@ public class InvoiceListViewModel : Screen
         ICM.orderType = User.UserSettings.InvoiceListQueryOrderType;
         ICM.LifeStatus = InvoiceLifeStatus.Active;
         ICM.FinStatus = null;
-        QueryDate = "____" + CurrentPersianDate.Substring(4);
+        QueryDate = new System.Globalization.PersianCalendar().GetYear(DateTime.Now).ToString() + "/__/__";
 
         _ = SearchAsync().ConfigureAwait(true);
     }
@@ -57,9 +57,9 @@ public class InvoiceListViewModel : Screen
     private string searchText;
     private LoggedInUser_DTO user;
     private readonly SingletonClass Singleton;
-    private int invoiceIdToSearch;
+    private string invoiceIdToSearch;
 
-    public int InvoiceIdToSearch
+    public string InvoiceIdToSearch
     {
         get { return invoiceIdToSearch; }
         set { invoiceIdToSearch = value;  NotifyOfPropertyChange(() => InvoiceIdToSearch); }
@@ -180,7 +180,9 @@ public class InvoiceListViewModel : Screen
         ICM.SearchValue = SearchText;
         ICM.FinStatus = FinStatus;
         ICM.LifeStatus = LifeStatus;
-        ICM.InvoiceIdToSearch = InvoiceIdToSearch == 0 ? -1 : InvoiceIdToSearch;
+        int invId;
+        int.TryParse(InvoiceIdToSearch, out invId);
+        ICM.InvoiceIdToSearch = invId <= 0 ? -1 : invId;
         ICM.InvoiceDate = QueryDate;
         await ICM.LoadFirstPageAsync();
         NotifyOfPropertyChange(() => Invoices);

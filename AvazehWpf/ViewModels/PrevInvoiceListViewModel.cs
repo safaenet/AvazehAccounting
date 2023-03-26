@@ -21,11 +21,12 @@ namespace AvazehWpf.ViewModels;
 
 public class PrevInvoiceListViewModel : Screen
 {
-    public PrevInvoiceListViewModel(IInvoiceCollectionManager manager, int InvoiceId)
+    public PrevInvoiceListViewModel(IInvoiceCollectionManager manager, int InvoiceId, string CustomerFullName = "Customer")
     {
         ICM = manager;
         _SelectedInvoice = new();
-
+        WindowTitle = "فاکتورهای " + CustomerFullName;
+        this.InvoiceId = InvoiceId;
         _ = SearchAsync().ConfigureAwait(true);
     }
 
@@ -59,6 +60,10 @@ public class PrevInvoiceListViewModel : Screen
             NotifyOfPropertyChange(() => Invoices);
         }
     }
+
+    public int InvoiceId { get; set; }
+
+    public string WindowTitle { get; set; }
 
     public async Task SearchAsync()
     {

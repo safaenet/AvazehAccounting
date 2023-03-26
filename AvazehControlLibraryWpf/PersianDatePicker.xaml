@@ -14,17 +14,17 @@
         </Grid.ColumnDefinitions>
         <ComboBox x:Name="cmbYear" ItemsSource="{Binding Years, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}" DisplayMemberPath="Value" SelectedValuePath="Key"
                   SelectedValue="{Binding Year, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}"
-                  VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="0" Grid.Column="0">
+                  VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="0" Grid.Column="0" SelectionChanged="HandleDateChangedEvent">
 
         </ComboBox>
         <ComboBox x:Name="cmbMonth" ItemsSource="{Binding Months, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}" DisplayMemberPath="Value" SelectedValuePath="Key"
                   SelectedValue="{Binding Month, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}" FontSize="{Binding MonthFontSize, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}"
-                  VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Margin="2,0,2,0" Grid.Column="1">
+                  VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Margin="2,0,2,0" Grid.Column="1" SelectionChanged="HandleDateChangedEvent">
 
         </ComboBox>
         <ComboBox x:Name="cmbDay" ItemsSource="{Binding Days, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}" DisplayMemberPath="Value" SelectedValuePath="Key"
                   SelectedValue="{Binding Day, RelativeSource={RelativeSource AncestorType={x:Type local:PersianDatePicker}}}"
-                  VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="0" Grid.Column="2">
+                  VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="0" Grid.Column="2" SelectionChanged="HandleDateChangedEvent">
 
         </ComboBox>
     </Grid>

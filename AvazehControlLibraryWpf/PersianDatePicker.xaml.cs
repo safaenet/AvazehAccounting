@@ -31,6 +31,7 @@ namespace AvazehUserControlLibraryWpf
         public ObservableCollection<KeyValuePair<int, string>> Years { get; private set; }
         public ObservableCollection<KeyValuePair<int, string>> Months { get; private set; }
         public ObservableCollection<KeyValuePair<int, string>> Days { get; private set; }
+        public event EventHandler OnDateChanged;
 
         public string PersianDate
         {
@@ -210,6 +211,11 @@ namespace AvazehUserControlLibraryWpf
             if (Month == 12 && Year!=0 && !PC.IsLeapYear(Year)) Days.Remove(new KeyValuePair<int, string>(30, "30"));
             if (Month >= 7) Days.Remove(new KeyValuePair<int, string>(31, "31"));
             if (Month <= 6 && !Days.Where(d => d.Key == 31).Any()) Days.Add(new KeyValuePair<int, string>(31, "31"));
+        }
+
+        private void HandleDateChangedEvent(object sender, SelectionChangedEventArgs e)
+        {
+            OnDateChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public enum MonthType

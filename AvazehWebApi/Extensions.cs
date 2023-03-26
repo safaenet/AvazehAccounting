@@ -161,6 +161,7 @@ internal static class Extensions
         {
             Customer = processor.LoadSingleItemAsync(model.CustomerId).Result,
             DateCreated = model.DateCreated,
+            TimeCreated = model.TimeCreated,
             DiscountType = model.DiscountType,
             DiscountValue = model.DiscountValue,
             Descriptions = model.Descriptions,
