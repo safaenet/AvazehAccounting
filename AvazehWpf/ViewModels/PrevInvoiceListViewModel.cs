@@ -29,6 +29,7 @@ public class PrevInvoiceListViewModel : Screen
         WindowTitle = "فاکتورهای " + CustomerFullName;
         this.InvoiceId = InvoiceId;
         QueryDate = "____/__/__";
+        CurrentPersianDate = PersianCalendarHelper.GetCurrentPersianDate();
         _ = SearchAsync().ConfigureAwait(true);
     }
 
@@ -36,6 +37,7 @@ public class PrevInvoiceListViewModel : Screen
     private InvoiceListModel _SelectedInvoice;
     public LoggedInUser_DTO User { get; init; }
     public int? ReturnId = null;
+    public string CurrentPersianDate { get; set; }
 
     public InvoiceListModel SelectedInvoice
     {

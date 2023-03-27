@@ -26,6 +26,7 @@ public class TransactionDetailViewModel : ViewAware
         TCM = iManager;
         TDM = dManager;
         User = user;
+        WindowTitle = "فایل";
         LoadSettings();
         CurrentPersianDate = PersianCalendarHelper.GetCurrentPersianDate();
         CallBackFunc = callBack;
@@ -98,7 +99,7 @@ public class TransactionDetailViewModel : ViewAware
         set { canPrintTransaction = value; NotifyOfPropertyChange(() => CanPrintTransaction); }
     }
 
-    public bool CanSaveTransactionChanges { get => canSaveTransactionChanges; set { canSaveTransactionChanges = value; NotifyOfPropertyChange(() => CanSaveTransactionChanges); } }
+    public bool CanSaveTransactionChangesAsync { get => canSaveTransactionChanges; set { canSaveTransactionChanges = value; NotifyOfPropertyChange(() => CanSaveTransactionChangesAsync); } }
     public TransactionItemModel SelectedItem { get; set; }
     private TransactionItemModel selectedItem_Backup { get; set; } = new();
     public TransactionItemModel WorkItem { get => _workItem; set { _workItem = value; NotifyOfPropertyChange(() => WorkItem); } }
@@ -275,8 +276,9 @@ public class TransactionDetailViewModel : ViewAware
             return;
         }
         Transaction.DateUpdated = result.DateUpdated;
+        Transaction.TimeUpdated = result.TimeUpdated;
         RefreshDataGrid();
-        CanSaveTransactionChanges = false;
+        CanSaveTransactionChangesAsync = false;
     }
 
     public void PrintTransactionMenu(object sender, object window)
@@ -390,11 +392,6 @@ public class TransactionDetailViewModel : ViewAware
         {
             await SearchAsync();
         }
-    }
-
-    public void FileDescriptions_TextChanged()
-    {
-        CanSaveTransactionChanges = true;
     }
 
     public void CountAndAmount_TextChanged()

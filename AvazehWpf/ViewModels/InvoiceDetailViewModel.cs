@@ -34,8 +34,8 @@ public class InvoiceDetailViewModel : ViewAware
         SC = sc;
         CallBackFunc = callBack;
         Singleton = singleton;
+        WindowTitle = "فاکتور";
         LoadSettings();
-        
         _ = LoadInvoiceAsync(InvoiceId).ConfigureAwait(false);
     }
 
@@ -85,7 +85,6 @@ public class InvoiceDetailViewModel : ViewAware
         get { return prevInvoiceSelectIcon; }
         set { prevInvoiceSelectIcon = value; NotifyOfPropertyChange(() => PrevInvoiceSelectIcon); }
     }
-
 
     public string CurrentPersianDate { get; init; }
     public bool CanSaveInvoiceChanges { get; set; } = true;
@@ -160,6 +159,7 @@ public class InvoiceDetailViewModel : ViewAware
             await ReloadInvoiceAsync(InvoiceId);
         }
         await GetComboboxItemsAsync();
+        WindowTitle = Invoice.Customer.FullName;
         PrevInvoiceSelectTitle = Invoice == null || Invoice.PrevInvoiceId <= 0 ? "انتخاب" : "حذف";
         PrevInvoiceSelectIcon = Invoice == null || Invoice.PrevInvoiceId <= 0 ? MaterialDesignThemes.Wpf.PackIconKind.Attachment : MaterialDesignThemes.Wpf.PackIconKind.AttachmentOff;
     }
@@ -552,7 +552,7 @@ public class InvoiceDetailViewModel : ViewAware
     {
         if (e.Key == Key.Enter)
         {
-            if (!User.UserSettings.SearchWhenTyping && ((window as Window).FindName("InvoiceDetailInputArea") as StackPanel).IsFocused)
+            if (((window as Window).FindName("InvoiceDetailInputArea") as Grid).IsKeyboardFocusWithin)
             {
                 await AddOrUpdateItemAsync();
             }
@@ -583,7 +583,7 @@ public class InvoiceDetailViewModel : ViewAware
         NotifyOfPropertyChange(() => WorkItem);
     }
 
-    public void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+    public async Task Window_PreviewKeyDownAsync(object window, KeyEventArgs e)
     {
         if (e.Key == Key.Escape)
         {
@@ -594,6 +594,13 @@ public class InvoiceDetailViewModel : ViewAware
                 WorkItem = new();
                 SelectedProductItem = new();
             }
+        }
+        else if (e.Key == Key.Enter)
+        {
+            if (((window as Window).FindName("InvoiceDetailInputArea") as Grid).IsKeyboardFocusWithin)
+                await AddOrUpdateItemAsync();
+            else if (((window as Window).FindName("InvoiceDiscountAmountArea") as TextBox).IsFocused || ((window as Window).FindName("InvoiceAmountArea") as TextBox).IsFocused)
+                await SaveInvoiceChangesAsync();
         }
     }
 

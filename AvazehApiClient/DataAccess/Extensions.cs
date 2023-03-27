@@ -64,6 +64,7 @@ public static class Extensions
         return new InvoiceModel_DTO_Create_Update()
         {
             CustomerId = model.Customer.Id,
+            About = model.About,
             DateCreated = model.DateCreated,
             TimeCreated = model.TimeCreated,
             DiscountType = model.DiscountType,
@@ -80,6 +81,7 @@ public static class Extensions
             Id = model.Id,
             CustomerId = model.Customer.Id,
             CustomerFullName = model.Customer.FullName,
+            About = model.About,
             DateCreated = model.DateCreated,
             DateUpdated = model.DateUpdated,
             TotalInvoiceSum = model.TotalInvoiceSum,
@@ -143,6 +145,7 @@ public static class Extensions
         {
             FileName = model.FileName,
             DateCreated = model.DateCreated,
+            TimeCreated = model.TimeCreated,
             Descriptions = model.Descriptions
         };
     }

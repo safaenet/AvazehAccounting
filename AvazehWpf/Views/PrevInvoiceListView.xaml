@@ -11,7 +11,7 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels" xmlns:avazehusercontrollibrarywpf="clr-namespace:AvazehUserControlLibraryWpf;assembly=AvazehUserControlLibraryWpf"
         d:DataContext="{d:DesignInstance Type=viewmodels:PrevInvoiceListViewModel}"
         Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
-        Width="1230" Height="650"
+        Width="1230" Height="450"
         cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
     <Window.Resources>
         <local:EnglishInvoiceStatusToPersianConverter x:Key="EnglishInvoiceStatusToPersianConverter"/>
@@ -30,7 +30,7 @@
             </Setter>
         </Style>
     </Window.Resources>
-    <Grid Visibility="{Binding GeneralSettings.CanViewInvoices}">
+    <Grid>
         <Grid.Resources>
             <Style TargetType="TextBox">
                 <Setter Property="TextAlignment" Value="Center"/>

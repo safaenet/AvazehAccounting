@@ -12,8 +12,8 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:InvoiceDetailViewModel}"
         xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary" xmlns:avazehusercontrollibrarywpf="clr-namespace:AvazehUserControlLibraryWpf;assembly=AvazehUserControlLibraryWpf"
         Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
-        Width="1250" Height="675"
-        cal:Message.Attach="[Event Closing] = [Action ClosingWindowAsync]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]; [Event Loaded] = [FocusOnProductsCombobox()]">
+        Width="1268" Height="675"
+        cal:Message.Attach="[Event Closing] = [Action ClosingWindowAsync]; [Event PreviewKeyDown] = [Window_PreviewKeyDownAsync($source, $eventArgs)]; [Event Loaded] = [FocusOnProductsCombobox()]">
     <Window.Resources>
         <ObjectDataProvider x:Key="DiscountTypeItems" MethodName="GetDiscountTypeItems" ObjectType="{x:Type viewmodels:InvoiceDiscountTypeItems}"/>
         <!--<local:DateTimeToPersianDateConverter x:Key="DateTimeToPersianDateConverter"/>
@@ -64,7 +64,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3"/>
-            <ColumnDefinition Width="200" MaxWidth="200"/>
+            <ColumnDefinition Width="200" MaxWidth="218"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="3"/>
         </Grid.ColumnDefinitions>
@@ -74,7 +74,7 @@
             <RowDefinition Height="3"/>
         </Grid.RowDefinitions>
         <Grid Grid.Column="1" Grid.Row="1">
-            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
@@ -113,13 +113,22 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                         </StackPanel>
-                        
-                        <StackPanel Orientation="Vertical" Margin="0,0,0,3">
-                            <StackPanel Width="90" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="FileOutline" Margin="0,2,5,2"/>
-                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره فاکتور" Margin="0,2,0,2"/>
+
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical" Margin="0,0,0,3">
+                                <StackPanel Width="144" Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <materialDesign:PackIcon Kind="FileOutline" Margin="55,2,5,2"/>
+                                    <TextBlock MaxWidth="200" TextAlignment="Center" Text="بابت" Margin="0,2,0,2"/>
+                                </StackPanel>
+                                <TextBox Text="{Binding Invoice.About, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="InvoiceAmountArea" MaxLength="200" MaxWidth="200" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Invoice.Id, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                            <StackPanel Orientation="Vertical" Margin="3,0,0,3">
+                                <StackPanel Width="50" Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <materialDesign:PackIcon Kind="FileOutline" Margin="0,2,0,2"/>
+                                    <TextBlock MaxWidth="200" TextAlignment="Center" Text="شماره" Margin="0,2,0,2"/>
+                                </StackPanel>
+                                <TextBox Text="{Binding Invoice.Id, Mode=OneWay}" IsReadOnly="True" MaxLength="50" MaxWidth="200" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                            </StackPanel>
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical" Margin="0,0,0,3">
@@ -148,7 +157,7 @@
                                                   ItemsSource="{Binding Source={StaticResource DiscountTypeItems}}" SelectedValuePath="Key" DisplayMemberPath="Value"
                                                   SelectedValue="{Binding SelectedDiscountType, Mode=TwoWay}"/>
                                 <TextBlock TextAlignment="Center" Text="نوع" VerticalAlignment="Center" Margin="3,0,3,3"/>
-                                <TextBox Text="{Binding Invoice.DiscountValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" MaxLength="70" Width="90" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                <TextBox Text="{Binding Invoice.DiscountValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:#,#.##}'}" x:Name="InvoiceDiscountAmountArea" MaxLength="70" Width="90" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                 <TextBlock TextAlignment="Center" Text="مقدار" VerticalAlignment="Center" Margin="3,0,3,3"/>
                             </StackPanel>
                         </StackPanel>
@@ -184,7 +193,8 @@
                             <materialDesign:PackIcon Kind="CommentAccountOutline" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="توضیحات" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <TextBox Text="{Binding Invoice.Descriptions, Mode=TwoWay}" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]" TextWrapping="Wrap" AcceptsReturn="True" MinHeight="50" Height="auto" HorizontalContentAlignment="Right" VerticalContentAlignment="Top"/>
+                        <local:TextBoxThatDoesntResizeWithText Text="{Binding Invoice.Descriptions, Mode=TwoWay}" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]"
+                            TextWrapping="Wrap" AcceptsReturn="True" MinHeight="50" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Height="auto" HorizontalContentAlignment="Right" VerticalContentAlignment="Top"/>
                     </DockPanel>
 
                     <StackPanel Grid.Row="2" Orientation="Vertical">
@@ -226,14 +236,14 @@
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="کل بدهی" FontWeight="Bold" Margin="3,0,0,2" VerticalAlignment="Center"/>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" IsEnabled="{Binding ShowNetProfits}" Margin="0,0,3,3" HorizontalAlignment="Right">
+                        <StackPanel Orientation="Horizontal" IsEnabled="{Binding ShowNetProfits, Converter={StaticResource b2v}}" Margin="0,0,3,3" HorizontalAlignment="Right">
                             <TextBlock Text="{Binding Invoice.NetProfit, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Visibility="{Binding IsChecked, ElementName=ShowNetProfit, Converter={StaticResource b2v}}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="118" VerticalAlignment="Center"/>
                             <CheckBox x:Name="ShowNetProfit" FlowDirection="RightToLeft">
                                 <TextBlock Text="سود خالص" Margin="0,0,0,2"/>
                             </CheckBox>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Visibility="{Binding ShowNetProfits}" Margin="0,0,3,0" HorizontalAlignment="Right">
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding ShowNetProfits, Converter={StaticResource b2v}}" Margin="0,0,3,0" HorizontalAlignment="Right">
                             <TextBlock Text="{Binding Invoice.CurrentProfit, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Visibility="{Binding IsChecked, ElementName=ShowNetProfit, Converter={StaticResource b2v}}" FontWeight="Bold" Margin="5,0,0,0" TextAlignment="Left" Width="120" VerticalAlignment="Center"/>
                             <TextBlock Text="سود جاری" Margin="0,0,22,2"/>
                         </StackPanel>
@@ -284,7 +294,7 @@
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0" IsEnabled="{Binding CanEditInvoice}">
+            <Grid Grid.Row="0" IsEnabled="{Binding CanEditInvoice}" x:Name="InvoiceDetailInputArea">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
@@ -296,7 +306,7 @@
                     <ColumnDefinition Width="0.25*"/>
                     <ColumnDefinition Width="0.6*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="AddOrUpdateItemAsync" Grid.Column="0" TabIndex="7" Width="40" Margin="0,0,5,0">
+                <Button x:Name="AddOrUpdateItemAsync" Grid.Column="0" TabIndex="7" Width="40" Margin="0,0,5,3">
                     <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Width="30" Height="30"/>
                 </Button>
 
@@ -305,7 +315,7 @@
                     <CheckBox IsChecked="{Binding WorkItem.Delivered, Mode=TwoWay}" TabIndex="6" Margin="8,3,0,0"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="2" Orientation="Vertical" x:Name="InvoiceDetailInputArea" Margin="0,0,3,0">
+                <StackPanel Grid.Column="2" Orientation="Vertical" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="MultiplyBoxMultipleOutline" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="جمع کل" Margin="0,0,0,0"/>
@@ -484,8 +494,8 @@
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ShowNetProfits}" Value="true">
-                                        <Setter Property="ToolTip" Value="{Binding NetProfit}"/>
+                                    <DataTrigger Binding="{Binding Source={x:Reference ShowNetProfit}, Path=IsChecked}" Value="true">
+                                        <Setter Property="ToolTip" Value="{Binding NetProfit, StringFormat='{}{0:#,#.##}'}"/>
                                     </DataTrigger>
                                 </Style.Triggers>                                
                             </Style>

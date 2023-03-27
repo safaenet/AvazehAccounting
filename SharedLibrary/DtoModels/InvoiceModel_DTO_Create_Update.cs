@@ -7,7 +7,7 @@ namespace SharedLibrary.DtoModels;
 public class InvoiceModel_DTO_Create_Update
 {
     public int CustomerId { get; set; }
-
+    public string About { get; set; }
     public string DateCreated { get; set; }
     public string TimeCreated { get; set; }
 

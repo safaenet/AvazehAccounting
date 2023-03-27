@@ -160,6 +160,7 @@ internal static class Extensions
         return new InvoiceModel()
         {
             Customer = processor.LoadSingleItemAsync(model.CustomerId).Result,
+            About = model.About,
             DateCreated = model.DateCreated,
             TimeCreated = model.TimeCreated,
             DiscountType = model.DiscountType,
@@ -174,6 +175,7 @@ internal static class Extensions
         return new InvoiceModel_DTO_Create_Update()
         {
             CustomerId = model.Customer.Id,
+            About = model.About,
             DiscountType = model.DiscountType,
             DiscountValue = model.DiscountValue,
             Descriptions = model.Descriptions,
@@ -237,6 +239,7 @@ internal static class Extensions
         {
             FileName = model.FileName,
             DateCreated = model.DateCreated,
+            TimeCreated = model.TimeCreated,
             Descriptions = model.Descriptions
         };
     }
