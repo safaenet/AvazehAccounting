@@ -287,8 +287,8 @@ public class DateToColorConverter : Freezable, IValueConverter //Used
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value == null || string.IsNullOrEmpty(ItemColor)) return DependencyProperty.UnsetValue;
-        if (((string)value) == Date) return new SolidColorBrush(ItemColor.ToColor());
+        if (value == null || string.IsNullOrWhiteSpace((string)value) || string.IsNullOrEmpty(ItemColor)) return DependencyProperty.UnsetValue;
+        if (((string)value).Substring(0, 10) == Date) return new SolidColorBrush(ItemColor.ToColor());
         return DependencyProperty.UnsetValue;
     }
 

@@ -214,14 +214,8 @@ public class InvoiceDetailViewModel : ViewAware
     public async Task ReloadCustomerPreviousBalanceAsync()
     {
         if (Invoice is null) return;
-        CustomerPreviousTotalBalance = await ICM.GetCustomerTotalBalanceById(Invoice.Customer.Id, Invoice.Id);
-        ReloadCustomerTotalBalance();
-    }
-
-    private void ReloadCustomerTotalBalance()
-    {
-        if (Invoice is null) return;
-        CustomerTotalBalancePlusThis = CustomerPreviousTotalBalance + (Invoice == null ? 0 : Invoice.TotalBalance);
+        Invoice.PrevInvoiceBalance = await ICM.GetInvoicePrevTotalBalanceById(Invoice.Id);
+        NotifyOfPropertyChange(() => Invoice);
     }
 
     public void EditItem() //DataGrid doubleClick event
@@ -342,7 +336,6 @@ public class InvoiceDetailViewModel : ViewAware
         WorkItem.Unit = temp;
         SelectedProductItem = null;
         ProductInput = "";
-        ReloadCustomerTotalBalance();
         CanEditInvoice = true;
         NotifyOfPropertyChange(() => Invoice.Items);
         NotifyOfPropertyChange(() => Invoice);
@@ -380,7 +373,6 @@ public class InvoiceDetailViewModel : ViewAware
             Invoice.Items.Remove(SelectedItem);
         }
         RefreshDataGrid();
-        ReloadCustomerTotalBalance();
         NotifyOfPropertyChange(() => Invoice);
     }
 
@@ -431,6 +423,7 @@ public class InvoiceDetailViewModel : ViewAware
     {
         if (!CanEditInvoice) return;
         Invoice.DiscountType = (DiscountTypes)SelectedDiscountType;
+        var phoneNumber = PhoneNumberText;
         var result = await ICM.UpdateItemAsync(Invoice);
         if (result == null)
         {
@@ -439,7 +432,9 @@ public class InvoiceDetailViewModel : ViewAware
         }
         Invoice.DateUpdated = result.DateUpdated;
         RefreshDataGrid();
-        ReloadCustomerTotalBalance();
+        //ReloadCustomerTotalBalance();
+        if (Invoice.Customer.PhoneNumbers.Any(x => x.PhoneNumber == phoneNumber)) PhoneNumberText = phoneNumber;
+        NotifyOfPropertyChange(() => Invoice);
         CanSaveInvoiceChanges = false;
     }
 
@@ -539,8 +534,8 @@ public class InvoiceDetailViewModel : ViewAware
         }
         if (await ICM.SetPrevInvoiceId(Invoice.Id, PrevId) == true)
         {
-            Invoice.PrevInvoiceBalance = await GetPrevBalanceAsync(Invoice.Id);
             Invoice.PrevInvoiceId = PrevId;
+            await ReloadCustomerPreviousBalanceAsync();
         }
         else MessageBox.Show("خطا در بروزرسانی فیلد فاکتور قبلی", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
         PrevInvoiceSelectTitle = Invoice == null || Invoice.PrevInvoiceId <= 0 ? "انتخاب" : "حذف";
@@ -548,15 +543,21 @@ public class InvoiceDetailViewModel : ViewAware
         NotifyOfPropertyChange(() => Invoice);
     }
 
-    public async Task<double> GetPrevBalanceAsync(int InvoiceId)
-    {
-        var result = await ICM.GetInvoicePrevTotalBalanceById(InvoiceId);
-        return result;
-    }
-
     public void SellPrice_LostFocus()
     {
 
+    }
+
+    public async Task InputArea_PreviewKeyDownAsync(object window, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            if (!User.UserSettings.SearchWhenTyping && ((window as Window).FindName("InvoiceDetailInputArea") as StackPanel).IsFocused)
+            {
+                await AddOrUpdateItemAsync();
+            }
+            else await SaveInvoiceChangesAsync();
+        }
     }
 
     public void ProductNames_PreviewTextInput()

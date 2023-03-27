@@ -12,7 +12,7 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:InvoiceDetailViewModel}"
         xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary" xmlns:avazehusercontrollibrarywpf="clr-namespace:AvazehUserControlLibraryWpf;assembly=AvazehUserControlLibraryWpf"
         Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
-        Width="1200" Height="675"
+        Width="1250" Height="675"
         cal:Message.Attach="[Event Closing] = [Action ClosingWindowAsync]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($source, $eventArgs)]; [Event Loaded] = [FocusOnProductsCombobox()]">
     <Window.Resources>
         <ObjectDataProvider x:Key="DiscountTypeItems" MethodName="GetDiscountTypeItems" ObjectType="{x:Type viewmodels:InvoiceDiscountTypeItems}"/>
@@ -167,14 +167,14 @@
                                     </ObjectDataProvider>
                                 </StackPanel.Resources>
 
-                                <Button x:Name="AddDeletePrevInvoiceAsync" IsEnabled="{Binding CanDeleteInvoice}" Grid.Row="0" Width="103" Height="25" Grid.Column="0"  HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,3,0">
+                                <Button x:Name="AddDeletePrevInvoiceAsync" IsEnabled="{Binding CanDeleteInvoice}" Grid.Row="0" Width="68" Height="25" Grid.Column="0"  HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,3,0">
                                     <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon Kind="{Binding PrevInvoiceSelectIcon}" Width="20" Height="15" Margin="3"/>
+                                        <materialDesign:PackIcon Kind="{Binding PrevInvoiceSelectIcon}" Width="20" Height="15" Margin="0,3,3,3"/>
                                         <TextBlock Text="{Binding PrevInvoiceSelectTitle}" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Button>
-                                <TextBox Text="{Binding Invoice.PrevInvoiceId, Mode=OneWay}" IsReadOnly="True" MaxLength="70" Width="55" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                                <TextBlock TextAlignment="Center" Text="شماره" VerticalAlignment="Center" Margin="3,0,3,3"/>
+                                <TextBox Text="{Binding Invoice.PrevInvoiceId, Mode=OneWay}" IsReadOnly="True" MaxLength="70" Width="58" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                <TextBlock TextAlignment="Center" Text="شماره فاکتور" VerticalAlignment="Center" Margin="3,0,3,3"/>
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
@@ -284,7 +284,7 @@
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0" IsEnabled="{Binding DataEnterRowEnabled}">
+            <Grid Grid.Row="0" IsEnabled="{Binding CanEditInvoice}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
@@ -296,7 +296,7 @@
                     <ColumnDefinition Width="0.25*"/>
                     <ColumnDefinition Width="0.6*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="AddOrUpdateItemAsync" IsEnabled="{Binding CanEditInvoice}" IsDefault="True" Grid.Column="0" TabIndex="7" Width="40" Margin="0,0,5,0">
+                <Button x:Name="AddOrUpdateItemAsync" Grid.Column="0" TabIndex="7" Width="40" Margin="0,0,5,0">
                     <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Width="30" Height="30"/>
                 </Button>
 
@@ -305,7 +305,7 @@
                     <CheckBox IsChecked="{Binding WorkItem.Delivered, Mode=TwoWay}" TabIndex="6" Margin="8,3,0,0"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="2" Orientation="Vertical" Margin="0,0,3,0">
+                <StackPanel Grid.Column="2" Orientation="Vertical" x:Name="InvoiceDetailInputArea" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="MultiplyBoxMultipleOutline" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="جمع کل" Margin="0,0,0,0"/>
@@ -332,7 +332,7 @@
                               IsEditable="True" IsDropDownOpen="{Binding IsSellPriceDropDownOpen}" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TabIndex="4"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="5" Visibility="{Binding IsChecked, ElementName=ShowNetProfit, Converter={StaticResource b2v}}" Width="100" IsEnabled="{Binding InvoiceSettings.DetailShowNetProfit}" Orientation="Vertical" Margin="0,0,3,0">
+                <StackPanel Grid.Column="5" Visibility="{Binding IsChecked, ElementName=ShowNetProfit, Converter={StaticResource b2v}}" Width="100" IsEnabled="{Binding ShowNetProfits}" Orientation="Vertical" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="Money" Margin="0,0,0,0"/>
                         <TextBlock TextAlignment="Center" Text="قیمت خرید" Margin="0,0,0,0"/>
@@ -498,7 +498,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="تاریخ ایجاد" Binding="{Binding DateCreated, Mode=OneWay}" Width="70">
+                    <DataGridTextColumn Header="تاریخ و ساعت ایجاد" Binding="{Binding DateTimeCreated, Mode=OneWay}" Width="120">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Background" Value="{Binding Path=DateCreated, Converter={StaticResource DateToColorConverterForNewItem}}"/>

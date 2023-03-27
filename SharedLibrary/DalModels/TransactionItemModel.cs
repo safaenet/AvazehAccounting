@@ -15,6 +15,8 @@ public class TransactionItemModel
     public string DateUpdated { get; set; }
     public string TimeUpdated { get; set; }
     public string Descriptions { get; set; }
+    public string DateTimeCreated => TimeCreated + " " + DateCreated;
+    public string DateTimeUpdated => TimeUpdated + " " + DateUpdated;
     public double CountValue => StandardCalculator.CalculateFromString(CountString);
     public bool IsCountStringValid => StandardCalculator.IsCalculatable(CountString);
     public double TotalValue => Amount * CountValue;
