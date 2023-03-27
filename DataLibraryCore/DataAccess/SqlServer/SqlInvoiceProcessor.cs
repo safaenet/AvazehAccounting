@@ -448,7 +448,6 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
     {
         try
         {
-            int EndId = -1;
             DynamicParameters dp = new();
             dp.Add("@FetchSize", FetcheSize);
             dp.Add("@InvoiceId", InvoiceId);
@@ -460,7 +459,6 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
             dp.Add("@SearchMode", SearchMode);
             dp.Add("@OrderType", orderType);
             dp.Add("@StartId", StartId);
-            dp.Add("@EndId", EndId, DbType.Int32, ParameterDirection.Output);
             var result = await DataAccess.LoadDataAsync<InvoiceListModel, DynamicParameters>("LoadInvoiceList", dp, CommandType.StoredProcedure);
             return result;
         }
@@ -548,6 +546,26 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
     {
         string sql = $"UPDATE Invoices SET [PrevInvoiceId] = { (PrevInvoiceId <= 0 ? "NULL" : PrevInvoiceId) } WHERE Id = {InvoiceId}";
         return await DataAccess.SaveDataAsync(sql);
+    }
+
+    public async Task<List<InvoiceListModel>> GetPrevInvoices(int InvoiceId, int CustomerId = -1, string InvoiceDate = null, string SearchValue = null, OrderType orderType = OrderType.DESC)
+    {
+        try
+        {
+            DynamicParameters dp = new();
+            dp.Add("@InvoiceId", InvoiceId);
+            dp.Add("@CustomerId", CustomerId);
+            dp.Add("@Date", InvoiceDate);
+            dp.Add("@SearchValue", SearchValue);
+            dp.Add("@OrderType", orderType);
+            var result = await DataAccess.LoadDataAsync<InvoiceListModel, DynamicParameters>("LoadCustomerNonBalancedList", dp, CommandType.StoredProcedure);
+            return result.ToList();
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return null;
     }
 
     public async Task<IEnumerable<ProductUnitModel>> GetProductUnitsAsync()

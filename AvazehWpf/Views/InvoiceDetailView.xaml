@@ -167,9 +167,14 @@
                                     </ObjectDataProvider>
                                 </StackPanel.Resources>
 
-                                <Button x:Name="AddDeletePrevInvoiceAsync" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="50" Height="25" Content="{Binding PrevInvoiceSelectTitle}" Margin="0,0,3,0"/>
-                                <TextBox Text="{Binding Invoice.PrevInvoiceId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" MaxLength="70" Width="76" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                                <TextBlock TextAlignment="Center" Text="شماره فاکتور" VerticalAlignment="Center" Margin="3,0,3,3"/>
+                                <Button x:Name="AddDeletePrevInvoiceAsync" IsEnabled="{Binding CanDeleteInvoice}" Grid.Row="0" Width="103" Height="25" Grid.Column="0"  HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,3,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="{Binding PrevInvoiceSelectIcon}" Width="20" Height="15" Margin="3"/>
+                                        <TextBlock Text="{Binding PrevInvoiceSelectTitle}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                                <TextBox Text="{Binding Invoice.PrevInvoiceId, Mode=OneWay}" IsReadOnly="True" MaxLength="70" Width="55" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                <TextBlock TextAlignment="Center" Text="شماره" VerticalAlignment="Center" Margin="3,0,3,3"/>
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>

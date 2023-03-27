@@ -35,6 +35,7 @@ public class InvoiceListViewModel : Screen
         ICM.orderType = User.UserSettings.InvoiceListQueryOrderType;
         ICM.LifeStatus = InvoiceLifeStatus.Active;
         ICM.FinStatus = null;
+        
         QueryDate = new System.Globalization.PersianCalendar().GetYear(DateTime.Now).ToString() + "/__/__";
 
         _ = SearchAsync().ConfigureAwait(true);

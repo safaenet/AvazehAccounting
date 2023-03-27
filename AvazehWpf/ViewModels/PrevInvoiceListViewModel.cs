@@ -21,17 +21,21 @@ namespace AvazehWpf.ViewModels;
 
 public class PrevInvoiceListViewModel : Screen
 {
-    public PrevInvoiceListViewModel(IInvoiceCollectionManager manager, int InvoiceId, string CustomerFullName = "Customer")
+    public PrevInvoiceListViewModel(IInvoiceCollectionManager manager, int InvoiceId, LoggedInUser_DTO user, string CustomerFullName = "Customer")
     {
         ICM = manager;
-        _SelectedInvoice = new();
+        User = user;
+        //_SelectedInvoice = new();
         WindowTitle = "فاکتورهای " + CustomerFullName;
         this.InvoiceId = InvoiceId;
+        QueryDate = "____/__/__";
         _ = SearchAsync().ConfigureAwait(true);
     }
 
     private IInvoiceCollectionManager _ICM;
     private InvoiceListModel _SelectedInvoice;
+    public LoggedInUser_DTO User { get; init; }
+    public int? ReturnId = null;
 
     public InvoiceListModel SelectedInvoice
     {
@@ -61,13 +65,31 @@ public class PrevInvoiceListViewModel : Screen
         }
     }
 
+    private string queryDate;
+
+    public string QueryDate
+    {
+        get { return queryDate; }
+        set { queryDate = value; NotifyOfPropertyChange(() => QueryDate); }
+    }
+
+    private string searchText;
+
+    public string SearchText
+    {
+        get { return searchText; }
+        set { searchText = value; NotifyOfPropertyChange(() => SearchText); }
+    }
+
+
     public int InvoiceId { get; set; }
 
     public string WindowTitle { get; set; }
 
     public async Task SearchAsync()
     {
-        await ICM.LoadFirstPageAsync();
+        var items = await ICM.LoadPrevInvoices(InvoiceId, QueryDate, SearchText, OrderType.DESC);
+        Invoices = items;
         NotifyOfPropertyChange(() => Invoices);
     }
 
@@ -76,9 +98,27 @@ public class PrevInvoiceListViewModel : Screen
         _ = Task.Run(SearchAsync);
     }
 
+    public async Task SelectInvoiceAndCloseAsync()
+    {
+        if (SelectedInvoice != null)
+        {
+            ReturnId = SelectedInvoice.Id;
+            await TryCloseAsync();
+        }
+    }
+
+    public async Task Dg_PreviewKeyDownAsync(object sender, KeyEventArgs e)
+    {
+        if (Key.Enter == e.Key)
+        {
+            await SelectInvoiceAndCloseAsync();
+            e.Handled = true;
+        }
+    }
+
     public async Task SearchBoxKeyDownHandlerAsync(ActionExecutionContext context)
     {
-        if (context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
+        if (!User.UserSettings.SearchWhenTyping && context.EventArgs is KeyEventArgs keyArgs && keyArgs.Key == Key.Enter)
         {
             await SearchAsync();
         }
@@ -86,7 +126,16 @@ public class PrevInvoiceListViewModel : Screen
 
     public async Task SearchBoxTextChangedHandlerAsync()
     {
-        await SearchAsync();
+        if (User.UserSettings.SearchWhenTyping)
+        {
+            await SearchAsync();
+        }
+    }
+
+    public void SetKeyboardLayout()
+    {
+        if (User.UserSettings.AutoSelectPersianLanguage)
+            ExtensionsAndStatics.ChangeLanguageToPersian();
     }
 
     public void Window_PreviewKeyDown(object window, KeyEventArgs e)

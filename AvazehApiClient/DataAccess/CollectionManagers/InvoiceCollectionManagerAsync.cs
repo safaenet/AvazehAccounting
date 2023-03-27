@@ -31,6 +31,8 @@ public class InvoiceCollectionManagerAsync : IInvoiceCollectionManager
     public ObservableCollection<InvoiceListModel> Items { get; set; }
 
     public int PageSize { get; set; } = 50;
+    public int SearchStartId { get; set; } = -1;
+    public SqlQuerySearchMode SearchMode { get; set; }
     public int InvoiceIdToSearch { get; set; }
     public int CustomerIdToSearch { get; set; }
     public string InvoiceDate { get; set; }
@@ -96,7 +98,7 @@ public class InvoiceCollectionManagerAsync : IInvoiceCollectionManager
 
     public async Task<int> LoadFirstPageAsync()
     {
-        var result = await LoadItemsAsync(SqlQuerySearchMode.Backward, -1);
+        var result = await LoadItemsAsync(SearchMode, -1);
         FirstPageLoaded?.Invoke(this, null);
         return result;
     }
@@ -128,6 +130,12 @@ public class InvoiceCollectionManagerAsync : IInvoiceCollectionManager
         DtoModel<int> model = new() { Value = PrevInvoiceId };
         var result = await ApiProcessor.UpdateItemAsync<DtoModel<int>, DtoModel<int>>(Key + "/SetPrevInvoiceId", InvoiceId, model);
         return result.Value != 0;
+    }
+
+    public async Task<ObservableCollection<InvoiceListModel>> LoadPrevInvoices(int InvoiceId, string InvoiceDate, string searchValue, OrderType orderType)
+    {
+        var collection = await ApiProcessor.GetInvoiceCollectionAsync<List<InvoiceListModel>>(Key + "/LoadPrevInvoices", InvoiceId: InvoiceId, InvoiceDate: InvoiceDate, SearchValue: searchValue, orderType: orderType);
+        return collection.AsObservable();
     }
 
     public async Task<List<ItemsForComboBox>> LoadProductItems(string SearchText = null)

@@ -170,21 +170,6 @@ public class ApiProcessor : IApiProcessor
         return false;
     }
 
-    //public async Task<T> GetInvoiceCollectionAsync<T>(string Key, string OrderBy, OrderType orderType, int Page = 1, string SearchText = "", InvoiceLifeStatus? LifeStatus = null, InvoiceFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false) where T : class
-    //{
-    //    try
-    //    {
-    //        var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&Page={Page}&SearchText={SearchText}&LifeStatus={LifeStatus}&FinStatus={FinStatus}&PageSize={PageSize}&ForceLoad={ForceLoad}";
-    //        var response = await ApiClient.GetAsync(Url);
-    //        return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        Log.Error(ex, "Error in ApiProcessor");
-    //    }
-    //    return default;
-    //}
-
     public async Task<T> GetInvoiceCollectionAsync<T>(string Key, int FetcheSize = 50, int InvoiceId = -1, int CustomerId = -1, string InvoiceDate = "%", string SearchValue = "%", InvoiceLifeStatus? LifeStatus = InvoiceLifeStatus.Active, InvoiceFinancialStatus? FinStatus = InvoiceFinancialStatus.Outstanding, SqlQuerySearchMode SearchMode = SqlQuerySearchMode.Backward, OrderType orderType = OrderType.DESC, int StartId = -1) where T : class
     {
         try

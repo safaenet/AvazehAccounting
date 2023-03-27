@@ -97,29 +97,19 @@
                     <TextBlock Text="شماره فاکتور جاری" Grid.Column="2" VerticalAlignment="Center" Margin="0,0,5,3"/>
                 </Grid>
             </Grid>
-            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action EditInvoiceAsync]; [Event PreviewKeyDown] = [Action dg_PreviewKeyDown($source, $eventArgs)]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
+            <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action SelectInvoiceAndCloseAsync]; [Event PreviewKeyDown] = [Action Dg_PreviewKeyDownAsync($source, $eventArgs)]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
                       Grid.Row="1" HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" ItemsSource="{Binding Invoices}" RowHeight="25" FontSize="{Binding User.UserSettings.DataGridFontSize}"
                       SelectedItem="{Binding SelectedInvoice}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False"
                       CellStyle="{StaticResource Body_Content_DataGrid_Centering}">
-                <DataGrid.ContextMenu>
+                <!--<DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="انتخاب" cal:Message.Attach="[Event Click] = [Action ُSelectInvoice]">
+                        <MenuItem Header="انتخاب" cal:Message.Attach="SelectInvoiceAndCloseAsync">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="Attachment"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="باز کردن" cal:Message.Attach="[Event Click] = [Action EditInvoiceAsync]">
-                            <MenuItem.Icon>
-                                <materialDesign:PackIcon Kind="OpenInApp"/>
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Header="نمایش پرداختها" cal:Message.Attach="[Event Click] = [Action ViewPaymentsAsync]">
-                            <MenuItem.Icon>
-                                <materialDesign:PackIcon Kind="Payment"/>
-                            </MenuItem.Icon>
-                        </MenuItem>
                     </ContextMenu>
-                </DataGrid.ContextMenu>
+                </DataGrid.ContextMenu>-->
                 <DataGrid.Resources>
                     <local:DateToColorConverter x:Key="DateToColorConverterForNewItem" ItemColor="{Binding User.UserSettings.ColorNewItem}" Date="{Binding CurrentPersianDate}"/>
                     <local:DateToColorConverter x:Key="DateToColorConverterForUpdatedItem" ItemColor="{Binding User.UserSettings.ColorUpdatedItem}" Date="{Binding CurrentPersianDate}"/>
@@ -177,7 +167,7 @@
                 </DataGrid.Columns>
             </DataGrid>
             <Grid Grid.Row="2">
-                <Button x:Name="SelectInvoice" Margin="0,3,3,0">
+                <Button x:Name="SelectInvoiceAndCloseAsync" Margin="0,3,3,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Attachment" Margin="3"/>
                         <TextBlock Text="انتخاب" VerticalAlignment="Center" Margin="5,0,15,0"/>

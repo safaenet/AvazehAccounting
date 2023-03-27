@@ -69,6 +69,7 @@ public class InvoiceDetailViewModel : ViewAware
             NotifyOfPropertyChange(() => SelectedDiscountType);
         }
     }
+
     private string prevInvoiceSelectTitle = "انتخاب";
 
     public string PrevInvoiceSelectTitle
@@ -76,6 +77,15 @@ public class InvoiceDetailViewModel : ViewAware
         get { return prevInvoiceSelectTitle; }
         set { prevInvoiceSelectTitle = value; NotifyOfPropertyChange(() => PrevInvoiceSelectTitle); }
     }
+
+    private MaterialDesignThemes.Wpf.PackIconKind prevInvoiceSelectIcon;
+
+    public MaterialDesignThemes.Wpf.PackIconKind PrevInvoiceSelectIcon
+    {
+        get { return prevInvoiceSelectIcon; }
+        set { prevInvoiceSelectIcon = value; NotifyOfPropertyChange(() => PrevInvoiceSelectIcon); }
+    }
+
 
     public string CurrentPersianDate { get; init; }
     public bool CanSaveInvoiceChanges { get; set; } = true;
@@ -151,6 +161,7 @@ public class InvoiceDetailViewModel : ViewAware
         }
         await GetComboboxItemsAsync();
         PrevInvoiceSelectTitle = Invoice == null || Invoice.PrevInvoiceId <= 0 ? "انتخاب" : "حذف";
+        PrevInvoiceSelectIcon = Invoice == null || Invoice.PrevInvoiceId <= 0 ? MaterialDesignThemes.Wpf.PackIconKind.Attachment : MaterialDesignThemes.Wpf.PackIconKind.AttachmentOff;
     }
 
     public string WindowTitle
@@ -522,8 +533,9 @@ public class InvoiceDetailViewModel : ViewAware
         else
         {
             WindowManager wm = new();
-            var viewModel = new PrevInvoiceListViewModel(ICM, Invoice.Id, Invoice.Customer.FullName);
+            var viewModel = new PrevInvoiceListViewModel(ICM, Invoice.Id, User, Invoice.Customer.FullName);
             await wm.ShowDialogAsync(viewModel);
+            if (viewModel.ReturnId != null && viewModel.ReturnId > 0) PrevId = (int)viewModel.ReturnId;
         }
         if (await ICM.SetPrevInvoiceId(Invoice.Id, PrevId) == true)
         {
@@ -532,6 +544,7 @@ public class InvoiceDetailViewModel : ViewAware
         }
         else MessageBox.Show("خطا در بروزرسانی فیلد فاکتور قبلی", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
         PrevInvoiceSelectTitle = Invoice == null || Invoice.PrevInvoiceId <= 0 ? "انتخاب" : "حذف";
+        PrevInvoiceSelectIcon = Invoice == null || Invoice.PrevInvoiceId <= 0 ? MaterialDesignThemes.Wpf.PackIconKind.Attachment : MaterialDesignThemes.Wpf.PackIconKind.AttachmentOff;
         NotifyOfPropertyChange(() => Invoice);
     }
 

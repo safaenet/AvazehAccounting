@@ -42,6 +42,7 @@ public interface IInvoiceCollectionManager
 
     ObservableCollection<InvoiceListModel> Items { get; set; }
     Task<bool> SetPrevInvoiceId(int InvoiceId, int PrevInvoiceId);
+    Task<ObservableCollection<InvoiceListModel>> LoadPrevInvoices(int InvoiceId, string InvoiceDate, string searchValue, OrderType orderType);
     InvoiceListModel GetItemFromCollectionById(int Id);
     Task<List<ItemsForComboBox>> LoadProductItems(string SearchText = null);
     Task<double> GetCustomerTotalBalanceById(int CustomerId, int InvoiceId = 0);
