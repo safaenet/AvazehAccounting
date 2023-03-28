@@ -37,6 +37,7 @@ public class InvoiceDetailViewModel : ViewAware
         WindowTitle = "فاکتور";
         LoadSettings();
         _ = LoadInvoiceAsync(InvoiceId).ConfigureAwait(false);
+        PrintInvoiceByShortcut.InputGestures.Add(new KeyGesture(Key.P, ModifierKeys.Control));
     }
 
     private void LoadSettings()
@@ -60,6 +61,7 @@ public class InvoiceDetailViewModel : ViewAware
     private InvoiceItemModel _workItem = new();
     private bool CanUpdateRowFromDB = true; //False when user DoubleClicks on a row.
     private bool EdittingItem = false;
+    public static RoutedCommand PrintInvoiceByShortcut = new("PrintInvoiceByShortcut", typeof(InvoiceDetailViewModel));
     public LoggedInUser_DTO User { get; init; }
     public int SelectedDiscountType
     {
@@ -602,6 +604,17 @@ public class InvoiceDetailViewModel : ViewAware
             else if (((window as Window).FindName("InvoiceDiscountAmountArea") as TextBox).IsFocused || ((window as Window).FindName("InvoiceAmountArea") as TextBox).IsFocused)
                 await SaveInvoiceChangesAsync();
         }
+    }
+
+    public void PrintInvoiceByShortcut_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+    {
+        //Return true or false based on command availablity.  
+        e.CanExecute = true;
+    }
+
+    public void PrintInvoiceByShortcut_Executed(object sender, ExecutedRoutedEventArgs e)
+    {
+        PrintInvoiceAsync(11);
     }
 
     public async Task GetComboboxItemsAsync()

@@ -61,6 +61,20 @@
                 </MenuItem>
             </ContextMenu>
     </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="{Binding PrintInvoiceByShortcut}"
+                        CanExecute="{Binding PrintInvoiceByShortcut_CanExecute}"
+                        Executed="{Binding PrintInvoiceByShortcut_Executed}" />
+    </Window.CommandBindings>
+    <!--<Window.InputBindings>
+        <KeyBinding
+        Command="{x:Static viewmodels:InvoiceDetailViewModel.CommandToExecute}"
+        CommandParameter="ParameterValue"
+        Gesture="Ctrl+A" />
+        --><!--<KeyBinding Modifiers="Control"
+                    Key="N"
+                    Command="{Binding CreateCustomerCommand}"/>--><!--
+    </Window.InputBindings>-->
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3"/>

@@ -132,6 +132,15 @@
                 <local:DateToColorConverter x:Key="DateToColorConverterForNewItem" ItemColor="{Binding User.UserSettings.ColorNewItem}" Date="{Binding CurrentPersianDate}"/>
                 <local:DateToColorConverter x:Key="DateToColorConverterForUpdatedItem" ItemColor="{Binding User.UserSettings.ColorUpdatedItem}" Date="{Binding CurrentPersianDate}"/>
             </DataGrid.Resources>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="حذف" cal:Message.Attach="[Event Click] = [Action DeleteItemAsync]">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="DeleteOutline"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="مبلغ" Binding="{Binding PayAmount, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.5*">
                     <DataGridTextColumn.CellStyle>
