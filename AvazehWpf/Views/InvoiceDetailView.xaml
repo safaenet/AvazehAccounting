@@ -67,6 +67,11 @@
                         Executed="{Binding PrintInvoiceByShortcut_Executed}" />
     </Window.CommandBindings>
     <!--<Window.InputBindings>
+        <KeyBinding Modifiers="Control"
+                    Key="P"
+                    Command="{Binding PrintInvoiceByShortcut}"/>
+    </Window.InputBindings>-->
+    <!--<Window.InputBindings>
         <KeyBinding
         Command="{x:Static viewmodels:InvoiceDetailViewModel.CommandToExecute}"
         CommandParameter="ParameterValue"

@@ -23,7 +23,7 @@ using SharedLibrary.Helpers;
 
 namespace AvazehWpf.ViewModels;
 
-public class InvoiceDetailViewModel : ViewAware
+public class InvoiceDetailViewModel : Screen
 {
     public InvoiceDetailViewModel(IInvoiceCollectionManager iManager, IInvoiceDetailManager dManager, LoggedInUser_DTO user, SingletonClass singleton, int? InvoiceId, Func<Task> callBack, SimpleContainer sc)
     {
@@ -61,8 +61,9 @@ public class InvoiceDetailViewModel : ViewAware
     private InvoiceItemModel _workItem = new();
     private bool CanUpdateRowFromDB = true; //False when user DoubleClicks on a row.
     private bool EdittingItem = false;
-    public static RoutedCommand PrintInvoiceByShortcut = new("PrintInvoiceByShortcut", typeof(InvoiceDetailViewModel));
+    public static RoutedCommand PrintInvoiceByShortcut = new();
     public LoggedInUser_DTO User { get; init; }
+
     public int SelectedDiscountType
     {
         get => selectedDiscountType; set
