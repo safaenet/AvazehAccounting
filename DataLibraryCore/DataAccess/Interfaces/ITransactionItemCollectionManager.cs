@@ -8,5 +8,5 @@ public interface ITransactionItemCollectionManager : ICollectionManagerBase<Tran
     ITransactionProcessor Processor { get; init; }
     TransactionFinancialStatus? FinStatus { get; }
     int TransactionId { get; set; }
-    int GenerateWhereClause(string val, string OrderBy, OrderType orderType, TransactionFinancialStatus? finStatus, bool run = false, SqlSearchMode mode = SqlSearchMode.OR);
+    int GenerateWhereClause(string val, string OrderBy, OrderType orderType, TransactionFinancialStatus? finStatus, string Date, bool run = false, SqlSearchMode mode = SqlSearchMode.OR);
 }

@@ -32,6 +32,8 @@ public class TransactionCollectionManagerAsync : ITransactionCollectionManager
     public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
     public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
 
+    public int TransactionIdToSearch { get; set; }
+    public string TransactionDateToSearch { get; set; }
     public string SearchValue { get; set; }
     public string QueryOrderBy { get; set; } = "Id";
     public OrderType QueryOrderType { get; set; } = OrderType.DESC;
@@ -88,7 +90,7 @@ public class TransactionCollectionManagerAsync : ITransactionCollectionManager
         PageLoadEventArgs eventArgs = new();
         PageLoading?.Invoke(this, eventArgs);
         if (eventArgs.Cancel) return 0;
-        var collection = await ApiProcessor.GetTransactionCollectionAsync<ItemsCollection_DTO<TransactionListModel>>(Key, QueryOrderBy, QueryOrderType, PageNumber, SearchValue, FinStatus, PageSize, Refresh);
+        var collection = await ApiProcessor.GetTransactionCollectionAsync<ItemsCollection_DTO<TransactionListModel>>(Key, QueryOrderBy, QueryOrderType, TransactionIdToSearch, TransactionDateToSearch, PageNumber, SearchValue, FinStatus, PageSize, Refresh);
         Items = collection?.Items.AsObservable();
         CurrentPage = collection is null ? 0 : collection.CurrentPage;
         PagesCount = collection is null ? 0 : collection.PagesCount;

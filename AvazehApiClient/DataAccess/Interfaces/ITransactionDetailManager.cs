@@ -7,4 +7,5 @@ public interface ITransactionDetailManager : ICollectionManager<TransactionItemM
 {
     TransactionFinancialStatus? FinStatus { get; set; }
     int TransactionId { get; set; }
+    string TransactionDateToSearch { get; set; }
 }

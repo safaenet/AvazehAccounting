@@ -21,10 +21,10 @@ public class TransactionItemController : ControllerBase
     private readonly ITransactionItemCollectionManager Manager;
 
     [HttpGet("{TransactionId}")]
-    public async Task<ActionResult<ItemsCollection_DTO<TransactionItemModel>>> GetItemsAsync(int TransactionId, int Page = 1, string SearchText = "", string OrderBy = "Id", OrderType orderType = OrderType.DESC, TransactionFinancialStatus? FinStatus = null, int PageSize = 100, bool ForceLoad = false)
+    public async Task<ActionResult<ItemsCollection_DTO<TransactionItemModel>>> GetItemsAsync(int TransactionId, int Page = 1, string SearchText = "", string OrderBy = "Id", OrderType orderType = OrderType.DESC, string Date = null, TransactionFinancialStatus? FinStatus = null, int PageSize = 100, bool ForceLoad = false)
     {
         Manager.TransactionId = TransactionId;
-        Manager.GenerateWhereClause(SearchText, OrderBy, orderType, FinStatus);
+        Manager.GenerateWhereClause(SearchText, OrderBy, orderType, FinStatus, Date);
         Manager.PageSize = PageSize;
         if (ForceLoad) Manager.Initialized = false;
         await Manager.GotoPageAsync(Page);

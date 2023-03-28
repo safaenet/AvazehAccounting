@@ -30,8 +30,8 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <Grid.Resources>
-            <Style TargetType="TextBox">
+        <!--<Grid.Resources>-->
+            <!--<Style TargetType="TextBox">
                 <Setter Property="TextAlignment" Value="Center"/>
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="Background" Value="Transparent"/>
@@ -39,8 +39,8 @@
                 <Setter Property="Margin" Value="0,2,0,2"/>
                 <Setter Property="Height" Value="25"/>
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
-            </Style>
-        </Grid.Resources>
+            </Style>-->
+        <!--</Grid.Resources>-->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3"/>
             <ColumnDefinition Width="auto" MaxWidth="200"/>
@@ -58,41 +58,6 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <!--<Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="200"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.Resources>
-                    <ObjectDataProvider x:Key="FinStatusItems" MethodName="GetTransactionFinStatusItems" ObjectType="{x:Type viewmodels:TransactionFinStatusItems}"/>
-                </Grid.Resources>
-                <Button IsEnabled="False" x:Name="PrintListAsync" Grid.Column="0" Height="25" Margin="0,0,5,0">
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="PrinterOutline" Margin="3"/>
-                        <TextBlock Text="چاپ لیست" VerticalAlignment="Center" Margin="5,0,30,0"/>
-                    </StackPanel>
-                </Button>
-                <Button x:Name="AddNewTransactionAsync" IsEnabled="{Binding CanAddNewTransaction}" Grid.Column="1" Height="25" Margin="0,0,5,0">
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="NotePlusOutline" Margin="3"/>
-                        <TextBlock Text="فایل جدید" VerticalAlignment="Center" Margin="5,0,30,0"/>
-                    </StackPanel>
-                </Button>
-                <ComboBox Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Grid.Column="2" BorderThickness="2" BorderBrush="DarkGray" Height="25" VerticalContentAlignment="Center"
-                          ItemsSource="{Binding Source={StaticResource FinStatusItems}}" SelectedValuePath="Key" DisplayMemberPath="Value"
-                          SelectedValue="{Binding SelectedFinStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action SearchAsync]"/>
-                <Button x:Name="SearchAsync" Grid.Column="3" Height="25" Margin="0,0,5,0">
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="DatabaseSearchOutline" Margin="3"/>
-                        <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
-                        <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="3" HorizontalAlignment="Right"/>
-                    </StackPanel>
-                </Button>
-                <TextBox x:Name="SearchText" Grid.Column="4" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandlerAsync($executionContext)]; [Event TextChanged] = [Action SearchBoxTextChangedHandlerAsync]" VerticalContentAlignment="Center" Margin="0,0,3,0"/>
-            </Grid>-->
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
@@ -101,13 +66,11 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.Resources>
-                    <ObjectDataProvider x:Key="FinStatusItems" MethodName="GetInvoiceFinStatusItems" ObjectType="{x:Type viewmodels:InvoiceFinStatusAndLifeStatusItems}"/>
-                    <ObjectDataProvider x:Key="LifeStatusItems" MethodName="GetInvoiceLifeStatusItems" ObjectType="{x:Type viewmodels:InvoiceFinStatusAndLifeStatusItems}"/>
+                    <ObjectDataProvider x:Key="FinStatusItems" MethodName="GetTransactionFinStatusItems" ObjectType="{x:Type viewmodels:TransactionFinStatusItems}"/>
                 </Grid.Resources>
                 <Button x:Name="PrintListAsync" Grid.Column="0" Height="25" Margin="0,0,5,0" IsEnabled="False" Width="25">
                     <StackPanel Orientation="Horizontal">
@@ -121,17 +84,18 @@
                     </StackPanel>
                 </Button>
                 <avazehusercontrollibrarywpf:PersianDatePicker PersianDate="{Binding QueryDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DayWidth="55" CanUserSelectAll="True" MonthDisplayType="Full" Grid.Column="2" Height="25" Width="220" cal:Message.Attach="[Event OnDateChanged] = [Action SearchBoxTextChangedHandlerAsync]" Margin="0,0,5,0"/>
-                <ComboBox Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" Grid.Column="4" BorderThickness="3" BorderBrush="DarkGray" Height="25" VerticalContentAlignment="Center"
+                <Separator Grid.Column="3" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+                <ComboBox Margin="3,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" Grid.Column="4" BorderBrush="DarkGray" Height="25" VerticalContentAlignment="Center"
                           ItemsSource="{Binding Source={StaticResource FinStatusItems}}" SelectedValuePath="Key" DisplayMemberPath="Value"
                           SelectedValue="{Binding SelectedFinStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action SearchBoxTextChangedHandlerAsync];"/>
-                <Button x:Name="SearchAsync" Grid.Column="6" Height="25" Margin="0,0,3,0">
+                <Button x:Name="SearchAsync" Grid.Column="5" Height="25" Margin="0,0,3,0">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="DatabaseSearchOutline" Margin="3"/>
                         <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="15,0,15,0"/>
                         <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="3" HorizontalAlignment="Right"/>
                     </StackPanel>
                 </Button>
-                <Grid Grid.Column="7">
+                <Grid Grid.Column="6">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="auto"/>
@@ -139,14 +103,14 @@
                     <TextBox x:Name="SearchText" Height="25" Grid.Column="0" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandlerAsync($executionContext)]; [Event TextChanged] = [Action SearchBoxTextChangedHandlerAsync]; [Event GotFocus] = [Action SetKeyboardLayout]" VerticalContentAlignment="Center" Margin="3,0,5,0"/>
                     <TextBlock Text="متن جستجو" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,3,3"/>
                 </Grid>
-                <Grid Grid.Column="8">
+                <Grid Grid.Column="7">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="80"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
-                    <TextBox Grid.Column="1" Text="{Binding InvoiceIdToSearch, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandlerAsync($executionContext)]; [Event TextChanged] = [Action SearchBoxTextChangedHandlerAsync];" VerticalContentAlignment="Center" Margin="3,0,5,0"/>
+                    <TextBox Grid.Column="1" Text="{Binding TransactionIdToSearch, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="25" cal:Message.Attach="[Event KeyDown] = [Action SearchBoxKeyDownHandlerAsync($executionContext)]; [Event TextChanged] = [Action SearchBoxTextChangedHandlerAsync];" VerticalContentAlignment="Center" Margin="3,0,5,0"/>
                     <TextBlock Text="شماره فایل" Grid.Column="2" VerticalAlignment="Center" Margin="0,0,5,3"/>
                 </Grid>
             </Grid>
@@ -195,7 +159,7 @@
                 <DataGrid.Resources>
                     <local:DateToColorConverter x:Key="DateToColorConverterForNewItem" ItemColor="{Binding User.UserSettings.ColorNewItem}" Date="{Binding CurrentPersianDate}"/>
                     <local:DateToColorConverter x:Key="DateToColorConverterForUpdatedItem" ItemColor="{Binding User.UserSettings.ColorUpdatedItem}" Date="{Binding CurrentPersianDate}"/>
-                    <local:AmountToColorConverter x:Key="AmountToColorConverterForTotalBalance" BalancedColor="{Binding User.UserSettings.ColorBalancedItem}" PositiveColor="{Binding User.UserSettings.ColorDeptorItem}" NegativeColor="{Binding User.UserSettings.ColorCreditorItem}"/>
+                    <local:AmountToColorConverter x:Key="AmountToColorConverterForTotalBalance" BalancedColor="{Binding User.UserSettings.ColorBalancedItem}" PositiveColor="{Binding User.UserSettings.ColorPositiveItem}" NegativeColor="{Binding User.UserSettings.ColorNegativeItem}"/>
                     <local:EnglishToPersianTransactionFinStatusConverter x:Key="EnglishToPersianTransactionFinStatusConverter"/>
                 </DataGrid.Resources>
                 <DataGrid.Columns>

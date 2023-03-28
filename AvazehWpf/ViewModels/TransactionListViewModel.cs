@@ -24,6 +24,7 @@ public class TransactionListViewModel : Screen
         SC = sc;
         _SelectedTransaction = new();
         Singleton = singleton;
+        QueryDate = new PersianCalendar().GetYear(DateTime.Now).ToString() + "/__/__";
         _ = LoadSettingsAsync().ConfigureAwait(true);
     }
 
@@ -34,6 +35,21 @@ public class TransactionListViewModel : Screen
     public LoggedInUser_DTO User { get; init; }
     public string CurrentPersianDate { get; init; }
 
+    private string queryDate;
+
+    public string QueryDate
+    {
+        get => queryDate;
+        set { queryDate = value; NotifyOfPropertyChange(() => QueryDate); }
+    }
+
+    private string transactionIdToSearch;
+
+    public string TransactionIdToSearch
+    {
+        get { return transactionIdToSearch; }
+        set { transactionIdToSearch = value; NotifyOfPropertyChange(() => TransactionIdToSearch); }
+    }
 
     public TransactionListModel SelectedTransaction
     {
@@ -142,6 +158,9 @@ public class TransactionListViewModel : Screen
         TransactionFinancialStatus? FinStatus = SelectedFinStatus >= Enum.GetNames(typeof(TransactionFinancialStatus)).Length ? null : (TransactionFinancialStatus)SelectedFinStatus;
         TCM.SearchValue = SearchText;
         TCM.FinStatus = FinStatus;
+        int.TryParse(TransactionIdToSearch, out var tnsId);
+        TCM.TransactionIdToSearch = tnsId <= 0 ? -1 : tnsId;
+        TCM.TransactionDateToSearch = QueryDate;
         await TCM.LoadFirstPageAsync();
         NotifyOfPropertyChange(() => Transactions);
     }
@@ -199,6 +218,12 @@ public class TransactionListViewModel : Screen
     public void Window_PreviewKeyDown(object window, KeyEventArgs e)
     {
         if (e.Key == Key.Escape) (GetView() as Window).Close();
+    }
+
+    public void SetKeyboardLayout()
+    {
+        if (User.UserSettings.AutoSelectPersianLanguage)
+            ExtensionsAndStatics.ChangeLanguageToPersian();
     }
 }
 

@@ -73,13 +73,13 @@ public class TransactionCollectionManager : ITransactionCollectionManager
     private protected int TotalQueryCount { get; set; }
     public int CurrentPage { get; private set; }
 
-    public int GenerateWhereClause(string val, string OrderBy, OrderType orderType, TransactionFinancialStatus? finStatus, bool run = false, SqlSearchMode mode = SqlSearchMode.OR)
+    public int GenerateWhereClause(string val, string OrderBy, OrderType orderType, TransactionFinancialStatus? finStatus, int Id = 0, string Date = null, bool run = false, SqlSearchMode mode = SqlSearchMode.OR)
     {
         if (val == SearchValue && OrderBy == QueryOrderBy && orderType == QueryOrderType) return 0;
         SearchValue = val;
         QueryOrderBy = OrderBy;
         QueryOrderType = orderType;
-        WhereClause = Processor.GenerateWhereClause(val, finStatus, mode);
+        WhereClause = Processor.GenerateWhereClause(val, finStatus, Id, Date, mode);
         if (run) LoadFirstPageAsync().ConfigureAwait(true);
         return Items == null ? 0 : Items.Count();
     }

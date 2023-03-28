@@ -117,7 +117,7 @@
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Vertical" Margin="0,0,0,3">
                                 <StackPanel Width="144" Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <materialDesign:PackIcon Kind="FileOutline" Margin="55,2,5,2"/>
+                                    <materialDesign:PackIcon Kind="AboutOutline" Margin="55,2,5,2"/>
                                     <TextBlock MaxWidth="200" TextAlignment="Center" Text="بابت" Margin="0,2,0,2"/>
                                 </StackPanel>
                                 <TextBox Text="{Binding Invoice.About, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="InvoiceAmountArea" MaxLength="200" MaxWidth="200" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>

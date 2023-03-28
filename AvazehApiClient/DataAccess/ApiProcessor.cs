@@ -185,11 +185,11 @@ public class ApiProcessor : IApiProcessor
         return default;
     }
 
-    public async Task<T> GetTransactionCollectionAsync<T>(string Key, string OrderBy, OrderType orderType, int Page = 1, string SearchText = "", TransactionFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false) where T : class
+    public async Task<T> GetTransactionCollectionAsync<T>(string Key, string OrderBy, OrderType orderType, int Id = 0, string Date = null, int Page = 1, string SearchText = "", TransactionFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false) where T : class
     {
         try
         {
-            var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&Page={Page}&SearchText={SearchText}&FinStatus={FinStatus}&PageSize={PageSize}&ForceLoad={ForceLoad}";
+            var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&Id={Id}&Date={Date}&Page={Page}&SearchText={SearchText}&FinStatus={FinStatus}&PageSize={PageSize}&ForceLoad={ForceLoad}";
             var response = await ApiClient.GetAsync(Url);
             return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<T>() : null;
         }

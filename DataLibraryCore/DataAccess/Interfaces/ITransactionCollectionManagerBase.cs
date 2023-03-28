@@ -6,5 +6,5 @@ public interface ITransactionCollectionManagerBase<TModel> : ICollectionManagerB
 {
     ITransactionProcessor Processor { get; init; }
     TransactionFinancialStatus? FinStatus { get; }
-    int GenerateWhereClause(string val, string OrderBy, OrderType orderType, TransactionFinancialStatus? finStatus, bool run = false, SqlSearchMode mode = SqlSearchMode.OR);
+    int GenerateWhereClause(string val, string OrderBy, OrderType orderType, TransactionFinancialStatus? finStatus, int Id = 0, string Date = null, bool run = false, SqlSearchMode mode = SqlSearchMode.OR);
 }

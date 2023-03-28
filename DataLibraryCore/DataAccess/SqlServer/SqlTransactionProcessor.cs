@@ -61,10 +61,12 @@ public class SqlTransactionProcessor : ITransactionProcessor
         return 0;
     }
 
-    public string GenerateWhereClause(string val, TransactionFinancialStatus? FinStatus, SqlSearchMode mode) //Used for TransactionList
+    public string GenerateWhereClause(string val, TransactionFinancialStatus? FinStatus, int Id, string Date, SqlSearchMode mode) //Used for TransactionList
     {
         try
         {
+            if (Id <= 0) Id = -1;
+            if (string.IsNullOrWhiteSpace(Date)) Date = "%";
             string finStatusOperand = "";
             switch (FinStatus)
             {
@@ -81,7 +83,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
                     break;
             }
             var criteria = string.IsNullOrWhiteSpace(val) ? "'%'" : $"'%{ val }%'";
-            return @$"(CAST(t.[Id] AS VARCHAR) LIKE {criteria}
+            var clause = @$"(CAST(t.[Id] AS VARCHAR) LIKE {criteria}
                       {mode} t.[FileName] LIKE N{criteria}
                       {mode} t.[DateCreated] LIKE {criteria}
                       {mode} t.[TimeCreated] LIKE {criteria}
@@ -91,7 +93,10 @@ public class SqlTransactionProcessor : ITransactionProcessor
                       {mode} CAST(pos.TotalVal AS VARCHAR) LIKE {criteria}
 					  {mode} CAST(neg.TotalVal AS VARCHAR) LIKE {criteria} )
                       { (FinStatus == null ? "" : $" AND ISNULL(pos.TotalVal, 0) + ISNULL(neg.TotalVal, 0) { finStatusOperand } 0 ")}
+                      AND (({Id} != -1 AND t.Id = {Id}) OR {Id} = -1)
+                      AND (('{Date}' != '%' AND (t.[DateCreated] LIKE '{Date}' OR t.[DateUpdated] LIKE '{Date}')) OR '{Date}' = '%')
             ";
+            return clause;
         }
         catch (Exception ex)
         {
@@ -100,10 +105,11 @@ public class SqlTransactionProcessor : ITransactionProcessor
         return null;
     }
 
-    public string GenerateTransactionItemWhereClause(string val, TransactionFinancialStatus? FinStatus, SqlSearchMode mode) //Used for TransactionItemList
+    public string GenerateTransactionItemWhereClause(string val, TransactionFinancialStatus? FinStatus, string Date, SqlSearchMode mode) //Used for TransactionItemList
     {
         try
         {
+            if (string.IsNullOrWhiteSpace(Date)) Date = "%";
             string finStatusOperand = "";
             switch (FinStatus)
             {
@@ -131,6 +137,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
                       {mode} [TimeUpdated] LIKE {criteria}
                       {mode} [Descriptions] LIKE N{criteria} ) 
                       { (FinStatus == null ? "" : $" AND ISNULL(([Amount] * [CountValue]), 0) { finStatusOperand } 0 ")}
+                      AND (('{Date}' != '%' AND ([DateCreated] LIKE '{Date}' OR [DateUpdated] LIKE '{Date}')) OR '{Date}' = '%')
             ";
         }
         catch (Exception ex)

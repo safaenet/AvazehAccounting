@@ -11,7 +11,7 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:TransactionDetailViewModel}"
         xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary"
-        xmlns:dlc2="clr-namespace:SharedLibrary.DtoModels;assembly=SharedLibrary"
+        xmlns:dlc2="clr-namespace:SharedLibrary.DtoModels;assembly=SharedLibrary" xmlns:avazehusercontrollibrarywpf="clr-namespace:AvazehUserControlLibraryWpf;assembly=AvazehUserControlLibraryWpf"
         Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1220" Height="650"
         cal:Message.Attach="[Event Closing] = [Action ClosingWindowAsync]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]; [Event Loaded] = [FocusOnProductsCombobox()]">
@@ -72,20 +72,22 @@
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,3,0">
 
-                        <StackPanel Orientation="Vertical" Margin="0,0,0,3">
-                            <StackPanel Width="85" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="AccountOutline" Margin="0,2,5,2"/>
-                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="شناسه فایل" Margin="0,2,0,2"/>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical" Margin="0,0,3,3">
+                                <StackPanel Width="134" Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <materialDesign:PackIcon Kind="FileOutline" Margin="35,2,5,2"/>
+                                    <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام فایل" Margin="0,2,0,2"/>
+                                </StackPanel>
+                                <TextBox Text="{Binding Transaction.FileName, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="100" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Transaction.Id, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
-                        </StackPanel>
-
-                        <StackPanel Orientation="Vertical" Margin="0,0,0,3">
-                            <StackPanel Width="70" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <materialDesign:PackIcon Kind="FileOutline" Margin="0,2,5,2"/>
-                                <TextBlock MaxWidth="200" TextAlignment="Center" Text="نام فایل" Margin="0,2,0,2"/>
+                            
+                            <StackPanel Orientation="Vertical" Margin="0,0,0,3">
+                                <StackPanel Width="60" Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <materialDesign:PackIcon Kind="AccountOutline" Margin="0,2,3,2"/>
+                                    <TextBlock MaxWidth="200" TextAlignment="Center" Text="شناسه" Margin="0,2,0,2"/>
+                                </StackPanel>
+                                <TextBox Text="{Binding Transaction.Id, Mode=OneWay}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Transaction.FileName, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" IsReadOnly="True" HorizontalContentAlignment="Center" MaxLength="100" MaxWidth="200" Height="25" VerticalContentAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
@@ -218,6 +220,8 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.Resources>
@@ -236,17 +240,19 @@
                     </StackPanel>
                 </Button>
                 <Separator Grid.Column="2" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
-                <ComboBox Margin="3,0,3,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Grid.Column="3" BorderThickness="2" BorderBrush="DarkGray" Height="25" VerticalContentAlignment="Center"
+                <ComboBox Margin="3,0,3,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Grid.Column="3" BorderBrush="DarkGray" Height="25" VerticalContentAlignment="Center"
                           ItemsSource="{Binding Source={StaticResource FinStatusItems}}" SelectedValuePath="Key" DisplayMemberPath="Value"
                           SelectedValue="{Binding SelectedFinStatus}" cal:Message.Attach="[Event SelectionChanged] = [Action SearchAsync]"/>
-                <Button x:Name="SearchAsync" Grid.Column="4" Width="150" Height="25" Margin="0,0,3,0" >
+                <Separator Grid.Column="4" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+                <avazehusercontrollibrarywpf:PersianDatePicker PersianDate="{Binding QueryDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DayWidth="55" CanUserSelectAll="True" MonthDisplayType="Full" Grid.Column="5" Height="25" Width="220" cal:Message.Attach="[Event OnDateChanged] = [Action SearchBoxTextChangedHandlerAsync]" Margin="3,0,5,0"/>
+                <Button x:Name="SearchAsync" Grid.Column="6" Width="150" Height="25" Margin="0,0,3,0" >
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="DatabaseSearchOutline" Margin="0"/>
                         <TextBlock Text="جستجو" VerticalAlignment="Center" Margin="30,0,30,0"/>
                         <materialDesign:PackIcon Kind="ArrowLeftBottomBold" Margin="0"/>
                     </StackPanel>
                 </Button>
-                <TextBox x:Name="SearchText" Grid.Column="5" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]; [Event TextChanged] = [Action SearchBoxTextChangedHandlerAsync]" VerticalContentAlignment="Center" Margin="0,0,3,0"/>
+                <TextBox x:Name="SearchText" Grid.Column="7" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]; [Event TextChanged] = [Action SearchBoxTextChangedHandlerAsync]" VerticalContentAlignment="Center" Margin="0,0,3,0"/>
             </Grid>
             <Separator Grid.Row="1" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
             <Grid Grid.Row="2">

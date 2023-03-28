@@ -27,6 +27,7 @@ public class TransactionDetailViewModel : ViewAware
         TDM = dManager;
         User = user;
         WindowTitle = "فایل";
+        QueryDate = "____/__/__";
         LoadSettings();
         CurrentPersianDate = PersianCalendarHelper.GetCurrentPersianDate();
         CallBackFunc = callBack;
@@ -57,6 +58,14 @@ public class TransactionDetailViewModel : ViewAware
     private ObservableCollection<ItemsForComboBox> productItems;
     private ObservableCollection<ItemsForComboBox> transactionsForComboBox;
     private TransactionItemModel _workItem = new();
+
+    private string queryDate;
+    public string QueryDate
+    {
+        get => queryDate;
+        set { queryDate = value; NotifyOfPropertyChange(() => QueryDate); }
+    }
+
     private bool _EdittingItem;
     public bool EdittingItem
     {
@@ -321,6 +330,7 @@ public class TransactionDetailViewModel : ViewAware
         EdittingItem = false;
         WorkItem = new();
         TDM.FinStatus = FinStatus;
+        TDM.TransactionDateToSearch = QueryDate;
         await TDM.LoadFirstPageAsync();
         Transaction.Items = TDM.Items;
         NotifyOfPropertyChange(() => Transaction);

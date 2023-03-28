@@ -35,7 +35,7 @@ public class InvoiceCollectionManagerAsync : IInvoiceCollectionManager
     public SqlQuerySearchMode SearchMode { get; set; }
     public int InvoiceIdToSearch { get; set; }
     public int CustomerIdToSearch { get; set; }
-    public string InvoiceDate { get; set; }
+    public string InvoiceDateToSearch { get; set; }
     public string SearchValue { get; set; }
     public InvoiceLifeStatus? LifeStatus { get; set; }
     public InvoiceFinancialStatus? FinStatus { get; set; }
@@ -86,7 +86,7 @@ public class InvoiceCollectionManagerAsync : IInvoiceCollectionManager
 
     public async Task<int> LoadItemsAsync(SqlQuerySearchMode SearchMode, int StartId)
     {
-        var collection = await ApiProcessor.GetInvoiceCollectionAsync<List<InvoiceListModel>>(Key, PageSize, InvoiceIdToSearch, CustomerIdToSearch, InvoiceDate, SearchValue, LifeStatus, FinStatus, SearchMode, orderType, StartId);
+        var collection = await ApiProcessor.GetInvoiceCollectionAsync<List<InvoiceListModel>>(Key, PageSize, InvoiceIdToSearch, CustomerIdToSearch, InvoiceDateToSearch, SearchValue, LifeStatus, FinStatus, SearchMode, orderType, StartId);
         Items = collection?.AsObservable();
         return collection == null ? 0 : collection.Count;
     }

@@ -181,10 +181,9 @@ public class InvoiceListViewModel : Screen
         ICM.SearchValue = SearchText;
         ICM.FinStatus = FinStatus;
         ICM.LifeStatus = LifeStatus;
-        int invId;
-        int.TryParse(InvoiceIdToSearch, out invId);
+        int.TryParse(InvoiceIdToSearch, out var invId);
         ICM.InvoiceIdToSearch = invId <= 0 ? -1 : invId;
-        ICM.InvoiceDate = QueryDate;
+        ICM.InvoiceDateToSearch = QueryDate;
         await ICM.LoadFirstPageAsync();
         NotifyOfPropertyChange(() => Invoices);
     }

@@ -9,8 +9,8 @@ namespace DataLibraryCore.DataAccess.Interfaces;
 
 public interface ITransactionProcessorBase<TModel> : IProcessorBase<TModel>
 {
-    string GenerateWhereClause(string val, TransactionFinancialStatus? FinStatus, SqlSearchMode mode = SqlSearchMode.OR);
-    string GenerateTransactionItemWhereClause(string val, TransactionFinancialStatus? FinStatus, SqlSearchMode mode);
+    string GenerateWhereClause(string val, TransactionFinancialStatus? FinStatus, int Id, string Date, SqlSearchMode mode);
+    string GenerateTransactionItemWhereClause(string val, TransactionFinancialStatus? FinStatus, string Date, SqlSearchMode mode);
     Task<IEnumerable<ItemsForComboBox>> GetProductItemsAsync(string SearchText = null, int TransactionId = 0);
     Task<IEnumerable<ItemsForComboBox>> GetTransactionNamesAsync(string SearchText = null);
     ValidationResult ValidateItem(TransactionItemModel item);

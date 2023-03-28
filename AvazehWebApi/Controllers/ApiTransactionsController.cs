@@ -26,13 +26,13 @@ public class TransactionsController : ControllerBase
 
     //GET /Customer?Id=1&SearchText=sometext
     [HttpGet, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanViewTransactionsList))]
-    public async Task<ActionResult<ItemsCollection_DTO<TransactionListModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "Id", OrderType orderType = OrderType.DESC, TransactionFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false)
+    public async Task<ActionResult<ItemsCollection_DTO<TransactionListModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "Id", OrderType orderType = OrderType.DESC, int Id = 0, string Date = null, TransactionFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false)
     {
-        Manager.GenerateWhereClause(SearchText, OrderBy, orderType, FinStatus);
+        Manager.GenerateWhereClause(SearchText, OrderBy, orderType, FinStatus, Id, Date);
         Manager.PageSize = PageSize;
         if (ForceLoad) Manager.Initialized = false;
         await Manager.GotoPageAsync(Page);
-        if (Manager.Items == null || Manager.Items.Count() == 0) return NotFound("List is empty");
+        if (Manager.Items == null || !Manager.Items.Any()) return NotFound("List is empty");
         return Manager.AsDto();
     }
 

@@ -13,4 +13,6 @@ public interface ITransactionCollectionManager : ICollectionManagerBase<Transact
     TransactionFinancialStatus? FinStatus { get; set; }
     TransactionListModel GetItemFromCollectionById(int Id);
     Task<List<ItemsForComboBox>> LoadProductItems(string SearchText = null);
+    public int TransactionIdToSearch { get; set; }
+    public string TransactionDateToSearch { get; set; }
 }
