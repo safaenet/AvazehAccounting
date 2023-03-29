@@ -14,7 +14,7 @@ using System.Windows.Controls;
 
 namespace AvazehWpf.ViewModels;
 
-public class SettingsViewModel : ViewAware
+public class SettingsViewModel : Screen
 {
     public SettingsViewModel(SimpleContainer sc, SingletonClass singleton, LoggedInUser_DTO user, Func<Task> callback = null)
     {
@@ -345,15 +345,14 @@ public class SettingsViewModel : ViewAware
 
     public async Task DeleteUserAsync()
     {
-        var msg = MessageBox.Show("آیا مطمئنید؟ با زدن دکمه 'بله' کاربر حذف خواهد شد", "حذف", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+        if (MessageBox.Show("آیا مطمئنید؟ با زدن دکمه 'بله' کاربر حذف خواهد شد", "حذف", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) return;
         var result = await ApiProcessor.DeleteItemAsync("Auth/DeleteUser", SelectedUserInfoBase.Id);
         if (!result)
         {
             MessageBox.Show("خطا هنگام حذف کاربر", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
             return;
         }
-        var delete = MessageBox.Show("آیا مطمئنید؟ با زدن دکمه 'بله' کاربر حذف خواهد شد", "حذف", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-        if (delete == MessageBoxResult.Yes) UserInfoBases.Remove(SelectedUserInfoBase);
+        else UserInfoBases.Remove(SelectedUserInfoBase);
     }
 
     public async Task LoadUserPermissionsAsync()
