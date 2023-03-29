@@ -73,6 +73,7 @@ public class MainWindowViewModel : ViewAware
     }
 
     readonly Timer timer = new();
+    private bool GotoLoginPage;
 
     public LoggedInUser_DTO User
     {
@@ -336,7 +337,8 @@ public class MainWindowViewModel : ViewAware
 
     public void Window_Closed()
     {
-        //Application.Current.Shutdown();
+        if (GotoLoginPage == false)
+            Application.Current.Shutdown();
     }
 
     public async Task LogoutAsync()
@@ -346,6 +348,7 @@ public class MainWindowViewModel : ViewAware
         {
             Application.Current.Windows[i].Close();
         }
+        GotoLoginPage = true;
         WindowManager wm = new();
         var viewModel = new LoginViewModel(SC, ApiProcessor);
         await wm.ShowWindowAsync(viewModel);
