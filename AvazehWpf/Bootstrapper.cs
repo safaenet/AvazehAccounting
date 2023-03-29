@@ -81,7 +81,7 @@ public class Bootstrapper : BootstrapperBase
                         return new KeyTrigger { Key = key };
 
                     case "Gesture":
-                        var mkg = (Scenario.KeyBinding.Input.MultiKeyGesture)(new Scenario.KeyBinding.Input.MultiKeyGestureConverter()).ConvertFrom(splits[1]);
+                        var mkg = (CaliburnMicro.KeyBinding.Input.MultiKeyGesture)(new CaliburnMicro.KeyBinding.Input.MultiKeyGestureConverter()).ConvertFrom(splits[1]);
                         return new KeyTrigger { Modifiers = mkg.KeySequences[0].Modifiers, Key = mkg.KeySequences[0].Keys[0] };
                 }
 
