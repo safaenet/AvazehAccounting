@@ -14,7 +14,7 @@ using System.Windows.Input;
 
 namespace AvazehWpf.ViewModels;
 
-public class NewInvoiceViewModel : ViewAware
+public class NewInvoiceViewModel : Screen
 {
     public NewInvoiceViewModel(SingletonClass singleton, int? InvoiceId, IInvoiceCollectionManager icManager, ICollectionManager<CustomerModel> ccManager, Func<Task> callBack, LoggedInUser_DTO user, SimpleContainer sc)
     {
@@ -26,14 +26,14 @@ public class NewInvoiceViewModel : ViewAware
         InvoiceID = InvoiceId;
         _ = GetComboboxItemsAsync().ConfigureAwait(true);
         CallBack = callBack;
-        if (InvoiceID == null)
+        if (InvoiceID == null || InvoiceID == 0)
         {
-            ButtonTitle = "Add";
+            ButtonTitle = "ذخیره";
             WindowTitle = "فاکتور جدید";
         }
         else
         {
-            ButtonTitle = "Update";
+            ButtonTitle = "بروزرسانی";
             _ = LoadSelectedItemAsync().ConfigureAwait(true);
         }
     }
@@ -43,11 +43,18 @@ public class NewInvoiceViewModel : ViewAware
     public ICollectionManager<CustomerModel> CCM { get; set; }
     private SingletonClass Singleton;
     private readonly int? InvoiceID;
+    private int OldCustomerId;
+    private string OldInvoiceAbout;
     private ObservableCollection<ItemsForComboBox> customerNames;
+    private ObservableCollection<ItemsForComboBox> invoiceAbouts;
     public ObservableCollection<ItemsForComboBox> CustomerNamesForComboBox { get => customerNames; set { customerNames = value; NotifyOfPropertyChange(() => CustomerNamesForComboBox); } }
+    public ObservableCollection<ItemsForComboBox> InvoiceAboutsForComboBox { get => invoiceAbouts; set { invoiceAbouts = value; NotifyOfPropertyChange(() => InvoiceAboutsForComboBox); } }
     private bool isCustomerInputDropDownOpen;
+    private bool isInvoiceAboutInputDropDownOpen;
     private ItemsForComboBox _selectedCustomer;
+    private ItemsForComboBox _selectedInvoiceAbout;
     private string customerInput;
+    private string invoiceAboutInput;
     private string buttonTitle;
     private Func<Task> CallBack;
     private string windowTitle;
@@ -65,11 +72,17 @@ public class NewInvoiceViewModel : ViewAware
     }
 
     public bool IsCustomerInputDropDownOpen { get => isCustomerInputDropDownOpen; set { isCustomerInputDropDownOpen = value; NotifyOfPropertyChange(() => IsCustomerInputDropDownOpen); } }
+    public bool IsInvoiceAboutInputDropDownOpen { get => isInvoiceAboutInputDropDownOpen; set { isInvoiceAboutInputDropDownOpen = value; NotifyOfPropertyChange(() => IsInvoiceAboutInputDropDownOpen); } }
 
     public ItemsForComboBox SelectedCustomer
     {
         get => _selectedCustomer;
         set { _selectedCustomer = value; NotifyOfPropertyChange(() => SelectedCustomer); }
+    }
+    public ItemsForComboBox SelectedInvoiceAbout
+    {
+        get => _selectedInvoiceAbout;
+        set { _selectedInvoiceAbout = value; NotifyOfPropertyChange(() => SelectedInvoiceAbout); }
     }
 
     public string CustomerInput
@@ -78,9 +91,16 @@ public class NewInvoiceViewModel : ViewAware
         set { customerInput = value; NotifyOfPropertyChange(() => CustomerInput); }
     }
 
+    public string InvoiceAboutInput
+    {
+        get => invoiceAboutInput;
+        set { invoiceAboutInput = value; NotifyOfPropertyChange(() => InvoiceAboutInput); }
+    }
+
     private async Task GetComboboxItemsAsync()
     {
         CustomerNamesForComboBox = await Singleton.ReloadCustomerNames();
+        InvoiceAboutsForComboBox = await Singleton.ReloadInvoiceAbouts();
     }
 
     public void CustomerNames_KeyUp(KeyEventArgs e)
@@ -92,9 +112,13 @@ public class NewInvoiceViewModel : ViewAware
         e.Handled = true;
     }
 
-    public void CloseWindow()
+    public void InvoiceAbout_KeyUp(KeyEventArgs e)
     {
-        (GetView() as Window).Close();
+        if (InvoiceAboutsForComboBox == null || InvoiceAboutsForComboBox.ToList().Find(x => x.ItemName.StartsWith(InvoiceAboutInput ?? string.Empty)) == null) IsInvoiceAboutInputDropDownOpen = false;
+        else IsInvoiceAboutInputDropDownOpen = true;
+
+        if (e.Key == Key.Enter) IsInvoiceAboutInputDropDownOpen = false;
+        e.Handled = true;
     }
 
     public async Task AddOrUpdateInvoiceAsync()
@@ -110,30 +134,34 @@ public class NewInvoiceViewModel : ViewAware
         {
             InvoiceModel i = new();
             i.Customer = c;
+            i.About = string.IsNullOrWhiteSpace(InvoiceAboutInput) ? null : InvoiceAboutInput;
             var newInvoice = await ICM.CreateItemAsync(i);
             if (newInvoice != null)
             {
                 WindowManager wm = new();
                 var idm = SC.GetInstance<IInvoiceDetailManager>();
                 await wm.ShowWindowAsync(new InvoiceDetailViewModel(ICM, idm, User, Singleton, newInvoice.Id, null, SC));
-                CloseWindow();
+                await TryCloseAsync();
             }
             else MessageBox.Show("خطا هنگام ایجاد فاکتور جدید", CustomerInput, MessageBoxButton.OK, MessageBoxImage.Error);
         }
         else //Update Owner
         {
-            if (c.Id == SelectedCustomer.Id) CloseWindow();
-            int id = (int)InvoiceID;
-            var invoice = await ICM.GetItemById(id);
-            if (invoice == null)
+            if (c.Id != OldCustomerId || InvoiceAboutInput != OldInvoiceAbout)
             {
-                MessageBox.Show("Cannot find such invoice.");
-                return;
+                int id = (int)InvoiceID;
+                var invoice = await ICM.GetItemById(id);
+                if (invoice == null)
+                {
+                    MessageBox.Show("Cannot find such invoice.");
+                    return;
+                }
+                if (MessageBox.Show("آیا مالک فاکتور و/یا فیلد بابت فاکتور تغییر کند؟", "تغییر مالک", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.No) return;
+                invoice.Customer = c;
+                invoice.About = string.IsNullOrWhiteSpace(InvoiceAboutInput) ? null : InvoiceAboutInput;
+                await ICM.UpdateItemAsync(invoice);
             }
-            if (MessageBox.Show("آیا مالک فاکتور تغییر کند؟", "تغییر مالک", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.No) return;
-            invoice.Customer = c;
-            await ICM.UpdateItemAsync(invoice);
-            CloseWindow();
+            await TryCloseAsync();
         }
     }
 
@@ -153,15 +181,18 @@ public class NewInvoiceViewModel : ViewAware
 
     private async Task LoadSelectedItemAsync()
     {
-        SelectedCustomer = new();
         var invoice = await ICM.GetItemById((int)InvoiceID);
+        SelectedCustomer = CustomerNamesForComboBox.SingleOrDefault(c => c.Id == invoice.Customer.Id);
+        OldCustomerId = invoice.Customer.Id;
+        OldInvoiceAbout = invoice.About;
         CustomerInput = invoice.Customer.FullName;
+        InvoiceAboutInput = invoice.About;
         WindowTitle = invoice.Customer.FullName + " - تغییر نام";
     }
 
     public void WindowLoaded()
     {
-        ((GetView() as Window).FindName("NewInvoiceInput") as ComboBox).Focus();
+        ((GetView() as Window).FindName("NewInvoiceOwnerInput") as ComboBox).Focus();
         IsCustomerInputDropDownOpen = true;
     }
 

@@ -68,6 +68,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
     private readonly string GetProductItemsQuery = "SELECT [Id], [ProductName] AS ItemName FROM Products {0} ORDER BY [ProductName]";
     private readonly string GetProductUnitsQuery = "SELECT [Id], [UnitName] FROM ProductUnits";
     private readonly string GetCustomerNamesQuery = "SELECT [Id], ISNULL(FirstName, '') + ' ' + ISNULL(LastName, '') AS ItemName FROM Customers {0} ORDER BY [FirstName], [LastName]";
+    private readonly string GetInvoiceAboutsQuery = "SELECT [Id], [About] AS ItemName FROM Invoices WHERE TRIM([About]) <> '' {0} ORDER BY [About]";
     private readonly string GetRecentPricesOfProductQuery = @"SELECT TOP({0}) it.SellPrice AS SellPrice, it.DateCreated AS DateSold FROM InvoiceItems it LEFT JOIN Invoices i ON it.InvoiceId = i.Id
                                                              LEFT JOIN Customers c ON i.CustomerId = c.Id LEFT JOIN Products p ON it.ProductId = p.Id
                                                              WHERE c.Id = {1} AND p.Id = {2} ORDER BY DateSold DESC";
@@ -586,6 +587,22 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         {
             var where = string.IsNullOrEmpty(SearchText) ? "" : $" WHERE [FirstName] + ' ' + [LastName] LIKE '%{ SearchText }%'";
             var sql = string.Format(GetCustomerNamesQuery, where);
+            var items = await DataAccess.LoadDataAsync<ItemsForComboBox>(sql);
+            return items;
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in SqlInvoiceProcessor");
+        }
+        return null;
+    }
+
+    public async Task<IEnumerable<ItemsForComboBox>> GetInvoiceAboutsAsync(string SearchText)
+    {
+        try
+        {
+            var where = string.IsNullOrWhiteSpace(SearchText) ? "" : $" AND TRIM([About]) LIKE '%{ SearchText }%'";
+            var sql = string.Format(GetInvoiceAboutsQuery, where);
             var items = await DataAccess.LoadDataAsync<ItemsForComboBox>(sql);
             return items;
         }

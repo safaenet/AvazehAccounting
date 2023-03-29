@@ -64,6 +64,13 @@ public class InvoicesController : ControllerBase
         return items is null ? NotFound("Couldn't find any match") : items.ToList();
     }
 
+    [HttpGet("InvoiceAbouts"), Authorize]
+    public async Task<ActionResult<List<ItemsForComboBox>>> GetInvoiceAboutsAsync(string SearchText)
+    {
+        var items = await Processor.GetInvoiceAboutsAsync(SearchText);
+        return items is null ? NotFound("Couldn't find any match") : items.ToList();
+    }
+
     [HttpGet("CustomerBalance/{CustomerId}/{InvoiceId}"), Authorize]
     public async Task<ActionResult<double>> GetCustomerBalanceAsync(int CustomerId, int InvoiceId = 0)
     {

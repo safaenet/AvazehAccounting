@@ -28,4 +28,5 @@ public class SingletonClass
     public async Task<ObservableCollection<UserInfoBaseModel>> ReloadUserInfoBases() => await Processor.GetCollectionAsync<ObservableCollection<UserInfoBaseModel>>("Auth/UserInfoBases", null);
 
     public async Task<ObservableCollection<ItemsForComboBox>> ReloadCustomerNames() => await Processor.GetCollectionAsync<ObservableCollection<ItemsForComboBox>>("Invoices/CustomerNames", null);
+    public async Task<ObservableCollection<ItemsForComboBox>> ReloadInvoiceAbouts() => await Processor.GetCollectionAsync<ObservableCollection<ItemsForComboBox>>("Invoices/InvoiceAbouts", null);
 }
