@@ -3,6 +3,7 @@ using AvazehApiClient.DataAccess.CollectionManagers;
 using AvazehApiClient.DataAccess.Interfaces;
 using AvazehWpf.ViewModels;
 using Caliburn.Micro;
+using Microsoft.Xaml.Behaviors.Input;
 using Serilog;
 using Serilog.Events;
 using SharedLibrary.DalModels;
@@ -12,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 
 namespace AvazehWpf;
 
@@ -55,6 +57,37 @@ public class Bootstrapper : BootstrapperBase
                 .PerRequest<ITransactionDetailManager, TransactionDetailManager>()
                 .PerRequest<IAppSettingsManager, AppSettingsManager>()
                 .Singleton<SingletonClass>();
+
+            #region KeyBinding
+            var defaultCreateTrigger = Parser.CreateTrigger;
+
+            Parser.CreateTrigger = (target, triggerText) =>
+            {
+                if (triggerText == null)
+                {
+                    return defaultCreateTrigger(target, null);
+                }
+
+                var triggerDetail = triggerText
+                    .Replace("[", string.Empty)
+                    .Replace("]", string.Empty);
+
+                var splits = triggerDetail.Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
+
+                switch (splits[0])
+                {
+                    case "Key":
+                        var key = (Key)Enum.Parse(typeof(Key), splits[1], true);
+                        return new KeyTrigger { Key = key };
+
+                    case "Gesture":
+                        var mkg = (Scenario.KeyBinding.Input.MultiKeyGesture)(new Scenario.KeyBinding.Input.MultiKeyGestureConverter()).ConvertFrom(splits[1]);
+                        return new KeyTrigger { Modifiers = mkg.KeySequences[0].Modifiers, Key = mkg.KeySequences[0].Keys[0] };
+                }
+
+                return defaultCreateTrigger(target, triggerText);
+            };
+            #endregion
         }
         catch (Exception ex)
         {

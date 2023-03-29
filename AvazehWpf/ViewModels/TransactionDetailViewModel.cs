@@ -108,7 +108,6 @@ public class TransactionDetailViewModel : ViewAware
         set { canPrintTransaction = value; NotifyOfPropertyChange(() => CanPrintTransaction); }
     }
 
-    public bool CanSaveTransactionChangesAsync { get => canSaveTransactionChanges; set { canSaveTransactionChanges = value; NotifyOfPropertyChange(() => CanSaveTransactionChangesAsync); } }
     public TransactionItemModel SelectedItem { get; set; }
     private TransactionItemModel selectedItem_Backup { get; set; } = new();
     public TransactionItemModel WorkItem { get => _workItem; set { _workItem = value; NotifyOfPropertyChange(() => WorkItem); } }
@@ -287,7 +286,6 @@ public class TransactionDetailViewModel : ViewAware
         Transaction.DateUpdated = result.DateUpdated;
         Transaction.TimeUpdated = result.TimeUpdated;
         RefreshDataGrid();
-        CanSaveTransactionChangesAsync = false;
     }
 
     public void PrintTransactionMenu(object sender, object window)
@@ -321,6 +319,11 @@ public class TransactionDetailViewModel : ViewAware
             StartInfo = new ProcessStartInfo(PrintInterfacePath, arguments)
         };
         p.Start();
+    }
+
+    public async Task PrintTransactionByShortcutAsync()
+    {
+        await PrintTransactionAsync(11);
     }
 
     public async Task SearchAsync()

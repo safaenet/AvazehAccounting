@@ -12,7 +12,7 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:InvoiceListViewModel}"
         Title="فاکتور ها" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1230" Height="650"
-        cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]">
+        cal:Message.Attach="[Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]; [Gesture Ctrl+N] = [AddNewInvoiceAsync]; [Gesture Ctrl+P] = [PrintInvoiceByShortcutAsync];">
     <Window.Resources>
         <local:EnglishInvoiceStatusToPersianConverter x:Key="EnglishInvoiceStatusToPersianConverter"/>
         <!--<local:DateTimeToPersianDateConverter x:Key="DateTimeToPersianDateConverter"/>

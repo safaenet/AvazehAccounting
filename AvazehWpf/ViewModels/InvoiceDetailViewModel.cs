@@ -37,7 +37,6 @@ public class InvoiceDetailViewModel : Screen
         WindowTitle = "فاکتور";
         LoadSettings();
         _ = LoadInvoiceAsync(InvoiceId).ConfigureAwait(false);
-        PrintInvoiceByShortcut.InputGestures.Add(new KeyGesture(Key.P, ModifierKeys.Control));
     }
 
     private void LoadSettings()
@@ -61,7 +60,6 @@ public class InvoiceDetailViewModel : Screen
     private InvoiceItemModel _workItem = new();
     private bool CanUpdateRowFromDB = true; //False when user DoubleClicks on a row.
     private bool EdittingItem = false;
-    public static RoutedCommand PrintInvoiceByShortcut = new();
     public LoggedInUser_DTO User { get; init; }
 
     public int SelectedDiscountType
@@ -447,6 +445,11 @@ public class InvoiceDetailViewModel : Screen
         ContextMenu cm = (window as Window).FindResource("PrintInvoiceCM") as ContextMenu;
         cm.PlacementTarget = sender as Button;
         cm.IsOpen = true;
+    }
+
+    public async Task PrintInvoiceByShortcutAsync()
+    {
+        await PrintInvoiceAsync(11);
     }
 
     public async Task PrintInvoiceAsync(int t)

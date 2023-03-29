@@ -13,7 +13,8 @@
         xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary" xmlns:avazehusercontrollibrarywpf="clr-namespace:AvazehUserControlLibraryWpf;assembly=AvazehUserControlLibraryWpf"
         Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1268" Height="675"
-        cal:Message.Attach="[Event Closing] = [Action ClosingWindowAsync]; [Event PreviewKeyDown] = [Window_PreviewKeyDownAsync($source, $eventArgs)]; [Event Loaded] = [FocusOnProductsCombobox()]">
+        cal:Message.Attach="[Event Closing] = [Action ClosingWindowAsync]; [Event PreviewKeyDown] = [Window_PreviewKeyDownAsync($source, $eventArgs)]; [Event Loaded] = [FocusOnProductsCombobox()];
+        [Gesture Ctrl+P] = [PrintInvoiceByShortcutAsync]; [Gesture Ctrl+D] = [ViewPaymentsAsync]; [Gesture Ctrl+S] = [SaveInvoiceChangesAsync];">
     <Window.Resources>
         <ObjectDataProvider x:Key="DiscountTypeItems" MethodName="GetDiscountTypeItems" ObjectType="{x:Type viewmodels:InvoiceDiscountTypeItems}"/>
         <!--<local:DateTimeToPersianDateConverter x:Key="DateTimeToPersianDateConverter"/>
@@ -61,25 +62,6 @@
                 </MenuItem>
             </ContextMenu>
     </Window.Resources>
-    <Window.CommandBindings>
-        <CommandBinding Command="{Binding PrintInvoiceByShortcut}"
-                        CanExecute="{Binding PrintInvoiceByShortcut_CanExecute}"
-                        Executed="{Binding PrintInvoiceByShortcut_Executed}" />
-    </Window.CommandBindings>
-    <!--<Window.InputBindings>
-        <KeyBinding Modifiers="Control"
-                    Key="P"
-                    Command="{Binding PrintInvoiceByShortcut}"/>
-    </Window.InputBindings>-->
-    <!--<Window.InputBindings>
-        <KeyBinding
-        Command="{x:Static viewmodels:InvoiceDetailViewModel.CommandToExecute}"
-        CommandParameter="ParameterValue"
-        Gesture="Ctrl+A" />
-        --><!--<KeyBinding Modifiers="Control"
-                    Key="N"
-                    Command="{Binding CreateCustomerCommand}"/>--><!--
-    </Window.InputBindings>-->
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3"/>
@@ -212,7 +194,7 @@
                             <materialDesign:PackIcon Kind="CommentAccountOutline" Margin="0,2,5,2"/>
                             <TextBlock MaxWidth="200" TextAlignment="Right" Text="توضیحات" Margin="0,2,0,2"/>
                         </StackPanel>
-                        <local:TextBoxThatDoesntResizeWithText Text="{Binding Invoice.Descriptions, Mode=TwoWay}" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]"
+                        <local:TextBoxThatDoesntResizeWithText Text="{Binding Invoice.Descriptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" cal:Message.Attach="[Event GotFocus] = [Action SetKeyboardLayout]"
                             TextWrapping="Wrap" AcceptsReturn="True" MinHeight="50" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Height="auto" HorizontalContentAlignment="Right" VerticalContentAlignment="Top"/>
                     </DockPanel>
 

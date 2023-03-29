@@ -289,6 +289,11 @@ public class InvoiceListViewModel : Screen
         p.Start();
     }
 
+    public async Task PrintInvoiceByShortcutAsync()
+    {
+        await PrintInvoiceAsync(11);
+    }
+
     public void SetKeyboardLayout()
     {
         if (User.UserSettings.AutoSelectPersianLanguage)

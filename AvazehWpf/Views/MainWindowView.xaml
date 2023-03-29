@@ -12,7 +12,8 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
         xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary"
         Title="{Binding User.GeneralSettings.CompanyName}" FontFamily="Tahoma" Height="545" Width="350"
-        cal:Message.Attach="[Event Closed] = [Window_Closed()]">
+        cal:Message.Attach="[Event Closed] = [Window_Closed()]; [Gesture Ctrl+N] = [AddNewTransactionAsync]; [Gesture Ctrl+M] = [ViewCustomersAsync]; [Gesture Ctrl+K] = [ViewProductsAsync]; [Gesture Ctrl+F] = [AddNewTransactionAsync];
+        [Gesture Ctrl+C] = [ViewChequesAsync]; [Gesture Ctrl+Shift+F] = [ViewTransactionListAsync]; [Gesture Ctrl+Shift+N] = [ViewInvoiceListAsync]; [Gesture Ctrl+Q] = [LogoutAsync];">
     <Window.Resources>
         <local:NumberToVisibilityConverter x:Key="NumberToVisibilityConverter"/>
         <BooleanToVisibilityConverter x:Key="b2v"/>
