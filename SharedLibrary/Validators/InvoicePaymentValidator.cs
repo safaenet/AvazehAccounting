@@ -12,6 +12,6 @@ public class InvoicePaymentValidator : AbstractValidator<InvoicePaymentModel>
             .NotEmpty().WithMessage("{PropertyName} cannot be empty")
             .NotEqual(0).WithMessage("{PropertyName} cannot be Zero");
 
-        RuleFor(x => x.PayAmount).GreaterThanOrEqualTo(0).WithMessage("{PropertyName} must be >= Zero");
+        //RuleFor(x => x.PayAmount).GreaterThanOrEqualTo(0).WithMessage("{PropertyName} must be >= Zero");
     }
 }

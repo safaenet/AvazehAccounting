@@ -16,19 +16,19 @@ public class InvoiceModel
     public ObservableCollection<InvoiceItemModel> Items { get; set; }
     public ObservableCollection<InvoicePaymentModel> Payments { get; set; }
     public DiscountTypes DiscountType { get; set; } = DiscountTypes.Amount;
-    public double DiscountValue { get; set; }
+    public decimal DiscountValue { get; set; }
     public string Descriptions { get; set; }
     public InvoiceLifeStatus LifeStatus { get; set; }
     public int PrevInvoiceId { get; set; }
-    public double PrevInvoiceBalance { get; set; }
-    public double TotalItemsBuySum => Items == null || Items.Count == 0 ? 0 : Items.Sum(i => i.TotalBuyValue);
-    public double TotalItemsSellSum => Items == null || Items.Count == 0 ? 0 : Items.Sum(i => i.TotalSellValue);
-    public double TotalDiscountAmount => DiscountType == DiscountTypes.Percent ? (TotalItemsSellSum * DiscountValue / 100) : DiscountValue;
-    public double TotalInvoiceSum => TotalItemsSellSum - TotalDiscountAmount;
-    public double TotalPayments => Payments == null || Payments.Count == 0 ? 0 : Payments.Sum(i => i.PayAmount);
-    public double TotalInvoiceBalance => TotalInvoiceSum - TotalPayments;
-    public double TotalBalance => TotalInvoiceBalance + PrevInvoiceBalance;
-    public double NetProfit => TotalInvoiceSum - TotalItemsBuySum; //(Prev invoice not included)
-    public double CurrentProfit => NetProfit - TotalInvoiceSum;
+    public decimal PrevInvoiceBalance { get; set; }
+    public decimal TotalItemsBuySum => Items == null || Items.Count == 0 ? 0 : Items.Sum(i => i.TotalBuyValue);
+    public decimal TotalItemsSellSum => Items == null || Items.Count == 0 ? 0 : Items.Sum(i => i.TotalSellValue);
+    public decimal TotalDiscountAmount => DiscountType == DiscountTypes.Percent ? (TotalItemsSellSum * DiscountValue / 100) : DiscountValue;
+    public decimal TotalInvoiceSum => TotalItemsSellSum - TotalDiscountAmount;
+    public decimal TotalPayments => Payments == null || Payments.Count == 0 ? 0 : (decimal)Payments.Sum(i => i.PayAmount);
+    public decimal TotalInvoiceBalance => TotalInvoiceSum - TotalPayments;
+    public decimal TotalBalance => TotalInvoiceBalance + PrevInvoiceBalance;
+    public decimal NetProfit => TotalInvoiceSum - TotalItemsBuySum; //(Prev invoice not included)
+    public decimal CurrentProfit => NetProfit - TotalInvoiceSum;
     public InvoiceFinancialStatus InvoiceFinancialStatus => TotalBalance == 0 ? InvoiceFinancialStatus.Balanced : TotalBalance > 0 ? InvoiceFinancialStatus.Deptor : InvoiceFinancialStatus.Creditor;
 }

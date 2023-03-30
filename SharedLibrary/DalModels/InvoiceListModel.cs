@@ -16,14 +16,14 @@ public class InvoiceListModel
     public string TimeCreated { get; set; }
     public string DateUpdated { get; set; }
     public string TimeUpdated { get; set; }
-    public double TotalInvoiceSum { get; set; }
-    public double TotalPayments { get; set; }
+    public decimal TotalInvoiceSum { get; set; }
+    public decimal TotalPayments { get; set; }
     public InvoiceLifeStatus LifeStatus { get; set; }
     public int? PrevInvoiceId { get; set; }
     public int PrevInvoiceBalance { get; set; }
     public int? FwdInvoiceId { get; set; }
-    public double TotalInvoiceBalance => TotalInvoiceSum - TotalPayments;
-    public double TotalBalance => TotalInvoiceBalance + PrevInvoiceBalance;
+    public decimal TotalInvoiceBalance => TotalInvoiceSum - TotalPayments;
+    public decimal TotalBalance => TotalInvoiceBalance + PrevInvoiceBalance;
     public string InvoiceTitle => string.IsNullOrEmpty(About) ? CustomerFullName : CustomerFullName + " - " + About;
     public string DateTimeCreated => TimeCreated + " " + DateCreated;
     public string DateTimeUpdated => TimeUpdated + " " + DateUpdated;

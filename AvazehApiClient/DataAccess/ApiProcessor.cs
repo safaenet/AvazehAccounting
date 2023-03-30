@@ -296,7 +296,7 @@ public class ApiProcessor : IApiProcessor
         return null;
     }
 
-    public async Task<double> GetValueOrZeroAsync<T>(string Key, params int[] Ids)
+    public async Task<decimal> GetValueOrZeroAsync<T>(string Key, params int[] Ids)
     {
         try
         {
@@ -308,7 +308,7 @@ public class ApiProcessor : IApiProcessor
             }
             var Url = $"{Key}{ids}";
             var response = await ApiClient.GetAsync(Url);
-            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<double>() : 0;
+            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<decimal>() : 0;
         }
         catch (Exception ex)
         {

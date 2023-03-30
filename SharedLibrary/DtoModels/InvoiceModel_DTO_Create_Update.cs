@@ -15,8 +15,8 @@ public class InvoiceModel_DTO_Create_Update
     public DiscountTypes DiscountType { get; set; }
 
     [Display(Name = "Discount Value")]
-    [Range(0, double.MaxValue, ErrorMessage = "Field must be >= Zero")]
-    public double DiscountValue { get; set; }
+    //[Range(0, decimal.MaxValue, ErrorMessage = "Field must be >= Zero")]
+    public decimal DiscountValue { get; set; }
 
     [Display(Name = "Description")]
     public string Descriptions { get; set; }

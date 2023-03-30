@@ -485,7 +485,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         return null;
     }
 
-    public async Task<double> GetTotalOrRestTotalBalanceOfCustomerAsync(int CustomerId, int InvoiceId = 0)
+    public async Task<decimal> GetTotalOrRestTotalBalanceOfCustomerAsync(int CustomerId, int InvoiceId = 0)
     {
         try
         {
@@ -501,7 +501,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
                                  FROM InvoicePayments ips GROUP BY ips.[InvoiceId]) pays ON i.Id=pays.InvoiceId
                               WHERE i.LifeStatus = { (int)InvoiceLifeStatus.Active } AND c.Id = { CustomerId } { InvoiceClause }
                               GROUP BY c.Id";
-            return await DataAccess.ExecuteScalarAsync<double>(sqlQuery);
+            return await DataAccess.ExecuteScalarAsync<decimal>(sqlQuery);
         }
         catch (Exception ex)
         {
@@ -510,12 +510,12 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         return 0;
     }
 
-    public async Task<double> GetPrevBalanceOfInvoiceAsync(int InvoiceId)
+    public async Task<decimal> GetPrevBalanceOfInvoiceAsync(int InvoiceId)
     {
         try
         {
             string sqlQuery = $"SELECT dbo.CalculatePrevInvoiceAmount({InvoiceId});";
-            return await DataAccess.ExecuteScalarAsync<double>(sqlQuery);
+            return await DataAccess.ExecuteScalarAsync<decimal>(sqlQuery);
         }
         catch (Exception ex)
         {

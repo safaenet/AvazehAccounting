@@ -1,5 +1,4 @@
 ﻿using DotNetStandardCalculator;
-using System;
 
 namespace SharedLibrary.DalModels;
 
@@ -21,7 +20,7 @@ public class InvoiceItemModel
     public string Descriptions { get; set; }
     public string DateTimeCreated => TimeCreated + " " + DateCreated;
     public string DateTimeUpdated => TimeUpdated + " " + DateUpdated;
-    public double CountValue => StandardCalculator.CalculateFromString(CountString);
+    public decimal CountValue => StandardCalculator.CalculateFromString(CountString);
     public bool IsCountStringValid => StandardCalculator.IsCalculatable(CountString);
     public string CountPlusUnit
     {
@@ -33,7 +32,7 @@ public class InvoiceItemModel
             return result;
         }
     }
-    public double TotalBuyValue => CountValue * BuyPrice;
-    public double TotalSellValue => CountValue * SellPrice;
-    public double NetProfit => TotalSellValue - TotalBuyValue;
+    public decimal TotalBuyValue => CountValue * BuyPrice;
+    public decimal TotalSellValue => CountValue * SellPrice;
+    public decimal NetProfit => TotalSellValue - TotalBuyValue;
 }

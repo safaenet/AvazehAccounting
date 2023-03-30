@@ -15,13 +15,13 @@ public class PrintInvoiceModel
     public string CustomerDescription = "";
     public string InvoiceDescription = "";
     public string InvoiceFinStatus;
-    public double TotalBalance;
-    public double TotalDiscountAmount;
-    public double TotalItemsSellSum;
-    public double TotalInvoiceSum;
-    public double TotalPayments;
+    public decimal TotalBalance;
+    public decimal TotalDiscountAmount;
+    public decimal TotalItemsSellSum;
+    public decimal TotalInvoiceSum;
+    public decimal TotalPayments;
 
-    public double CustomerPreviousBalance;
+    public decimal CustomerPreviousBalance;
     public int InvoiceType;
     public bool PrintInvoiceDescription;
     public bool PrintCustomerDescription;

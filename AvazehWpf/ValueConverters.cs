@@ -57,13 +57,12 @@ public class AmountToBrushConverterForBackground : IValueConverter
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
         if (value == null) return DependencyProperty.UnsetValue;
-        double input = (double)value;
+        decimal input = (decimal)value;
         return input switch
         {
             < 0 => Brushes.LightBlue,
             0 => Brushes.LightGreen,
-            > 0 => Brushes.LightPink,
-            _ => throw new NotImplementedException(),
+            > 0 => Brushes.LightPink
         };
     }
 
@@ -78,13 +77,12 @@ public class AmountToBrushConverterForBackgroundInverted : IValueConverter
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
         if (value == null) return DependencyProperty.UnsetValue;
-        double input = (double)value;
+        decimal input = (decimal)value;
         return input switch
         {
             < 0 => Brushes.LightPink,
             0 => Brushes.LightGreen,
-            > 0 => Brushes.LightBlue,
-            _ => throw new NotImplementedException(),
+            > 0 => Brushes.LightBlue
         };
     }
 
@@ -99,7 +97,7 @@ public class AmountToBrushConverterForForeground : IValueConverter
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
         if (value == null) return DependencyProperty.UnsetValue;
-        //double input = (double)value;
+        //decimal input = (decimal)value;
         return Brushes.Black;
     }
 
@@ -337,7 +335,7 @@ public class AmountToColorConverter : Freezable, IValueConverter
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value == null) return DependencyProperty.UnsetValue;
-        switch ((double)value)
+        switch ((decimal)value)
         {
             case 0:
                 if (string.IsNullOrEmpty(BalancedColor)) return DependencyProperty.UnsetValue; else return new SolidColorBrush(BalancedColor.ToColor());

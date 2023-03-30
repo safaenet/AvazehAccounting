@@ -72,7 +72,7 @@ public class InvoicesController : ControllerBase
     }
 
     [HttpGet("CustomerBalance/{CustomerId}/{InvoiceId}"), Authorize]
-    public async Task<ActionResult<double>> GetCustomerBalanceAsync(int CustomerId, int InvoiceId = 0)
+    public async Task<ActionResult<decimal>> GetCustomerBalanceAsync(int CustomerId, int InvoiceId = 0)
     {
         var result = await Processor.GetTotalOrRestTotalBalanceOfCustomerAsync(CustomerId, InvoiceId);
         return result;
@@ -107,7 +107,7 @@ public class InvoicesController : ControllerBase
     }
 
     [HttpGet("PrevBalance/{InvoiceId}"), Authorize]
-    public async Task<ActionResult<double>> GetPrevBalanceAsync(int InvoiceId)
+    public async Task<ActionResult<decimal>> GetPrevBalanceAsync(int InvoiceId)
     {
         var result = await Processor.GetPrevBalanceOfInvoiceAsync(InvoiceId);
         return result;

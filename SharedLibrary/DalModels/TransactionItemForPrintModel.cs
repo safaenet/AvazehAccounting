@@ -8,7 +8,7 @@ public class TransactionItemForPrintModel
     public string Title { get; set; }
     public long Amount { get; set; }
     public string CountString { get; set; }
-    public double TotalPrice { get; set; }
+    public decimal TotalPrice { get; set; }
     public string DateCreated { get; set; }
     public string TimeCreated { get; set; }
     public string DateUpdated { get; set; }

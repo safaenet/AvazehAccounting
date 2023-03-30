@@ -91,8 +91,8 @@ public class InvoiceDetailViewModel : Screen
     public bool CanSaveInvoiceChanges { get; set; } = true;
     public InvoiceItemModel SelectedItem { get; set; }
     public InvoiceItemModel WorkItem { get => _workItem; set { _workItem = value; NotifyOfPropertyChange(() => WorkItem); } }
-    public double CustomerPreviousTotalBalance { get => customerPreviousTotalBalance; private set { customerPreviousTotalBalance = value; NotifyOfPropertyChange(() => CustomerPreviousTotalBalance); } }
-    public double CustomerTotalBalancePlusThis { get => customerTotalBalancePlusThis; set { customerTotalBalancePlusThis = value; NotifyOfPropertyChange(() => CustomerTotalBalancePlusThis); } }
+    public decimal CustomerPreviousTotalBalance { get => customerPreviousTotalBalance; private set { customerPreviousTotalBalance = value; NotifyOfPropertyChange(() => CustomerPreviousTotalBalance); } }
+    public decimal CustomerTotalBalancePlusThis { get => customerTotalBalancePlusThis; set { customerTotalBalancePlusThis = value; NotifyOfPropertyChange(() => CustomerTotalBalancePlusThis); } }
     public ObservableCollection<ItemsForComboBox> ProductItemsForComboBox { get => productItems; set { productItems = value; NotifyOfPropertyChange(() => ProductItemsForComboBox); } }
     public ObservableCollection<ProductUnitModel> ProductUnits { get => productUnits; set { productUnits = value; NotifyOfPropertyChange(() => ProductUnits); } }
     public ObservableCollection<RecentSellPriceModel> RecentSellPrices { get => recentSellPrices; set { recentSellPrices = value; NotifyOfPropertyChange(() => RecentSellPrices); } }
@@ -111,8 +111,8 @@ public class InvoiceDetailViewModel : Screen
     private ItemsForComboBox _selectedProductItem;
     private bool isSellPriceDropDownOpen;
     private string productInput;
-    private double customerPreviousTotalBalance;
-    private double customerTotalBalancePlusThis;
+    private decimal customerPreviousTotalBalance;
+    private decimal customerTotalBalancePlusThis;
     private bool isProductInputDropDownOpen;
     private string windowTitle;
     private string phoneNumberText;

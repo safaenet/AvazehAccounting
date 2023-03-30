@@ -138,8 +138,8 @@ public class TransactionCollectionManagerAsync : ITransactionCollectionManager
         return collection is null ? null : collection;
     }
 
-    public async Task<double> GetCustomerTotalBalanceById(int CustomerId, int InvoiceId = 0)
+    public async Task<decimal> GetCustomerTotalBalanceById(int CustomerId, int InvoiceId = 0)
     {
-        return (double)await ApiProcessor.GetValueOrNullAsync<double>(Key + "/CustomerBalance", CustomerId, InvoiceId);
+        return (decimal)await ApiProcessor.GetValueOrNullAsync<decimal>(Key + "/CustomerBalance", CustomerId, InvoiceId);
     }
 }

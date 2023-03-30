@@ -14,8 +14,8 @@ public interface IInvoiceProcessorBase<TModel> : IProcessorBase<TModel>
     ValidationResult ValidateItem(InvoicePaymentModel item);
     Task<int> DeleteInvoiceItemFromDatabaseAsync(int ItemId);
     Task<IEnumerable<ItemsForComboBox>> GetProductItemsAsync(string SearchText);
-    Task<double> GetTotalOrRestTotalBalanceOfCustomerAsync(int CustomerId, int InvoiceId = 0);
-    Task<double> GetPrevBalanceOfInvoiceAsync(int InvoiceId);
+    Task<decimal> GetTotalOrRestTotalBalanceOfCustomerAsync(int CustomerId, int InvoiceId = 0);
+    Task<decimal> GetPrevBalanceOfInvoiceAsync(int InvoiceId);
     Task<InvoiceItemModel> GetInvoiceItemFromDatabaseAsync(int Id);
     Task<InvoicePaymentModel> GetInvoicePaymentFromDatabaseAsync(int Id);
     Task<int> InsertInvoiceItemToDatabaseAsync(InvoiceItemModel item);

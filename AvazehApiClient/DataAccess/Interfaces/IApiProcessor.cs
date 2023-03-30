@@ -25,5 +25,5 @@ public interface IApiProcessor
     Task<U> UpdateItemAsync<T, U>(string Key, int Id, T model) where U : class;
     Task<bool> DeleteItemAsync(string Key, int Id);
     Task<T?> GetValueOrNullAsync<T>(string Key, params int[] Ids) where T : struct;
-    Task<double> GetValueOrZeroAsync<T>(string Key, params int[] Ids);
+    Task<decimal> GetValueOrZeroAsync<T>(string Key, params int[] Ids);
 }

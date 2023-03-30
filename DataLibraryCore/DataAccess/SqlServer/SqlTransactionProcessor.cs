@@ -469,12 +469,12 @@ public class SqlTransactionProcessor : ITransactionProcessor
         return null;
     }
 
-    public async Task<double> LoadTotalPositive(int Id)
+    public async Task<decimal> LoadTotalPositive(int Id)
     {
         try
         {
             var sql = $"SELECT ISNULL(SUM([Amount]*[CountValue]), 0) FROM TransactionItems WHERE ([Amount]*[CountValue]) > 0 AND TransactionId = { Id }";
-            return await DataAccess.ExecuteScalarAsync<double>(sql);
+            return await DataAccess.ExecuteScalarAsync<decimal>(sql);
         }
         catch (Exception ex)
         {
@@ -483,12 +483,12 @@ public class SqlTransactionProcessor : ITransactionProcessor
         return 0;
     }
 
-    public async Task<double> LoadTotalNegative(int Id)
+    public async Task<decimal> LoadTotalNegative(int Id)
     {
         try
         {
             var sql = $"SELECT ISNULL(SUM([Amount]*[CountValue]), 0) FROM TransactionItems WHERE ([Amount]*[CountValue]) < 0 AND TransactionId = { Id }";
-            return await DataAccess.ExecuteScalarAsync<double>(sql);
+            return await DataAccess.ExecuteScalarAsync<decimal>(sql);
         }
         catch (Exception ex)
         {

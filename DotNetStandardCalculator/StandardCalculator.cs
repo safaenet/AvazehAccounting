@@ -7,7 +7,7 @@ namespace DotNetStandardCalculator
 {
     public static class StandardCalculator
     {
-        public static double CalculateFromString(string calculateFrom)
+        public static decimal CalculateFromString(string calculateFrom)
         {
             try
             {
@@ -42,21 +42,21 @@ namespace DotNetStandardCalculator
                 var rpn = PrepareString(calculateFrom);
 
                 if (rpn.Length == 0) return false;
-                if (rpn.Length == 1) return double.TryParse(rpn[0], NumberStyles.Any, CultureInfo.InvariantCulture, out _);
-                foreach (var token in rpn) if (!double.TryParse(token, NumberStyles.Any, CultureInfo.InvariantCulture, out _) && token != OPERATOR_POW && token != OPERATOR_MULTIPLY && token != OPERATOR_ADD && token != OPERATOR_DIVIDE && token != OPERATOR_SUBTRACT) return false;
+                if (rpn.Length == 1) return decimal.TryParse(rpn[0], NumberStyles.Any, CultureInfo.InvariantCulture, out _);
+                foreach (var token in rpn) if (!decimal.TryParse(token, NumberStyles.Any, CultureInfo.InvariantCulture, out _) && token != OPERATOR_POW && token != OPERATOR_MULTIPLY && token != OPERATOR_ADD && token != OPERATOR_DIVIDE && token != OPERATOR_SUBTRACT) return false;
                 return true;
             }
             catch { return false; }
         }
 
-        public static double Calculate(string[] rpnSum)
+        public static decimal Calculate(string[] rpnSum)
         {
             if (rpnSum.Length == 0)
                 throw new Exception("");
 
             if (rpnSum.Length == 1)
             {
-                if (double.TryParse(rpnSum[0], NumberStyles.Any, CultureInfo.InvariantCulture, out double parsedValue))
+                if (decimal.TryParse(rpnSum[0], NumberStyles.Any, CultureInfo.InvariantCulture, out decimal parsedValue))
                 {
                     return parsedValue;
                 }
@@ -66,11 +66,11 @@ namespace DotNetStandardCalculator
                 }
             }
 
-            var stack = new Stack<double>();
+            var stack = new Stack<decimal>();
             foreach(var token in rpnSum)
             {
-                var workingNumber = 0D;
-                if (double.TryParse(token, NumberStyles.Any, CultureInfo.InvariantCulture, out double parsed))
+                var workingNumber = 0M;
+                if (decimal.TryParse(token, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal parsed))
                     stack.Push(parsed);
                 else
                 {
@@ -78,7 +78,7 @@ namespace DotNetStandardCalculator
                     {
                         case OPERATOR_POW:
                             workingNumber = stack.Pop();
-                            stack.Push(Math.Pow(stack.Pop(), workingNumber));
+                            stack.Push((decimal)Math.Pow((double)stack.Pop(), (double)workingNumber));
                             break;
                         case OPERATOR_MULTIPLY:
                             stack.Push(stack.Pop() * stack.Pop());

@@ -21,6 +21,6 @@ public interface ITransactionProcessorBase<TModel> : IProcessorBase<TModel>
     Task<IEnumerable<TransactionListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy, OrderType Order);
     Task<IEnumerable<TransactionItemModel>> LoadManyTransactionItemsAsync(int OffSet, int FetcheSize, string WhereClause, int Id, string OrderBy, OrderType Order);
     Task<int> UpdateTransactionItemInDatabaseAsync(TransactionItemModel item);
-    Task<double> LoadTotalPositive(int Id);
-    Task<double> LoadTotalNegative(int Id);
+    Task<decimal> LoadTotalPositive(int Id);
+    Task<decimal> LoadTotalNegative(int Id);
 }

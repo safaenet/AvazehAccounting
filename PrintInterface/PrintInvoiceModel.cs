@@ -26,12 +26,12 @@ namespace PrintInterface
         private string invoiceDescription;
         private string customerDescription;
         
-        private double totalItemsSellSum;
-        private double totalDiscountAmount;
-        private double totalInvoiceSum;
-        private double totalPayments;
-        private double customerPreviousBalance;
-        private double totalBalance;
+        private decimal totalItemsSellSum;
+        private decimal totalDiscountAmount;
+        private decimal totalInvoiceSum;
+        private decimal totalPayments;
+        private decimal customerPreviousBalance;
+        private decimal totalBalance;
         private string invoiceFinStatus;
         private int invoiceType;
         private PrintSettingsModel printSettings;
@@ -48,12 +48,12 @@ namespace PrintInterface
         public bool PrintUserDescription { get => printUserDescription; set => printUserDescription = value; }
         public string InvoiceDescription { get => invoiceDescription; set => invoiceDescription = value; }
         public string CustomerDescription { get => customerDescription; set => customerDescription = value; }
-        public double TotalItemsSellSum { get => totalItemsSellSum; set => totalItemsSellSum = value; }
-        public double TotalDiscountAmount { get => totalDiscountAmount; set => totalDiscountAmount = value; }
-        public double TotalInvoiceSum { get => totalInvoiceSum; set => totalInvoiceSum = value; }
-        public double TotalPayments { get => totalPayments; set => totalPayments = value; }
-        public double CustomerPreviousBalance { get => customerPreviousBalance; set => customerPreviousBalance = value; }
-        public double TotalBalance { get => totalBalance; set => totalBalance = value; }
+        public decimal TotalItemsSellSum { get => totalItemsSellSum; set => totalItemsSellSum = value; }
+        public decimal TotalDiscountAmount { get => totalDiscountAmount; set => totalDiscountAmount = value; }
+        public decimal TotalInvoiceSum { get => totalInvoiceSum; set => totalInvoiceSum = value; }
+        public decimal TotalPayments { get => totalPayments; set => totalPayments = value; }
+        public decimal CustomerPreviousBalance { get => customerPreviousBalance; set => customerPreviousBalance = value; }
+        public decimal TotalBalance { get => totalBalance; set => totalBalance = value; }
         public string InvoiceFinStatus { get => invoiceFinStatus; set => invoiceFinStatus = value; }
         public int InvoiceType { get => invoiceType; set => invoiceType = value; }
         public bool PrintCustomerPhoneNumber { get => printCustomerPhoneNumber; set => printCustomerPhoneNumber = value; }

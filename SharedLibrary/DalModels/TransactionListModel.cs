@@ -15,10 +15,10 @@ public class TransactionListModel
     public string DateUpdated { get; set; }
     public string TimeUpdated { get; set; }
     public string Descriptions { get; set; }
-    public double TotalPositiveItemsSum { get; set; }
-    public double TotalNegativeItemsSum { get; set; }
+    public decimal TotalPositiveItemsSum { get; set; }
+    public decimal TotalNegativeItemsSum { get; set; }
     public string DateTimeCreated => TimeCreated + " " + DateCreated;
     public string DateTimeUpdated => TimeUpdated + " " + DateUpdated;
-    public double TotalBalance => TotalPositiveItemsSum + TotalNegativeItemsSum;
+    public decimal TotalBalance => TotalPositiveItemsSum + TotalNegativeItemsSum;
     public TransactionFinancialStatus TransactionFinancialStatus => TotalBalance == 0 ? TransactionFinancialStatus.Balanced : TotalBalance > 0 ? TransactionFinancialStatus.Positive : TransactionFinancialStatus.Negative;
 }

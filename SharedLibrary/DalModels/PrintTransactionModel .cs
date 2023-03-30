@@ -11,9 +11,9 @@ public class PrintTransactionModel
     public string TransactionDateCreated;
     public string TransactionDescription = "";
     public string TransactionFinStatus;
-    public double TotalBalance;
-    public double TotalPositiveItemsSum;
-    public double TotalNegativeItemsSum;
+    public decimal TotalBalance;
+    public decimal TotalPositiveItemsSum;
+    public decimal TotalNegativeItemsSum;
 
     public int TransactionType;
     public bool PrintTransactionDescription;

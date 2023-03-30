@@ -27,7 +27,7 @@ public class InvoicePaymentsViewModel : ViewAware
         _ = ReloadCustomerBalanceAsync().ConfigureAwait(true);
     }
     private InvoiceModel _invoice;
-    public double CustomerTotalBalance { get => customerTotalBalance; private set { customerTotalBalance = value; NotifyOfPropertyChange(() => CustomerTotalBalance); } }
+    public decimal CustomerTotalBalance { get => customerTotalBalance; private set { customerTotalBalance = value; NotifyOfPropertyChange(() => CustomerTotalBalance); } }
     private readonly IInvoiceCollectionManager InvoiceCollectionManager;
     private readonly IInvoiceDetailManager InvoiceDetailManager;
     public LoggedInUser_DTO User { get; init; }
@@ -37,7 +37,7 @@ public class InvoicePaymentsViewModel : ViewAware
     private bool EdittingItem = false;
     private InvoicePaymentModel _workItem = new();
     private InvoicePaymentModel selectedPaymentItem;
-    private double customerTotalBalance;
+    private decimal customerTotalBalance;
 
     public InvoicePaymentModel SelectedPaymentItem
     {
@@ -143,7 +143,7 @@ public class InvoicePaymentsViewModel : ViewAware
     public async Task ReloadCustomerBalanceAsync()
     {
         if (Invoice is null) return;
-        CustomerTotalBalance = await InvoiceCollectionManager.GetCustomerTotalBalanceById(Invoice.Customer.Id);
+        CustomerTotalBalance = await InvoiceCollectionManager.GetInvoicePrevTotalBalanceById(Invoice.Id);
     }
 
     public void ReloadInvoiceBalance()

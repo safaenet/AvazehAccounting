@@ -10,6 +10,6 @@ public class InvoicePaymentModel
     public string TimeCreated { get; set; }
     public string DateUpdated { get; set; }
     public string TimeUpdated { get; set; }
-    public double PayAmount { get; set; }
+    public decimal PayAmount { get; set; }
     public string Descriptions { get; set; }
 }
