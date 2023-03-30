@@ -111,7 +111,7 @@ public class InvoiceListViewModel : Screen
             NotifyOfPropertyChange(() => SearchText);
         }
     }
-    public int SelectedFinStatus { get; set; } = 1;
+    public int SelectedFinStatus { get; set; } = 3;
     public int SelectedLifeStatus { get; set; }
 
     private bool canAddNewInvoice;
@@ -240,13 +240,14 @@ public class InvoiceListViewModel : Screen
     public async Task ShowCustomerInvoicesAsync()
     {
         if (SelectedInvoice is null) return;
-        SearchText = SelectedInvoice.CustomerFullName;
+        ICM.CustomerIdToSearch = SelectedInvoice.CustomerId;
         await SearchAsync();
     }
 
     public async Task ShowAllInvoicesAsync()
     {
-        SearchText = "";
+        SearchText = string.Empty;
+        ICM.CustomerIdToSearch = -1;
         await SearchAsync();
     }
 

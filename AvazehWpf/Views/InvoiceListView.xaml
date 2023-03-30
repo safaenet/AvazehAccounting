@@ -186,7 +186,7 @@
                                 <materialDesign:PackIcon Kind="Payment"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="نمایش همه فاکتورها با این نام" cal:Message.Attach="[Event Click] = [Action ShowCustomerInvoicesAsync]">
+                        <MenuItem Header="فقط فاکتورهای این مشتری" cal:Message.Attach="[Event Click] = [Action ShowCustomerInvoicesAsync]">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon Kind="SearchPlusOutline"/>
                             </MenuItem.Icon>
