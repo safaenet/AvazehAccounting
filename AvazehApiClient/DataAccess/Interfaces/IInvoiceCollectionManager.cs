@@ -12,6 +12,7 @@ namespace AvazehApiClient.DataAccess.Interfaces;
 public interface IInvoiceCollectionManager
 {
     IApiProcessor ApiProcessor { get; init; }
+    SqlQuerySearchMode SearchMode { get; set; }
     public int PageSize { get; set; }
     public int InvoiceIdToSearch { get; set; }
     public int CustomerIdToSearch { get; set; }

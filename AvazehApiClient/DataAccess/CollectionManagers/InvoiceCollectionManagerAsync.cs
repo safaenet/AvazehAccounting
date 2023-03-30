@@ -87,7 +87,7 @@ public class InvoiceCollectionManagerAsync : IInvoiceCollectionManager
     public async Task<int> LoadItemsAsync(SqlQuerySearchMode SearchMode, int StartId)
     {
         var collection = await ApiProcessor.GetInvoiceCollectionAsync<List<InvoiceListModel>>(Key, PageSize, InvoiceIdToSearch, CustomerIdToSearch, InvoiceDateToSearch, SearchValue, LifeStatus, FinStatus, SearchMode, orderType, StartId);
-        Items = collection?.AsObservable();
+        if (collection != null && collection.Any()) Items = collection?.AsObservable();
         return collection == null ? 0 : collection.Count;
     }
 

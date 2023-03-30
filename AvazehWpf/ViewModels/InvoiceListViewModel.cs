@@ -34,6 +34,7 @@ public class InvoiceListViewModel : Screen
         ICM.PageSize = User.UserSettings.InvoicePageSize;
         ICM.orderType = User.UserSettings.InvoiceListQueryOrderType;
         ICM.LifeStatus = InvoiceLifeStatus.Active;
+        ICM.SearchMode = SqlQuerySearchMode.Backward;
         ICM.FinStatus = null;
         
         QueryDate = new System.Globalization.PersianCalendar().GetYear(DateTime.Now).ToString() + "/__/__";
