@@ -1,5 +1,5 @@
-﻿CREATE FUNCTION dbo.GetDiscountedInvoiceSum(@disType tinyint, @disVal float, @amountVal float)
-                            RETURNS FLOAT
+﻿CREATE FUNCTION [dbo].[CalculateDiscountedInvoiceSum](@disType tinyint, @disVal decimal, @amountVal decimal)
+                            RETURNS DECIMAL
                             AS
                             BEGIN
                             IF @disType IS NULL SET @disType = 0
@@ -10,3 +10,4 @@
                             		WHEN @disType = 1 THEN @amountVal - @disVal
                             		END
                             END
+GO

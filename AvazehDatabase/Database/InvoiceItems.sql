@@ -13,7 +13,10 @@
     [TimeUpdated] CHAR(8) NULL, 
     [Delivered] BIT NOT NULL , 
     [Descriptions] NVARCHAR(50) NULL,
-    [ProductUnitId] INT NULL
+    [ProductUnitId] INT NULL,
+	[BuySum]  AS ([BuyPrice]*[CountValue]) PERSISTED,
+	[SellSum]  AS ([SellPrice]*[CountValue]) PERSISTED,
+	[NetProfit]  AS (([SellPrice]-[BuyPrice])*[CountValue]) PERSISTED
 
     CONSTRAINT [FK_Invoices_InvoiceItems] FOREIGN KEY([InvoiceId]) REFERENCES [Invoices] ([Id]) ON DELETE CASCADE
     CONSTRAINT [FK_Invoices_Products] FOREIGN KEY([ProductId]) REFERENCES [Products] ([Id]) ON DELETE CASCADE
