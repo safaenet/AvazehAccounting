@@ -1054,3 +1054,18 @@ System.Data.SqlClient.SqlException (0x80131904): Timeout expired.  The timeout p
    at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.LoadDataAsync[T,U](String sql, U param, CommandType CType) in D:\Users\Safad\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 52
 ClientConnectionId:96061bec-dbdc-4768-8180-bdb5cca881a6
 Error Number:-2,State:0,Class:11
+2023-03-31 15:24:50.150 +03:30 [ERR] Error in DataLibraryCore.DataAccess.SqlServer.SqlDataAccess+<LoadDataAsync>d__3`2[T,U]
+System.Data.SqlClient.SqlException (0x80131904): Timeout expired.  The timeout period elapsed prior to completion of the operation or the server is not responding.
+ ---> System.ComponentModel.Win32Exception (258): The wait operation timed out.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryAsync[T](IDbConnection cnn, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 418
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.LoadDataAsync[T,U](String sql, U param, CommandType CType) in D:\Users\Safad\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 52
+ClientConnectionId:dc198735-f1ec-4b3a-afce-96625efc77e6
+Error Number:-2,State:0,Class:11

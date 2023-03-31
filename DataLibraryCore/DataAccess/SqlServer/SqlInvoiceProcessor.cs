@@ -458,7 +458,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
             dp.Add("@SearchMode", SearchMode);
             dp.Add("@OrderType", orderType);
             dp.Add("@StartId", StartId);
-            var result = await DataAccess.LoadDataAsync<InvoiceListModel, DynamicParameters>("LoadInvoiceListFromView", dp, CommandType.StoredProcedure);
+            var result = await DataAccess.LoadDataAsync<InvoiceListModel, DynamicParameters>("LoadInvoiceList", dp, CommandType.StoredProcedure);
             return result;
         }
         catch (Exception ex)
