@@ -67,6 +67,14 @@ public class PrevInvoiceListViewModel : Screen
         }
     }
 
+    private bool uiEnabled = true;
+
+    public bool UIEnabled
+    {
+        get { return uiEnabled; }
+        set { uiEnabled = value; NotifyOfPropertyChange(() => UIEnabled); }
+    }
+
     private string queryDate;
 
     public string QueryDate
@@ -90,8 +98,10 @@ public class PrevInvoiceListViewModel : Screen
 
     public async Task SearchAsync()
     {
+        UIEnabled = false;
         var items = await ICM.LoadPrevInvoices(InvoiceId, QueryDate, SearchText, OrderType.DESC);
         Invoices = items;
+        UIEnabled = true;
         NotifyOfPropertyChange(() => Invoices);
     }
 

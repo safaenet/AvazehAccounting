@@ -100,7 +100,7 @@
             <DataGrid cal:Message.Attach="[Event MouseDoubleClick] = [Action SelectInvoiceAndCloseAsync]; [Event PreviewKeyDown] = [Action Dg_PreviewKeyDownAsync($source, $eventArgs)]" viewmodels:DataGridBehavior.DisplayRowNumber="True"
                       Grid.Row="1" HorizontalGridLinesBrush="Silver" VerticalGridLinesBrush="Silver" ItemsSource="{Binding Invoices}" RowHeight="25" FontSize="{Binding User.UserSettings.DataGridFontSize}"
                       SelectedItem="{Binding SelectedInvoice}" FlowDirection="RightToLeft" AutoGenerateColumns="False" Background="Transparent" CanUserAddRows="False" CanUserDeleteRows="False"
-                      CellStyle="{StaticResource Body_Content_DataGrid_Centering}">
+                      CellStyle="{StaticResource Body_Content_DataGrid_Centering}" IsEnabled="{Binding UIEnabled}">
                 <!--<DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="انتخاب" cal:Message.Attach="SelectInvoiceAndCloseAsync">
@@ -167,7 +167,7 @@
                 </DataGrid.Columns>
             </DataGrid>
             <Grid Grid.Row="2">
-                <Button x:Name="SelectInvoiceAndCloseAsync" Margin="0,3,3,0">
+                <Button x:Name="SelectInvoiceAndCloseAsync" Margin="0,3,3,0" IsEnabled="{Binding UIEnabled}">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Attachment" Margin="3"/>
                         <TextBlock Text="انتخاب" VerticalAlignment="Center" Margin="5,0,15,0"/>

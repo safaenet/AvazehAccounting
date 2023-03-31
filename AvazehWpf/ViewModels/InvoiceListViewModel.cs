@@ -61,6 +61,15 @@ public class InvoiceListViewModel : Screen
     private readonly SingletonClass Singleton;
     private string invoiceIdToSearch;
 
+    private bool uiEnabled = true;
+
+    public bool UIEnabled
+    {
+        get { return uiEnabled; }
+        set { uiEnabled = value; NotifyOfPropertyChange(() => UIEnabled); }
+    }
+
+
     public string InvoiceIdToSearch
     {
         get { return invoiceIdToSearch; }
@@ -151,19 +160,25 @@ public class InvoiceListViewModel : Screen
 
     public async Task PreviousPageAsync()
     {
+        UIEnabled = false;
         await ICM.LoadPreviousPageAsync();
+        UIEnabled = true;
         NotifyOfPropertyChange(() => Invoices);
     }
 
     public async Task NextPageAsync()
     {
+        UIEnabled = false;
         await ICM.LoadNextPageAsync();
+        UIEnabled = true;
         NotifyOfPropertyChange(() => Invoices);
     }
 
     public async Task RefreshPageAsync()
     {
+        UIEnabled = false;
         await ICM.RefreshPage();
+        UIEnabled = true;
         NotifyOfPropertyChange(() => Invoices);
     }
 
@@ -185,7 +200,9 @@ public class InvoiceListViewModel : Screen
         int.TryParse(InvoiceIdToSearch, out var invId);
         ICM.InvoiceIdToSearch = invId <= 0 ? -1 : invId;
         ICM.InvoiceDateToSearch = QueryDate;
+        UIEnabled = false;
         await ICM.LoadFirstPageAsync();
+        UIEnabled = true;
         NotifyOfPropertyChange(() => Invoices);
     }
 

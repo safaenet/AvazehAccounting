@@ -93,7 +93,9 @@ public class InvoiceCollectionManagerAsync : IInvoiceCollectionManager
 
     public async Task<int> RefreshPage()
     {
-        return await LoadFirstPageAsync(); //To be improved.
+        if (Items == null || Items.Count == 0) return await LoadFirstPageAsync();
+        var result = await LoadItemsAsync(SqlQuerySearchMode.Backward, Items.Max(x => x.Id) + 1);
+        return result;
     }
 
     public async Task<int> LoadFirstPageAsync()
