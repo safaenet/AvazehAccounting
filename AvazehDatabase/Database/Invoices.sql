@@ -9,7 +9,7 @@
     [DiscountType] TINYINT NULL DEFAULT 0, 
     [DiscountValue] DECIMAL NULL DEFAULT 0, 
     [About] NVARCHAR(50) NULL,
-    [Descriptions] NTEXT NULL, 
+    [Descriptions] NVARCHAR(MAX) NULL, 
     [LifeStatus] TINYINT NOT NULL,
     [PrevInvoiceId] INT NULL
  --   [BuySum] AS (dbo.CalculateInvoiceBuySum([Id])) PERSISTED,

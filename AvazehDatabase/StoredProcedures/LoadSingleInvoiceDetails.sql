@@ -14,7 +14,7 @@ BEGIN
 		[TimeUpdated] [char] (8),
 		[DiscountType] [tinyint],
 		[DiscountValue] [float],
-		[Descriptions] [ntext],
+		[Descriptions] [NVARCHAR](MAX),
 		[LifeStatus] [tinyint],
 		[PrevInvoiceId] [int],
 		[PrevInvoiceBalance] [float],
@@ -24,9 +24,9 @@ BEGIN
 		[LastName] [nvarchar](50),
 		[CompanyName] [nvarchar](50),
 		[EmailAddress] [nvarchar](50),
-		[PostAddress] [ntext],
+		[PostAddress] [NVARCHAR](MAX),
 		[DateJoined] [char](10),
-		[CustDescriptions] [ntext]
+		[CustDescriptions] [NVARCHAR](MAX)
 	)
 		INSERT INTO @invoice
 		SELECT i.Id, i.CustomerId, i.About, i.DateCreated, i.TimeCreated, i.DateUpdated, i.TimeUpdated, i.DiscountType, i.DiscountValue, i.Descriptions, i.LifeStatus, i.PrevInvoiceId, [dbo].[CalculatePrevInvoiceAmount](@InvoiceId) AS [PrevInvoiceBalance],

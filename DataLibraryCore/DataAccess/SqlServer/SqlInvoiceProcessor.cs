@@ -140,10 +140,10 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
 
                       {mode} CAST(sp.[TotalSellValue] AS varchar) LIKE { criteria }
                       {mode} CAST(pays.[TotalPayments] AS varchar) LIKE { criteria }
-                      {mode} CAST(ISNULL(dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue), 0) - ISNULL(pays.[TotalPayments], 0) AS varchar) LIKE { criteria }
-                      {mode} CAST(ISNULL(dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue), 0) AS varchar) LIKE { criteria } )
+                      {mode} CAST(ISNULL(dbo.CalculateDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue), 0) - ISNULL(pays.[TotalPayments], 0) AS varchar) LIKE { criteria }
+                      {mode} CAST(ISNULL(dbo.CalculateDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue), 0) AS varchar) LIKE { criteria } )
                       {(LifeStatus == null ? "" : $" AND i.[LifeStatus] = { (int)LifeStatus } ")}
-                      {(FinStatus == null ? "" : $" AND ISNULL(dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue), 0) - ISNULL(pays.TotalPayments, 0) { finStatusOperand } 0 ")}";
+                      {(FinStatus == null ? "" : $" AND ISNULL(dbo.CalculateDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue), 0) - ISNULL(pays.TotalPayments, 0) { finStatusOperand } 0 ")}";
         }
         catch (Exception ex)
         {
@@ -458,7 +458,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
             dp.Add("@SearchMode", SearchMode);
             dp.Add("@OrderType", orderType);
             dp.Add("@StartId", StartId);
-            var result = await DataAccess.LoadDataAsync<InvoiceListModel, DynamicParameters>("LoadInvoiceList", dp, CommandType.StoredProcedure);
+            var result = await DataAccess.LoadDataAsync<InvoiceListModel, DynamicParameters>("LoadInvoiceListFromView", dp, CommandType.StoredProcedure);
             return result;
         }
         catch (Exception ex)
@@ -491,7 +491,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         {
             var InvoiceClause = InvoiceId == 0 ? "" : $"AND i.[Id] <> { InvoiceId }";
             var sqlQuery = @$"SET NOCOUNT ON
-                              SELECT SUM(dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) - ISNULL(pays.TotalPayments, 0))
+                              SELECT SUM(dbo.CalculateDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) - ISNULL(pays.TotalPayments, 0))
                               FROM Invoices i LEFT JOIN Customers c ON i.CustomerId = c.Id
                               
                               LEFT JOIN (SELECT SUM(ii.[CountValue] * ii.[SellPrice]) AS TotalSellValue, ii.[InvoiceId]
@@ -557,7 +557,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
             dp.Add("@Date", InvoiceDate);
             dp.Add("@SearchValue", SearchValue);
             dp.Add("@OrderType", orderType);
-            var result = await DataAccess.LoadDataAsync<InvoiceListModel, DynamicParameters>("LoadCustomerNonBalancedList", dp, CommandType.StoredProcedure);
+            var result = await DataAccess.LoadDataAsync<InvoiceListModel, DynamicParameters>("LoadCustomerNonBalancedListFromView", dp, CommandType.StoredProcedure);
             return result.ToList();
         }
         catch (Exception ex)

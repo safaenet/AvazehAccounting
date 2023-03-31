@@ -24,7 +24,7 @@ BEGIN
 		[TimeUpdated] [char] (8),
 		[TotalInvoiceSum] [decimal],
 		[TotalPayments] [decimal],
-		[Descriptions] [ntext],
+		[Descriptions] [NVARCHAR(MAX)],
 		[LifeStatus] [tinyint],
 		[PrevInvoiceId] [int],
 		[PrevInvoiceBalance] [decimal],
@@ -54,7 +54,7 @@ BEGIN
 
 	INSERT INTO @ResultTable
 		SELECT TOP (@FetchSize) i.Id, i.CustomerId, ISNULL(c.FirstName, '') + ' ' + ISNULL(c.LastName, '') CustomerFullName, i.About, i.DateCreated, i.TimeCreated, i.DateUpdated, i.TimeUpdated, 
-			dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) AS TotalInvoiceSum, ISNULL(pays.TotalPayments, 0) TotalPayments, i.Descriptions, i.LifeStatus, i.PrevInvoiceId,
+			dbo.CalculateDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) AS TotalInvoiceSum, ISNULL(pays.TotalPayments, 0) TotalPayments, i.Descriptions, i.LifeStatus, i.PrevInvoiceId,
 			prevs.PrevInvoiceBalance, fwds.FwdInvoiceId
 			FROM Invoices i
 			LEFT JOIN Customers c ON i.CustomerId = c.Id
@@ -71,19 +71,19 @@ BEGIN
 					(ISNULL(c.FirstName, '') + ' ' + ISNULL(c.LastName, '') LIKE @SearchValue OR
 					i.About LIKE @SearchValue OR
 					[TimeCreated] LIKE @SearchValue OR [TimeUpdated] LIKE @SearchValue OR
-					dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) LIKE @SearchValue OR
+					dbo.CalculateDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) LIKE @SearchValue OR
 					ISNULL(pays.TotalPayments, 0) LIKE @SearchValue OR
-					dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) - ISNULL(pays.TotalPayments, 0) LIKE @SearchValue OR
-					dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) - ISNULL(pays.TotalPayments, 0) + ISNULL(prevs.PrevInvoiceBalance, 0) LIKE @SearchValue OR
+					dbo.CalculateDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) - ISNULL(pays.TotalPayments, 0) LIKE @SearchValue OR
+					dbo.CalculateDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue) - ISNULL(pays.TotalPayments, 0) + ISNULL(prevs.PrevInvoiceBalance, 0) LIKE @SearchValue OR
 					i.Descriptions LIKE @SearchValue OR
-					(CAST(ISNULL(prevs.PrevInvoiceBalance, 0) AS VARCHAR) LIKE @SearchValue OR CAST((dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue)-ISNULL(pays.TotalPayments, 0)) AS VARCHAR) LIKE @SearchValue OR CAST((dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue)-ISNULL(pays.TotalPayments, 0)+ISNULL(prevs.PrevInvoiceBalance, 0)) AS VARCHAR) LIKE @SearchValue OR
+					(CAST(ISNULL(prevs.PrevInvoiceBalance, 0) AS VARCHAR) LIKE @SearchValue OR CAST((dbo.CalculateDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue)-ISNULL(pays.TotalPayments, 0)) AS VARCHAR) LIKE @SearchValue OR CAST((dbo.CalculateDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue)-ISNULL(pays.TotalPayments, 0)+ISNULL(prevs.PrevInvoiceBalance, 0)) AS VARCHAR) LIKE @SearchValue OR
 					CAST(fwds.FwdInvoiceId AS VARCHAR) LIKE @SearchValue) OR
 					i.[PrevInvoiceId] LIKE @SearchValue) OR (@SearchValue = '%'))
 				)
-			AND ((@FinStatus <> -1 AND ((@FinStatus = @BALANCED AND (dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue)-ISNULL(pays.TotalPayments, 0)+ISNULL(prevs.PrevInvoiceBalance, 0)) = 0) OR 
-				 (@FinStatus = @DEPTOR AND (dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue)-ISNULL(pays.TotalPayments, 0)+ISNULL(prevs.PrevInvoiceBalance, 0)) > 0) OR
-				 (@FinStatus = @CREDITOR AND (dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue)-ISNULL(pays.TotalPayments, 0)+ISNULL(prevs.PrevInvoiceBalance, 0)) < 0) OR
-				 (@FinStatus = @OUTSTANDING AND fwds.FwdInvoiceId IS NULL AND (dbo.GetDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue)-ISNULL(pays.TotalPayments, 0)+ISNULL(prevs.PrevInvoiceBalance, 0)) <> 0)) OR
+			AND ((@FinStatus <> -1 AND ((@FinStatus = @BALANCED AND (dbo.CalculateDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue)-ISNULL(pays.TotalPayments, 0)+ISNULL(prevs.PrevInvoiceBalance, 0)) = 0) OR 
+				 (@FinStatus = @DEPTOR AND (dbo.CalculateDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue)-ISNULL(pays.TotalPayments, 0)+ISNULL(prevs.PrevInvoiceBalance, 0)) > 0) OR
+				 (@FinStatus = @CREDITOR AND (dbo.CalculateDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue)-ISNULL(pays.TotalPayments, 0)+ISNULL(prevs.PrevInvoiceBalance, 0)) < 0) OR
+				 (@FinStatus = @OUTSTANDING AND fwds.FwdInvoiceId IS NULL AND (dbo.CalculateDiscountedInvoiceSum(i.DiscountType, i.DiscountValue, sp.TotalSellValue)-ISNULL(pays.TotalPayments, 0)+ISNULL(prevs.PrevInvoiceBalance, 0)) <> 0)) OR
 				  @FinStatus = -1)
 			)
 			ORDER BY CASE WHEN @SearchMode = @BACKWARD THEN i.[Id] END DESC, CASE WHEN @SearchMode = @FORWARD THEN i.[Id] END ASC

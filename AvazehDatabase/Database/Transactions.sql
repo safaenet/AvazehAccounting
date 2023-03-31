@@ -6,5 +6,5 @@
     [TimeCreated] CHAR(8) NOT NULL, 
     [DateUpdated] CHAR(10) NULL, 
     [TimeUpdated] CHAR(8) NULL, 
-    [Descriptions] NTEXT NULL
+    [Descriptions] NVARCHAR(MAX) NULL
 )

@@ -5,9 +5,9 @@
     [LastName] NVARCHAR(50) NULL, 
 	[CompanyName] NVARCHAR(50) NULL,
     [EmailAddress] NVARCHAR(50) NULL, 
-    [PostAddress] NTEXT NULL, 
+    [PostAddress] NVARCHAR(MAX) NULL, 
     [DateJoined] CHAR(10) NOT NULL, 
-    [Descriptions] NTEXT NULL
+    [Descriptions] NVARCHAR(MAX) NULL
     
 	CHECK ([EmailAddress] LIKE '%_@_%._%'), 
 )

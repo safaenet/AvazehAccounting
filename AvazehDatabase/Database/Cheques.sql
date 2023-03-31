@@ -10,5 +10,5 @@
     [BankName] NVARCHAR(50) NOT NULL, 
     [Serial] NVARCHAR(25) NULL, 
     [Identifier] NVARCHAR(20) NULL, 
-    [Descriptions] NTEXT NULL
+    [Descriptions] NVARCHAR(MAX) NULL
 )
