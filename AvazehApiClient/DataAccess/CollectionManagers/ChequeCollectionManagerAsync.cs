@@ -117,22 +117,22 @@ public class ChequeCollectionManagerAsync : IChequeCollectionManagerAsync
 
     public async Task<int> LoadPreviousPageAsync()
     {
-        if (CurrentPage == 1) return 0;
+        if (CurrentPage == PagesCount) return 0;
         PageLoadEventArgs eventArgs = new();
         PreviousPageLoading?.Invoke(this, eventArgs);
         if (eventArgs.Cancel) return 0;
-        var result = await GotoPageAsync(CurrentPage - 1);
+        var result = await GotoPageAsync(CurrentPage + 1);
         PreviousPageLoaded?.Invoke(this, null);
         return result;
     }
 
     public async Task<int> LoadNextPageAsync()
     {
-        if (CurrentPage == PagesCount) return 0;
+        if (CurrentPage == 1) return 0;
         PageLoadEventArgs eventArgs = new();
         NextPageLoading?.Invoke(this, eventArgs);
         if (eventArgs.Cancel) return 0;
-        var result = await GotoPageAsync(CurrentPage + 1);
+        var result = await GotoPageAsync(CurrentPage - 1);
         NextPageLoaded?.Invoke(this, null);
         return result;
     }
