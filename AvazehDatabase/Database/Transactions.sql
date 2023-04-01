@@ -2,9 +2,9 @@
 (
 	[Id] INT NOT NULL PRIMARY KEY, 
     [FileName] NVARCHAR(100) NOT NULL,
-    [DateCreated] CHAR(10) NOT NULL, 
-    [TimeCreated] CHAR(8) NOT NULL, 
-    [DateUpdated] CHAR(10) NULL, 
-    [TimeUpdated] CHAR(8) NULL, 
+    [DateCreated] [dbo].[DateType] NOT NULL, 
+    [TimeCreated] [dbo].[TimeType] NOT NULL, 
+    [DateUpdated] [dbo].[DateType] NULL, 
+    [TimeUpdated] [dbo].[TimeType] NULL, 
     [Descriptions] NVARCHAR(MAX) NULL
 )

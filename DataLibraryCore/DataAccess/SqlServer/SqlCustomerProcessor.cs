@@ -44,8 +44,8 @@ public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<
 	        [CompanyName] [nvarchar](50),
 	        [EmailAddress] [nvarchar](50),
 	        [PostAddress] [ntext],
-	        [DateJoined] [char](10),
-	        [Descriptions] [ntext])
+	        [DateJoined] dbo.DateType,
+	        [Descriptions] NVARCHAR(MAX))
             {0}
             SELECT * FROM @customers ORDER BY [Id] ASC;
             SELECT * FROM PhoneNumbers WHERE CustomerId IN (SELECT c.Id FROM @customers c);";

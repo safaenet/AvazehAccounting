@@ -252,7 +252,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
             dp.Add("@buyPrice", item.BuyPrice);
             dp.Add("@sellPrice", item.SellPrice);
             dp.Add("@countString", item.CountString);
-            dp.Add("@countValue", item.CountValue);
+            dp.Add("@countValue", decimal.Round(item.CountValue, 3));
             dp.Add("@productUnitId", item.Unit == null ? (int?)null : item.Unit.Id);
             dp.Add("@dateCreated", item.DateCreated);
             dp.Add("@timeCreated", item.TimeCreated);
@@ -286,7 +286,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
             dp.Add("@buyPrice", item.BuyPrice);
             dp.Add("@sellPrice", item.SellPrice);
             dp.Add("@countString", item.CountString);
-            dp.Add("@countValue", item.CountValue);
+            dp.Add("@countValue", decimal.Round(item.CountValue, 3));
             dp.Add("@productUnitId", item.Unit == null ? (int?)null : item.Unit.Id);
             dp.Add("@dateUpdated", item.DateUpdated);
             dp.Add("@timeUpdated", item.TimeUpdated);

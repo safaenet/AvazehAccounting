@@ -60,7 +60,7 @@
     <Folder Include="Database" />
     <Folder Include="Functions" />
     <Folder Include="StoredProcedures" />
-    <Folder Include="Views" />
+    <Folder Include="Types" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Database\Customers.sql" />
@@ -78,16 +78,16 @@
     <Build Include="Database\UserInfo.sql" />
     <Build Include="Database\UserPermissions.sql" />
     <Build Include="Database\UserSettings.sql" />
-    <Build Include="StoredProcedures\LoadCountOfInvoiceList.sql" />
-    <Build Include="StoredProcedures\LoadCustomerNonBalancedList.sql" />
-    <Build Include="StoredProcedures\LoadInvoiceList.sql" />
     <Build Include="StoredProcedures\LoadSingleInvoiceDetails.sql" />
     <Build Include="Functions\CalculateInvoiceBalance.sql" />
     <Build Include="Functions\CalculatePrevInvoiceAmount.sql" />
     <Build Include="Functions\CalculateDiscountedInvoiceSum.sql" />
-    <Build Include="Functions\CalculateInvoiceBuySum.sql" />
-    <Build Include="Functions\CalculateInvoiceSellSum.sql" />
-    <Build Include="Views\InvoiceList_View.sql" />
+    <Build Include="Types\CountType.sql" />
+    <Build Include="Types\DateType.sql" />
+    <Build Include="Types\TimeType.sql" />
+    <Build Include="Types\CalculationType.sql" />
+    <Build Include="StoredProcedures\LoadInvoiceList_OldStyle.sql" />
+    <Build Include="StoredProcedures\LoadPrevInvoiceList_OldStyle.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="AvazehDatabase.refactorlog" />

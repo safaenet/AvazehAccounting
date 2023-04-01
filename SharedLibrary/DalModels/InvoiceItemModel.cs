@@ -20,7 +20,7 @@ public class InvoiceItemModel
     public string Descriptions { get; set; }
     public string DateTimeCreated => TimeCreated + " " + DateCreated;
     public string DateTimeUpdated => TimeUpdated + " " + DateUpdated;
-    public decimal CountValue => StandardCalculator.CalculateFromString(CountString);
+    public decimal CountValue => decimal.Round(StandardCalculator.CalculateFromString(CountString), 3);
     public bool IsCountStringValid => StandardCalculator.IsCalculatable(CountString);
     public string CountPlusUnit
     {

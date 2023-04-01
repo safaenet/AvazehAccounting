@@ -235,112 +235,118 @@ public class InvoiceDetailViewModel : Screen
 
     public async Task AddOrUpdateItemAsync()
     {
-        if (!CanEditInvoice || Invoice == null) return;
-        CanEditInvoice = false;
-        var enableBarcodeReader = ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanUseBarcodeReader));
-        var pcm = SC.GetInstance<ICollectionManager<ProductModel>>();
-        if (SelectedProductItem == null && ProductInput != null && ProductInput.Length > 0 && EdittingItem == false) //Search by Entered text
+        try
         {
-            if (enableBarcodeReader) //Search Barcode
+            if (!CanEditInvoice || Invoice == null) return;
+            CanEditInvoice = false;
+            var enableBarcodeReader = ICM.ApiProcessor.IsInRole(nameof(UserPermissionsModel.CanUseBarcodeReader));
+            var pcm = SC.GetInstance<ICollectionManager<ProductModel>>();
+            if (SelectedProductItem == null && ProductInput != null && ProductInput.Length > 0 && EdittingItem == false) //Search by Entered text
             {
-                var product = await pcm.GetItemByBarCodeAsync(ProductInput);
-                if (product != null) //Found by barcode.
+                if (enableBarcodeReader) //Search Barcode
                 {
-                    if (Invoice.Items == null) Invoice.Items = new();
-                    var item = Invoice.Items.FirstOrDefault(x => x.Product.Id == product.Id);
-                    if (item == null) //If doesnt exsist in list, add new
+                    var product = await pcm.GetItemByBarCodeAsync(ProductInput);
+                    if (product != null) //Found by barcode.
                     {
-                        WorkItem = new();
-                        WorkItem.InvoiceId = Invoice.Id;
-                        WorkItem.Product = product;
-                        WorkItem.SellPrice = product.SellPrice;
-                        WorkItem.BuyPrice = product.BuyPrice;
-                        //WorkItem.CountString = User.Settings.
-                        var addedItem = await IDM.CreateItemAsync(WorkItem);
-                        if (addedItem is not null)
+                        if (Invoice.Items == null) Invoice.Items = new();
+                        var item = Invoice.Items.FirstOrDefault(x => x.Product.Id == product.Id);
+                        if (item == null) //If doesnt exsist in list, add new
                         {
-                            //Validate here
-                            Invoice.Items.Insert(0, addedItem);
+                            WorkItem = new();
+                            WorkItem.InvoiceId = Invoice.Id;
+                            WorkItem.Product = product;
+                            WorkItem.SellPrice = product.SellPrice;
+                            WorkItem.BuyPrice = product.BuyPrice;
+                            //WorkItem.CountString = User.Settings.
+                            var addedItem = await IDM.CreateItemAsync(WorkItem);
+                            if (addedItem is not null)
+                            {
+                                //Validate here
+                                Invoice.Items.Insert(0, addedItem);
+                            }
+                        }
+                        else //if exists in list, update it to "BarcodeAddItemCount" more
+                        {
+                            WorkItem = item;
+                            WorkItem.CountString = (WorkItem.CountValue + User.GeneralSettings.BarcodeAddItemCount).ToString();
+                            await UpdateItemInDatabaseAsync(WorkItem);
                         }
                     }
-                    else //if exists in list, update it to "BarcodeAddItemCount" more
+                    else if (User.UserSettings.AskToAddNotExistingProduct) //Not found by barcode, Try to create new product.
                     {
-                        WorkItem = item;
-                        WorkItem.CountString = (WorkItem.CountValue + User.GeneralSettings.BarcodeAddItemCount).ToString();
-                        await UpdateItemInDatabaseAsync(WorkItem);
-                    }
-                }
-                else if (User.UserSettings.AskToAddNotExistingProduct) //Not found by barcode, Try to create new product.
-                {
-                    if (MessageBox.Show("نام کالای وارد شده موجود نیست. آیا به لیست کالاها اضافه شود ؟", "اضافه کردن کالا", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
-                    {
-                        ProductModel newProduct = new();
-                        newProduct.SellPrice = WorkItem.SellPrice;
-                        newProduct.ProductName = ProductInput;
-                        if (long.TryParse(ProductInput, NumberStyles.Any, CultureInfo.InvariantCulture, out _)) newProduct.Barcode = ProductInput;
-                        newProduct.BuyPrice = WorkItem.BuyPrice;
-                        var p = await pcm.CreateItemAsync(newProduct);
-                        if (p is not null)
+                        if (MessageBox.Show("نام کالای وارد شده موجود نیست. آیا به لیست کالاها اضافه شود ؟", "اضافه کردن کالا", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
                         {
-                            ItemsForComboBox item = new() { Id = p.Id, ItemName = p.ProductName };
-                            ProductItemsForComboBox.Add(item);
-                            SelectedProductItem = item;
-                            WorkItem.Id = p.Id;
-                            WorkItem.InvoiceId = Invoice.Id;
-                            WorkItem.Product = p;
-                            //Add newly created product to invoice:
+                            ProductModel newProduct = new();
+                            newProduct.SellPrice = WorkItem.SellPrice;
+                            newProduct.ProductName = ProductInput;
+                            if (long.TryParse(ProductInput, NumberStyles.Any, CultureInfo.InvariantCulture, out _)) newProduct.Barcode = ProductInput;
+                            newProduct.BuyPrice = WorkItem.BuyPrice;
+                            var p = await pcm.CreateItemAsync(newProduct);
+                            if (p is not null)
+                            {
+                                ItemsForComboBox item = new() { Id = p.Id, ItemName = p.ProductName };
+                                ProductItemsForComboBox.Add(item);
+                                SelectedProductItem = item;
+                                WorkItem.Id = p.Id;
+                                WorkItem.InvoiceId = Invoice.Id;
+                                WorkItem.Product = p;
+                                //Add newly created product to invoice:
+                                if (Invoice.Items == null) Invoice.Items = new();
+                                var addedItem = await IDM.CreateItemAsync(WorkItem);
+                                if (addedItem is not null)
+                                    Invoice.Items.Insert(0, addedItem);
+                            }
+                            else MessageBox.Show("خطا هنگام اضافه کردن کالای جدید", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                    else MessageBox.Show("نام کالای وارد شده موجود نیست", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                if (WorkItem != null && SelectedProductItem != null && SelectedProductItem.Id != 0)
+                {
+                    WorkItem.InvoiceId = Invoice.Id;
+                    WorkItem.Product = await pcm.GetItemById(SelectedProductItem.Id);
+                    var validate = IDM.ValidateItem(WorkItem);
+                    if (validate.IsValid)
+                    {
+                        if (EdittingItem == false) //New Item
+                        {
                             if (Invoice.Items == null) Invoice.Items = new();
                             var addedItem = await IDM.CreateItemAsync(WorkItem);
                             if (addedItem is not null)
                                 Invoice.Items.Insert(0, addedItem);
                         }
-                        else MessageBox.Show("خطا هنگام اضافه کردن کالای جدید", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
+                        else //Edit Item
+                        {
+                            await UpdateItemInDatabaseAsync(WorkItem);
+                            EdittingItem = false;
+                        }
+                    }
+                    else
+                    {
+                        var str = "";
+                        foreach (var error in validate.Errors)
+                            str += error.ErrorMessage + "\n";
+                        MessageBox.Show(str, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
                     }
                 }
-                else MessageBox.Show("نام کالای وارد شده موجود نیست", "خطا", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        else
+        finally
         {
-            if (WorkItem != null && SelectedProductItem != null && SelectedProductItem.Id != 0)
-            {
-                WorkItem.InvoiceId = Invoice.Id;
-                WorkItem.Product = await pcm.GetItemById(SelectedProductItem.Id);
-                var validate = IDM.ValidateItem(WorkItem);
-                if (validate.IsValid)
-                {
-                    if (EdittingItem == false) //New Item
-                    {
-                        if (Invoice.Items == null) Invoice.Items = new();
-                        var addedItem = await IDM.CreateItemAsync(WorkItem);
-                        if (addedItem is not null)
-                            Invoice.Items.Insert(0, addedItem);
-                    }
-                    else //Edit Item
-                    {
-                        await UpdateItemInDatabaseAsync(WorkItem);
-                        EdittingItem = false;
-                    }
-                }
-                else
-                {
-                    var str = "";
-                    foreach (var error in validate.Errors)
-                        str += error.ErrorMessage + "\n";
-                    MessageBox.Show(str, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-            }
+            ProductUnitModel temp = WorkItem.Unit;
+            WorkItem = new();
+            WorkItem.Unit = temp;
+            SelectedProductItem = null;
+            ProductInput = "";
+            CanEditInvoice = true;
+            NotifyOfPropertyChange(() => Invoice.Items);
+            NotifyOfPropertyChange(() => Invoice);
+            FocusOnProductsCombobox();
         }
-        ProductUnitModel temp = WorkItem.Unit;
-        WorkItem = new();
-        WorkItem.Unit = temp;
-        SelectedProductItem = null;
-        ProductInput = "";
-        CanEditInvoice = true;
-        NotifyOfPropertyChange(() => Invoice.Items);
-        NotifyOfPropertyChange(() => Invoice);
-        FocusOnProductsCombobox();
     }
 
     public void FocusOnProductsCombobox()

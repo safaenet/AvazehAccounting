@@ -2,11 +2,11 @@
 (
     [Id] INT NOT NULL,
     [InvoiceId] INT NOT NULL,
-    [DateCreated] CHAR(10) NOT NULL, 
-    [TimeCreated] CHAR(8) NOT NULL, 
-    [DateUpdated] CHAR(10) NULL, 
-    [TimeUpdated] CHAR(8) NULL, 
-    [PayAmount] BIGINT NOT NULL,
+    [DateCreated] [dbo].[DATETYPE] NOT NULL, 
+    [TimeCreated] [dbo].[TimeType] NOT NULL, 
+    [DateUpdated] [dbo].[DateType] NULL, 
+    [TimeUpdated] [dbo].[TimeType] NULL, 
+    [PayAmount] [dbo].[CalculationType] NOT NULL,
     [Descriptions] NVARCHAR(MAX) NULL
 
     CONSTRAINT [PK_InvoicePayments] PRIMARY KEY ([Id]),

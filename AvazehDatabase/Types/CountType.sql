@@ -1,0 +1,2 @@
+﻿CREATE TYPE [dbo].[CountType]
+	FROM DECIMAL(18, 3) NOT NULL;

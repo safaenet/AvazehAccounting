@@ -6,9 +6,9 @@
     [PasswordSalt] VARBINARY(MAX) NOT NULL, 
     [FirstName] NVARCHAR(50) NOT NULL, 
     [LastName] NVARCHAR(50) NULL, 
-    [DateCreated] CHAR(10) NOT NULL, 
-    [LastLoginDate] CHAR(10) NULL, 
-    [LastLoginTime] CHAR(8) NULL, 
+    [DateCreated] [dbo].[DateType] NOT NULL, 
+    [LastLoginDate] [dbo].[DateType] NULL, 
+    [LastLoginTime] [dbo].[TimeType] NULL, 
     [IsActive] BIT NOT NULL  , 
 
     CONSTRAINT unique_Username3 UNIQUE(Username)
