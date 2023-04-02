@@ -241,7 +241,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="صادر کننده" Binding="{Binding Drawer, Mode=OneWay}" Width="*"/>
-                    <DataGridTextColumn Header="در وجه" Binding="{Binding Orderer, Mode=OneWay}" Width="*"/>
+                    <DataGridTextColumn Header="در وجه" Binding="{Binding Orderer, Mode=OneWay}" Width="0.7*"/>
                     <DataGridTextColumn Header="مبلغ" Binding="{Binding PayAmount, Mode=OneWay, StringFormat='{}{0:#,#.##}'}" Width="0.5*"/>
                     <DataGridTextColumn Header="بابت" Binding="{Binding About, Mode=OneWay}" Width="0.7*"/>
                     <DataGridTextColumn Header="تاریخ سررسید" Binding="{Binding DueDate, Mode=OneWay}" Width="80">
@@ -254,7 +254,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="شناسه صیاد" Binding="{Binding Identifier, Mode=OneWay}" Width="120"/>
-                    <DataGridTextColumn Header="آخرین وضعیت" Width="120">
+                    <DataGridTextColumn Header="آخرین وضعیت" Width="160">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Text">
