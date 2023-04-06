@@ -1140,3 +1140,31 @@ System.ArgumentNullException: Value cannot be null. (Parameter 'source')
    at System.Linq.ThrowHelper.ThrowArgumentNullException(ExceptionArgument argument)
    at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
    at DataLibraryCore.DataAccess.SqlServer.SqlInvoiceProcessor.GetPrevInvoices(Int32 InvoiceId, Int32 CustomerId, String InvoiceDate, String SearchValue, OrderType orderType) in D:\Users\Safad\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlInvoiceProcessor.cs:line 561
+2023-04-06 10:56:04.327 +03:30 [ERR] Error in DataLibraryCore.DataAccess.SqlServer.SqlDataAccess+<LoadDataAsync>d__3`2[T,U]
+System.Data.SqlClient.SqlException (0x80131904): The statement terminated. The maximum recursion 100 has been exhausted before statement completion.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryAsync[T](IDbConnection cnn, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 418
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.LoadDataAsync[T,U](String sql, U param, CommandType CType) in D:\Users\Safad\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 52
+ClientConnectionId:c2554993-4e01-416c-b301-2ac4ec5e3439
+Error Number:530,State:1,Class:16
+2023-04-06 10:56:09.523 +03:30 [ERR] Error in DataLibraryCore.DataAccess.SqlServer.SqlDataAccess+<LoadDataAsync>d__3`2[T,U]
+System.Data.SqlClient.SqlException (0x80131904): The statement terminated. The maximum recursion 100 has been exhausted before statement completion.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__126_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__272_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryAsync[T](IDbConnection cnn, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 418
+   at DataLibraryCore.DataAccess.SqlServer.SqlDataAccess.LoadDataAsync[T,U](String sql, U param, CommandType CType) in D:\Users\Safad\Source\Repos\safaenet\AvazehAccounting\DataLibraryCore\DataAccess\SqlServer\SqlDataAccess.cs:line 52
+ClientConnectionId:c2554993-4e01-416c-b301-2ac4ec5e3439
+Error Number:530,State:1,Class:16

@@ -56,12 +56,13 @@ public class PrevInvoiceListViewModel : Screen
         }
     }
 
+    private ObservableCollection<InvoiceListModel> invoices;
     public ObservableCollection<InvoiceListModel> Invoices
     {
-        get => ICM.Items;
+        get => invoices;
         set
         {
-            ICM.Items = value;
+            invoices = value;
             NotifyOfPropertyChange(() => ICM);
             NotifyOfPropertyChange(() => Invoices);
         }

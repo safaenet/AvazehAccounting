@@ -197,7 +197,7 @@ public class InvoiceListViewModel : Screen
         ICM.SearchValue = SearchText;
         ICM.FinStatus = FinStatus;
         ICM.LifeStatus = LifeStatus;
-        int.TryParse(InvoiceIdToSearch, out var invId);
+        _ = int.TryParse(InvoiceIdToSearch, out var invId);
         ICM.InvoiceIdToSearch = invId <= 0 ? -1 : invId;
         ICM.InvoiceDateToSearch = QueryDate;
         UIEnabled = false;
