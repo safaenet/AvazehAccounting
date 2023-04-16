@@ -147,7 +147,6 @@
             this.txtUserDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtUserDescription.Size = new System.Drawing.Size(248, 126);
             this.txtUserDescription.TabIndex = 3;
-            this.txtUserDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtUserDescription.WordWrap = false;
             this.txtUserDescription.TextChanged += new System.EventHandler(this.txtUserDescription_TextChanged);
             // 
