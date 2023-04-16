@@ -81,6 +81,7 @@ namespace PrintInterface
 
             CanRefresh = true;
             InitilizeReport();
+            if (cmbUserDescriptions.Items != null && cmbUserDescriptions.Items.Count > 0) txtUserDescription.Text = (string)cmbUserDescriptions.SelectedValue;
         }
 
         private void InitilizeReport()
