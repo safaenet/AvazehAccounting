@@ -102,7 +102,6 @@
             this.txtCustomerPostAddress.Location = new System.Drawing.Point(13, 89);
             this.txtCustomerPostAddress.Multiline = true;
             this.txtCustomerPostAddress.Name = "txtCustomerPostAddress";
-            this.txtCustomerPostAddress.ReadOnly = true;
             this.txtCustomerPostAddress.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtCustomerPostAddress.Size = new System.Drawing.Size(248, 53);
             this.txtCustomerPostAddress.TabIndex = 3;
@@ -116,7 +115,6 @@
             this.txtCustomerDescription.Location = new System.Drawing.Point(13, 170);
             this.txtCustomerDescription.Multiline = true;
             this.txtCustomerDescription.Name = "txtCustomerDescription";
-            this.txtCustomerDescription.ReadOnly = true;
             this.txtCustomerDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtCustomerDescription.Size = new System.Drawing.Size(248, 53);
             this.txtCustomerDescription.TabIndex = 3;
@@ -130,7 +128,6 @@
             this.txtInvoiceDescription.Location = new System.Drawing.Point(12, 251);
             this.txtInvoiceDescription.Multiline = true;
             this.txtInvoiceDescription.Name = "txtInvoiceDescription";
-            this.txtInvoiceDescription.ReadOnly = true;
             this.txtInvoiceDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtInvoiceDescription.Size = new System.Drawing.Size(248, 53);
             this.txtInvoiceDescription.TabIndex = 3;
