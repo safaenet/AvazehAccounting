@@ -20,7 +20,7 @@ public class InvoiceListModel
     public decimal TotalPayments { get; set; }
     public InvoiceLifeStatus LifeStatus { get; set; }
     public int? PrevInvoiceId { get; set; }
-    public int PrevInvoiceBalance { get; set; }
+    public decimal PrevInvoiceBalance { get; set; }
     public int? FwdInvoiceId { get; set; }
     public decimal TotalInvoiceBalance => TotalInvoiceSum - TotalPayments;
     public decimal TotalBalance => TotalInvoiceBalance + PrevInvoiceBalance;
