@@ -74,10 +74,10 @@ namespace PrintInterface
             txtCustomerPostAddress.Text = pim.CustomerPostAddress;
 
             if (string.IsNullOrEmpty(pim.CustomerPhoneNumber)) ShowPhoneNumber.Enabled = ShowPhoneNumber.Checked = false;
-            if (string.IsNullOrEmpty(pim.CustomerDescription)) ShowCustomerDescription.Enabled = txtCustomerDescription.Enabled = ShowCustomerDescription.Checked = false;
-            if (string.IsNullOrEmpty(pim.InvoiceDescription)) ShowInvoiceDescription.Enabled = txtInvoiceDescription.Enabled = ShowInvoiceDescription.Checked = false;
+            //if (string.IsNullOrEmpty(pim.CustomerDescription)) ShowCustomerDescription.Enabled = txtCustomerDescription.Enabled = ShowCustomerDescription.Checked = false;
+            //if (string.IsNullOrEmpty(pim.InvoiceDescription)) ShowInvoiceDescription.Enabled = txtInvoiceDescription.Enabled = ShowInvoiceDescription.Checked = false;
             if (string.IsNullOrEmpty(pim.CustomerPhoneNumber) && string.IsNullOrEmpty(pim.InvoiceDescription) && (pim.PrintSettings.UserDescriptions == null || pim.PrintSettings.UserDescriptions.Count == 0)) cmbDescriptionFontSize.Enabled = false;
-            if (string.IsNullOrEmpty(pim.CustomerPostAddress)) txtCustomerPostAddress.Enabled = ShowCustomerPostAddress.Enabled = false;
+            //if (string.IsNullOrEmpty(pim.CustomerPostAddress)) txtCustomerPostAddress.Enabled = ShowCustomerPostAddress.Enabled = false;
 
             CanRefresh = true;
             InitilizeReport();
@@ -257,9 +257,9 @@ namespace PrintInterface
         private void txtUserDescription_TextChanged(object sender, EventArgs e)
         {
             if (!CanRefresh) return;
-            rd.SetParameterValue("UserDescription", txtUserDescription.Text);
             if (!ShowUserDescription.Checked) return;
-            RefreshCrystalReport();
+            rd.SetParameterValue("UserDescription", txtUserDescription.Text);
+            //RefreshCrystalReport();
         }
 
         private void cmbPageSize_SelectedIndexChanged(object sender, EventArgs e)
@@ -300,6 +300,32 @@ namespace PrintInterface
             pim.PrintCustomerPostAddress = (sender as CheckBox).Checked;
             rd.SetParameterValue("ShowCustomerPostAddress", pim.PrintCustomerPostAddress);
             RefreshCrystalReport();
+        }
+
+        private void btnUpdateReport_Click(object sender, EventArgs e)
+        {
+            RefreshCrystalReport();
+        }
+
+        private void txtCustomerPostAddress_TextChanged(object sender, EventArgs e)
+        {
+            if (!CanRefresh) return;
+            if (!ShowCustomerPostAddress.Checked) return;
+            rd.SetParameterValue("CustomerPostAddress", txtCustomerPostAddress.Text);
+        }
+
+        private void txtCustomerDescription_TextChanged(object sender, EventArgs e)
+        {
+            if (!CanRefresh) return;
+            if (!ShowCustomerDescription.Checked) return;
+            rd.SetParameterValue("CustomerDescription", txtCustomerDescription.Text);
+        }
+
+        private void txtInvoiceDescription_TextChanged(object sender, EventArgs e)
+        {
+            if (!CanRefresh) return;
+            if (!ShowInvoiceDescription.Checked) return;
+            rd.SetParameterValue("InvoiceDescription", txtInvoiceDescription.Text);
         }
     }
 }

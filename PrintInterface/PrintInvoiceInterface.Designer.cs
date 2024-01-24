@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.gbSettings = new System.Windows.Forms.GroupBox();
+            this.btnUpdateReport = new System.Windows.Forms.Button();
             this.txtCustomerPostAddress = new System.Windows.Forms.TextBox();
             this.txtCustomerDescription = new System.Windows.Forms.TextBox();
             this.txtInvoiceDescription = new System.Windows.Forms.TextBox();
@@ -61,6 +62,7 @@
             // 
             // gbSettings
             // 
+            this.gbSettings.Controls.Add(this.btnUpdateReport);
             this.gbSettings.Controls.Add(this.txtCustomerPostAddress);
             this.gbSettings.Controls.Add(this.txtCustomerDescription);
             this.gbSettings.Controls.Add(this.txtInvoiceDescription);
@@ -96,6 +98,16 @@
             this.gbSettings.Text = "تنظیمات چاپ";
             this.gbSettings.Visible = false;
             // 
+            // btnUpdateReport
+            // 
+            this.btnUpdateReport.Location = new System.Drawing.Point(12, 573);
+            this.btnUpdateReport.Name = "btnUpdateReport";
+            this.btnUpdateReport.Size = new System.Drawing.Size(249, 35);
+            this.btnUpdateReport.TabIndex = 4;
+            this.btnUpdateReport.Text = "بروزرسانی";
+            this.btnUpdateReport.UseVisualStyleBackColor = true;
+            this.btnUpdateReport.Click += new System.EventHandler(this.btnUpdateReport_Click);
+            // 
             // txtCustomerPostAddress
             // 
             this.txtCustomerPostAddress.AcceptsReturn = true;
@@ -107,7 +119,7 @@
             this.txtCustomerPostAddress.TabIndex = 3;
             this.txtCustomerPostAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtCustomerPostAddress.WordWrap = false;
-            this.txtCustomerPostAddress.TextChanged += new System.EventHandler(this.txtUserDescription_TextChanged);
+            this.txtCustomerPostAddress.TextChanged += new System.EventHandler(this.txtCustomerPostAddress_TextChanged);
             // 
             // txtCustomerDescription
             // 
@@ -120,7 +132,7 @@
             this.txtCustomerDescription.TabIndex = 3;
             this.txtCustomerDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtCustomerDescription.WordWrap = false;
-            this.txtCustomerDescription.TextChanged += new System.EventHandler(this.txtUserDescription_TextChanged);
+            this.txtCustomerDescription.TextChanged += new System.EventHandler(this.txtCustomerDescription_TextChanged);
             // 
             // txtInvoiceDescription
             // 
@@ -133,7 +145,7 @@
             this.txtInvoiceDescription.TabIndex = 3;
             this.txtInvoiceDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtInvoiceDescription.WordWrap = false;
-            this.txtInvoiceDescription.TextChanged += new System.EventHandler(this.txtUserDescription_TextChanged);
+            this.txtInvoiceDescription.TextChanged += new System.EventHandler(this.txtInvoiceDescription_TextChanged);
             // 
             // txtUserDescription
             // 
@@ -488,6 +500,7 @@
         private System.Windows.Forms.TextBox txtInvoiceDescription;
         private System.Windows.Forms.TextBox txtCustomerPostAddress;
         private System.Windows.Forms.CheckBox ShowCustomerPostAddress;
+        private System.Windows.Forms.Button btnUpdateReport;
     }
 }
 

@@ -27,7 +27,7 @@ public class MainWindowViewModel : ViewAware
         timer.Interval = 5 * 1000;
         timer.AutoReset = true;
         //Timer_Elapsed(new object(), new ElapsedEventArgs());
-        timer.Start();
+        //timer.Start();
     }
 
     private async void Timer_Elapsed(object sender, ElapsedEventArgs e)

@@ -65,7 +65,7 @@ public class SqlUserProcessor : IUserProcessor
             ChequeNotify = @chequeNotify, InvoicePageSize = @invoicePageSize, InvoiceListQueryOrderType = @invoiceListQueryOrderType, InvoiceDetailQueryOrderType = @invoiceDetailQueryOrderType,
             TransactionListPageSize = @transactionListPageSize, TransactionDetailPageSize = @transactionDetailPageSize, TransactionListQueryOrderType = @transactionListQueryOrderType,
             TransactionDetailQueryOrderType = @transactionDetailQueryOrderType, AutoSelectPersianLanguage = @autoSelectPersianLanguage,
-            TransactionShortcut1Id = @transactionShortcut1Id, TransactionShortcut2Id = @transactionShortcut2Id, TransactionShortcut3Id = transactionShortcut3Id,
+            TransactionShortcut1Id = @transactionShortcut1Id, TransactionShortcut2Id = @transactionShortcut2Id, TransactionShortcut3Id = @transactionShortcut3Id,
             TransactionShortcut1Name = @transactionShortcut1Name, TransactionShortcut2Name = @transactionShortcut2Name, TransactionShortcut3Name = @transactionShortcut3Name,
             AskToAddNotExistingProduct = @askToAddNotExistingProduct, SearchWhenTyping = @searchWhenTyping, CustomerListPageSize = @customerListPageSize, CustomerListQueryOrderType = @customerListQueryOrderType,
             ProductListPageSize = @productListPageSize, ProductListQueryOrderType = @productListQueryOrderType WHERE [Id] = @id;";

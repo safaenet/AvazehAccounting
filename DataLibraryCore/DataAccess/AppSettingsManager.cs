@@ -152,13 +152,15 @@ public class AppSettingsManager : IAppSettingsManager
 
     private async Task<bool> InsertProductUnitsToDatabaseAsync(List<ProductUnitModel> units)
     {
+        if (units == null || units.Count == 0) return false;
         try
         {
             var backup_units = await GetProductUnitsAsync();
-            if (units == null || units.Count == 0) return false;
             var updatables = units.Where(productUnit => productUnit.Id != -1).ToList();
             var newUnits = units.Where(productUnit => productUnit.Id == -1).ToList();
             var deletedUnits = backup_units.Except(units).ToList();
+            var differences = backup_units.Where(b =>
+                !units.Any(u => u.Id == b.Id));
 
             if (newUnits != null && newUnits.Count > 0) await DataAccess.SaveDataAsync(InsertProductUnits, newUnits);
             if (updatables != null && updatables.Count > 0) await DataAccess.SaveDataAsync(UpdateProductUnits, units);
