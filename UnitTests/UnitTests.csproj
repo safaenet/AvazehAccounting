@@ -22,8 +22,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DataLibraryCore\DataLibraryCore.csproj" />
-  </ItemGroup>
-
 </Project>
