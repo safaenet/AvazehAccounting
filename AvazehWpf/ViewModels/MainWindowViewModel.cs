@@ -47,7 +47,7 @@ public class MainWindowViewModel : ViewAware
             if (list != null && list.Count > 0)
             {
                 ShowChequeNotification = true;
-                if (list.All(c => c.LastEventString == SharedLibrary.Enums.ChequeEventTypes.Sold.ToString())) ChequeNotificationForeground = System.Windows.Media.Brushes.Orange;
+                if (list.All(c => c.LastEventString == SharedLibrary.Enums.ChequeStatusTypes.Sold.ToString())) ChequeNotificationForeground = System.Windows.Media.Brushes.Orange;
                 else ChequeNotificationForeground = System.Windows.Media.Brushes.Red;
             }
             else ShowChequeNotification = false;

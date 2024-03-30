@@ -10,17 +10,15 @@ public class InvoiceModel
     public CustomerModel Customer { get; set; }
     public string About { get; set; }
     public string DateCreated { get; set; }
-    public string TimeCreated { get; set; }
     public string DateUpdated { get; set; }
-    public string TimeUpdated { get; set; }
     public ObservableCollection<InvoiceItemModel> Items { get; set; }
     public ObservableCollection<InvoicePaymentModel> Payments { get; set; }
     public DiscountTypes DiscountType { get; set; } = DiscountTypes.Amount;
     public decimal DiscountValue { get; set; }
     public string Descriptions { get; set; }
-    public InvoiceLifeStatus LifeStatus { get; set; }
     public int PrevInvoiceId { get; set; }
     public decimal PrevInvoiceBalance { get; set; }
+    public int FwdInvoiceId { get; set; }
     public decimal TotalItemsBuySum => Items == null || Items.Count == 0 ? 0 : Items.Sum(i => i.TotalBuyValue);
     public decimal TotalItemsSellSum => Items == null || Items.Count == 0 ? 0 : Items.Sum(i => i.TotalSellValue);
     public decimal TotalDiscountAmount => DiscountType == DiscountTypes.Percent ? (TotalItemsSellSum * DiscountValue / 100) : DiscountValue;

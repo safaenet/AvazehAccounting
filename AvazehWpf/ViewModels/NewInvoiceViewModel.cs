@@ -172,7 +172,7 @@ public class NewInvoiceViewModel : Screen
         if (res == MessageBoxResult.Yes)
         {
             CustomerModel TempCustomer = new();
-            TempCustomer.FirstName = customerInput;
+            TempCustomer.FullName = customerInput;
             var newCustomer = await CCM.CreateItemAsync(TempCustomer);
             return newCustomer;
         }

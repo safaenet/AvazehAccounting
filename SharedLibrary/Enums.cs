@@ -3,22 +3,22 @@
 public enum SqlSearchMode { AND, OR }
 public enum PaginationQueryMode { Previous, Next, Refresh }
 public enum SearchIdType { Min, Max }
-public enum ChequeEventTypes
+public enum ChequeStatusTypes
 {
     None = 0,
-    Holding = 1,
-    Sold = 2,
-    NonSufficientFund = 3,
-    Cashed = 4
+    Endorsed = 1,
+    Returned = 2,
+    Cashed = 3
 }
 
 public enum ChequeListQueryStatus
 {
     NotCashed = 0,
     Cashed = 1,
-    Sold = 2,
-    NonSufficientFund = 3,
-    FromNowOn = 4
+    Endorsed = 2,
+    Returned = 3,
+    FromNowOn = 4,
+    All = 5
 }
 
 public enum DiscountTypes

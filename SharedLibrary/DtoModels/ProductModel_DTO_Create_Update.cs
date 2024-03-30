@@ -30,5 +30,5 @@ public class ProductModel_DTO_Create_Update
     public string Descriptions { get; set; }
 
     [Display(Name = "Is Active")]
-    public bool IsActive { get; set; } = true;
+    public bool Active { get; set; } = true;
 }

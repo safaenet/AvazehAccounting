@@ -12,13 +12,8 @@ public class ProductModel
     public string Barcode { get; set; }
     public string CountString { get; set; } = "0";
     public string DateCreated { get; set; }
-    public string TimeCreated { get; set; }
     public string DateUpdated { get; set; }
-    public string TimeUpdated { get; set; }
     public string Descriptions { get; set; }
-    public bool IsActive { get; set; } = true;
-    public string DateTimeCreated => TimeCreated + " " + DateCreated;
-    public string DateTimeUpdated => TimeUpdated + " " + DateUpdated;
-    public decimal CountValue => StandardCalculator.CalculateFromString(CountString);
+    public bool Active { get; set; } = true;
     public bool IsCountStringValid => StandardCalculator.IsCalculatable(CountString);
 }

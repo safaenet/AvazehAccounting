@@ -38,18 +38,18 @@ public class ChequeValidator : AbstractValidator<ChequeModel>
             .NotEmpty().WithMessage("{PropertyName} cannot be empty.")
             .MaximumLength(50).WithMessage("{PropertyName} cannot be more than 50 characters ({TotalLength})");
 
-        RuleFor(c => c.Serial)
+        RuleFor(c => c.SerialNumber)
             .MaximumLength(25).WithMessage("{PropertyName} cannot be more than 25 characters ({TotalLength})");
 
         RuleFor(c => c.Identifier)
             .MaximumLength(20).WithMessage("{PropertyName} cannot be more than 20 digits ({TotalLength})");
 
-        RuleForEach(c => c.Events).Cascade(CascadeMode.Stop).ChildRules(p =>
-        {
-            p.RuleFor(x => x.EventType).NotEmpty().WithMessage("{PropertyName} cannot be empty");
+        //RuleForEach(c => c.Events).Cascade(CascadeMode.Stop).ChildRules(p =>
+        //{
+        //    p.RuleFor(x => x.EventType).NotEmpty().WithMessage("{PropertyName} cannot be empty");
 
-            p.RuleFor(x => x.EventText)
-                .MaximumLength(50).WithMessage("{PropertyName} cannot be more than 50 characters ({TotalLength})");
-        });
+        //    p.RuleFor(x => x.EventText)
+        //        .MaximumLength(50).WithMessage("{PropertyName} cannot be more than 50 characters ({TotalLength})");
+        //});
     }
 }

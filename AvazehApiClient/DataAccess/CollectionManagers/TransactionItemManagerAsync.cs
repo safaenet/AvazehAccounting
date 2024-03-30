@@ -86,7 +86,7 @@ public class TransactionDetailManager : ITransactionDetailManager
         PageLoadEventArgs eventArgs = new();
         PageLoading?.Invoke(this, eventArgs);
         if (eventArgs.Cancel) return 0;
-        var collection = await ApiProcessor.GetTransactionCollectionAsync<ItemsCollection_DTO<TransactionItemModel>>(KeyWithId, QueryOrderBy, QueryOrderType, 0, TransactionDateToSearch, PageNumber, SearchValue, FinStatus, PageSize, Refresh);
+        var collection = await ApiProcessor.GetTransactionCollectionAsync<PageModel<TransactionItemModel>>(KeyWithId, QueryOrderBy, QueryOrderType, 0, TransactionDateToSearch, PageNumber, SearchValue, FinStatus, PageSize, Refresh);
         Items = collection?.Items.AsObservable();
         CurrentPage = collection is null ? 0 : collection.CurrentPage;
         PagesCount = collection is null ? 0 : collection.PagesCount;

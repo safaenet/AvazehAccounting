@@ -200,13 +200,13 @@ public class ApiProcessor : IApiProcessor
         return default;
     }
 
-    public async Task<ItemsCollection_DTO<ChequeModel>> GetChequeCollectionAsync(string Key, string OrderBy, OrderType orderType, ChequeListQueryStatus? listQueryStatus = ChequeListQueryStatus.FromNowOn, int Page = 1, string SearchText = "", int PageSize = 50, bool ForceLoad = false)
+    public async Task<PageModel<ChequeModel>> GetChequeCollectionAsync(string Key, string OrderBy, OrderType orderType, ChequeListQueryStatus? listQueryStatus = ChequeListQueryStatus.FromNowOn, int Page = 1, string SearchText = "", int PageSize = 50, bool ForceLoad = false)
     {
         try
         {
             var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&listQueryStatus={listQueryStatus}&Page={Page}&SearchText={SearchText}&PageSize={PageSize}&ForceLoad={ForceLoad}";
             var response = await ApiClient.GetAsync(Url);
-            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<ItemsCollection_DTO<ChequeModel>>() : null;
+            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<PageModel<ChequeModel>>() : null;
         }
         catch (Exception ex)
         {

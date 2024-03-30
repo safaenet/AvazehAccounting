@@ -172,18 +172,18 @@ public static class EventTypeItems //For ComboBoxes
     public static Dictionary<int, string> GetPersianEventTypeItems()
     {
         Dictionary<int, string> choices = new();
-        for (int i = 0; i < Enum.GetNames(typeof(ChequeEventTypes)).Length; i++)
+        for (int i = 0; i < Enum.GetNames(typeof(ChequeStatusTypes)).Length; i++)
         {
-            if (Enum.GetName(typeof(ChequeEventTypes), i) == ChequeEventTypes.None.ToString())
-                choices.Add((int)ChequeEventTypes.None, "هیچ");
-            else if (Enum.GetName(typeof(ChequeEventTypes), i) == ChequeEventTypes.Holding.ToString())
-                choices.Add((int)ChequeEventTypes.Holding, "عادی");
-            else if (Enum.GetName(typeof(ChequeEventTypes), i) == ChequeEventTypes.Sold.ToString())
-                choices.Add((int)ChequeEventTypes.Sold, "منتقل شده");
-            else if (Enum.GetName(typeof(ChequeEventTypes), i) == ChequeEventTypes.NonSufficientFund.ToString())
-                choices.Add((int)ChequeEventTypes.NonSufficientFund, "برگشت خورده");
-            else if (Enum.GetName(typeof(ChequeEventTypes), i) == ChequeEventTypes.Cashed.ToString())
-                choices.Add((int)ChequeEventTypes.Cashed, "وصول شده");
+            if (Enum.GetName(typeof(ChequeStatusTypes), i) == ChequeStatusTypes.None.ToString())
+                choices.Add((int)ChequeStatusTypes.None, "هیچ");
+            else if (Enum.GetName(typeof(ChequeStatusTypes), i) == ChequeStatusTypes.Holding.ToString())
+                choices.Add((int)ChequeStatusTypes.Holding, "عادی");
+            else if (Enum.GetName(typeof(ChequeStatusTypes), i) == ChequeStatusTypes.Sold.ToString())
+                choices.Add((int)ChequeStatusTypes.Sold, "منتقل شده");
+            else if (Enum.GetName(typeof(ChequeStatusTypes), i) == ChequeStatusTypes.NonSufficientFund.ToString())
+                choices.Add((int)ChequeStatusTypes.NonSufficientFund, "برگشت خورده");
+            else if (Enum.GetName(typeof(ChequeStatusTypes), i) == ChequeStatusTypes.Cashed.ToString())
+                choices.Add((int)ChequeStatusTypes.Cashed, "وصول شده");
         }
         return choices;
     }

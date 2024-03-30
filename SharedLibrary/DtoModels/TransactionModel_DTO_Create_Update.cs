@@ -10,7 +10,6 @@ public class TransactionModel_DTO_Create_Update
     public string FileName { get; set; }
 
     public string DateCreated { get; set; }
-    public string TimeCreated { get; set; }
 
     [Display(Name = "Description")]
     public string Descriptions { get; set; }

@@ -30,7 +30,7 @@ public class CustomerModel_DTO_Create_Update
     public string PostAddress { get; set; }
     public string DateJoined { get; set; }
 
-    public ObservableCollection<PhoneNumberModel> PhoneNumbers { get; set; }
+    public string PhoneNumber { get; set; }
 
     [Display(Name = "Description")]
     public string Descriptions { get; set; }

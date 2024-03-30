@@ -22,7 +22,7 @@ public static class Extensions
             Barcode = model.Barcode,
             CountString = model.CountString,
             Descriptions = model.Descriptions,
-            IsActive = model.IsActive,
+            Active = model.Active,
         };
     }
 
@@ -30,7 +30,7 @@ public static class Extensions
     {
         return new CustomerModel_DTO_Create_Update()
         {
-            FirstName = model.FirstName,
+            FirstName = model.FullName,
             LastName = model.LastName,
             CompanyName = model.CompanyName,
             EmailAddress = model.EmailAddress,
@@ -52,7 +52,7 @@ public static class Extensions
             IssueDate = model.IssueDate,
             DueDate = model.DueDate,
             BankName = model.BankName,
-            Serial = model.Serial,
+            Serial = model.SerialNumber,
             Identifier = model.Identifier,
             Descriptions = model.Descriptions,
             Events = model.Events
@@ -85,7 +85,7 @@ public static class Extensions
             DateCreated = model.DateCreated,
             DateUpdated = model.DateUpdated,
             TotalInvoiceSum = model.TotalInvoiceSum,
-            TotalPayments = model.TotalPayments,
+            TotalInvoicePayments = model.TotalPayments,
             LifeStatus = model.LifeStatus
         };
     }
@@ -163,7 +163,7 @@ public static class Extensions
         To.DateCreated = From.DateCreated;
         To.DateUpdated = From.DateUpdated;
         To.Descriptions = From.Descriptions;
-        To.IsActive = From.IsActive;
+        To.Active = From.Active;
     }
 
     public static void Clone(this CustomerModel From, CustomerModel To)
@@ -171,7 +171,7 @@ public static class Extensions
         if (From == null) return;
         if (To == null) To = new();
         To.Id = From.Id;
-        To.FirstName = From.FirstName;
+        To.FullName = From.FullName;
         To.LastName = From.LastName;
         To.CompanyName = From.CompanyName;
         To.EmailAddress = From.EmailAddress;
@@ -198,7 +198,7 @@ public static class Extensions
         To.IssueDate = From.IssueDate;
         To.DueDate = From.DueDate;
         To.BankName = From.BankName;
-        To.Serial = From.Serial;
+        To.SerialNumber = From.SerialNumber;
         To.Identifier = From.Identifier;
         To.Descriptions = From.Descriptions;
         if (From.Events != null)

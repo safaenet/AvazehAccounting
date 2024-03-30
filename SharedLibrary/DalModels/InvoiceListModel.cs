@@ -13,20 +13,15 @@ public class InvoiceListModel
     public string CustomerFullName { get; set; }
     public string About { get; set; }
     public string DateCreated { get; set; }
-    public string TimeCreated { get; set; }
     public string DateUpdated { get; set; }
-    public string TimeUpdated { get; set; }
     public decimal TotalInvoiceSum { get; set; }
-    public decimal TotalPayments { get; set; }
-    public InvoiceLifeStatus LifeStatus { get; set; }
+    public decimal TotalInvoicePayments { get; set; }
     public int? PrevInvoiceId { get; set; }
     public decimal PrevInvoiceBalance { get; set; }
     public int? FwdInvoiceId { get; set; }
-    public decimal TotalInvoiceBalance => TotalInvoiceSum - TotalPayments;
+    public decimal TotalInvoiceBalance => TotalInvoiceSum - TotalInvoicePayments;
     public decimal TotalBalance => TotalInvoiceBalance + PrevInvoiceBalance;
     public string InvoiceTitle => string.IsNullOrEmpty(About) ? CustomerFullName : CustomerFullName + " - " + About;
-    public string DateTimeCreated => TimeCreated + " " + DateCreated;
-    public string DateTimeUpdated => TimeUpdated + " " + DateUpdated;
     public InvoiceFinancialStatus InvoiceFinancialStatus => TotalBalance == 0 ? InvoiceFinancialStatus.Balanced : TotalBalance > 0 ? InvoiceFinancialStatus.Deptor : InvoiceFinancialStatus.Creditor;
     //public InvoiceFinancialStatus InvoiceFinancialStatus => (FwdInvoiceId is not null and > 0) ? InvoiceFinancialStatus.Outstanding : TotalBalance == 0 ? InvoiceFinancialStatus.Balanced : TotalBalance > 0 ? InvoiceFinancialStatus.Deptor : InvoiceFinancialStatus.Creditor;
 }

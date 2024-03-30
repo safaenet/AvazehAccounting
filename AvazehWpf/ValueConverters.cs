@@ -183,11 +183,11 @@ public class EnglishToPersianChequeEventTypeConverter : IMultiValueConverter
         if (values == null || values[0] == DependencyProperty.UnsetValue || values[0] == null) return DependencyProperty.UnsetValue;
         var eventText = (values[1] == DependencyProperty.UnsetValue || string.IsNullOrEmpty((string)values[1])) ? string.Empty : (string)values[1];
         eventText = string.IsNullOrEmpty(eventText) ? string.Empty : $" - {eventText}";
-        if ((string)values[0] == ChequeEventTypes.None.ToString()) return $"عادی{eventText}";
-        else if ((string)values[0] == ChequeEventTypes.Holding.ToString()) return $"عادی{eventText}";
-        else if ((string)values[0] == ChequeEventTypes.Sold.ToString()) return $"منتقل شده{eventText}";
-        else if ((string)values[0] == ChequeEventTypes.NonSufficientFund.ToString()) return $"برگشت خورده{eventText}";
-        else if ((string)values[0] == ChequeEventTypes.Cashed.ToString()) return $"وصول شده{eventText}";
+        if ((string)values[0] == ChequeStatusTypes.None.ToString()) return $"عادی{eventText}";
+        else if ((string)values[0] == ChequeStatusTypes.Holding.ToString()) return $"عادی{eventText}";
+        else if ((string)values[0] == ChequeStatusTypes.Sold.ToString()) return $"منتقل شده{eventText}";
+        else if ((string)values[0] == ChequeStatusTypes.NonSufficientFund.ToString()) return $"برگشت خورده{eventText}";
+        else if ((string)values[0] == ChequeStatusTypes.Cashed.ToString()) return $"وصول شده{eventText}";
         else return DependencyProperty.UnsetValue;
     }
 
@@ -236,15 +236,15 @@ public class ChequeEventToColorConverter : Freezable, IValueConverter
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value == null) return DependencyProperty.UnsetValue;
-        else if ((string)value == ChequeEventTypes.Sold.ToString())
+        else if ((string)value == ChequeStatusTypes.Sold.ToString())
         {
             if (string.IsNullOrEmpty(SoldColor)) return DependencyProperty.UnsetValue; else return new SolidColorBrush(SoldColor.ToColor());
         }
-        else if ((string)value == ChequeEventTypes.NonSufficientFund.ToString())
+        else if ((string)value == ChequeStatusTypes.NonSufficientFund.ToString())
         {
             if (string.IsNullOrEmpty(NonSufficientFundColor)) return DependencyProperty.UnsetValue; else return new SolidColorBrush(NonSufficientFundColor.ToColor());
         }
-        else if ((string)value == ChequeEventTypes.Cashed.ToString())
+        else if ((string)value == ChequeStatusTypes.Cashed.ToString())
         {
             if (string.IsNullOrEmpty(CashedColor)) return DependencyProperty.UnsetValue; else return new SolidColorBrush(CashedColor.ToColor());
         }
@@ -413,12 +413,12 @@ public class intToValueChequeEventTypeConverter : IValueConverter
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value == null) return DependencyProperty.UnsetValue;
-        var val = (ChequeEventTypes)value;
-        if (val == ChequeEventTypes.None) return (int)ChequeEventTypes.None;
-        else if (val == ChequeEventTypes.Holding) return (int)ChequeEventTypes.Holding;
-        else if (val == ChequeEventTypes.Sold) return (int)ChequeEventTypes.Sold;
-        else if (val == ChequeEventTypes.NonSufficientFund) return (int)ChequeEventTypes.NonSufficientFund;
-        else if (val == ChequeEventTypes.Cashed) return (int)ChequeEventTypes.Cashed;
+        var val = (ChequeStatusTypes)value;
+        if (val == ChequeStatusTypes.None) return (int)ChequeStatusTypes.None;
+        else if (val == ChequeStatusTypes.Holding) return (int)ChequeStatusTypes.Holding;
+        else if (val == ChequeStatusTypes.Sold) return (int)ChequeStatusTypes.Sold;
+        else if (val == ChequeStatusTypes.NonSufficientFund) return (int)ChequeStatusTypes.NonSufficientFund;
+        else if (val == ChequeStatusTypes.Cashed) return (int)ChequeStatusTypes.Cashed;
         return DependencyProperty.UnsetValue;
     }
 
@@ -426,11 +426,11 @@ public class intToValueChequeEventTypeConverter : IValueConverter
     {
         if (value == null) return DependencyProperty.UnsetValue;
         var val = (int)value;
-        if (val == (int)ChequeEventTypes.None) return ChequeEventTypes.None;
-        else if (val == (int)ChequeEventTypes.Holding) return ChequeEventTypes.Holding;
-        else if (val == (int)ChequeEventTypes.Sold) return ChequeEventTypes.Sold;
-        else if (val == (int)ChequeEventTypes.NonSufficientFund) return ChequeEventTypes.NonSufficientFund;
-        else if (val == (int)ChequeEventTypes.Cashed) return ChequeEventTypes.Cashed;
+        if (val == (int)ChequeStatusTypes.None) return ChequeStatusTypes.None;
+        else if (val == (int)ChequeStatusTypes.Holding) return ChequeStatusTypes.Holding;
+        else if (val == (int)ChequeStatusTypes.Sold) return ChequeStatusTypes.Sold;
+        else if (val == (int)ChequeStatusTypes.NonSufficientFund) return ChequeStatusTypes.NonSufficientFund;
+        else if (val == (int)ChequeStatusTypes.Cashed) return ChequeStatusTypes.Cashed;
         return DependencyProperty.UnsetValue;
     }
 }

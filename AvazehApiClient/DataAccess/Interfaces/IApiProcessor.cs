@@ -19,7 +19,7 @@ public interface IApiProcessor
     Task<bool> GetBooleanAsync(string Key);
     Task<T> GetInvoiceCollectionAsync<T>(string Key, int FetcheSize = 50, int InvoiceId = -1, int CustomerId = -1, string InvoiceDate = "%", string SearchValue = "%", InvoiceLifeStatus? LifeStatus = InvoiceLifeStatus.Active, InvoiceFinancialStatus? FinStatus = InvoiceFinancialStatus.Outstanding, SqlQuerySearchMode SearchMode = SqlQuerySearchMode.Backward, OrderType orderType = OrderType.DESC, int StartId = -1) where T : class;
     Task<T> GetTransactionCollectionAsync<T>(string Key, string OrderBy, OrderType orderType, int IdToSearch = 0, string DateToSearch = null, int Page = 1, string SearchText = "", TransactionFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false) where T : class;
-    Task<ItemsCollection_DTO<ChequeModel>> GetChequeCollectionAsync(string Key, string OrderBy, OrderType orderType, ChequeListQueryStatus? listQueryStatus = ChequeListQueryStatus.FromNowOn, int Page = 1, string SearchText = "", int PageSize = 50, bool ForceLoad = false);
+    Task<PageModel<ChequeModel>> GetChequeCollectionAsync(string Key, string OrderBy, OrderType orderType, ChequeListQueryStatus? listQueryStatus = ChequeListQueryStatus.FromNowOn, int Page = 1, string SearchText = "", int PageSize = 50, bool ForceLoad = false);
     Task<T> GetItemAsync<T>(string Key, string Id) where T : class;
     Task<U> CreateItemAsync<T, U>(string Key, T model) where U : class;
     Task<U> UpdateItemAsync<T, U>(string Key, int Id, T model) where U : class;
