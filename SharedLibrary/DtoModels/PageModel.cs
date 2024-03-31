@@ -1,10 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 
 namespace SharedLibrary.DtoModels;
 
 public class PageModel<T>
 {
-    public ObservableCollection<T> Content { get; init; }
+    public IEnumerable<T> Content { get; init; }
     public Pageable Pageable { get; set; }
     public bool Last { get; set; }
     public int TotalPages { get; set; }

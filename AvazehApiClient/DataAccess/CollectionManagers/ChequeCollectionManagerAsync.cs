@@ -4,7 +4,6 @@ using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
 using SharedLibrary.Validators;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -18,19 +17,10 @@ public class ChequeCollectionManagerAsync : IChequeCollectionManagerAsync
     {
         ApiProcessor = apiProcessor;
     }
-    public event EventHandler PageLoading;
-    public event EventHandler PageLoaded;
-    public event EventHandler FirstPageLoaded;
-    public event EventHandler NextPageLoading;
-    public event EventHandler NextPageLoaded;
-    public event EventHandler PreviousPageLoading;
-    public event EventHandler PreviousPageLoaded;
     private const string Key = "Cheque";
     public IApiProcessor ApiProcessor { get; init; }
 
     public ObservableCollection<ChequeModel> Items { get; set; }
-    public int? MinID => Items == null || Items.Count == 0 ? null : Items.Min(x => x.Id);
-    public int? MaxID => Items == null || Items.Count == 0 ? null : Items.Max(x => x.Id);
 
     public string SearchValue { get; set; }
     public string QueryOrderBy { get; set; } = "DueDate";
@@ -39,6 +29,7 @@ public class ChequeCollectionManagerAsync : IChequeCollectionManagerAsync
     public int PageSize { get; set; } = 50;
     public int PagesCount { get; private set; }
     public int CurrentPage { get; private set; }
+    public int TotalItemCount { get; private set; }
     public ChequeListQueryStatus? ListQueryStatus { get; set; } = ChequeListQueryStatus.FromNowOn;
 
     public ChequeModel GetItemFromCollectionById(int Id)
@@ -92,14 +83,10 @@ public class ChequeCollectionManagerAsync : IChequeCollectionManagerAsync
 
     public async Task<int> GotoPageAsync(int PageNumber, bool Refresh = false)
     {
-        PageLoadEventArgs eventArgs = new();
-        PageLoading?.Invoke(this, eventArgs);
-        if (eventArgs.Cancel) return 0;
-        var collection = await ApiProcessor.GetChequeCollectionAsync(Key, QueryOrderBy, QueryOrderType, ListQueryStatus, PageNumber, SearchValue, PageSize, Refresh);
-        Items = collection?.Items.AsObservable();
+        var collection = await ApiProcessor.GetChequeCollectionAsync(Key, QueryOrderBy, QueryOrderType, ListQueryStatus, PageNumber, SearchValue, PageSize);
+        Items = collection?.Content.AsObservable();
         CurrentPage = collection is null ? 0 : collection.CurrentPage;
         PagesCount = collection is null ? 0 : collection.PagesCount;
-        PageLoaded?.Invoke(this, null);
         return Items == null ? 0 : Items.Count;
     }
 
@@ -111,29 +98,20 @@ public class ChequeCollectionManagerAsync : IChequeCollectionManagerAsync
     public async Task<int> LoadFirstPageAsync()
     {
         var result = await GotoPageAsync(1);
-        FirstPageLoaded?.Invoke(this, null);
         return result;
     }
 
     public async Task<int> LoadPreviousPageAsync()
     {
         if (CurrentPage == PagesCount) return 0;
-        PageLoadEventArgs eventArgs = new();
-        PreviousPageLoading?.Invoke(this, eventArgs);
-        if (eventArgs.Cancel) return 0;
         var result = await GotoPageAsync(CurrentPage + 1);
-        PreviousPageLoaded?.Invoke(this, null);
         return result;
     }
 
     public async Task<int> LoadNextPageAsync()
     {
         if (CurrentPage == 1) return 0;
-        PageLoadEventArgs eventArgs = new();
-        NextPageLoading?.Invoke(this, eventArgs);
-        if (eventArgs.Cancel) return 0;
         var result = await GotoPageAsync(CurrentPage - 1);
-        NextPageLoaded?.Invoke(this, null);
         return result;
     }
 }

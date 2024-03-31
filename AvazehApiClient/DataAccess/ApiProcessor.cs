@@ -200,11 +200,12 @@ public class ApiProcessor : IApiProcessor
         return default;
     }
 
-    public async Task<PageModel<ChequeModel>> GetChequeCollectionAsync(string Key, string OrderBy, OrderType orderType, ChequeListQueryStatus? listQueryStatus = ChequeListQueryStatus.FromNowOn, int Page = 1, string SearchText = "", int PageSize = 50, bool ForceLoad = false)
+    public async Task<PageModel<ChequeModel>> GetChequeCollectionAsync(string Key, string OrderBy, OrderType orderType, ChequeListQueryStatus? listQueryStatus = ChequeListQueryStatus.FromNowOn, int Page = 1, string SearchText = "", int PageSize = 50)
     {
         try
         {
-            var Url = $"{Key}?OrderBy={OrderBy}&OrderType={orderType}&listQueryStatus={listQueryStatus}&Page={Page}&SearchText={SearchText}&PageSize={PageSize}&ForceLoad={ForceLoad}";
+            var Url = $"{Key + "/GetWithPagination"}?searchText={SearchText}&chequeStatus={listQueryStatus}&offset={Page + 1}&pageSize={PageSize}&sortColumn={OrderBy}&sortOrder={orderType}";
+
             var response = await ApiClient.GetAsync(Url);
             return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<PageModel<ChequeModel>>() : null;
         }
