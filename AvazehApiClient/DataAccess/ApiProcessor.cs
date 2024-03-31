@@ -4,6 +4,7 @@ using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
@@ -140,7 +141,7 @@ public class ApiProcessor : IApiProcessor
         return default;
     }
 
-    public async Task<T> GetCollectionAsync<T>(string Key, int Id1, int Id2, int Id3) where T : class //Mostly used for Load Product recent prices in invoice details page.
+    public async Task<T> GetCollectionAsync<T>(string Key, int Id1, int Id2, int Id3) where T : class //Mostly used for Load Product recent prices in invoice details page. JAVA
     {
         try
         {
@@ -204,7 +205,7 @@ public class ApiProcessor : IApiProcessor
     {
         try
         {
-            var Url = $"{Key + "/GetWithPagination"}?searchText={SearchText}&chequeStatus={listQueryStatus}&offset={Page + 1}&pageSize={PageSize}&sortColumn={OrderBy}&sortOrder={orderType}";
+            var Url = $"{Key}?searchText={SearchText}&chequeStatus={listQueryStatus}&offset={Page + 1}&pageSize={PageSize}&sortColumn={OrderBy}&sortOrder={orderType}";
 
             var response = await ApiClient.GetAsync(Url);
             return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<PageModel<ChequeModel>>() : null;
@@ -214,6 +215,21 @@ public class ApiProcessor : IApiProcessor
             Log.Error(ex, "Error in ApiProcessor");
         }
         return null;
+    }
+
+    public async Task<List<ChequeModel>> GetCloseChequesAsync(string Key) //JAVA
+    {
+        try
+        {
+            var Url = $"{Key}";
+            var response = await ApiClient.GetAsync(Url);
+            return response.IsSuccessStatusCode ? await response.Content.ReadAsAsync<List<ChequeModel>>() : null;
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error in ApiProcessor");
+        }
+        return default;
     }
 
     public async Task<T> GetItemAsync<T>(string Key, string Id) where T : class

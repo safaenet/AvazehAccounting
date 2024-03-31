@@ -111,7 +111,7 @@ public class Bootstrapper : BootstrapperBase
 
     protected override void OnStartup(object sender, StartupEventArgs e)
     {
-        _ = DisplayRootViewFor<LoginViewModel>();
+        _ = DisplayRootViewFor<MainWindowViewModel>();
     }
 
 }

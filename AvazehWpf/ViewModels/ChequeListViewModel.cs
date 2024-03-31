@@ -8,7 +8,6 @@ using SharedLibrary.SecurityAndSettingsModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -101,25 +100,7 @@ public class ChequeListViewModel : Screen
     public async Task AddNewChequeAsync()
     {
         WindowManager wm = new();
-        await wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, null, Singleton, RefreshPageAsync));
-    }
-
-    public async Task PreviousPageAsync()
-    {
-        await CCM.LoadPreviousPageAsync();
-        NotifyOfPropertyChange(() => Cheques);
-    }
-
-    public async Task NextPageAsync()
-    {
-        await CCM.LoadNextPageAsync();
-        NotifyOfPropertyChange(() => Cheques);
-    }
-
-    public async Task RefreshPageAsync()
-    {
-        await CCM.RefreshPage();
-        NotifyOfPropertyChange(() => Cheques);
+        await wm.ShowWindowAsync(new ChequeDetailViewModel(CCM, null, Singleton, SearchAsync));
     }
 
     public async Task SearchAsync()
@@ -127,7 +108,7 @@ public class ChequeListViewModel : Screen
         ChequeListQueryStatus? ListQueryStatus = SelectedListQueryStatus >= Enum.GetNames(typeof(ChequeListQueryStatus)).Length ? null : (ChequeListQueryStatus)SelectedListQueryStatus;
         CCM.ListQueryStatus = ListQueryStatus;
         CCM.SearchValue = SearchText;
-        await CCM.LoadFirstPageAsync();
+        await CCM.RefreshPage();
         NotifyOfPropertyChange(() => Cheques);
     }
 

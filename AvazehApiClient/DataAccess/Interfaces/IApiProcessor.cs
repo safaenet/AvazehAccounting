@@ -1,6 +1,7 @@
 ﻿using SharedLibrary.DalModels;
 using SharedLibrary.DtoModels;
 using SharedLibrary.Enums;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AvazehApiClient.DataAccess.Interfaces;
@@ -26,4 +27,5 @@ public interface IApiProcessor
     Task<bool> DeleteItemAsync(string Key, int Id);
     Task<T?> GetValueOrNullAsync<T>(string Key, params int[] Ids) where T : struct;
     Task<decimal> GetValueOrZeroAsync<T>(string Key, params int[] Ids);
+    Task<List<ChequeModel>> GetCloseChequesAsync(string Key);
 }

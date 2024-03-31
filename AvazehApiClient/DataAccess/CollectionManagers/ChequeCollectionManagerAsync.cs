@@ -77,41 +77,16 @@ public class ChequeCollectionManagerAsync : IChequeCollectionManagerAsync
 
     public async Task<List<ChequeModel>> GetCloseCheques()
     {
-        var list = await ApiProcessor.GetCollectionAsync<List<ChequeModel>>("Cheque/CloseCheques", 0);
+        var list = await ApiProcessor.GetCloseChequesAsync(Key + "/GetCloseCheques");
         return list;
-    }
-
-    public async Task<int> GotoPageAsync(int PageNumber, bool Refresh = false)
-    {
-        var collection = await ApiProcessor.GetChequeCollectionAsync(Key, QueryOrderBy, QueryOrderType, ListQueryStatus, PageNumber, SearchValue, PageSize);
-        Items = collection?.Content.AsObservable();
-        CurrentPage = collection is null ? 0 : collection.CurrentPage;
-        PagesCount = collection is null ? 0 : collection.PagesCount;
-        return Items == null ? 0 : Items.Count;
     }
 
     public async Task<int> RefreshPage()
     {
-        return await GotoPageAsync(CurrentPage, true);
-    }
-
-    public async Task<int> LoadFirstPageAsync()
-    {
-        var result = await GotoPageAsync(1);
-        return result;
-    }
-
-    public async Task<int> LoadPreviousPageAsync()
-    {
-        if (CurrentPage == PagesCount) return 0;
-        var result = await GotoPageAsync(CurrentPage + 1);
-        return result;
-    }
-
-    public async Task<int> LoadNextPageAsync()
-    {
-        if (CurrentPage == 1) return 0;
-        var result = await GotoPageAsync(CurrentPage - 1);
-        return result;
+        var collection = await ApiProcessor.GetChequeCollectionAsync(Key + "/GetWithPagination", QueryOrderBy, QueryOrderType, ListQueryStatus, CurrentPage, SearchValue, PageSize);
+        Items = collection?.Content.AsObservable();
+        TotalItemCount = collection.NumberOfElements;
+        if (Items == null) return 0;
+        else return Items.Count;
     }
 }

@@ -18,11 +18,7 @@ public interface ICollectionManagerBase<T>
     Task<T> CreateItemAsync(T item);
     Task<T> UpdateItemAsync(T item);
     Task<bool> DeleteItemAsync(int Id);
-    Task<int> GotoPageAsync(int PageNumber, bool Refresh);
     Task<int> RefreshPage();
-    Task<int> LoadFirstPageAsync();
-    Task<int> LoadNextPageAsync();
-    Task<int> LoadPreviousPageAsync();
     Task<T> GetItemById(int Id);
     ValidationResult ValidateItem(T item);
 }
