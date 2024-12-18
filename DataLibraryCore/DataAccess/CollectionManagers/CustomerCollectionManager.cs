@@ -14,17 +14,9 @@ public class CustomerCollectionManager : IGeneralCollectionManager<CustomerModel
     {
         Processor = processor;
     }
-    public event EventHandler WhereClauseChanged;
-    public event EventHandler FirstPageLoaded;
-    public event EventHandler NextPageLoading;
-    public event EventHandler NextPageLoaded;
-    public event EventHandler PreviousPageLoading;
-    public event EventHandler PreviousPageLoaded;
     public bool Initialized { get; set; }
     public IGeneralProcessor<CustomerModel> Processor { get; init; }
     public IEnumerable<CustomerModel> Items { get; set; }
-    public int? MinID => Items == null || Items.Count() == 0 ? null : Items.Min(x => x.Id);
-    public int? MaxID => Items == null || Items.Count() == 0 ? null : Items.Max(x => x.Id);
 
     private protected string _WhereClause;
     public string WhereClause
@@ -35,7 +27,6 @@ public class CustomerCollectionManager : IGeneralCollectionManager<CustomerModel
             if (_WhereClause != value)
                 Initialized = false;
             _WhereClause = value;
-            WhereClauseChanged?.Invoke(this, null);
         }
     }
 
@@ -76,7 +67,7 @@ public class CustomerCollectionManager : IGeneralCollectionManager<CustomerModel
         QueryOrderBy = OrderBy;
         QueryOrderType = orderType;
         WhereClause = Processor.GenerateWhereClause(val, mode);
-        if (run) LoadFirstPageAsync().ConfigureAwait(true);
+        if (run) GotoPageAsync(1).ConfigureAwait(true);
         return Items == null ? 0 : Items.Count();
     }
 
@@ -98,32 +89,5 @@ public class CustomerCollectionManager : IGeneralCollectionManager<CustomerModel
         Items = await Processor.LoadManyItemsAsync((PageNumber - 1) * PageSize, PageSize, WhereClause, QueryOrderBy, QueryOrderType);
         CurrentPage = Items == null || Items.Count() == 0 ? 0 : PageNumber;
         return Items == null ? 0 : Items.Count();
-    }
-
-    public async Task<int> LoadFirstPageAsync()
-    {
-        var result = await GotoPageAsync(1);
-        FirstPageLoaded?.Invoke(this, null);
-        return result;
-    }
-
-    public async Task<int> LoadPreviousPageAsync()
-    {
-        PageLoadEventArgs eventArgs = new();
-        PreviousPageLoading?.Invoke(this, eventArgs);
-        if (eventArgs.Cancel) return 0;
-        var result = await GotoPageAsync(CurrentPage - 1);
-        PreviousPageLoaded?.Invoke(this, null);
-        return result;
-    }
-
-    public async Task<int> LoadNextPageAsync()
-    {
-        PageLoadEventArgs eventArgs = new();
-        NextPageLoading?.Invoke(this, eventArgs);
-        if (eventArgs.Cancel) return 0;
-        var result = await GotoPageAsync(CurrentPage + 1);
-        NextPageLoaded?.Invoke(this, null);
-        return result;
     }
 }

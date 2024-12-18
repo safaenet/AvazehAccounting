@@ -21,7 +21,7 @@ namespace AvazehWebAPI.Controllers;
 [Route("api/v1/[controller]")]
 public class ChequeController : ControllerBase
 {
-    public ChequeController(IChequeCollectionManager manager, System.IServiceProvider service)
+    public ChequeController(IChequeCollectionManager manager, IServiceProvider service)
     {
         Manager = manager;
         Service = service;
@@ -38,7 +38,7 @@ public class ChequeController : ControllerBase
         Manager.PageSize = PageSize;
         if (ForceLoad) Manager.Initialized = false;
         await Manager.GotoPageAsync(Page);
-        if (Manager.Items == null || Manager.Items.Count() == 0) return NotFound("List is empty");
+        if (Manager.Items == null || !Manager.Items.Any()) return NotFound("List is empty");
         return Manager.AsDto();
     }
 
