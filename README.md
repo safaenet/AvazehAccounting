@@ -146,9 +146,9 @@ This project is licensed under the **MIT License**. See the `LICENSE` file for m
 
 ---
 
-## 🧑‍💻 About the Author
+## 🧑‍💻 About Safa Dana
 
 **Safa Dana** is a results-driven software developer specializing in backend development, IoT, and scalable systems. This project reflects a strong foundation in .NET technologies and a commitment to delivering efficient software solutions.  
 - GitHub: [safaenet](https://github.com/safaenet)  
-- LinkedIn: [Your LinkedIn Profile](#)
+- LinkedIn: [My Profile](www.linkedin.com/in/safa-dana)
 
