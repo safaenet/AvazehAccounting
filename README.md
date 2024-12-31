@@ -1,5 +1,5 @@
 
-# Avazeh Accounting (OlderStyle Branch)
+# Avazeh Accounting (Retail Management Software)
 
 **Avazeh Accounting** is a comprehensive desktop retail management application developed using **C# .NET** with **Windows Presentation Foundation (WPF)**. This project demonstrates proficiency in software development, application architecture, and database management. I have already sold this software to some of local retail shop back in my country.
 
