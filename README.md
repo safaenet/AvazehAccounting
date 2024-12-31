@@ -1,5 +1,5 @@
 
-# Avazeh Accounting (Older Style Branch)
+# Avazeh Accounting (OlderStyle Branch)
 
 **Avazeh Accounting** is a comprehensive desktop retail management application developed using **C# .NET** with **Windows Presentation Foundation (WPF)**. This project demonstrates proficiency in software development, application architecture, and database management. I have already sold this software to some of local retail shop back in my country.
 
@@ -38,6 +38,8 @@ It was built to simplify financial management processes for small businesses and
 ---
 
 ## 🖥️ Technical Stack
+
+![Solution explorer](https://github.com/safaenet/AvazehAccounting/blob/573a7c7f34413e13c407b889024bd688d4ae8784/Screenshots/Screenshot%202024-12-26%20101159.png)
 
 ### **Languages and Frameworks**
 - **C#.NET**: Backend logic and application development.
@@ -97,16 +99,51 @@ It was built to simplify financial management processes for small businesses and
 
 I hope you don't mind that the language of the application is in Farsi (Persian)
 1. **Login**: Use default credentials set up during the database initialization. If `login` as disabled, you need to `signup` first.
+   
+   ![Login Page](https://github.com/safaenet/AvazehAccounting/blob/573a7c7f34413e13c407b889024bd688d4ae8784/Screenshots/Screenshot%202024-12-26%20101254.png)
+   
 2. **Dashboard**: Access different options of the app here.
+
+   ![Dashboard](https://github.com/safaenet/AvazehAccounting/blob/573a7c7f34413e13c407b889024bd688d4ae8784/Screenshots/Screenshot%202024-12-26%20101309.png)
+   
 3. **Modules**:
    - **Create New Invoice**: Create an invoice.
+     
+     ![New Invoice](https://github.com/safaenet/AvazehAccounting/blob/573a7c7f34413e13c407b889024bd688d4ae8784/Screenshots/Screenshot%202024-12-26%20101402.png)
+
+     ![New Invoice](https://github.com/safaenet/AvazehAccounting/blob/3a080dee147857ac2b798bfc7559cddd75a14509/Screenshots/Screenshot%202024-12-26%20101458.png)
+     
    - **View Invoices**: View already exsisting invoices.
-   - **Create New Ledger**: Create a ledger for customers who continuously buy and pay in once. 
+
+     ![View Invoices](https://github.com/safaenet/AvazehAccounting/blob/3a080dee147857ac2b798bfc7559cddd75a14509/Screenshots/Screenshot%202024-12-31%20111647.png)
+     
+   - **Create New Ledger**: Create a ledger for customers who continuously buy and pay.
+
+     ![New Ledger](https://github.com/safaenet/AvazehAccounting/blob/0cd333bc7d82549f578fd02778597033cd052c5e/Screenshots/Screenshot%202024-12-31%20112832.png)
+     
    - **View Ledgers**: View all ledgers.
+
+     ![View Ledgers](https://github.com/safaenet/AvazehAccounting/blob/0cd333bc7d82549f578fd02778597033cd052c5e/Screenshots/Screenshot%202024-12-26%20101659.png)
+     
    - **Bank Checks**: Here we put checks that we paid other people and checks that people paid us. The app notifies us when the due date is close.
-   - **Products (Goods)**: List of all the products that are being sold. Products can be created/updated/deleted here.
-   - **Customers**: List of all customers. Customers can be created/updated/deleted here.
+
+     ![Bank Checks](https://github.com/safaenet/AvazehAccounting/blob/542c7d49e8fb35397d6a08f28d855bcf3438c8d5/Screenshots/Screenshot%202024-12-31%20113015.png)
+     
+   - **Products (Goods)**: List of all the products that are being sold shown by pagination. Products can be created/updated/deleted here.
+
+     ![Products](https://github.com/safaenet/AvazehAccounting/blob/542c7d49e8fb35397d6a08f28d855bcf3438c8d5/Screenshots/Screenshot%202024-12-31%20113043.png)
+     
+   - **Customers**: List of all customers shown by pagination. Customers can be created/updated/deleted here.
+
+     ![Customers](https://github.com/safaenet/AvazehAccounting/blob/542c7d49e8fb35397d6a08f28d855bcf3438c8d5/Screenshots/Screenshot%202024-12-31%20113031.png)
+     
 4. **Settings**: Modify `settings` to suit specific needs.
+   
+   ![Settings](https://github.com/safaenet/AvazehAccounting/blob/851d3bda69e3a1091ddc57c35a995556a2c865ba/Screenshots/Screenshot%202024-12-31%20113321.png)
+
+5. **Print Invoice/Ledger**
+
+   ![Print](https://github.com/safaenet/AvazehAccounting/blob/851d3bda69e3a1091ddc57c35a995556a2c865ba/Screenshots/Screenshot%202024-12-26%20203917.png)
 
 ---
 
