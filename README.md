@@ -177,12 +177,6 @@ I hope you don't mind that the language of the application is in Farsi (Persian)
 
 ---
 
-## 📜 License
-
-This project is licensed under the **MIT License**. See the `LICENSE` file for more details.
-
----
-
 ## 🧑‍💻 About Safa Dana
 
 **Safa Dana** is a results-driven software developer specializing in backend development, IoT, and scalable systems. This project reflects a strong foundation in .NET technologies and a commitment to delivering efficient software solutions.  
