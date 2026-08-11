@@ -79,7 +79,7 @@ public class LoginViewModel : ViewAware
     public async Task GetIfAdminExistsAsync()
     {
         //CanRegisterAsync = true;
-        CanRegisterAsync = !(await ApiProcessor.GetBooleanAsync("Auth/AdminExists"));
+        CanRegisterAsync = !await ApiProcessor.GetBooleanAsync("Auth/AdminExists");
     }
 
     public async Task LoginAsync()

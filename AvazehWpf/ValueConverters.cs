@@ -344,7 +344,6 @@ public class AmountToColorConverter : Freezable, IValueConverter
             case < 0:
                 if (string.IsNullOrEmpty(NegativeColor)) return DependencyProperty.UnsetValue; else return new SolidColorBrush(NegativeColor.ToColor());
         }
-        return DependencyProperty.UnsetValue;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
