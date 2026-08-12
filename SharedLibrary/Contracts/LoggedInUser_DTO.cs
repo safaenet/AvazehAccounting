@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SharedLibrary.SecurityAndSettingsModels;
+namespace SharedLibrary.Contracts;
 
 public class LoggedInUser_DTO
 {
