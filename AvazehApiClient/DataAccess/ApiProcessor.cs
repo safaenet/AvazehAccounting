@@ -1,7 +1,7 @@
 ﻿using AvazehApiClient.DataAccess.Interfaces;
 using Serilog;
-using SharedLibrary.DalModels;
-using SharedLibrary.DtoModels;
+using SharedLibrary.Models;
+using SharedLibrary.Contracts;
 using SharedLibrary.Enums;
 using System;
 using System.IdentityModel.Tokens.Jwt;

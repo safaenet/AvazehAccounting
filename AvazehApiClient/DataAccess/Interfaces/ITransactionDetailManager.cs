@@ -1,4 +1,4 @@
-﻿using SharedLibrary.DalModels;
+﻿using SharedLibrary.Models;
 using SharedLibrary.Enums;
 
 namespace AvazehApiClient.DataAccess.Interfaces;

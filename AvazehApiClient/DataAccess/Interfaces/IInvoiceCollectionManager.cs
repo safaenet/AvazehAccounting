@@ -1,6 +1,6 @@
 ﻿using FluentValidation.Results;
-using SharedLibrary.DalModels;
-using SharedLibrary.DtoModels;
+using SharedLibrary.Models;
+using SharedLibrary.Contracts;
 using SharedLibrary.Enums;
 using System;
 using System.Collections.Generic;

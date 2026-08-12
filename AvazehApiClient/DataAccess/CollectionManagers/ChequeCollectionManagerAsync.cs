@@ -1,7 +1,7 @@
 ﻿using AvazehApiClient.DataAccess.Interfaces;
 using FluentValidation.Results;
-using SharedLibrary.DalModels;
-using SharedLibrary.DtoModels;
+using SharedLibrary.Models;
+using SharedLibrary.Contracts;
 using SharedLibrary.Enums;
 using SharedLibrary.Validators;
 using System;

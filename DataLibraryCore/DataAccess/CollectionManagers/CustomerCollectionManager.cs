@@ -1,5 +1,5 @@
 ﻿using DataLibraryCore.DataAccess.Interfaces;
-using SharedLibrary.DalModels;
+using SharedLibrary.Models;
 using SharedLibrary.Enums;
 using System;
 using System.Collections.Generic;

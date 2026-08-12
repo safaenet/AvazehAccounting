@@ -11,7 +11,7 @@
         xmlns:viewmodels="clr-namespace:AvazehWpf.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:TransactionDetailViewModel}"
         xmlns:dlc="clr-namespace:SharedLibrary.Enums;assembly=SharedLibrary"
-        xmlns:dlc2="clr-namespace:SharedLibrary.DtoModels;assembly=SharedLibrary" xmlns:avazehusercontrollibrarywpf="clr-namespace:AvazehUserControlLibraryWpf;assembly=AvazehUserControlLibraryWpf"
+        xmlns:dlc2="clr-namespace:SharedLibrary.Contracts;assembly=SharedLibrary" xmlns:avazehusercontrollibrarywpf="clr-namespace:AvazehUserControlLibraryWpf;assembly=AvazehUserControlLibraryWpf"
         Title="{Binding WindowTitle}" FontFamily="Tahoma" WindowStartupLocation="CenterScreen"
         Width="1220" Height="650"
         cal:Message.Attach="[Event Closing] = [Action ClosingWindowAsync]; [Event PreviewKeyDown] = [Window_PreviewKeyDown($view, $eventArgs)]; [Event Loaded] = [FocusOnProductsCombobox()];

@@ -1,5 +1,5 @@
 ﻿using FluentValidation.Results;
-using SharedLibrary.DalModels;
+using SharedLibrary.Models;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 

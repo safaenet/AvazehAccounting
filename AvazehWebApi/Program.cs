@@ -9,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SharedLibrary.DalModels;
+using SharedLibrary.Models;
 using SharedLibrary.Validators;
 using System.Text;
 using Swashbuckle.AspNetCore.Filters;

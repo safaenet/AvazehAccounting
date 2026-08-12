@@ -1,4 +1,4 @@
-﻿using SharedLibrary.DalModels;
+﻿using SharedLibrary.Models;
 
 namespace DataLibraryCore.DataAccess.Interfaces;
 
