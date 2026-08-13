@@ -4,7 +4,7 @@ using System.Linq;
 using FluentValidation.Results;
 using DataLibraryCore.DataAccess.Interfaces;
 using SharedLibrary.Validators;
-using SharedLibrary.DalModels;
+using SharedLibrary.Models;
 using SharedLibrary.Enums;
 using System.Threading.Tasks;
 using System;

@@ -2,7 +2,7 @@
 using DataLibraryCore.DataAccess.Interfaces;
 using DataLibraryCore.DataAccess.SqlServer;
 using Serilog;
-using SharedLibrary.DalModels;
+using SharedLibrary.Models;
 using SharedLibrary.SecurityAndSettingsModels;
 using System;
 using System.Collections.Generic;

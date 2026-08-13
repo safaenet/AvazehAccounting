@@ -1,6 +1,6 @@
 ﻿using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
-using SharedLibrary.DalModels;
+using SharedLibrary.Models;
 using SharedLibrary.Helpers;
 using SharedLibrary.SecurityAndSettingsModels;
 using System;

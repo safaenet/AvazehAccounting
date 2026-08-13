@@ -1,8 +1,8 @@
 ﻿using AvazehWeb;
 using DataLibraryCore.DataAccess.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using SharedLibrary.DalModels;
-using SharedLibrary.DtoModels;
+using SharedLibrary.Models;
+using SharedLibrary.Contracts;
 using SharedLibrary.Enums;
 using System.Linq;
 using System.Threading.Tasks;

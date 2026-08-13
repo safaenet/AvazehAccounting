@@ -1,5 +1,5 @@
-﻿using SharedLibrary.DalModels;
-using SharedLibrary.DtoModels;
+﻿using SharedLibrary.Models;
+using SharedLibrary.Contracts;
 using SharedLibrary.Enums;
 using System.Threading.Tasks;
 

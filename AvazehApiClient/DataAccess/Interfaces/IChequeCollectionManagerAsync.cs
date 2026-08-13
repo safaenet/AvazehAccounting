@@ -1,4 +1,4 @@
-﻿using SharedLibrary.DalModels;
+﻿using SharedLibrary.Models;
 using SharedLibrary.Enums;
 using System.Collections.Generic;
 using System.Threading.Tasks;

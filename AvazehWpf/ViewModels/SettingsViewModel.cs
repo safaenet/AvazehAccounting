@@ -1,11 +1,11 @@
 ﻿using Caliburn.Micro;
-using SharedLibrary.DtoModels;
+using SharedLibrary.Contracts;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using AvazehApiClient.DataAccess;
-using SharedLibrary.DalModels;
+using SharedLibrary.Models;
 using System.Windows;
 using System.Windows.Input;
 using SharedLibrary.SecurityAndSettingsModels;

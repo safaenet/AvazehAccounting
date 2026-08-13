@@ -2,8 +2,8 @@
 using AvazehApiClient.DataAccess.CollectionManagers;
 using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
-using SharedLibrary.DalModels;
-using SharedLibrary.DtoModels;
+using SharedLibrary.Models;
+using SharedLibrary.Contracts;
 using SharedLibrary.Enums;
 using SharedLibrary.Helpers;
 using SharedLibrary.SecurityAndSettingsModels;

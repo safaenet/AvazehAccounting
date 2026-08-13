@@ -1,7 +1,7 @@
 ﻿using Caliburn.Micro;
 using System.Windows;
 using AvazehApiClient.DataAccess.Interfaces;
-using SharedLibrary.DalModels;
+using SharedLibrary.Models;
 using System.Threading.Tasks;
 using AvazehApiClient.DataAccess;
 using System.Net.Http;
