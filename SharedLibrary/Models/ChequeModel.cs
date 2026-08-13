@@ -1,6 +1,5 @@
 ﻿using SharedLibrary.Enums;
-using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 namespace SharedLibrary.Models;
 
@@ -17,7 +16,7 @@ public class ChequeModel
     public string Serial { get; set; }
     public string Identifier { get; set; } //Sayyaad Code
     public string Descriptions { get; set; }
-    public ObservableCollection<ChequeEventModel> Events { get; set; }
+    public List<ChequeEventModel> Events { get; set; }
     public string PayAmountInPersian { get; }
     public ChequeEventModel LastEvent => Events == null || Events.Count == 0 ? null : Events[^1];
     public string LastEventString => Events == null || Events.Count == 0 ? ChequeEventTypes.None.ToString() : LastEvent.EventTypeString;

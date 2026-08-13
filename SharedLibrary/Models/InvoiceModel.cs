@@ -1,5 +1,5 @@
 ﻿using SharedLibrary.Enums;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SharedLibrary.Models;
@@ -13,8 +13,8 @@ public class InvoiceModel
     public string TimeCreated { get; set; }
     public string DateUpdated { get; set; }
     public string TimeUpdated { get; set; }
-    public ObservableCollection<InvoiceItemModel> Items { get; set; }
-    public ObservableCollection<InvoicePaymentModel> Payments { get; set; }
+    public List<InvoiceItemModel> Items { get; set; }
+    public List<InvoicePaymentModel> Payments { get; set; }
     public DiscountTypes DiscountType { get; set; } = DiscountTypes.Amount;
     public decimal DiscountValue { get; set; }
     public string Descriptions { get; set; }

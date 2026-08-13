@@ -336,21 +336,21 @@ public class TransactionDetailViewModel : ViewAware
         TDM.FinStatus = FinStatus;
         TDM.TransactionDateToSearch = QueryDate;
         await TDM.LoadFirstPageAsync();
-        Transaction.Items = TDM.Items;
+        Transaction.Items = [.. TDM.Items];
         NotifyOfPropertyChange(() => Transaction);
     }
 
     public async Task PreviousPageAsync()
     {
         await TDM.LoadPreviousPageAsync();
-        Transaction.Items = TDM.Items;
+        Transaction.Items = [.. TDM.Items];
         NotifyOfPropertyChange(() => Transaction);
     }
 
     public async Task NextPageAsync()
     {
         await TDM.LoadNextPageAsync();
-        Transaction.Items = TDM.Items;
+        Transaction.Items = [.. TDM.Items];
         NotifyOfPropertyChange(() => Transaction);
     }
 

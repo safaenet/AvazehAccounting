@@ -1,5 +1,6 @@
 ﻿using SharedLibrary.Models;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -38,5 +39,5 @@ public class ChequeModel_DTO_Create_Update
     [StringLength(20, ErrorMessage = "Maximum length is 20")]
     public string Identifier { get; set; } //Sayyaad Code
     public string Descriptions { get; set; }
-    public ObservableCollection<ChequeEventModel> Events { get; set; }
+    public List<ChequeEventModel> Events { get; set; }
 }

@@ -1,6 +1,5 @@
 ﻿using SharedLibrary.Enums;
-using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SharedLibrary.Models;
@@ -13,7 +12,7 @@ public class TransactionModel
     public string TimeCreated { get; set; }
     public string DateUpdated { get; set; }
     public string TimeUpdated { get; set; }
-    public ObservableCollection<TransactionItemModel> Items { get; set; }
+    public List<TransactionItemModel> Items { get; set; }
     public string Descriptions { get; set; }
 
     public decimal PositiveItemsSum => Items == null ? 0 : Items.Where(i => i.TotalValue > 0).Sum(i => i.TotalValue);
