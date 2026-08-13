@@ -8,7 +8,7 @@ using SharedLibrary.DtoModels;
 using SharedLibrary.SecurityAndSettingsModels;
 using System.Threading.Tasks;
 
-namespace AvazehWebAPI.Controllers;
+namespace AvazehWebApi.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]

@@ -15,7 +15,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Globalization;
 
-namespace AvazehWebAPI.Controllers;
+namespace AvazehWebApi.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
