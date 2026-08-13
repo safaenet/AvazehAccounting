@@ -2,7 +2,7 @@
 using FluentValidation.Results;
 using SharedLibrary.Models;
 using SharedLibrary.Contracts;
-using SharedLibrary.Validators;
+using SharedLibrary.Validation;
 using System.Threading.Tasks;
 
 namespace AvazehApiClient.DataAccess.CollectionManagers;

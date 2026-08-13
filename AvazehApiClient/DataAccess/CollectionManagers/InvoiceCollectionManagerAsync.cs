@@ -3,12 +3,12 @@ using FluentValidation.Results;
 using SharedLibrary.Models;
 using SharedLibrary.Contracts;
 using SharedLibrary.Enums;
-using SharedLibrary.Validators;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using SharedLibrary.Validation;
 
 namespace AvazehApiClient.DataAccess.CollectionManagers;
 

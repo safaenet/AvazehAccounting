@@ -6,7 +6,8 @@ using AvazehApiClient.DataAccess;
 using System.Threading.Tasks;
 using System;
 using System.Windows.Input;
-using SharedLibrary.SecurityAndSettingsModels;
+using SharedLibrary.Security;
+using SharedLibrary.Contracts;
 
 namespace AvazehWpf.ViewModels;
 

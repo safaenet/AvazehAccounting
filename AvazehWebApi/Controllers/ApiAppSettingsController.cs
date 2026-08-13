@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SharedLibrary.SecurityAndSettingsModels;
+using SharedLibrary.Security;
+using SharedLibrary.Settings;
 using System.Threading.Tasks;
 
 namespace AvazehWeb.Controllers;

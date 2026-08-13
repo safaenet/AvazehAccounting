@@ -1,4 +1,4 @@
-﻿namespace SharedLibrary.SecurityAndSettingsModels;
+﻿namespace SharedLibrary.Settings;
 
 public class AppSettingsModel
 {

@@ -1,4 +1,4 @@
-﻿using SharedLibrary.Validators;
+﻿using SharedLibrary.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace SharedLibrary.Contracts;

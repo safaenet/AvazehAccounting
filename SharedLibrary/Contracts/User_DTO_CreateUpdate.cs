@@ -1,4 +1,7 @@
-﻿namespace SharedLibrary.Contracts;
+﻿using SharedLibrary.Security;
+using SharedLibrary.Settings;
+
+namespace SharedLibrary.Contracts;
 
 public class User_DTO_CreateUpdate
 {

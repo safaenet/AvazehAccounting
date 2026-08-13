@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.Models;
 using SharedLibrary.Contracts;
 using SharedLibrary.Enums;
-using SharedLibrary.SecurityAndSettingsModels;
 using System.Linq;
 using System.Threading.Tasks;
+using SharedLibrary.Security;
 
 namespace AvazehWebApi.Controllers;
 

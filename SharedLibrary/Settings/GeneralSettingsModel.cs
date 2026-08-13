@@ -1,7 +1,7 @@
 ﻿using SharedLibrary.Models;
 using System.Collections.Generic;
 
-namespace SharedLibrary.SecurityAndSettingsModels;
+namespace SharedLibrary.Settings;
 
 public class GeneralSettingsModel
 {

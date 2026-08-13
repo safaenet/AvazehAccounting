@@ -1,7 +1,7 @@
-﻿using SharedLibrary.SecurityAndSettingsModels;
+﻿using SharedLibrary.Settings;
 using System.Collections.Generic;
 
-namespace SharedLibrary.Models;
+namespace AvazehApiClient.Print;
 
 public class PrintInvoiceModel
 {

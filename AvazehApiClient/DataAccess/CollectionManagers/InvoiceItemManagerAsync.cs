@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AvazehApiClient.DataAccess.Interfaces;
 using SharedLibrary.Models;
 using SharedLibrary.Contracts;
-using SharedLibrary.Validators;
+using SharedLibrary.Validation;
 using System.Collections.ObjectModel;
 
 namespace AvazehApiClient.DataAccess.CollectionManagers;

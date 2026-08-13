@@ -7,13 +7,13 @@ using SharedLibrary.Models;
 using SharedLibrary.Contracts;
 using SharedLibrary.Enums;
 using SharedLibrary.Helpers;
-using SharedLibrary.SecurityAndSettingsModels;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using SharedLibrary.Security;
 
 namespace AvazehWebApi.Controllers;
 

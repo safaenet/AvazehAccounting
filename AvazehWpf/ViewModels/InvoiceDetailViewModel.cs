@@ -16,10 +16,11 @@ using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 using System.IO;
 using System.Diagnostics;
-using SharedLibrary.SecurityAndSettingsModels;
 using System.Globalization;
 using SharedLibrary.Enums;
 using SharedLibrary.Helpers;
+using SharedLibrary.Security;
+using AvazehApiClient.Print;
 
 namespace AvazehWpf.ViewModels;
 

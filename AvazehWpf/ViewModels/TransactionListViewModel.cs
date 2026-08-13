@@ -3,7 +3,6 @@ using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.Models;
 using SharedLibrary.Enums;
-using SharedLibrary.SecurityAndSettingsModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,6 +10,8 @@ using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using SharedLibrary.Security;
+using SharedLibrary.Contracts;
 
 namespace AvazehWpf.ViewModels;
 

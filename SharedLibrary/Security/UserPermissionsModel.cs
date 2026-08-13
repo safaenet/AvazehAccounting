@@ -1,4 +1,4 @@
-﻿namespace SharedLibrary.SecurityAndSettingsModels;
+﻿namespace SharedLibrary.Security;
 
 public class UserPermissionsModel
 {

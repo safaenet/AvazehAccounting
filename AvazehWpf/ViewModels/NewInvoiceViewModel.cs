@@ -3,7 +3,6 @@ using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.Models;
 using SharedLibrary.Contracts;
-using SharedLibrary.SecurityAndSettingsModels;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;

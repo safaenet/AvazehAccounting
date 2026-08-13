@@ -1,21 +1,13 @@
-﻿using AvazehApiClient.DataAccess;
-using AvazehApiClient.DataAccess.CollectionManagers;
-using AvazehApiClient.DataAccess.Interfaces;
+﻿using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
 using SharedLibrary.Models;
 using SharedLibrary.Contracts;
 using SharedLibrary.Enums;
 using SharedLibrary.Helpers;
-using SharedLibrary.SecurityAndSettingsModels;
-using SharedLibrary.Validators;
-using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Xml.Serialization;
 
 namespace AvazehWpf.ViewModels;
 

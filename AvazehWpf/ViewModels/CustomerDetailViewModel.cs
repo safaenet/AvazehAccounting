@@ -1,8 +1,9 @@
 ﻿using AvazehApiClient.DataAccess;
 using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
+using SharedLibrary.Contracts;
 using SharedLibrary.Models;
-using SharedLibrary.SecurityAndSettingsModels;
+using SharedLibrary.Security;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

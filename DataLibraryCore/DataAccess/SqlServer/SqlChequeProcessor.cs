@@ -7,12 +7,12 @@ using FluentValidation.Results;
 using DataLibraryCore.DataAccess.Interfaces;
 using SharedLibrary.Models;
 using SharedLibrary.Enums;
-using SharedLibrary.Validators;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using SharedLibrary.Helpers;
 using System;
 using Serilog;
+using SharedLibrary.Validation;
 
 namespace DataLibraryCore.DataAccess.SqlServer;
 

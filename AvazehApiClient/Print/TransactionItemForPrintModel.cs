@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SharedLibrary.Models;
+﻿namespace AvazehApiClient.Print;
 
 public class TransactionItemForPrintModel
 {

@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.Models;
 using SharedLibrary.Contracts;
-using SharedLibrary.SecurityAndSettingsModels;
 using System.Threading.Tasks;
+using SharedLibrary.Security;
 
 namespace AvazehWebApi.Controllers;
 

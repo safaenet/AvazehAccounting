@@ -1,7 +1,6 @@
 ﻿using AvazehApiClient.DataAccess.Interfaces;
 using SharedLibrary.Models;
 using SharedLibrary.Contracts;
-using SharedLibrary.SecurityAndSettingsModels;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 

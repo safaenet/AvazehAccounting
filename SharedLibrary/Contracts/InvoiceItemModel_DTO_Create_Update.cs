@@ -1,5 +1,5 @@
 ﻿using SharedLibrary.Models;
-using SharedLibrary.Validators;
+using SharedLibrary.Validation;
 using System;
 using System.ComponentModel.DataAnnotations;
 

@@ -1,6 +1,7 @@
 ﻿using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
-using SharedLibrary.SecurityAndSettingsModels;
+using SharedLibrary.Contracts;
+using SharedLibrary.Models;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;

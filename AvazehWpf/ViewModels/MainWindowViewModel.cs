@@ -5,12 +5,13 @@ using SharedLibrary.Models;
 using System.Threading.Tasks;
 using AvazehApiClient.DataAccess;
 using System.Net.Http;
-using SharedLibrary.SecurityAndSettingsModels;
 using System.Security.Claims;
 using System.Linq;
 using System.Timers;
 using System;
 using Serilog;
+using SharedLibrary.Security;
+using SharedLibrary.Contracts;
 
 namespace AvazehWpf.ViewModels;
 

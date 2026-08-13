@@ -1,5 +1,5 @@
 ﻿using AvazehApiClient.DataAccess.Interfaces;
-using SharedLibrary.SecurityAndSettingsModels;
+using SharedLibrary.Settings;
 using System.Threading.Tasks;
 
 namespace AvazehApiClient.DataAccess;

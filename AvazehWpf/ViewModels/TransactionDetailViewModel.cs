@@ -14,8 +14,9 @@ using SharedLibrary.Enums;
 using System.Xml.Serialization;
 using System.IO;
 using System.Diagnostics;
-using SharedLibrary.SecurityAndSettingsModels;
 using SharedLibrary.Helpers;
+using SharedLibrary.Security;
+using AvazehApiClient.Print;
 
 namespace AvazehWpf.ViewModels;
 

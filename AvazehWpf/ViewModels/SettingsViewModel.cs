@@ -8,9 +8,10 @@ using AvazehApiClient.DataAccess;
 using SharedLibrary.Models;
 using System.Windows;
 using System.Windows.Input;
-using SharedLibrary.SecurityAndSettingsModels;
 using AvazehApiClient.DataAccess.Interfaces;
 using System.Windows.Controls;
+using SharedLibrary.Settings;
+using SharedLibrary.Security;
 
 namespace AvazehWpf.ViewModels;
 

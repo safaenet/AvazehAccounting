@@ -6,8 +6,6 @@ using SharedLibrary.Models;
 using SharedLibrary.Contracts;
 using SharedLibrary.Enums;
 using SharedLibrary.Helpers;
-using SharedLibrary.SecurityAndSettingsModels;
-using SharedLibrary.Validators;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,6 +15,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
+using SharedLibrary.Security;
+using SharedLibrary.Validation;
+using AvazehApiClient.Print;
 
 namespace AvazehWpf.ViewModels;
 

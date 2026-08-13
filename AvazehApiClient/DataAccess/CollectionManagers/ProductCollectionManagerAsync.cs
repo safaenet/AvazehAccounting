@@ -3,7 +3,7 @@ using FluentValidation.Results;
 using SharedLibrary.Models;
 using SharedLibrary.Contracts;
 using SharedLibrary.Enums;
-using SharedLibrary.Validators;
+using SharedLibrary.Validation;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;

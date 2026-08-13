@@ -1,7 +1,7 @@
 ﻿using DotNetStandardCalculator;
 using System.ComponentModel.DataAnnotations;
 
-namespace SharedLibrary.Validators;
+namespace SharedLibrary.Validation;
 
 public class CountStringIsValid : ValidationAttribute //For DataAnnotation
 {

@@ -8,7 +8,7 @@ using Serilog;
 using Serilog.Events;
 using SharedLibrary.Models;
 using SharedLibrary.Contracts;
-using SharedLibrary.Validators;
+using SharedLibrary.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;

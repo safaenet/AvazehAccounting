@@ -14,6 +14,7 @@ using SharedLibrary.Validators;
 using System.Text;
 using Swashbuckle.AspNetCore.Filters;
 using System;
+using SharedLibrary.Validation;
 
 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Debug()

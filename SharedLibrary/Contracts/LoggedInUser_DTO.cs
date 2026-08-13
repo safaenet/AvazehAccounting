@@ -1,6 +1,5 @@
-﻿using System;
-
-namespace SharedLibrary.Contracts;
+﻿namespace SharedLibrary.Contracts;
+using SharedLibrary.Settings;
 
 public class LoggedInUser_DTO
 {

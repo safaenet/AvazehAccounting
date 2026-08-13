@@ -1,6 +1,6 @@
 ﻿using SharedLibrary.Enums;
 
-namespace SharedLibrary.SecurityAndSettingsModels;
+namespace SharedLibrary.Settings;
 
 public class UserSettingsModel
 {

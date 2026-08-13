@@ -3,7 +3,7 @@ using DataLibraryCore.DataAccess.Interfaces;
 using DataLibraryCore.DataAccess.SqlServer;
 using Serilog;
 using SharedLibrary.Models;
-using SharedLibrary.SecurityAndSettingsModels;
+using SharedLibrary.Settings;
 using System;
 using System.Collections.Generic;
 using System.IO;

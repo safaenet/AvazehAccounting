@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SharedLibrary.SecurityAndSettingsModels;
+namespace SharedLibrary.Models;
 
 public class UserInfoBaseModel
 {

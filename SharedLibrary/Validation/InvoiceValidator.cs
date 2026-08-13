@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using SharedLibrary.Models;
 
-namespace SharedLibrary.Validators;
+namespace SharedLibrary.Validation;
 
 public class InvoiceValidator : AbstractValidator<InvoiceModel>
 {

@@ -1,4 +1,7 @@
-﻿namespace SharedLibrary.SecurityAndSettingsModels;
+﻿using SharedLibrary.Security;
+using SharedLibrary.Settings;
+
+namespace SharedLibrary.Models;
 
 public class UserInfoModel : UserInfoBaseModel
 {

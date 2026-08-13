@@ -1,6 +1,5 @@
 ﻿using DataLibraryCore.DataAccess.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using SharedLibrary.SecurityAndSettingsModels;
 using System.Threading.Tasks;
 using System.Text;
 using System.Security.Claims;
@@ -11,9 +10,12 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Globalization;
+using SharedLibrary.Settings;
+using SharedLibrary.Models;
+using SharedLibrary.Security;
+using SharedLibrary.Contracts;
 
 namespace AvazehWebApi.Controllers;
 
