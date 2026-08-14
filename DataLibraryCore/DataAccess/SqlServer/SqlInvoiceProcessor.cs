@@ -9,7 +9,7 @@ using Dapper.FluentMap;
 using DataLibraryCore.DataAccess.Interfaces;
 using SharedLibrary.Enums;
 using SharedLibrary.Models;
-using SharedLibrary.Validators;
+using SharedLibrary.Validation;
 using SharedLibrary.Contracts;
 using System.Threading.Tasks;
 using System;

@@ -10,11 +10,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SharedLibrary.Models;
-using SharedLibrary.Validators;
+using SharedLibrary.Validation;
 using System.Text;
 using Swashbuckle.AspNetCore.Filters;
 using System;
-using SharedLibrary.Validation;
 
 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Debug()
