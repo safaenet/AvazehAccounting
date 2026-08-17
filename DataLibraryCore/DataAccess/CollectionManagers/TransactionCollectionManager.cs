@@ -1,10 +1,10 @@
 ﻿using DataLibraryCore.DataAccess.Interfaces;
-using SharedLibrary.Models;
 using SharedLibrary.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SharedLibrary.Contracts;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers;
 
@@ -17,7 +17,7 @@ public class TransactionCollectionManager : ITransactionCollectionManager
     public bool Initialized { get; set; }
     public ITransactionProcessor Processor { get; init; }
 
-    public IEnumerable<TransactionListModel> Items { get; set; }
+    public IEnumerable<TransactionSummaryDTO> Items { get; set; }
 
     private protected string _WhereClause;
     public string WhereClause

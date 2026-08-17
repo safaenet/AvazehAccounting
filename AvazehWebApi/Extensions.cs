@@ -49,9 +49,9 @@ internal static class Extensions
         };
     }
 
-    internal static ItemsCollection_DTO<InvoiceListModel> AsDto(this IInvoiceCollectionManager manager)
+    internal static ItemsCollection_DTO<InvoiceSummaryDTO> AsDto(this IInvoiceCollectionManager manager)
     {
-        return new ItemsCollection_DTO<InvoiceListModel>()
+        return new ItemsCollection_DTO<InvoiceSummaryDTO>()
         {
             Items = manager.Items,
             PagesCount = manager.PagesCount,
@@ -59,9 +59,9 @@ internal static class Extensions
         };
     }
 
-    internal static ItemsCollection_DTO<TransactionListModel> AsDto(this ITransactionCollectionManager manager)
+    internal static ItemsCollection_DTO<TransactionSummaryDTO> AsDto(this ITransactionCollectionManager manager)
     {
-        return new ItemsCollection_DTO<TransactionListModel>()
+        return new ItemsCollection_DTO<TransactionSummaryDTO>()
         {
             Items = manager.Items,
             PagesCount = manager.PagesCount,

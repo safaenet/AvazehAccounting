@@ -1,12 +1,11 @@
 ﻿using SharedLibrary.Enums;
-using System;
 
-namespace SharedLibrary.Models;
+namespace SharedLibrary.Contracts;
 
 /// <summary>
 /// This model is for viewing Transactions in ListView
 /// </summary>
-public class TransactionListModel
+public class TransactionSummaryDTO
 {
     public int Id { get; set; }
     public string FileName { get; set; }
@@ -17,8 +16,4 @@ public class TransactionListModel
     public string Descriptions { get; set; }
     public decimal TotalPositiveItemsSum { get; set; }
     public decimal TotalNegativeItemsSum { get; set; }
-    public string DateTimeCreated => TimeCreated + " " + DateCreated;
-    public string DateTimeUpdated => TimeUpdated + " " + DateUpdated;
-    public decimal TotalBalance => TotalPositiveItemsSum + TotalNegativeItemsSum;
-    public TransactionFinancialStatus TransactionFinancialStatus => TotalBalance == 0 ? TransactionFinancialStatus.Balanced : TotalBalance > 0 ? TransactionFinancialStatus.Positive : TransactionFinancialStatus.Negative;
 }

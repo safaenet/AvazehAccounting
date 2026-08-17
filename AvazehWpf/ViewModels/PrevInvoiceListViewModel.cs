@@ -1,6 +1,5 @@
 ﻿using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
-using SharedLibrary.Models;
 using SharedLibrary.Contracts;
 using SharedLibrary.Enums;
 using SharedLibrary.Helpers;
@@ -26,12 +25,12 @@ public class PrevInvoiceListViewModel : Screen
     }
 
     private IInvoiceCollectionManager _ICM;
-    private InvoiceListModel _SelectedInvoice;
+    private InvoiceSummaryDTO _SelectedInvoice;
     public LoggedInUser_DTO User { get; init; }
     public int? ReturnId = null;
     public string CurrentPersianDate { get; set; }
 
-    public InvoiceListModel SelectedInvoice
+    public InvoiceSummaryDTO SelectedInvoice
     {
         get { return _SelectedInvoice; }
         set { _SelectedInvoice = value; NotifyOfPropertyChange(() => SelectedInvoice); }
@@ -48,8 +47,8 @@ public class PrevInvoiceListViewModel : Screen
         }
     }
 
-    private ObservableCollection<InvoiceListModel> invoices;
-    public ObservableCollection<InvoiceListModel> Invoices
+    private ObservableCollection<InvoiceSummaryDTO> invoices;
+    public ObservableCollection<InvoiceSummaryDTO> Invoices
     {
         get => invoices;
         set

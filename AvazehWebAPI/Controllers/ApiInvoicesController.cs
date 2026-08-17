@@ -25,7 +25,7 @@ public class InvoicesController : ControllerBase
     private readonly IInvoiceProcessor Processor;
 
     [HttpGet, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanViewInvoicesList))]
-    public async Task<ActionResult<List<InvoiceListModel>>> GetItemsAsync(int FetcheSize = 50, int InvoiceId = -1 , int CustomerId = -1 , string InvoiceDate = "%", string SearchValue = "%", InvoiceLifeStatus? LifeStatus = InvoiceLifeStatus.Active, InvoiceFinancialStatus? FinStatus = InvoiceFinancialStatus.Outstanding, SqlQuerySearchMode SearchMode = SqlQuerySearchMode.Backward, OrderType orderType = OrderType.DESC, int StartId = -1)
+    public async Task<ActionResult<List<InvoiceSummaryDTO>>> GetItemsAsync(int FetcheSize = 50, int InvoiceId = -1 , int CustomerId = -1 , string InvoiceDate = "%", string SearchValue = "%", InvoiceLifeStatus? LifeStatus = InvoiceLifeStatus.Active, InvoiceFinancialStatus? FinStatus = InvoiceFinancialStatus.Outstanding, SqlQuerySearchMode SearchMode = SqlQuerySearchMode.Backward, OrderType orderType = OrderType.DESC, int StartId = -1)
     {
         if (InvoiceId <= 0) InvoiceId = -1;
         if (CustomerId <= 0) CustomerId = -1;
@@ -96,7 +96,7 @@ public class InvoicesController : ControllerBase
     }
 
     [HttpGet("LoadPrevInvoices"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanViewInvoicesList))]
-    public async Task<ActionResult<List<InvoiceListModel>>> GetPrevInvoicesAsync(int InvoiceId = -1, int CustomerId = -1, string InvoiceDate = "%", string SearchValue = "%", OrderType orderType = OrderType.DESC)
+    public async Task<ActionResult<List<InvoiceSummaryDTO>>> GetPrevInvoicesAsync(int InvoiceId = -1, int CustomerId = -1, string InvoiceDate = "%", string SearchValue = "%", OrderType orderType = OrderType.DESC)
     {
         if (InvoiceId <= 0) InvoiceId = -1;
         if (CustomerId <= 0) CustomerId = -1;

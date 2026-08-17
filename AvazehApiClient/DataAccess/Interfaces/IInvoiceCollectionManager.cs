@@ -41,10 +41,10 @@ public interface IInvoiceCollectionManager
     Task<InvoiceModel> GetItemById(int Id);
     ValidationResult ValidateItem(InvoiceModel item);
 
-    ObservableCollection<InvoiceListModel> Items { get; set; }
+    ObservableCollection<InvoiceSummaryDTO> Items { get; set; }
     Task<bool> SetPrevInvoiceId(int InvoiceId, int PrevInvoiceId);
-    Task<ObservableCollection<InvoiceListModel>> LoadPrevInvoices(int InvoiceId, string InvoiceDate, string searchValue, OrderType orderType);
-    InvoiceListModel GetItemFromCollectionById(int Id);
+    Task<ObservableCollection<InvoiceSummaryDTO>> LoadPrevInvoices(int InvoiceId, string InvoiceDate, string searchValue, OrderType orderType);
+    InvoiceSummaryDTO GetItemFromCollectionById(int Id);
     Task<List<ItemsForComboBox>> LoadProductItems(string SearchText = null);
     Task<decimal> GetCustomerTotalBalanceById(int CustomerId, int InvoiceId = 0);
     Task<decimal> GetInvoicePrevTotalBalanceById(int InvoiceId);

@@ -410,7 +410,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
         return 0;
     }
 
-    public async Task<IEnumerable<TransactionListModel>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
+    public async Task<IEnumerable<TransactionSummaryDTO>> LoadManyItemsAsync(int OffSet, int FetcheSize, string WhereClause, string OrderBy = QueryOrderBy, OrderType Order = QueryOrderType)
     {
         try
         {
@@ -423,7 +423,7 @@ public class SqlTransactionProcessor : ITransactionProcessor
 
                             { (string.IsNullOrEmpty(WhereClause) ? "" : $" WHERE { WhereClause }") }
                             ORDER BY [{OrderBy}] {Order} OFFSET {OffSet} ROWS FETCH NEXT {FetcheSize} ROWS ONLY";
-            return await DataAccess.LoadDataAsync<TransactionListModel>(sql);
+            return await DataAccess.LoadDataAsync<TransactionSummaryDTO>(sql);
         }
         catch (Exception ex)
         {

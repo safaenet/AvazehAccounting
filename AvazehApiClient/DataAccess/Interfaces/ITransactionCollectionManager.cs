@@ -9,9 +9,9 @@ namespace AvazehApiClient.DataAccess.Interfaces;
 
 public interface ITransactionCollectionManager : ICollectionManagerBase<TransactionModel>
 {
-    ObservableCollection<TransactionListModel> Items { get; set; }
+    ObservableCollection<TransactionSummaryDTO> Items { get; set; }
     TransactionFinancialStatus? FinStatus { get; set; }
-    TransactionListModel GetItemFromCollectionById(int Id);
+    TransactionSummaryDTO GetItemFromCollectionById(int Id);
     Task<List<ItemsForComboBox>> LoadProductItems(string SearchText = null);
     public int TransactionIdToSearch { get; set; }
     public string TransactionDateToSearch { get; set; }

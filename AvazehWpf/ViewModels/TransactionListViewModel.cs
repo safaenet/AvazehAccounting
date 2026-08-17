@@ -1,7 +1,6 @@
 ﻿using AvazehApiClient.DataAccess;
 using AvazehApiClient.DataAccess.Interfaces;
 using Caliburn.Micro;
-using SharedLibrary.Models;
 using SharedLibrary.Enums;
 using System;
 using System.Collections.Generic;
@@ -31,7 +30,7 @@ public class TransactionListViewModel : Screen
 
     SimpleContainer SC;
     private ITransactionCollectionManager _TCM;
-    private TransactionListModel _SelectedTransaction;
+    private TransactionSummaryDTO _SelectedTransaction;
     private readonly SingletonClass Singleton;
     public LoggedInUser_DTO User { get; init; }
     public string CurrentPersianDate { get; init; }
@@ -52,7 +51,7 @@ public class TransactionListViewModel : Screen
         set { transactionIdToSearch = value; NotifyOfPropertyChange(() => TransactionIdToSearch); }
     }
 
-    public TransactionListModel SelectedTransaction
+    public TransactionSummaryDTO SelectedTransaction
     {
         get { return _SelectedTransaction; }
         set { _SelectedTransaction = value; NotifyOfPropertyChange(() => SelectedTransaction); }
@@ -69,7 +68,7 @@ public class TransactionListViewModel : Screen
         }
     }
 
-    public ObservableCollection<TransactionListModel> Transactions
+    public ObservableCollection<TransactionSummaryDTO> Transactions
     {
         get => TCM.Items;
         set
