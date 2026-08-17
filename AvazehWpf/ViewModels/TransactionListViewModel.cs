@@ -1,16 +1,19 @@
 ﻿using AvazehApiClient.DataAccess;
 using AvazehApiClient.DataAccess.Interfaces;
+using AvazehWpf.Mappings;
+using AvazehWpf.Models;
 using Caliburn.Micro;
+using SharedLibrary.Contracts;
 using SharedLibrary.Enums;
+using SharedLibrary.Security;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using SharedLibrary.Security;
-using SharedLibrary.Contracts;
 
 namespace AvazehWpf.ViewModels;
 
@@ -30,7 +33,7 @@ public class TransactionListViewModel : Screen
 
     SimpleContainer SC;
     private ITransactionCollectionManager _TCM;
-    private TransactionSummaryDTO _SelectedTransaction;
+    private TransactionListExtraDetailsModel _SelectedTransaction;
     private readonly SingletonClass Singleton;
     public LoggedInUser_DTO User { get; init; }
     public string CurrentPersianDate { get; init; }
@@ -51,7 +54,7 @@ public class TransactionListViewModel : Screen
         set { transactionIdToSearch = value; NotifyOfPropertyChange(() => TransactionIdToSearch); }
     }
 
-    public TransactionSummaryDTO SelectedTransaction
+    public TransactionListExtraDetailsModel SelectedTransaction
     {
         get { return _SelectedTransaction; }
         set { _SelectedTransaction = value; NotifyOfPropertyChange(() => SelectedTransaction); }
@@ -68,12 +71,12 @@ public class TransactionListViewModel : Screen
         }
     }
 
-    public ObservableCollection<TransactionSummaryDTO> Transactions
+    public ObservableCollection<TransactionListExtraDetailsModel> Transactions
     {
-        get => TCM.Items;
+        get => TCM.Items.Select(x=>x.ToListExtraDetails()).AsObservable();
         set
         {
-            TCM.Items = value;
+            //TCM.Items = value;
             NotifyOfPropertyChange(() => TCM);
             NotifyOfPropertyChange(() => Transactions);
         }

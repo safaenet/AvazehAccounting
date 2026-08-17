@@ -2,6 +2,7 @@
 using AvazehApiClient.DataAccess.CollectionManagers;
 using AvazehApiClient.DataAccess.Interfaces;
 using AvazehApiClient.Print;
+using AvazehWpf.Mappings;
 using AvazehWpf.Models;
 using Caliburn.Micro;
 using SharedLibrary.Contracts;
@@ -15,6 +16,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -103,12 +105,12 @@ public class InvoiceListViewModel : Screen
         }
     }
 
-    public ObservableCollection<InvoiceSummaryDTO> Invoices
+    public ObservableCollection<InvoiceSummaryExtraDetailsModel> Invoices
     {
-        get => ICM.Items;
+        get => ICM.Items.Select(x => x.ToListExtraDetails()).AsObservable();
         set
         {
-            ICM.Items = value;
+            //ICM.Items = value;
             NotifyOfPropertyChange(() => ICM);
             NotifyOfPropertyChange(() => Invoices);
         }

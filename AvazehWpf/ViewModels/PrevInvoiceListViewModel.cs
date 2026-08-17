@@ -1,9 +1,13 @@
-﻿using AvazehApiClient.DataAccess.Interfaces;
+﻿using AvazehApiClient.DataAccess;
+using AvazehApiClient.DataAccess.Interfaces;
+using AvazehWpf.Mappings;
+using AvazehWpf.Models;
 using Caliburn.Micro;
 using SharedLibrary.Contracts;
 using SharedLibrary.Enums;
 using SharedLibrary.Helpers;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -25,12 +29,12 @@ public class PrevInvoiceListViewModel : Screen
     }
 
     private IInvoiceCollectionManager _ICM;
-    private InvoiceSummaryDTO _SelectedInvoice;
+    private InvoiceSummaryExtraDetailsModel _SelectedInvoice;
     public LoggedInUser_DTO User { get; init; }
     public int? ReturnId = null;
     public string CurrentPersianDate { get; set; }
 
-    public InvoiceSummaryDTO SelectedInvoice
+    public InvoiceSummaryExtraDetailsModel SelectedInvoice
     {
         get { return _SelectedInvoice; }
         set { _SelectedInvoice = value; NotifyOfPropertyChange(() => SelectedInvoice); }
@@ -47,8 +51,8 @@ public class PrevInvoiceListViewModel : Screen
         }
     }
 
-    private ObservableCollection<InvoiceSummaryDTO> invoices;
-    public ObservableCollection<InvoiceSummaryDTO> Invoices
+    private ObservableCollection<InvoiceSummaryExtraDetailsModel> invoices;
+    public ObservableCollection<InvoiceSummaryExtraDetailsModel> Invoices
     {
         get => invoices;
         set
@@ -92,7 +96,7 @@ public class PrevInvoiceListViewModel : Screen
     {
         UIEnabled = false;
         var items = await ICM.LoadPrevInvoices(InvoiceId, QueryDate, SearchText, OrderType.DESC);
-        Invoices = items;
+        Invoices = items.Select(x => x.ToListExtraDetails()).AsObservable();
         UIEnabled = true;
         NotifyOfPropertyChange(() => Invoices);
     }
