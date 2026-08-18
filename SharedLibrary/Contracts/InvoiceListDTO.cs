@@ -5,7 +5,7 @@ namespace SharedLibrary.Contracts;
 /// <summary>
 /// This model is for viewing Invoices in ListView
 /// </summary>
-public class InvoiceSummaryDTO
+public class InvoiceListDTO
 {
     public int Id { get; set; }
     public int CustomerId { get; set; }
@@ -21,10 +21,10 @@ public class InvoiceSummaryDTO
     public int? PrevInvoiceId { get; set; }
     public decimal PrevInvoiceBalance { get; set; }
     public int? FwdInvoiceId { get; set; }
-    //public decimal TotalInvoiceBalance => TotalInvoiceSum - TotalPayments;
-    //public decimal TotalBalance => TotalInvoiceBalance + PrevInvoiceBalance;
-    //public string InvoiceTitle => string.IsNullOrEmpty(About) ? CustomerFullName : CustomerFullName + " - " + About;
-    //public string DateTimeCreated => TimeCreated + " " + DateCreated;
-    //public string DateTimeUpdated => TimeUpdated + " " + DateUpdated;
-    //public InvoiceFinancialStatus InvoiceFinancialStatus => TotalBalance == 0 ? InvoiceFinancialStatus.Balanced : TotalBalance > 0 ? InvoiceFinancialStatus.Deptor : InvoiceFinancialStatus.Creditor;
+    public decimal TotalInvoiceBalance => TotalInvoiceSum - TotalPayments;
+    public decimal TotalBalance => TotalInvoiceBalance + PrevInvoiceBalance;
+    public string InvoiceTitle => string.IsNullOrEmpty(About) ? CustomerFullName : CustomerFullName + " - " + About;
+    public string DateTimeCreated => TimeCreated + " " + DateCreated;
+    public string DateTimeUpdated => TimeUpdated + " " + DateUpdated;
+    public InvoiceFinancialStatus InvoiceFinancialStatus => TotalBalance == 0 ? InvoiceFinancialStatus.Balanced : TotalBalance > 0 ? InvoiceFinancialStatus.Deptor : InvoiceFinancialStatus.Creditor;
 }

@@ -17,7 +17,7 @@ public class TransactionCollectionManager : ITransactionCollectionManager
     public bool Initialized { get; set; }
     public ITransactionProcessor Processor { get; init; }
 
-    public IEnumerable<TransactionSummaryDTO> Items { get; set; }
+    public IEnumerable<TransactionListDTO> Items { get; set; }
 
     private protected string _WhereClause;
     public string WhereClause

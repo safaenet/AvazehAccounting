@@ -2,6 +2,6 @@
 
 namespace DataLibraryCore.DataAccess.Interfaces;
 
-public interface ITransactionCollectionManager : ITransactionCollectionManagerBase<TransactionSummaryDTO>
+public interface ITransactionCollectionManager : ITransactionCollectionManagerBase<TransactionListDTO>
 {
 }

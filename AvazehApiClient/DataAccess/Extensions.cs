@@ -74,9 +74,9 @@ public static class Extensions
         };
     }
 
-    public static InvoiceSummaryDTO AsListModel(this InvoiceModel model)
+    public static InvoiceListDTO AsListModel(this InvoiceModel model)
     {
-        return new InvoiceSummaryDTO()
+        return new InvoiceListDTO()
         {
             Id = model.Id,
             CustomerId = model.Customer.Id,

@@ -14,9 +14,9 @@ public class ChequeEventModel
         get => EventType.ToString();
         set { if (Enum.IsDefined(typeof(ChequeEventTypes), value)) EventType = Enum.Parse<ChequeEventTypes>(value); }
     }
-    public int EventTypeValue
-    {
-        get => (int)EventType;
-        set { if (Enum.IsDefined(typeof(ChequeEventTypes), value)) EventType = (ChequeEventTypes)value; }
-    }
+    //public int EventTypeValue
+    //{
+    //    get => (int)EventType;
+    //    set { if (Enum.IsDefined(typeof(ChequeEventTypes), value)) EventType = (ChequeEventTypes)value; }
+    //}
 }

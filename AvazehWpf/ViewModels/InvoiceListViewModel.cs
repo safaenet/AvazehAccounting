@@ -2,8 +2,6 @@
 using AvazehApiClient.DataAccess.CollectionManagers;
 using AvazehApiClient.DataAccess.Interfaces;
 using AvazehApiClient.Print;
-using AvazehWpf.Mappings;
-using AvazehWpf.Models;
 using Caliburn.Micro;
 using SharedLibrary.Contracts;
 using SharedLibrary.Enums;
@@ -59,7 +57,7 @@ public class InvoiceListViewModel : Screen
     private IInvoiceCollectionManager _ICM;
     public LoggedInUser_DTO User { get => user; init => user = value; }
     public string CurrentPersianDate { get; init; }
-    private InvoiceSummaryExtraDetailsModel _SelectedInvoice;
+    private InvoiceListDTO _SelectedInvoice;
     private string searchText;
     private LoggedInUser_DTO user;
     private readonly SingletonClass Singleton;
@@ -88,7 +86,7 @@ public class InvoiceListViewModel : Screen
         set { queryDate = value; NotifyOfPropertyChange(() => QueryDate); }
     }
 
-    public InvoiceSummaryExtraDetailsModel SelectedInvoice
+    public InvoiceListDTO SelectedInvoice
     {
         get => _SelectedInvoice;
         set { _SelectedInvoice = value; NotifyOfPropertyChange(() => SelectedInvoice); }
@@ -105,9 +103,9 @@ public class InvoiceListViewModel : Screen
         }
     }
 
-    public ObservableCollection<InvoiceSummaryExtraDetailsModel> Invoices
+    public ObservableCollection<InvoiceListDTO> Invoices
     {
-        get => ICM.Items.Select(x => x.ToListExtraDetails()).AsObservable();
+        get => ICM.Items;
         set
         {
             //ICM.Items = value;

@@ -5,7 +5,7 @@ namespace SharedLibrary.Contracts;
 /// <summary>
 /// This model is for viewing Transactions in ListView
 /// </summary>
-public class TransactionSummaryDTO
+public class TransactionListDTO
 {
     public int Id { get; set; }
     public string FileName { get; set; }

@@ -59,9 +59,9 @@ internal static class Extensions
         };
     }
 
-    internal static ItemsCollection_DTO<TransactionSummaryDTO> AsDto(this ITransactionCollectionManager manager)
+    internal static ItemsCollection_DTO<TransactionListDTO> AsDto(this ITransactionCollectionManager manager)
     {
-        return new ItemsCollection_DTO<TransactionSummaryDTO>()
+        return new ItemsCollection_DTO<TransactionListDTO>()
         {
             Items = manager.Items,
             PagesCount = manager.PagesCount,
