@@ -2,6 +2,6 @@
 
 namespace DataLibraryCore.DataAccess.Interfaces;
 
-public interface IInvoiceCollectionManager : IInvoiceCollectionManagerBase<InvoiceSummaryDTO>
+public interface IInvoiceCollectionManager : IInvoiceCollectionManagerBase<InvoiceListDTO>
 {
 }

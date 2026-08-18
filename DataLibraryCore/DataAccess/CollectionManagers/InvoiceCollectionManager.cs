@@ -16,7 +16,7 @@ public class InvoiceCollectionManager : IInvoiceCollectionManager
     }
     public bool Initialized { get; set; }
     public IInvoiceProcessor Processor { get; init; }
-    public IEnumerable<InvoiceSummaryDTO> Items { get; set; }
+    public IEnumerable<InvoiceListDTO> Items { get; set; }
 
     private protected string _WhereClause;
     public string WhereClause

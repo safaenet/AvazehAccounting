@@ -443,7 +443,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         return 0;
     }
 
-    public async Task<IEnumerable<InvoiceSummaryDTO>> LoadManyItemsAsync(int FetcheSize, int InvoiceId, int CustomerId, string InvoiceDate, string SearchValue, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, SqlQuerySearchMode SearchMode, OrderType orderType, int StartId)
+    public async Task<IEnumerable<InvoiceListDTO>> LoadManyItemsAsync(int FetcheSize, int InvoiceId, int CustomerId, string InvoiceDate, string SearchValue, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, SqlQuerySearchMode SearchMode, OrderType orderType, int StartId)
     {
         try
         {
@@ -458,7 +458,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
             dp.Add("@SearchMode", SearchMode);
             dp.Add("@OrderType", orderType);
             dp.Add("@StartId", StartId);
-            var result = await DataAccess.LoadDataAsync<InvoiceSummaryDTO, DynamicParameters>("LoadInvoiceList_OldStyle", dp, CommandType.StoredProcedure);
+            var result = await DataAccess.LoadDataAsync<InvoiceListDTO, DynamicParameters>("LoadInvoiceList_OldStyle", dp, CommandType.StoredProcedure);
             return result;
         }
         catch (Exception ex)
@@ -547,7 +547,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
         return await DataAccess.SaveDataAsync(sql);
     }
 
-    public async Task<List<InvoiceSummaryDTO>> GetPrevInvoices(int InvoiceId, int CustomerId = -1, string InvoiceDate = null, string SearchValue = null, OrderType orderType = OrderType.DESC)
+    public async Task<List<InvoiceListDTO>> GetPrevInvoices(int InvoiceId, int CustomerId = -1, string InvoiceDate = null, string SearchValue = null, OrderType orderType = OrderType.DESC)
     {
         try
         {
@@ -557,7 +557,7 @@ public class SqlInvoiceProcessor : IInvoiceProcessor
             dp.Add("@Date", InvoiceDate);
             dp.Add("@SearchValue", SearchValue);
             dp.Add("@OrderType", orderType);
-            var result = await DataAccess.LoadDataAsync<InvoiceSummaryDTO, DynamicParameters>("LoadPrevInvoiceList_OldStyle", dp, CommandType.StoredProcedure);
+            var result = await DataAccess.LoadDataAsync<InvoiceListDTO, DynamicParameters>("LoadPrevInvoiceList_OldStyle", dp, CommandType.StoredProcedure);
             return result.ToList();
         }
         catch (Exception ex)

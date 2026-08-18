@@ -22,10 +22,10 @@ public interface IInvoiceProcessorBase<TModel> : IProcessorBase<TModel>
     Task<IEnumerable<ProductUnitModel>> GetProductUnitsAsync();
     Task<IEnumerable<ItemsForComboBox>> GetCustomerNamesAsync(string SearchText);
     Task<IEnumerable<ItemsForComboBox>> GetInvoiceAboutsAsync(string SearchText);
-    Task<IEnumerable<InvoiceSummaryDTO>> LoadManyItemsAsync(int FetcheSize, int InvoiceId, int CustomerId, string InvoiceDate, string SearchValue, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, SqlQuerySearchMode SearchMode, OrderType orderType, int StartId);
+    Task<IEnumerable<InvoiceListDTO>> LoadManyItemsAsync(int FetcheSize, int InvoiceId, int CustomerId, string InvoiceDate, string SearchValue, InvoiceLifeStatus? LifeStatus, InvoiceFinancialStatus? FinStatus, SqlQuerySearchMode SearchMode, OrderType orderType, int StartId);
     Task<int> UpdateInvoiceItemInDatabaseAsync(InvoiceItemModel item);
     Task<int> SetPrevInvoiceId(int InvoiceId, int PrevInvoiceId);
-    Task<List<InvoiceSummaryDTO>> GetPrevInvoices(int InvoiceId, int CustomerId, string InvoiceDate, string SearchValue, OrderType orderType);
+    Task<List<InvoiceListDTO>> GetPrevInvoices(int InvoiceId, int CustomerId, string InvoiceDate, string SearchValue, OrderType orderType);
     Task<int> InsertInvoicePaymentToDatabaseAsync(InvoicePaymentModel item);
     Task<int> UpdateInvoicePaymentInDatabaseAsync(InvoicePaymentModel item);
     Task<int> DeleteInvoicePaymentFromDatabaseAsync(int ItemId);
