@@ -15,11 +15,11 @@ public class TransactionModel
     public List<TransactionItemModel> Items { get; set; }
     public string Descriptions { get; set; }
 
-    public decimal PositiveItemsSum => Items == null ? 0 : Items.Where(i => i.TotalValue > 0).Sum(i => i.TotalValue);
-    public decimal NegativeItemsSum => Items == null ? 0 : Items.Where(i => i.TotalValue < 0).Sum(i => i.TotalValue);
+    public decimal PositiveItemsSum => Items == null ? 0 : Items.Where(i => i.TotalValue > 0).Sum(i => i.TotalValue); //Total amount of positive items in the current loaded items - loaded by pagination.
+    public decimal NegativeItemsSum => Items == null ? 0 : Items.Where(i => i.TotalValue < 0).Sum(i => i.TotalValue); //Total amount of negative items in the current loaded items - loaded by pagination.
     public decimal Balance => PositiveItemsSum + NegativeItemsSum;
-    public decimal TotalPositiveItemsSum { get; set; }
-    public decimal TotalNegativeItemsSum { get; set; }
+    public decimal TotalPositiveItemsSum { get; set; } //Total amount of positive items in the whole transaction.
+    public decimal TotalNegativeItemsSum { get; set; } //Total amount of negative items in the whole transaction.
     public decimal TotalBalance => TotalPositiveItemsSum + TotalNegativeItemsSum;
     public TransactionFinancialStatus TransactionFinancialStatus => Balance == 0 ? TransactionFinancialStatus.Balanced : Balance > 0 ? TransactionFinancialStatus.Positive : TransactionFinancialStatus.Negative;
 }

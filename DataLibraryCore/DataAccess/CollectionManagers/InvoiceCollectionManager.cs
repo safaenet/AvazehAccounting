@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SharedLibrary.Contracts;
+using SharedLibrary.Models;
 
 namespace DataLibraryCore.DataAccess.CollectionManagers;
 
@@ -16,7 +16,7 @@ public class InvoiceCollectionManager : IInvoiceCollectionManager
     }
     public bool Initialized { get; set; }
     public IInvoiceProcessor Processor { get; init; }
-    public IEnumerable<InvoiceListDTO> Items { get; set; }
+    public IEnumerable<InvoiceListModel> Items { get; set; }
 
     private protected string _WhereClause;
     public string WhereClause

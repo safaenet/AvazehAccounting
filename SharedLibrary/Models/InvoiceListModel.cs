@@ -1,11 +1,11 @@
 ﻿using SharedLibrary.Enums;
 
-namespace SharedLibrary.Contracts;
+namespace SharedLibrary.Models;
 
 /// <summary>
 /// This model is for viewing Invoices in ListView
 /// </summary>
-public class InvoiceListDTO
+public class InvoiceListModel
 {
     public int Id { get; set; }
     public int CustomerId { get; set; }

@@ -4,6 +4,7 @@ using Caliburn.Micro;
 using SharedLibrary.Contracts;
 using SharedLibrary.Enums;
 using SharedLibrary.Helpers;
+using SharedLibrary.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,12 +28,12 @@ public class PrevInvoiceListViewModel : Screen
     }
 
     private IInvoiceCollectionManager _ICM;
-    private InvoiceListDTO _SelectedInvoice;
+    private InvoiceListModel _SelectedInvoice;
     public LoggedInUser_DTO User { get; init; }
     public int? ReturnId = null;
     public string CurrentPersianDate { get; set; }
 
-    public InvoiceListDTO SelectedInvoice
+    public InvoiceListModel SelectedInvoice
     {
         get { return _SelectedInvoice; }
         set { _SelectedInvoice = value; NotifyOfPropertyChange(() => SelectedInvoice); }
@@ -49,8 +50,8 @@ public class PrevInvoiceListViewModel : Screen
         }
     }
 
-    private ObservableCollection<InvoiceListDTO> invoices;
-    public ObservableCollection<InvoiceListDTO> Invoices
+    private ObservableCollection<InvoiceListModel> invoices;
+    public ObservableCollection<InvoiceListModel> Invoices
     {
         get => invoices;
         set

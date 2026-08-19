@@ -1,7 +1,7 @@
-﻿using SharedLibrary.Contracts;
+﻿using SharedLibrary.Models;
 
 namespace DataLibraryCore.DataAccess.Interfaces;
 
-public interface IInvoiceCollectionManager : IInvoiceCollectionManagerBase<InvoiceListDTO>
+public interface IInvoiceCollectionManager : IInvoiceCollectionManagerBase<InvoiceListModel>
 {
 }

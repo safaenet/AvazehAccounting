@@ -26,7 +26,7 @@ public class TransactionsController : ControllerBase
 
     //GET /Customer?Id=1&SearchText=sometext
     [HttpGet, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = nameof(UserPermissionsModel.CanViewTransactionsList))]
-    public async Task<ActionResult<ItemsCollection_DTO<TransactionListDTO>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "Id", OrderType orderType = OrderType.DESC, int Id = 0, string Date = null, TransactionFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false)
+    public async Task<ActionResult<ItemsCollection_DTO<TransactionListModel>>> GetItemsAsync(int Page = 1, string SearchText = "", string OrderBy = "Id", OrderType orderType = OrderType.DESC, int Id = 0, string Date = null, TransactionFinancialStatus? FinStatus = null, int PageSize = 50, bool ForceLoad = false)
     {
         Manager.GenerateWhereClause(SearchText, OrderBy, orderType, FinStatus, Id, Date);
         Manager.PageSize = PageSize;

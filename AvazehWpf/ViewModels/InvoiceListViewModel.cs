@@ -57,7 +57,7 @@ public class InvoiceListViewModel : Screen
     private IInvoiceCollectionManager _ICM;
     public LoggedInUser_DTO User { get => user; init => user = value; }
     public string CurrentPersianDate { get; init; }
-    private InvoiceListDTO _SelectedInvoice;
+    private InvoiceListModel _SelectedInvoice;
     private string searchText;
     private LoggedInUser_DTO user;
     private readonly SingletonClass Singleton;
@@ -86,7 +86,7 @@ public class InvoiceListViewModel : Screen
         set { queryDate = value; NotifyOfPropertyChange(() => QueryDate); }
     }
 
-    public InvoiceListDTO SelectedInvoice
+    public InvoiceListModel SelectedInvoice
     {
         get => _SelectedInvoice;
         set { _SelectedInvoice = value; NotifyOfPropertyChange(() => SelectedInvoice); }
@@ -103,7 +103,7 @@ public class InvoiceListViewModel : Screen
         }
     }
 
-    public ObservableCollection<InvoiceListDTO> Invoices
+    public ObservableCollection<InvoiceListModel> Invoices
     {
         get => ICM.Items;
         set

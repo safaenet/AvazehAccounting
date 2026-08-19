@@ -28,7 +28,7 @@ public class InvoiceCollectionManagerAsync : IInvoiceCollectionManager
     private const string Key = "Invoices";
     public IApiProcessor ApiProcessor { get; init; }
 
-    public ObservableCollection<InvoiceListDTO> Items { get; set; }
+    public ObservableCollection<InvoiceListModel> Items { get; set; }
 
     public int PageSize { get; set; } = 50;
     public int SearchStartId { get; set; } = -1;
@@ -41,7 +41,7 @@ public class InvoiceCollectionManagerAsync : IInvoiceCollectionManager
     public InvoiceFinancialStatus? FinStatus { get; set; }
     public OrderType orderType { get; set; }
 
-    public InvoiceListDTO GetItemFromCollectionById(int Id)
+    public InvoiceListModel GetItemFromCollectionById(int Id)
     {
         return Items.SingleOrDefault(i => i.Id == Id);
     }
@@ -86,7 +86,7 @@ public class InvoiceCollectionManagerAsync : IInvoiceCollectionManager
 
     public async Task<int> LoadItemsAsync(SqlQuerySearchMode SearchMode, int StartId)
     {
-        var collection = await ApiProcessor.GetInvoiceCollectionAsync<List<InvoiceListDTO>>(Key, PageSize, InvoiceIdToSearch, CustomerIdToSearch, InvoiceDateToSearch, SearchValue, LifeStatus, FinStatus, SearchMode, orderType, StartId);
+        var collection = await ApiProcessor.GetInvoiceCollectionAsync<List<InvoiceListModel>>(Key, PageSize, InvoiceIdToSearch, CustomerIdToSearch, InvoiceDateToSearch, SearchValue, LifeStatus, FinStatus, SearchMode, orderType, StartId);
         if (collection != null && collection.Any()) Items = collection?.AsObservable();
         return collection == null ? 0 : collection.Count;
     }
@@ -134,9 +134,9 @@ public class InvoiceCollectionManagerAsync : IInvoiceCollectionManager
         return result.Value != 0;
     }
 
-    public async Task<ObservableCollection<InvoiceListDTO>> LoadPrevInvoices(int InvoiceId, string InvoiceDate, string searchValue, OrderType orderType)
+    public async Task<ObservableCollection<InvoiceListModel>> LoadPrevInvoices(int InvoiceId, string InvoiceDate, string searchValue, OrderType orderType)
     {
-        var collection = await ApiProcessor.GetInvoiceCollectionAsync<List<InvoiceListDTO>>(Key + "/LoadPrevInvoices", InvoiceId: InvoiceId, InvoiceDate: InvoiceDate, SearchValue: searchValue, orderType: orderType);
+        var collection = await ApiProcessor.GetInvoiceCollectionAsync<List<InvoiceListModel>>(Key + "/LoadPrevInvoices", InvoiceId: InvoiceId, InvoiceDate: InvoiceDate, SearchValue: searchValue, orderType: orderType);
         return collection.AsObservable();
     }
 
