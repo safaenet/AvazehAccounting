@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SharedLibrary.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace SharedLibrary.Contracts //DTO Models
 ;
@@ -24,6 +25,7 @@ public class ProductModel_DTO_Create_Update
 
     [Display(Name = "Count", Prompt = "Count. Max length is 50 characters")]
     [StringLength(50, ErrorMessage = "Maximum length is 50")]
+    [CountStringIsValid]
     public string CountString { get; set; } = "0";
 
     [Display(Name = "Description")]

@@ -143,4 +143,33 @@ public class SqlDataAccess : Interfaces.IDataAccess
         }
         return default;
     }
+
+    public async Task<T> ExecuteInTransactionAsync<T>(
+    Func<IDbConnection, IDbTransaction, Task<T>> action)
+    {
+        using var connection = new SqlConnection(GetConnectionString());
+
+        await connection.OpenAsync();
+
+        using var transaction = connection.BeginTransaction();
+
+        try
+        {
+            var result = await action(connection, transaction);
+
+            transaction.Commit();
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            transaction.Rollback();
+
+            Log.Error(
+                ex,
+                $"Error in {System.Reflection.MethodBase.GetCurrentMethod().DeclaringType}");
+
+            throw;
+        }
+    }
 }

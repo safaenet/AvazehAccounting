@@ -87,81 +87,178 @@ public class SqlCustomerProcessor<TModel, TSub, TValidator> : IGeneralProcessor<
         return null;
     }
 
+    //public async Task<int> CreateItemAsync(TModel item)
+    //{
+    //    try
+    //    {
+    //        if (item == null || !ValidateItem(item).IsValid) return 0;
+    //        item.DateJoined = PersianCalendarHelper.GetCurrentPersianDate();
+    //        var dp = new DynamicParameters();
+    //        dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
+    //        dp.Add("@firstName", item.FirstName);
+    //        dp.Add("@lastName", item.LastName);
+    //        dp.Add("@companyName", item.CompanyName);
+    //        dp.Add("@emailAddress", item.EmailAddress);
+    //        dp.Add("@postAddress", item.PostAddress);
+    //        dp.Add("@dateJoined", item.DateJoined);
+    //        dp.Add("@descriptions", item.Descriptions);
+    //        var AffectedCount = await DataAccess.SaveDataAsync(CreateCustomerQuery, dp);
+    //        var OutputId = dp.Get<int>("@id");
+    //        if (AffectedCount > 0)
+    //        {
+    //            item.Id = OutputId;
+    //            await InsertPhoneNumbersToDatabaseAsync(item).ConfigureAwait(false);
+    //        }
+    //        return OutputId;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Log.Error(ex, "Error in SqlCustomerProcessor");
+    //    }
+    //    return 0;
+    //}
+
     public async Task<int> CreateItemAsync(TModel item)
     {
         try
         {
             if (item == null || !ValidateItem(item).IsValid) return 0;
+
             item.DateJoined = PersianCalendarHelper.GetCurrentPersianDate();
-            var dp = new DynamicParameters();
-            dp.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
-            dp.Add("@firstName", item.FirstName);
-            dp.Add("@lastName", item.LastName);
-            dp.Add("@companyName", item.CompanyName);
-            dp.Add("@emailAddress", item.EmailAddress);
-            dp.Add("@postAddress", item.PostAddress);
-            dp.Add("@dateJoined", item.DateJoined);
-            dp.Add("@descriptions", item.Descriptions);
-            var AffectedCount = await DataAccess.SaveDataAsync(CreateCustomerQuery, dp);
-            var OutputId = dp.Get<int>("@id");
-            if (AffectedCount > 0)
-            {
-                item.Id = OutputId;
-                await InsertPhoneNumbersToDatabaseAsync(item).ConfigureAwait(false);
-            }
-            return OutputId;
+
+            return await DataAccess.ExecuteInTransactionAsync(
+                async (connection, transaction) =>
+                {
+                    var dp = new DynamicParameters();
+
+                    dp.Add( "@id", 0, DbType.Int32, ParameterDirection.Output);
+
+                    dp.Add("@firstName", item.FirstName);
+                    dp.Add("@lastName", item.LastName);
+                    dp.Add("@companyName", item.CompanyName);
+                    dp.Add("@emailAddress", item.EmailAddress);
+                    dp.Add("@postAddress", item.PostAddress);
+                    dp.Add("@dateJoined", item.DateJoined);
+                    dp.Add("@descriptions", item.Descriptions);
+
+                    var affectedCount = await connection.ExecuteAsync( CreateCustomerQuery, dp, transaction);
+
+                    if (affectedCount <= 0) return 0;
+
+                    var outputId = dp.Get<int>("@id");
+
+                    item.Id = outputId;
+
+                    await InsertPhoneNumbersToDatabaseAsync( item, connection, transaction);
+
+                    return outputId;
+                });
         }
         catch (Exception ex)
         {
             Log.Error(ex, "Error in SqlCustomerProcessor");
+            return 0;
         }
-        return 0;
     }
+
+    //public async Task<int> UpdateItemAsync(TModel item)
+    //{
+    //    try
+    //    {
+    //        if (item == null || !ValidateItem(item).IsValid) return 0;
+    //        if (item.DateJoined is null) item.DateJoined = PersianCalendarHelper.GetCurrentPersianDate();
+    //        var AffectedCount = await DataAccess.SaveDataAsync(UpdateCustomerQuery, item);
+    //        if (AffectedCount > 0)
+    //        {
+    //            string sqlPhones = $"DELETE FROM PhoneNumbers WHERE CustomerId = { item.Id }";
+    //            await DataAccess.SaveDataAsync<DynamicParameters>(sqlPhones, null).ConfigureAwait(false);
+    //            await InsertPhoneNumbersToDatabaseAsync(item).ConfigureAwait(false);
+    //        }
+    //        return AffectedCount;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Log.Error(ex, "Error in SqlCustomerProcessor");
+    //    }
+    //    return 0;
+    //}
 
     public async Task<int> UpdateItemAsync(TModel item)
     {
         try
         {
-            if (item == null || !ValidateItem(item).IsValid) return 0;
+            if (item == null || !ValidateItem(item).IsValid)
+                return 0;
+
             if (item.DateJoined is null) item.DateJoined = PersianCalendarHelper.GetCurrentPersianDate();
-            var AffectedCount = await DataAccess.SaveDataAsync(UpdateCustomerQuery, item);
-            if (AffectedCount > 0)
-            {
-                string sqlPhones = $"DELETE FROM PhoneNumbers WHERE CustomerId = { item.Id }";
-                await DataAccess.SaveDataAsync<DynamicParameters>(sqlPhones, null).ConfigureAwait(false);
-                await InsertPhoneNumbersToDatabaseAsync(item).ConfigureAwait(false);
-            }
-            return AffectedCount;
+
+            return await DataAccess.ExecuteInTransactionAsync(
+                async (connection, transaction) =>
+                {
+                    var affectedCount = await connection.ExecuteAsync(
+                        UpdateCustomerQuery, item, transaction);
+
+                    if (affectedCount <= 0) return 0;
+
+                    const string deletePhonesQuery = "DELETE FROM PhoneNumbers WHERE CustomerId = @CustomerId";
+
+                    await connection.ExecuteAsync(deletePhonesQuery, new { CustomerId = item.Id }, transaction);
+
+                    await InsertPhoneNumbersToDatabaseAsync(item, connection, transaction);
+
+                    return affectedCount;
+                });
         }
         catch (Exception ex)
         {
             Log.Error(ex, "Error in SqlCustomerProcessor");
+            return 0;
         }
-        return 0;
     }
 
-    private async Task<int> InsertPhoneNumbersToDatabaseAsync(TModel customer)
+    //private async Task<int> InsertPhoneNumbersToDatabaseAsync(TModel customer)
+    //{
+    //    try
+    //    {
+    //        if (customer == null || customer.PhoneNumbers == null || customer.PhoneNumbers.Count == 0) return 0;
+    //        ObservableCollection<TSub> phones = new();
+    //        foreach (var phone in customer.PhoneNumbers)
+    //        {
+    //            if (!string.IsNullOrEmpty(phone.PhoneNumber) && !string.IsNullOrWhiteSpace(phone.PhoneNumber))
+    //            {
+    //                phone.CustomerId = customer.Id;
+    //                phones.Add(phone as TSub);
+    //            }
+    //        }
+    //        if (phones.Count == 0) return 0;
+    //        return await DataAccess.SaveDataAsync(InsertPhonesQuery, phones).ConfigureAwait(false);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Log.Error(ex, "Error in SqlCustomerProcessor");
+    //    }
+    //    return 0;
+    //}
+
+    private async Task<int> InsertPhoneNumbersToDatabaseAsync(TModel customer, IDbConnection connection, IDbTransaction transaction)
     {
-        try
-        {
-            if (customer == null || customer.PhoneNumbers == null || customer.PhoneNumbers.Count == 0) return 0;
-            ObservableCollection<TSub> phones = new();
-            foreach (var phone in customer.PhoneNumbers)
+        if (customer?.PhoneNumbers == null || customer.PhoneNumbers.Count == 0) return 0;
+
+        var phones = customer.PhoneNumbers
+            .Where(x => !string.IsNullOrWhiteSpace(x.PhoneNumber))
+            .Select(x => new
             {
-                if (!string.IsNullOrEmpty(phone.PhoneNumber) && !string.IsNullOrWhiteSpace(phone.PhoneNumber))
-                {
-                    phone.CustomerId = customer.Id;
-                    phones.Add(phone as TSub);
-                }
-            }
-            if (phones.Count == 0) return 0;
-            return await DataAccess.SaveDataAsync(InsertPhonesQuery, phones).ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "Error in SqlCustomerProcessor");
-        }
-        return 0;
+                CustomerId = customer.Id,
+                PhoneNumber = x.PhoneNumber
+            }).ToList();
+
+        if (phones.Count == 0)
+            return 0;
+
+        return await connection.ExecuteAsync(
+            InsertPhonesQuery,
+            phones,
+            transaction);
     }
 
     public async Task<int> DeleteItemByIdAsync(int Id)

@@ -36,7 +36,7 @@ public static class Extensions
             EmailAddress = model.EmailAddress,
             PostAddress = model.PostAddress,
             DateJoined = model.DateJoined,
-            PhoneNumbers = model.PhoneNumbers,
+            PhoneNumbers = model.PhoneNumbers?.Select(p => p.PhoneNumber).ToList() ?? [],
             Descriptions = model.Descriptions
         };
     }

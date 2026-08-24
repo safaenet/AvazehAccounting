@@ -29,7 +29,7 @@ public class CustomerModel_DTO_Create_Update
     public string PostAddress { get; set; }
     public string DateJoined { get; set; }
 
-    public List<PhoneNumberModel> PhoneNumbers { get; set; }
+    public List<string> PhoneNumbers { get; set; }
 
     [Display(Name = "Description")]
     public string Descriptions { get; set; }

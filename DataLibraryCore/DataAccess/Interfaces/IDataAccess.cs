@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 
@@ -15,4 +16,5 @@ public interface IDataAccess
     Task<T> ExecuteScalarAsync<T, U>(string sql, U param);
     Task<T> ExecuteScalarAsync<T>(string sql);
     Task<T> QuerySingleOrDefaultAsync<T, U>(string sql, U param);
+    Task<T> ExecuteInTransactionAsync<T>(Func<IDbConnection, IDbTransaction, Task<T>> action);
 }

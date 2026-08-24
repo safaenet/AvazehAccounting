@@ -1,12 +1,13 @@
 ﻿using DataLibraryCore.DataAccess.Interfaces;
 using DataLibraryCore.DataAccess.SqlServer;
-using SharedLibrary.Models;
 using SharedLibrary.Contracts;
 using SharedLibrary.Enums;
+using SharedLibrary.Models;
 using SharedLibrary.Validation;
+using SharedLibrary.Validation;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SharedLibrary.Validation;
 
 namespace AvazehWeb;
 
@@ -99,7 +100,7 @@ internal static class Extensions
             EmailAddress = model.EmailAddress,
             PostAddress = model.PostAddress,
             DateJoined = model.DateJoined,
-            PhoneNumbers = model.PhoneNumbers,
+            PhoneNumbers = model.PhoneNumbers?.Select(p => new PhoneNumberModel { PhoneNumber = p}).ToList() ?? [],
             Descriptions = model.Descriptions
         };
     }
@@ -114,7 +115,7 @@ internal static class Extensions
             EmailAddress = model.EmailAddress,
             PostAddress = model.PostAddress,
             DateJoined = model.DateJoined,
-            PhoneNumbers = model.PhoneNumbers,
+            PhoneNumbers = model.PhoneNumbers?.Select(p => p.PhoneNumber).ToList() ?? [],
             Descriptions = model.Descriptions
         };
     }
